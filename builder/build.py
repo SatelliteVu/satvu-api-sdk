@@ -36,9 +36,6 @@ def _load_openapi(api_id: str, use_cached: bool):
 
 
 # Override
-models_relative_prefix = "id."
-openapi_python_client.parser.openapi.models_relative_prefix = models_relative_prefix
-
 class SatVuProject(Project):
     def _build_api(self, api_id: str) -> None:
         # Generate endpoints
@@ -75,14 +72,19 @@ class SatVuProject(Project):
         except FileExistsError:
             if not self.config.overwrite:
                 return [GeneratorError(detail="Directory already exists. Delete it or use the --overwrite option.")]
+
         self._build_models()
         self._build_api(api_id)
+        types_template = self.env.get_template("types.py.jinja")
+        types_path = self.package_dir / "types.py"
+        types_path.write_text(types_template.render(), encoding=self.config.file_encoding)
         self._run_post_hooks()
         return self._get_errors()
 
 
 
 def build(api_id: str, use_cached: False):
+    openapi_python_client.parser.openapi.models_relative_prefix = f"{api_id}."
     openapi_dict, openapi_src = _load_openapi(api_id, use_cached)
     config = Config.from_sources(
         config_file=ConfigFile(),

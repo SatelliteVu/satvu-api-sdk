@@ -1,13 +1,15 @@
 import ast as pyast
+import shutil
 from hashlib import sha1
 from json import dumps, loads
 from pathlib import Path
+from pprint import pprint
 
 from httpx import get
 
-from openapi_python_client import Project
+from openapi_python_client import Project, utils
 from openapi_python_client.config import Config, MetaType, ConfigFile
-from openapi_python_client.parser.openapi import GeneratorData
+from openapi_python_client.parser.openapi import GeneratorData, Endpoint
 from openapi_python_client.parser.errors import GeneratorError
 
 from builder.config import APIS, BASE_URL
@@ -32,6 +34,40 @@ def _load_openapi(api_id: str, use_cached: bool):
     return loads(cache_file.read_text()), cache_file
 
 
+# Override
+class SatVuProject(Project):
+    def _build_api(self) -> None:
+        # Generate endpoints
+        api_dir = self.package_dir / "api"
+        shutil.rmtree(api_dir, ignore_errors=True)
+        api_dir.mkdir()
+        api_init_path = api_dir / "__init__.py"
+        api_init_template = self.env.get_template("api_init.py.jinja")
+        api_init_path.write_text(api_init_template.render(), encoding=self.config.file_encoding)
+
+        endpoint_collections_by_tag = self.openapi.endpoint_collections_by_tag
+        endpoint_template = self.env.get_template(
+            "endpoint_module.py.jinja", globals={"isbool": lambda obj: obj.get_base_type_string() == "bool"}
+        )
+        endpoints: list[Endpoint] = []
+        for endpoint_collection in endpoint_collections_by_tag.values():
+            for endpoint in endpoint_collection.endpoints:
+                endpoints.append(endpoint)
+
+
+        pprint(endpoints[0].responses[0])
+
+        api_class_path = api_dir / "api.py"
+        # module_path = tag_dir / f"{utils.PythonIdentifier(endpoint.name, self.config.field_prefix)}.py"
+        api_class_path.write_text(
+            endpoint_template.render(
+                endpoints=endpoints,
+            ),
+            encoding=self.config.file_encoding,
+        )
+
+
+
 def build(api_id: str, use_cached: False):
     openapi_dict, openapi_src = _load_openapi(api_id, use_cached)
     config = Config.from_sources(
@@ -48,7 +84,7 @@ def build(api_id: str, use_cached: False):
         print(GeneratorError)
         exit(1)
 
-    project = Project(
+    project = SatVuProject(
         openapi=openapi,
         custom_template_path=TEMPLATE_DIR,
         config=config,

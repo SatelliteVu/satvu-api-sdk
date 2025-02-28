@@ -1,5 +1,4 @@
-import ast as pyast
-import shutil
+from dataclasses import dataclass
 from hashlib import sha1
 from json import dumps, loads
 from pathlib import Path
@@ -10,6 +9,7 @@ from httpx import get
 
 from openapi_python_client import Project
 from openapi_python_client.config import Config, MetaType, ConfigFile
+from openapi_python_client.parser.bodies import Body
 from openapi_python_client.parser.openapi import GeneratorData, Endpoint
 from openapi_python_client.parser.errors import GeneratorError
 
@@ -35,9 +35,14 @@ def _load_openapi(api_id: str, use_cached: bool):
     return loads(cache_file.read_text()), cache_file
 
 
+@dataclass
+class SatVuEndpoint(Endpoint):
+    body_docstrings: list[str] | None = None
+
+
 # Override
 class SatVuProject(Project):
-    def _build_api(self, api_id: str) -> None:
+    def _build_api(self, api_id: str, config: Config) -> None:
         # Generate endpoints
         api_dir = self.package_dir
         api_init_path = api_dir / "__init__.py"
@@ -51,6 +56,10 @@ class SatVuProject(Project):
         endpoints: list[Endpoint] = []
         for endpoint_collection in endpoint_collections_by_tag.values():
             for endpoint in endpoint_collection.endpoints:
+                body_docstrings = []
+                if endpoint.bodies:
+                    body_docstrings = self.body_docstrings(endpoint.bodies[0])
+                endpoint = SatVuEndpoint(body_docstrings=body_docstrings, **vars(endpoint))
                 endpoints.append(endpoint)
 
         api_class_path = api_dir / "api.py"
@@ -63,7 +72,7 @@ class SatVuProject(Project):
             encoding=self.config.file_encoding,
         )
 
-    def build(self, api_id: str) -> Sequence[GeneratorError]:
+    def build(self, api_id: str, config: Config) -> Sequence[GeneratorError]:
         """Create the project from templates"""
 
         print(f"Generating {self.project_dir}")
@@ -74,13 +83,21 @@ class SatVuProject(Project):
                 return [GeneratorError(detail="Directory already exists. Delete it or use the --overwrite option.")]
 
         self._build_models()
-        self._build_api(api_id)
+        self._build_api(api_id, config)
         types_template = self.env.get_template("types.py.jinja")
         types_path = self.package_dir / "types.py"
         types_path.write_text(types_template.render(), encoding=self.config.file_encoding)
         self._run_post_hooks()
         return self._get_errors()
 
+    def body_docstrings(self, body: Body) -> list[str]:
+        docstrings = []
+        for prop in body.prop.required_properties + body.prop.optional_properties:
+            docstring = f"{prop.python_name} ({prop.get_type_string()}): {prop.description or ''}"
+            print(docstring)
+            docstrings.append(docstring)
+
+        return docstrings
 
 
 def build(api_id: str, use_cached: False):
@@ -106,7 +123,7 @@ def build(api_id: str, use_cached: False):
         config=config,
     )
 
-    errors = project.build(api_id)
+    errors = project.build(api_id, config)
     if len(errors) > 0:
         for error in errors:
             print("=" * 20)

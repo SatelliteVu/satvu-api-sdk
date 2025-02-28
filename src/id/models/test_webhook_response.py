@@ -1,0 +1,25 @@
+from typing import TYPE_CHECKING, TypedDict
+from uuid import UUID
+
+if TYPE_CHECKING:
+    from ..models.notification_description import NotificationDescription
+    from ..models.webhook_result import WebhookResult
+
+
+class TestWebhookResponse(TypedDict):
+    """
+    Attributes:
+        active (bool): Whether the webhook is active.
+        event_types (list['NotificationDescription']): List of events that the webhook is subscribed to.
+        name (str): The name of the webhook.
+        url (str): The URL where events are received.
+        id (UUID): A unique identifier for the webhook.
+        webhook_result (WebhookResult):
+    """
+
+    active: bool
+    event_types: list["NotificationDescription"]
+    name: str
+    url: str
+    id: UUID
+    webhook_result: "WebhookResult"

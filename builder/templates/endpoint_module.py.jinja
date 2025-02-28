@@ -1,7 +1,6 @@
-{% from "endpoint_macros.py.jinja" import header_params, cookie_params,
-   client, kwargs, parse_response, docstring, body_to_kwarg %}
+{% from "helpers.jinja" import safe_docstring %}
 
-{# The all the kwargs passed into an endpoint (and variants thereof)) #}
+{# Generate arguments for function #}
 {%- macro arguments(endpoint) %}
 {# path parameters #}
 {% for parameter in endpoint.path_parameters %}
@@ -17,6 +16,7 @@
 {% endif %}
 {% endmacro %}
 
+{# Build url #}
 {%- macro url(endpoint) %}
 "{{ endpoint.path }}".format(
     {%- for parameter in endpoint.path_parameters -%}
@@ -28,6 +28,7 @@
     )
 {%- endmacro %}
 
+{# Prepare query params #}
 {%- macro query_params(endpoint) %}
 {% if endpoint.query_parameters %}
 params: dict[str, Any] = {}
@@ -49,6 +50,7 @@ params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 {% endif %}
 {% endmacro %}
 
+{# Prepare request #}
 {%- macro make_request(endpoint) %}
 {% filter indent(width=8) %}
 {%- if endpoint.query_parameters -%}
@@ -65,6 +67,34 @@ params=params,
 {% endfilter %}
 {% endmacro %}
 
+{%- macro docstring_content(endpoint, return_string) %}
+{% if endpoint.summary %}{{ endpoint.summary | wordwrap(100)}}
+
+{% endif -%}
+{%- if endpoint.description %} {{ endpoint.description | wordwrap(100) }}
+
+{% endif %}
+{% if not endpoint.summary and not endpoint.description %}
+{# Leave extra space so that Args or Returns isn't at the top #}
+
+{% endif %}
+Args:
+    {% for param in endpoint.path_parameters %}
+    {{ param.to_docstring() | wordwrap(90) | indent(8) }}
+    {% endfor %}{% for param in endpoint.query_parameters %}
+    {{ param.to_docstring() | wordwrap(90) | indent(8) }}
+    {% endfor %}
+    {% for string in endpoint.body_docstrings %}
+    {{ string | wordwrap(90) | indent(8) }}
+    {% endfor %}
+
+Returns:
+    {{ return_string }}
+{% endmacro %}
+
+{%- macro docstring(endpoint, return_string, is_detailed) %}
+{{ safe_docstring(docstring_content(endpoint, return_string)) }}
+{% endmacro %}
 from collections.abc import Callable
 from typing import Any, Unpack
 
@@ -85,6 +115,7 @@ class {{ api_id | title }}Service(SDKClient):
     {% for endpoint in endpoints %}
     {% set return_string = endpoint.responses[0].prop.get_type_string(quoted=False) %}
     def {{ endpoint.method }}_{{ endpoint.name }}(self, {{ arguments(endpoint) }}) -> {{ return_string }}:
+        {{ docstring(endpoint, return_string, is_detailed=true) }}
         {{ make_request(endpoint) }}
         return {{ return_string }}(**response.json())
 

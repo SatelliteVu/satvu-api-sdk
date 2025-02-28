@@ -3,11 +3,12 @@ import shutil
 from hashlib import sha1
 from json import dumps, loads
 from pathlib import Path
-from pprint import pprint
+from typing import Sequence
 
+import openapi_python_client.parser.openapi
 from httpx import get
 
-from openapi_python_client import Project, utils
+from openapi_python_client import Project
 from openapi_python_client.config import Config, MetaType, ConfigFile
 from openapi_python_client.parser.openapi import GeneratorData, Endpoint
 from openapi_python_client.parser.errors import GeneratorError
@@ -22,7 +23,7 @@ SRC_DIR = BASE_DIR / "src"
 
 def _load_openapi(api_id: str, use_cached: bool):
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    openapi_url = f"{BASE_URL.rstrip('/')}/{APIS[api_id]}"
+    openapi_url = f"{BASE_URL.rstrip('/')}/{APIS[api_id]}/openapi.json"
     cache_file = CACHE_DIR / f"{api_id}-{sha1(openapi_url.encode()).hexdigest()}.json"
 
     if not use_cached:
@@ -35,12 +36,13 @@ def _load_openapi(api_id: str, use_cached: bool):
 
 
 # Override
+models_relative_prefix = "id."
+openapi_python_client.parser.openapi.models_relative_prefix = models_relative_prefix
+
 class SatVuProject(Project):
-    def _build_api(self) -> None:
+    def _build_api(self, api_id: str) -> None:
         # Generate endpoints
-        api_dir = self.package_dir / "api"
-        shutil.rmtree(api_dir, ignore_errors=True)
-        api_dir.mkdir()
+        api_dir = self.package_dir
         api_init_path = api_dir / "__init__.py"
         api_init_template = self.env.get_template("api_init.py.jinja")
         api_init_path.write_text(api_init_template.render(), encoding=self.config.file_encoding)
@@ -54,17 +56,29 @@ class SatVuProject(Project):
             for endpoint in endpoint_collection.endpoints:
                 endpoints.append(endpoint)
 
-
-        pprint(endpoints[0].responses[0])
-
         api_class_path = api_dir / "api.py"
-        # module_path = tag_dir / f"{utils.PythonIdentifier(endpoint.name, self.config.field_prefix)}.py"
         api_class_path.write_text(
             endpoint_template.render(
                 endpoints=endpoints,
+                api_id=api_id,
+                base_path=APIS[api_id]
             ),
             encoding=self.config.file_encoding,
         )
+
+    def build(self, api_id: str) -> Sequence[GeneratorError]:
+        """Create the project from templates"""
+
+        print(f"Generating {self.project_dir}")
+        try:
+            self.project_dir.mkdir()
+        except FileExistsError:
+            if not self.config.overwrite:
+                return [GeneratorError(detail="Directory already exists. Delete it or use the --overwrite option.")]
+        self._build_models()
+        self._build_api(api_id)
+        self._run_post_hooks()
+        return self._get_errors()
 
 
 
@@ -90,7 +104,7 @@ def build(api_id: str, use_cached: False):
         config=config,
     )
 
-    errors = project.build()
+    errors = project.build(api_id)
     if len(errors) > 0:
         for error in errors:
             print("=" * 20)

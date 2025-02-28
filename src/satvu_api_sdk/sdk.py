@@ -1,4 +1,4 @@
-from demo.main import IDService
+from id.api import IdService
 from satvu_api_sdk.auth import AuthService, TokenCache
 
 
@@ -34,7 +34,7 @@ class SatVuSDK:
     @property
     def id(self):
         if not self._id:
-            self._id = IDService(
-                self.get_token, contract_id=self.contract_id, env=self.env
+            self._id = IdService(
+                env=self.env
             )
         return self._id

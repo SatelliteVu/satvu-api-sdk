@@ -11,7 +11,6 @@ class SDKClient:
     def __init__(
         self,
         env: str | None,
-        get_token: Callable[[], str] | None = None,
         subdomain: str = "api",
     ):
         base_url = f"{self.build_url(subdomain, env=env).rstrip("/")}/{self.base_path.lstrip("/")}"
@@ -23,7 +22,7 @@ class SDKClient:
             env = ""
         else:
             env = f"{env}."
-        return f"https://{subdomain}.{env}.satellitevu.com/"
+        return f"https://{subdomain}.{env}satellitevu.com/"
 
     def make_request(
         self,

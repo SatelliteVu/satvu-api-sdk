@@ -11,6 +11,11 @@ dependencies = [
     "openapi-python-client>=0.23.0",
 ]
 
+[project.optional-dependencies]
+standard = [
+    "appdirs>=1.4.4",
+]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

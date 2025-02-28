@@ -1,0 +1,54 @@
+{% from "helpers.jinja" import safe_docstring %}
+
+{% set class_name = model.class_info.name %}
+{% set module_name = model.class_info.module_name %}
+
+{% macro class_docstring_content(model) %}
+    {% if model.title %}{{ model.title | wordwrap(116) }}
+
+    {% endif -%}
+    {%- if model.description %}{{ model.description | wordwrap(116) }}
+
+    {% endif %}
+    {% if not model.title and not model.description %}
+    {# Leave extra space so that a section doesn't start on the first line #}
+
+    {% endif %}
+    {% if model.example %}
+    Example:
+        {{ model.example | string | wordwrap(112) | indent(12) }}
+
+    {% endif %}
+    {% if model.required_properties or model.optional_properties %}
+    Attributes:
+    {% for property in model.required_properties + model.optional_properties %}
+        {{ property.to_docstring() | wordwrap(112) | indent(12) }}
+    {% endfor %}{% endif %}
+{% endmacro %}
+
+from typing import TYPE_CHECKING, TypedDict
+
+{% for relative in model.relative_imports | sort %}
+{{ relative }}
+{% endfor %}
+
+{% for lazy_import in model.lazy_imports %}
+{% if loop.first %}
+if TYPE_CHECKING:
+{% endif %}
+  {{ lazy_import }}
+{% endfor %}
+
+class {{ class_name }}(TypedDict):
+    {{ safe_docstring(class_docstring_content(model)) | indent(4) }}
+
+    {% for property in model.required_properties + model.optional_properties %}
+    {% if property.default is none and property.required %}
+    {{ property.to_string() }}
+    {% endif %}
+    {% endfor %}
+    {% for property in model.required_properties + model.optional_properties %}
+    {% if property.default is not none or not property.required %}
+    {{ property.to_string() }}
+    {% endif %}
+    {% endfor %}

@@ -1,0 +1,22 @@
+[project]
+name = "satvu-api-sdk"
+version = "0.0.0"
+description = "SatVu API SDK"
+readme = "README.md"
+authors = [
+    { name = "Christian Wygoda", email = "christian.wygoda@satellitevu.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "openapi-python-client>=0.23.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = [
+    "httpx>=0.28.1",
+    "pydantic>=2.10.4",
+]

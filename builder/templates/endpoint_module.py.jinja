@@ -79,8 +79,8 @@ from satvu_api_sdk.core import SDKClient
 class {{ api_id | title }}Service(SDKClient):
     base_path = "{{ base_path }}"
 
-    def __init__(self, env: str | None):
-        super().__init__(env=env)
+    def __init__(self, get_token: Callable[[], str], env: str | None):
+        super().__init__(env=env, get_token=get_token)
 
     {% for endpoint in endpoints %}
     {% set return_string = endpoint.responses[0].prop.get_type_string(quoted=False) %}

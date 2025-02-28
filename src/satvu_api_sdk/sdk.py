@@ -9,13 +9,11 @@ class SatVuSDK:
         self,
         client_id: str,
         client_secret: str,
-        contract_id: str | None,
         env: str | None = None,
         token_cache: TokenCache | None = None,
     ):
         self.client_id = client_id
         self.client_secret = client_secret
-        self.contract_id = contract_id
         self.token_cache = token_cache
         self.env = env
 
@@ -26,15 +24,16 @@ class SatVuSDK:
     def get_token(self):
         return self.auth.token(self.client_id, self.client_secret)
 
-    def auth(self):
+    @property
+    def auth(self) -> AuthService:
         if not self._auth:
             self._auth = AuthService(env=self.env, token_cache=self.token_cache)
         return self._auth
 
     @property
-    def id(self):
+    def id(self) -> IdService:
         if not self._id:
             self._id = IdService(
-                env=self.env
+                env=self.env, get_token=self.get_token
             )
         return self._id

@@ -125,7 +125,7 @@ class AuthService(SDKClient):
             token = self._auth(client_id, client_secret, scopes)
             self.cache.save(cache_key.hexdigest(), token)
 
-        return token
+        return token["access_token"]
 
     def _auth(
         self,

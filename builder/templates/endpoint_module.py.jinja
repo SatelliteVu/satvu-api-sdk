@@ -113,10 +113,17 @@ class {{ api_id | title }}Service(SDKClient):
         super().__init__(env=env, get_token=get_token)
 
     {% for endpoint in endpoints %}
+    {% set success_responses = endpoint.responses|selectattr("status_code.is_success") %}
     {% set return_string = endpoint.responses[0].prop.get_type_string(quoted=False) %}
     def {{ endpoint.method }}_{{ endpoint.name }}(self, {{ arguments(endpoint) }}) -> {{ return_string }}:
         {{ docstring(endpoint, return_string, is_detailed=true) }}
         {{ make_request(endpoint) }}
-        return {{ return_string }}(**response.json())
-
+        {% for response in success_responses %}
+        if response.status_code == {{ response.status_code }}:
+            {% if response.prop.get_type_string(quoted=True) == 'Any' %}
+            return response.json()
+            {% else %}
+            return {{ response.prop.get_type_string(quoted=False) }}(**response.json())
+            {% endif %}
+        {% endfor %}
     {% endfor %}

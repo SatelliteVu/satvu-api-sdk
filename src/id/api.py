@@ -45,7 +45,10 @@ class IdService(SDKClient):
             url="/client".format(),
         )
 
-        return ClientID(**response.json())
+        if response.status_code == 200:
+            return ClientID(**response.json())
+        if response.status_code == 204:
+            return response.json()
 
     def post_create_user_client_client_post(
         self,
@@ -65,7 +68,8 @@ class IdService(SDKClient):
             url="/client".format(),
         )
 
-        return ClientCredentials(**response.json())
+        if response.status_code == 201:
+            return ClientCredentials(**response.json())
 
     def post_rotate_client_secret_client_reset_post(
         self,
@@ -85,7 +89,8 @@ class IdService(SDKClient):
             url="/client/reset".format(),
         )
 
-        return ClientCredentials(**response.json())
+        if response.status_code == 200:
+            return ClientCredentials(**response.json())
 
     def get_get_user_details_user_details_get(
         self,
@@ -105,7 +110,8 @@ class IdService(SDKClient):
             url="/user/details".format(),
         )
 
-        return UserInfo(**response.json())
+        if response.status_code == 200:
+            return UserInfo(**response.json())
 
     def put_edit_user_settings_user_settings_put(
         self, **kwargs: Unpack[UserSettings]
@@ -129,7 +135,8 @@ class IdService(SDKClient):
             json=kwargs,
         )
 
-        return UserInfo(**response.json())
+        if response.status_code == 200:
+            return UserInfo(**response.json())
 
     def get_get_user_client__contract_id__client_get(
         self,
@@ -151,7 +158,10 @@ class IdService(SDKClient):
             url="/{contract_id}/client".format(contract_id=contract_id),
         )
 
-        return ClientID(**response.json())
+        if response.status_code == 200:
+            return ClientID(**response.json())
+        if response.status_code == 204:
+            return response.json()
 
     def post_create_user_client__contract_id__client_post(
         self,
@@ -173,7 +183,8 @@ class IdService(SDKClient):
             url="/{contract_id}/client".format(contract_id=contract_id),
         )
 
-        return ClientCredentials(**response.json())
+        if response.status_code == 201:
+            return ClientCredentials(**response.json())
 
     def post_rotate_client_secret__contract_id__client_reset_post(
         self,
@@ -195,7 +206,8 @@ class IdService(SDKClient):
             url="/{contract_id}/client/reset".format(contract_id=contract_id),
         )
 
-        return ClientCredentials(**response.json())
+        if response.status_code == 200:
+            return ClientCredentials(**response.json())
 
     def get_get_user_details__contract_id__user_details_get(
         self,
@@ -217,7 +229,8 @@ class IdService(SDKClient):
             url="/{contract_id}/user/details".format(contract_id=contract_id),
         )
 
-        return UserInfoDeprecated(**response.json())
+        if response.status_code == 200:
+            return UserInfoDeprecated(**response.json())
 
     def get_credit__contract_id__wallet_credit_get(
         self,
@@ -240,7 +253,8 @@ class IdService(SDKClient):
             url="/{contract_id}/wallet/credit".format(contract_id=contract_id),
         )
 
-        return CreditBalanceResponse(**response.json())
+        if response.status_code == 200:
+            return CreditBalanceResponse(**response.json())
 
     def get_list_webhooks_webhooks__get(
         self,
@@ -276,7 +290,8 @@ class IdService(SDKClient):
             params=params,
         )
 
-        return ListWebhookResponse(**response.json())
+        if response.status_code == 200:
+            return ListWebhookResponse(**response.json())
 
     def post_create_webhook_webhooks__post(
         self, **kwargs: Unpack[CoreWebhook]
@@ -301,7 +316,8 @@ class IdService(SDKClient):
             json=kwargs,
         )
 
-        return CreateWebhookResponse(**response.json())
+        if response.status_code == 200:
+            return CreateWebhookResponse(**response.json())
 
     def get_get_webhook_webhooks__id__get(
         self,
@@ -323,7 +339,8 @@ class IdService(SDKClient):
             url="/webhooks/{id}".format(id=id),
         )
 
-        return WebhookResponse(**response.json())
+        if response.status_code == 200:
+            return WebhookResponse(**response.json())
 
     def delete_delete_webhook_webhooks__id__delete(
         self,
@@ -345,7 +362,8 @@ class IdService(SDKClient):
             url="/webhooks/{id}".format(id=id),
         )
 
-        return Any(**response.json())
+        if response.status_code == 204:
+            return response.json()
 
     def patch_edit_webhook_webhooks__id__patch(
         self, id: UUID, **kwargs: Unpack[EditWebhookPayload]
@@ -370,7 +388,8 @@ class IdService(SDKClient):
             json=kwargs,
         )
 
-        return WebhookResponse(**response.json())
+        if response.status_code == 200:
+            return WebhookResponse(**response.json())
 
     def get_get_webhook_events_webhooks_events_get(
         self,
@@ -390,7 +409,8 @@ class IdService(SDKClient):
             url="/webhooks/events".format(),
         )
 
-        return list["NotificationDescription"](**response.json())
+        if response.status_code == 200:
+            return list["NotificationDescription"](**response.json())
 
     def post_rotate_webhook_signing_key_webhooks__id__rotate_post(
         self,
@@ -412,7 +432,8 @@ class IdService(SDKClient):
             url="/webhooks/{id}/rotate".format(id=id),
         )
 
-        return PostWebhookResponse(**response.json())
+        if response.status_code == 200:
+            return PostWebhookResponse(**response.json())
 
     def post_test_webhook_webhooks__id__test_post(
         self,
@@ -434,4 +455,5 @@ class IdService(SDKClient):
             url="/webhooks/{id}/test".format(id=id),
         )
 
-        return TestWebhookResponse(**response.json())
+        if response.status_code == 200:
+            return TestWebhookResponse(**response.json())

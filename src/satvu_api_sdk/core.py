@@ -35,5 +35,7 @@ class SDKClient:
         url: str,
         json: dict | None = None,
         params: dict | None = None,
+        follow_redirects: bool = False,
+        timeout: int = 5,
     ):
-        return self.client.request(method=method, url=url, json=json, params=params)
+        return self.client.request(method=method, url=url, json=json, params=params, follow_redirects=follow_redirects, timeout=timeout)

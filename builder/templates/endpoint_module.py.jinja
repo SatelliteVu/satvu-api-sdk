@@ -51,7 +51,7 @@ params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 {% endmacro %}
 
 {# Prepare request #}
-{%- macro make_request(endpoint) %}
+{%- macro make_request(endpoint, follow_redirects=False) %}
 {% filter indent(width=8) %}
 {%- if endpoint.query_parameters -%}
 {{ query_params(endpoint) }}
@@ -62,6 +62,10 @@ json=kwargs,
 {%- endif -%}
 {%- if endpoint.query_parameters -%}
 params=params,
+{%- endif -%}
+{%- if follow_redirects -%}
+follow_redirects=redirect,
+timeout=60 if redirect else 5,
 {%- endif -%}
 )
 {% endfilter %}
@@ -113,11 +117,24 @@ class {{ api_id | title }}Service(SDKClient):
         super().__init__(env=env, get_token=get_token)
 
     {% for endpoint in endpoints %}
-    {% set success_responses = endpoint.responses|selectattr("status_code.is_success") %}
+    {% set success_responses = endpoint.responses | selectattr("status_code.is_success") | list %}
+    {% set redirect_response = endpoint.responses | selectattr("status_code.is_redirection") | list %}
     {% set return_string = endpoint.responses[0].prop.get_type_string(quoted=False) %}
     def {{ endpoint.method }}_{{ endpoint.name }}(self, {{ arguments(endpoint) }}) -> {{ return_string }}:
         {{ docstring(endpoint, return_string, is_detailed=true) }}
+        {% if redirect_response | length > 0 %}
+        {{ make_request(endpoint, follow_redirects=True) }}
+        {% else %}
         {{ make_request(endpoint) }}
+        {% endif %}
+
+        {% if redirect_response %}
+        if response.headers.get("Content-Type") == 'application/zip':
+            import io
+            zip_bytes = io.BytesIO(response.content)
+            return zip_bytes
+        {% endif %}
+
         {% for response in success_responses %}
         if response.status_code == {{ response.status_code }}:
             {% if response.prop.get_type_string(quoted=True) == 'Any' %}

@@ -12,6 +12,7 @@ from openapi_python_client.config import Config, MetaType, ConfigFile
 from openapi_python_client.parser.bodies import Body
 from openapi_python_client.parser.openapi import GeneratorData, Endpoint
 from openapi_python_client.parser.errors import GeneratorError
+from openapi_python_client.parser.properties import UnionProperty
 
 from builder.config import APIS, BASE_URL
 
@@ -92,10 +93,20 @@ class SatVuProject(Project):
 
     def body_docstrings(self, body: Body) -> list[str]:
         docstrings = []
-        for prop in body.prop.required_properties + body.prop.optional_properties:
-            docstring = f"{prop.python_name} ({prop.get_type_string()}): {prop.description or ''}"
-            print(docstring)
-            docstrings.append(docstring)
+        if isinstance(body.prop, UnionProperty):
+            models = body.prop.inner_properties
+            docstring = "Either"
+            for model in models:
+                docstring += f" ({model.get_type_string()}):"
+                for prop in model.required_properties:
+                    docstring += f"\n- {prop.python_name} ({prop.get_type_string()}): {prop.description or ''}"
+                docstrings.append(docstring)
+                docstring = "Or:"
+        else:
+            props = body.prop.required_properties + body.prop.optional_properties
+            for prop in props:
+                docstring = f"{prop.python_name} ({prop.get_type_string()}): {prop.description or ''}"
+                docstrings.append(docstring)
 
         return docstrings
 

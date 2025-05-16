@@ -1,3 +1,4 @@
+from cos.api import CosService
 from id.api import IdService
 from satvu_api_sdk.auth import AuthService, TokenCache
 
@@ -20,6 +21,7 @@ class SatVuSDK:
         # for lazy service initialisation
         self._auth = None
         self._id = None
+        self._cos = None
 
     def get_token(self):
         return self.auth.token(self.client_id, self.client_secret)
@@ -37,3 +39,11 @@ class SatVuSDK:
                 env=self.env, get_token=self.get_token
             )
         return self._id
+
+    @property
+    def cos(self) -> CosService:
+        if not self._cos:
+            self._cos = CosService(
+                env=self.env, get_token=self.get_token
+            )
+        return self._cos

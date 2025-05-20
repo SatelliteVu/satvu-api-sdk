@@ -1,3 +1,4 @@
+import builtins
 from dataclasses import dataclass
 from hashlib import sha1
 from json import dumps, loads
@@ -7,6 +8,7 @@ from typing import Sequence
 import openapi_python_client.parser.openapi
 from httpx import get
 
+import openapi_python_client.utils
 from openapi_python_client import Project
 from openapi_python_client.config import Config, MetaType, ConfigFile
 from openapi_python_client.parser.bodies import Body
@@ -21,6 +23,12 @@ CACHE_DIR = BASE_DIR / ".cache"
 TEMPLATE_DIR = Path(__file__).parent / "templates"
 SRC_DIR = BASE_DIR / "src"
 
+# Override reserved words - we want to still use "type"
+RESERVED_WORDS = (set(dir(builtins)) | {"self", "true", "false", "datetime"}) - {
+    "id", "type"
+}
+
+openapi_python_client.utils.RESERVED_WORDS = RESERVED_WORDS
 
 def _load_openapi(api_id: str, use_cached: bool):
     CACHE_DIR.mkdir(parents=True, exist_ok=True)

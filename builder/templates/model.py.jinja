@@ -26,6 +26,7 @@
     {% endfor %}{% endif %}
 {% endmacro %}
 
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, TypedDict
 
 {% for relative in model.relative_imports | sort %}
@@ -39,7 +40,8 @@ if TYPE_CHECKING:
   {{ lazy_import }}
 {% endfor %}
 
-class {{ class_name }}(TypedDict):
+@dataclass
+class {{ class_name }}:
     {{ safe_docstring(class_docstring_content(model)) | indent(4) }}
 
     {% for property in model.required_properties + model.optional_properties %}
@@ -52,3 +54,14 @@ class {{ class_name }}(TypedDict):
     {{ property.to_string() }}
     {% endif %}
     {% endfor %}
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            {% for property in model.required_properties %}
+            "{{ property.name }}",
+            {% endfor %}
+        }

@@ -1,14 +1,23 @@
-from typing import Literal, TypedDict, Union
+from dataclasses import dataclass
+from typing import Literal, Union
 
 from ..types import UNSET, Unset
 
 
-class PolygonGeometry(TypedDict):
+@dataclass
+class PolygonGeometry:
     """
     Attributes:
-        type_ (Union[Literal['Polygon'], Unset]):  Default: 'Polygon'.
+        type (Union[Literal['Polygon'], Unset]):  Default: 'Polygon'.
         coordinates (Union[Unset, list[list[list[Union[float, int]]]]]): The coordinates of the item.
     """
 
-    type_: Union[Literal["Polygon"], Unset] = "Polygon"
+    type: Union[Literal["Polygon"], Unset] = "Polygon"
     coordinates: Union[Unset, list[list[list[Union[float, int]]]]] = UNSET
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {}

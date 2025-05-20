@@ -1,14 +1,25 @@
-from typing import Literal, TypedDict, Union
+from dataclasses import dataclass
+from typing import Literal, Union
 
 from ..types import Unset
 
 
-class PointGeometry(TypedDict):
+@dataclass
+class PointGeometry:
     """
     Attributes:
         coordinates (list[Union[float, int]]): The coordinates of the item.
-        type_ (Union[Literal['Point'], Unset]):  Default: 'Point'.
+        type (Union[Literal['Point'], Unset]):  Default: 'Point'.
     """
 
     coordinates: list[Union[float, int]]
-    type_: Union[Literal["Point"], Unset] = "Point"
+    type: Union[Literal["Point"], Unset] = "Point"
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            "coordinates",
+        }

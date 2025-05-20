@@ -27,7 +27,7 @@ class CosService(SDKClient):
     ) -> Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"]:
         """Order details
 
-         Retrieve order details for a specified Order ID owned by the authenticated user.
+        Retrieve order details for a specified Order ID owned by the authenticated user.
 
         Args:
             contract_id (UUID): Contract ID.
@@ -45,9 +45,21 @@ class CosService(SDKClient):
         )
 
         if response.status_code == 200:
-            return Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"](
-                **response.json()
-            )
+            # Handle Union of response types
+            response_data = response.json()
+            response_fields = list(response_data.keys())
+
+            response_models = [FeatureCollectionOrder, ResellerFeatureCollectionOrder]
+
+            for response_model in sorted(
+                response_models,
+                key=lambda x: len(response_model.get_required_fields()),
+                reverse=True,
+            ):
+                if response_model.get_required_fields().issubset(response_fields):
+                    return response_model(**response_data)
+
+        return response.json()
 
     def get_query__contract_id___get(
         self,
@@ -57,7 +69,7 @@ class CosService(SDKClient):
     ) -> OrderPage:
         """Query orders
 
-         Retrieve all existing orders owned by the authenticated user.
+        Retrieve all existing orders owned by the authenticated user.
 
         Args:
             contract_id (UUID): Contract ID.
@@ -93,6 +105,8 @@ class CosService(SDKClient):
         if response.status_code == 200:
             return OrderPage(**response.json())
 
+        return response.json()
+
     def post_submit__contract_id___post(
         self,
         contract_id: UUID,
@@ -100,7 +114,7 @@ class CosService(SDKClient):
     ) -> Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"]:
         """Submit order
 
-         Create and submit a new imagery order of one or more items (maximum 100)
+        Create and submit a new imagery order of one or more items (maximum 100)
         from SatVu's imagery catalog. The order will be owned by the
         authenticated user.
 
@@ -123,9 +137,21 @@ class CosService(SDKClient):
         )
 
         if response.status_code == 201:
-            return Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"](
-                **response.json()
-            )
+            # Handle Union of response types
+            response_data = response.json()
+            response_fields = list(response_data.keys())
+
+            response_models = [FeatureCollectionOrder, ResellerFeatureCollectionOrder]
+
+            for response_model in sorted(
+                response_models,
+                key=lambda x: len(response_model.get_required_fields()),
+                reverse=True,
+            ):
+                if response_model.get_required_fields().issubset(response_fields):
+                    return response_model(**response_data)
+
+        return response.json()
 
     def get_download_item__contract_id___order_id___item_id__download_get(
         self,
@@ -136,7 +162,7 @@ class CosService(SDKClient):
     ) -> OrderItemDownloadUrl:
         """Item download
 
-         Download an item, identified by its STAC ID, for a specified imagery order
+        Download an item, identified by its STAC ID, for a specified imagery order
         owned by the authenticated user.
 
         By default, the redirect parameter is set to True which allows the image
@@ -176,8 +202,11 @@ class CosService(SDKClient):
 
         if response.status_code == 200:
             return OrderItemDownloadUrl(**response.json())
+
         if response.status_code == 202:
             return response.json()
+
+        return response.json()
 
     def get_download_order__contract_id___order_id__download_get(
         self,
@@ -187,7 +216,7 @@ class CosService(SDKClient):
     ) -> OrderDownloadUrl:
         """Order download
 
-         Download all the items for a specified imagery order owned by the authenticated
+        Download all the items for a specified imagery order owned by the authenticated
         user.
 
         By default, the redirect parameter is set to True which allows the image
@@ -226,5 +255,8 @@ class CosService(SDKClient):
 
         if response.status_code == 200:
             return OrderDownloadUrl(**response.json())
+
         if response.status_code == 202:
             return response.json()
+
+        return response.json()

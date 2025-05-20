@@ -1,7 +1,8 @@
-from typing import TypedDict
+from dataclasses import dataclass
 
 
-class ClientCredentials(TypedDict):
+@dataclass
+class ClientCredentials:
     """
     Attributes:
         client_id (str):
@@ -10,3 +11,13 @@ class ClientCredentials(TypedDict):
 
     client_id: str
     client_secret: str
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            "client_id",
+            "client_secret",
+        }

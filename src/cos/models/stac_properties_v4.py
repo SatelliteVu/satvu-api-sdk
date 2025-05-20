@@ -1,11 +1,13 @@
 import datetime
-from typing import TYPE_CHECKING, TypedDict
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ..models.geojson_polygon import GeojsonPolygon
 
 
-class StacPropertiesV4(TypedDict):
+@dataclass
+class StacPropertiesV4:
     """
     Attributes:
         datetime_ (datetime.datetime): Acquisition datetime
@@ -37,3 +39,23 @@ class StacPropertiesV4(TypedDict):
     viewoff_nadir: float
     viewsun_azimuth: float
     viewsun_elevation: float
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            "datetime",
+            "eo:cloud_cover",
+            "gsd",
+            "platform",
+            "proj:epsg",
+            "proj:geometry",
+            "proj:shape",
+            "proj:transform",
+            "view:azimuth",
+            "view:off_nadir",
+            "view:sun_azimuth",
+            "view:sun_elevation",
+        }

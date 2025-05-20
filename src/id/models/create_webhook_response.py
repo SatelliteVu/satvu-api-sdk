@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING, TypedDict, Union
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Union
 from uuid import UUID
 
 from ..types import UNSET, Unset
@@ -7,7 +8,8 @@ if TYPE_CHECKING:
     from ..models.notification_description import NotificationDescription
 
 
-class CreateWebhookResponse(TypedDict):
+@dataclass
+class CreateWebhookResponse:
     """
     Attributes:
         active (bool): Whether the webhook is active.
@@ -26,3 +28,17 @@ class CreateWebhookResponse(TypedDict):
     id: UUID
     signing_key: str
     unreachable_warning: Union[Unset, str] = UNSET
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            "active",
+            "event_types",
+            "name",
+            "url",
+            "id",
+            "signing_key",
+        }

@@ -1,14 +1,27 @@
-from typing import TypedDict, Union
+from dataclasses import dataclass
+from typing import Union
 
 
-class ValidationError(TypedDict):
+@dataclass
+class ValidationError:
     """
     Attributes:
         loc (list[Union[int, str]]):
         msg (str):
-        type_ (str):
+        type (str):
     """
 
     loc: list[Union[int, str]]
     msg: str
-    type_: str
+    type: str
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            "loc",
+            "msg",
+            "type",
+        }

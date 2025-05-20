@@ -1,9 +1,10 @@
-from typing import TypedDict
+from dataclasses import dataclass
 
 from ..models.webhook_event import WebhookEvent
 
 
-class CoreWebhook(TypedDict):
+@dataclass
+class CoreWebhook:
     """
     Attributes:
         event_types (list[WebhookEvent]): A list of events to subscribe to.
@@ -14,3 +15,14 @@ class CoreWebhook(TypedDict):
     event_types: list[WebhookEvent]
     name: str
     url: str
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            "event_types",
+            "name",
+            "url",
+        }

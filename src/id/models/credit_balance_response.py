@@ -1,7 +1,9 @@
-from typing import TypedDict, Union
+from dataclasses import dataclass
+from typing import Union
 
 
-class CreditBalanceResponse(TypedDict):
+@dataclass
+class CreditBalanceResponse:
     """
     Attributes:
         currency (str): The currency of the credit balance.
@@ -13,3 +15,14 @@ class CreditBalanceResponse(TypedDict):
     currency: str
     balance: int
     billing_cycle: Union[None, str]
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            "currency",
+            "balance",
+            "billing_cycle",
+        }

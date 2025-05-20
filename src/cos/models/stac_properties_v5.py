@@ -1,5 +1,6 @@
 import datetime
-from typing import TYPE_CHECKING, TypedDict
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ..models.polygon import Polygon
@@ -8,7 +9,8 @@ if TYPE_CHECKING:
     )
 
 
-class StacPropertiesV5(TypedDict):
+@dataclass
+class StacPropertiesV5:
     """
     Attributes:
         datetime_ (datetime.datetime): Acquisition datetime
@@ -48,3 +50,27 @@ class StacPropertiesV5(TypedDict):
     viewoff_nadir: float
     viewsun_azimuth: float
     viewsun_elevation: float
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            "datetime",
+            "created",
+            "created_at",
+            "eo:cloud_cover",
+            "gsd",
+            "platform",
+            "processing:software",
+            "proj:bbox",
+            "proj:epsg",
+            "proj:geometry",
+            "proj:shape",
+            "proj:transform",
+            "view:azimuth",
+            "view:off_nadir",
+            "view:sun_azimuth",
+            "view:sun_elevation",
+        }

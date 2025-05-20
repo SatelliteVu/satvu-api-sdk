@@ -1,8 +1,10 @@
-from typing import TypedDict, Union
+from dataclasses import dataclass
+from typing import Union
 from uuid import UUID
 
 
-class ResellerOrderPayload(TypedDict):
+@dataclass
+class ResellerOrderPayload:
     """
     Attributes:
         item_id (Union[list[str], str]): Item ID.
@@ -11,3 +13,13 @@ class ResellerOrderPayload(TypedDict):
 
     item_id: Union[list[str], str]
     reseller_end_user_id: UUID
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            "item_id",
+            "reseller_end_user_id",
+        }

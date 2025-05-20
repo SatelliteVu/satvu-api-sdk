@@ -1,10 +1,12 @@
-from typing import TypedDict, Union
+from dataclasses import dataclass
+from typing import Union
 
 from ..models.webhook_event import WebhookEvent
 from ..types import UNSET, Unset
 
 
-class EditWebhookPayload(TypedDict):
+@dataclass
+class EditWebhookPayload:
     """
     Attributes:
         active (Union[Unset, bool]): Whether the webhook should be active or not.
@@ -15,3 +17,10 @@ class EditWebhookPayload(TypedDict):
     active: Union[Unset, bool] = UNSET
     event_types: Union[Unset, list[WebhookEvent]] = UNSET
     name: Union[Unset, str] = UNSET
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {}

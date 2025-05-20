@@ -3,18 +3,18 @@ from dataclasses import dataclass
 from hashlib import sha1
 from json import dumps, loads
 from pathlib import Path
-from typing import Sequence
+from typing import Sequence, Union
 
 import openapi_python_client.parser.openapi
 from httpx import get
 
 import openapi_python_client.utils
-from openapi_python_client import Project
+from openapi_python_client import Project, schema, utils
 from openapi_python_client.config import Config, MetaType, ConfigFile
-from openapi_python_client.parser.bodies import Body
+from openapi_python_client.parser.bodies import Body, body_from_data
 from openapi_python_client.parser.openapi import GeneratorData, Endpoint
-from openapi_python_client.parser.errors import GeneratorError
-from openapi_python_client.parser.properties import UnionProperty
+from openapi_python_client.parser.errors import GeneratorError, ParseError
+from openapi_python_client.parser.properties import UnionProperty, Schemas, Parameters
 
 from builder.config import APIS, BASE_URL
 
@@ -29,6 +29,90 @@ RESERVED_WORDS = (set(dir(builtins)) | {"self", "true", "false", "datetime"}) - 
 }
 
 openapi_python_client.utils.RESERVED_WORDS = RESERVED_WORDS
+
+def from_data(
+    *,
+    data: schema.Operation,
+    path: str,
+    method: str,
+    tags: list[openapi_python_client.utils.PythonIdentifier],
+    schemas: Schemas,
+    parameters: Parameters,
+    request_bodies: dict[str, Union[schema.RequestBody, schema.Reference]],
+    responses: dict[str, Union[schema.Response, schema.Reference]],
+    config: Config,
+) -> tuple[Union["Endpoint", ParseError], Schemas, Parameters]:
+    """Construct an endpoint from the OpenAPI data"""
+
+    if data.operationId is None:
+        name = openapi_python_client.parser.generate_operation_id(path=path, method=method)
+    else:
+        name = data.operationId.replace("-", "_")
+
+    endpoint = Endpoint(
+        path=path,
+        method=method,
+        summary=utils.remove_string_escapes(data.summary) if data.summary else "",
+        description=utils.remove_string_escapes(data.description)
+        if data.description
+        else "",
+        name=name,
+        requires_security=bool(data.security),
+        tags=tags,
+    )
+
+    result, schemas, parameters = Endpoint.add_parameters(
+        endpoint=endpoint,
+        data=data,
+        schemas=schemas,
+        parameters=parameters,
+        config=config,
+    )
+    if isinstance(result, ParseError):
+        return result, schemas, parameters
+    result, schemas = Endpoint._add_responses(
+        endpoint=result,
+        data=data.responses,
+        schemas=schemas,
+        responses=responses,
+        config=config,
+    )
+    if isinstance(result, ParseError):
+        return result, schemas, parameters
+    bodies, schemas = body_from_data(
+        data=data,
+        schemas=schemas,
+        config=config,
+        endpoint_name=result.name,
+        request_bodies=request_bodies,
+    )
+    body_errors = []
+    for body in bodies:
+        if isinstance(body, ParseError):
+            body_errors.append(body)
+            continue
+        result.bodies.append(body)
+        result.relative_imports.update(
+            body.prop.get_imports(prefix=openapi_python_client.parser.openapi.models_relative_prefix)
+        )
+        result.relative_imports.update(
+            body.prop.get_lazy_imports(prefix=openapi_python_client.parser.openapi.models_relative_prefix)
+        )
+    if len(result.bodies) > 0:
+        result.errors.extend(body_errors)
+    elif len(body_errors) > 0:
+        return (
+            ParseError(
+                header="Endpoint requires a body, but none were parseable.",
+                detail="\n".join(error.detail or "" for error in body_errors),
+            ),
+            schemas,
+            parameters,
+        )
+
+    return result, schemas, parameters
+
+openapi_python_client.parser.openapi.Endpoint.from_data = from_data
 
 def _load_openapi(api_id: str, use_cached: bool):
     CACHE_DIR.mkdir(parents=True, exist_ok=True)

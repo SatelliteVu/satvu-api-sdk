@@ -64,6 +64,7 @@ class SatVuProject(Project):
                 endpoints.append(endpoint)
 
         api_class_path = api_dir / "api.py"
+        endpoint_template.environment.filters["split"] = lambda s, sep: s.split(sep)
         api_class_path.write_text(
             endpoint_template.render(
                 endpoints=endpoints,

@@ -27,7 +27,7 @@
 {% endmacro %}
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, TypedDict
+from typing import TYPE_CHECKING, TypedDict, Any
 
 {% for relative in model.relative_imports | sort %}
 {{ relative }}

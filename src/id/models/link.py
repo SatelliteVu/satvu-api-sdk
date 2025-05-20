@@ -1,7 +1,8 @@
-from typing import TypedDict
+from dataclasses import dataclass
 
 
-class Link(TypedDict):
+@dataclass
+class Link:
     """
     Attributes:
         href (str): The link in the format of a URL.
@@ -10,3 +11,13 @@ class Link(TypedDict):
 
     href: str
     rel: str
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            "href",
+            "rel",
+        }

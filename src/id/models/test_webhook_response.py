@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING, TypedDict
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
 from uuid import UUID
 
 if TYPE_CHECKING:
@@ -6,7 +7,8 @@ if TYPE_CHECKING:
     from ..models.webhook_result import WebhookResult
 
 
-class TestWebhookResponse(TypedDict):
+@dataclass
+class TestWebhookResponse:
     """
     Attributes:
         active (bool): Whether the webhook is active.
@@ -23,3 +25,17 @@ class TestWebhookResponse(TypedDict):
     url: str
     id: UUID
     webhook_result: "WebhookResult"
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            "active",
+            "event_types",
+            "name",
+            "url",
+            "id",
+            "webhook_result",
+        }

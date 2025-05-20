@@ -1,12 +1,24 @@
-from typing import Literal, TypedDict
+from dataclasses import dataclass
+from typing import Literal
 
 
-class GeojsonPolygon(TypedDict):
+@dataclass
+class GeojsonPolygon:
     """
     Attributes:
-        type_ (Literal['Polygon']):
+        type (Literal['Polygon']):
         coordinates (list[list[list[float]]]):
     """
 
-    type_: Literal["Polygon"]
+    type: Literal["Polygon"]
     coordinates: list[list[list[float]]]
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            "type",
+            "coordinates",
+        }

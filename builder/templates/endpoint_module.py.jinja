@@ -75,7 +75,8 @@ timeout=60 if redirect else 5,
 {% if endpoint.summary %}{{ endpoint.summary | wordwrap(100)}}
 
 {% endif -%}
-{%- if endpoint.description %} {{ endpoint.description | wordwrap(100) }}
+{%- if endpoint.description %}
+{{ endpoint.description | wordwrap(100) }}
 
 {% endif %}
 {% if not endpoint.summary and not endpoint.description %}
@@ -99,6 +100,25 @@ Returns:
 {%- macro docstring(endpoint, return_string, is_detailed) %}
 {{ safe_docstring(docstring_content(endpoint, return_string)) }}
 {% endmacro %}
+
+{% set ns = namespace(types=[]) %}
+
+{% macro get_union_types(union_str) %}
+{# Extract types from a Union[...] string #}
+{% if union_str.startswith("Union[") %}
+    {% set inner = union_str | replace("Union[", "") | replace("]", "") %}
+    {% set raw_types = inner | split(",") %}
+    {% set types = [] %}
+    {% for t in raw_types %}
+      {% set clean = t | replace("'", "") | trim %}
+      {% set _ = types.append(clean) %}
+    {% endfor %}
+    {% set ns.types = types %}
+{% else %}
+    [type_string]
+{% endif %}
+{% endmacro %}
+
 from collections.abc import Callable
 from typing import Any, Unpack
 
@@ -137,10 +157,26 @@ class {{ api_id | title }}Service(SDKClient):
 
         {% for response in success_responses %}
         if response.status_code == {{ response.status_code }}:
-            {% if response.prop.get_type_string(quoted=True) == 'Any' %}
+        {% if response.prop.get_type_string(quoted=True).startswith("Union[") %}
+            # Handle Union of response types
+            response_data = response.json()
+            response_fields = list(response_data.keys())
+        {{ get_union_types(response.prop.get_type_string(quoted=True)) }}
+            response_models = [{{ ns.types | join(", ") }}]
+
+            for response_model in sorted(response_models, key=lambda x: len(response_model.get_required_fields()), reverse=True):
+                if response_model.get_required_fields().issubset(response_fields):
+                    return response_model(**response_data)
+
+        {% else %}
+            {% set response_type = response.prop.get_type_string(quoted=False) %}
+            {% if response_type == 'Any' %}
             return response.json()
             {% else %}
             return {{ response.prop.get_type_string(quoted=False) }}(**response.json())
             {% endif %}
+
+        {% endif %}
         {% endfor %}
+        return response.json()
     {% endfor %}

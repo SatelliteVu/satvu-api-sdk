@@ -1,10 +1,12 @@
-from typing import TypedDict, Union
+from dataclasses import dataclass
+from typing import Union
 
 from ..models.webhook_failure_title import WebhookFailureTitle
 from ..types import UNSET, Unset
 
 
-class WebhookResult(TypedDict):
+@dataclass
+class WebhookResult:
     """
     Attributes:
         success (bool): Whether the request to the webhook URL was successful.
@@ -17,3 +19,12 @@ class WebhookResult(TypedDict):
     status_code: Union[None, Unset, int] = UNSET
     title: Union[None, Unset, WebhookFailureTitle] = UNSET
     detail: Union[None, Unset, str] = UNSET
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            "success",
+        }

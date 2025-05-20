@@ -1,9 +1,11 @@
-from typing import Literal, TypedDict, Union
+from dataclasses import dataclass
+from typing import Literal, Union
 
 from ..types import Unset
 
 
-class NotificationConfig(TypedDict):
+@dataclass
+class NotificationConfig:
     """
     Attributes:
         topic (Literal['tasking:order_status']): Notification topic.
@@ -12,3 +14,12 @@ class NotificationConfig(TypedDict):
 
     topic: Literal["tasking:order_status"]
     email: Union[Unset, bool] = False
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            "topic",
+        }

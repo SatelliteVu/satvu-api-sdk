@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING, TypedDict, Union
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Union
 
 if TYPE_CHECKING:
     from ..models.feature_collection_order import FeatureCollectionOrder
@@ -8,7 +9,8 @@ if TYPE_CHECKING:
     )
 
 
-class OrderPage(TypedDict):
+@dataclass
+class OrderPage:
     """
     Attributes:
         orders (list[Union['FeatureCollectionOrder', 'ResellerFeatureCollectionOrder']]): A list of existing orders
@@ -18,3 +20,13 @@ class OrderPage(TypedDict):
 
     orders: list[Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"]]
     links: list["Link"]
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            "orders",
+            "links",
+        }

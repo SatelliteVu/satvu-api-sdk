@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING, TypedDict
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ..models.link import Link
@@ -6,7 +7,8 @@ if TYPE_CHECKING:
     from ..models.webhook_response import WebhookResponse
 
 
-class ListWebhookResponse(TypedDict):
+@dataclass
+class ListWebhookResponse:
     """
     Attributes:
         webhooks (list['WebhookResponse']): List of webhooks.
@@ -17,3 +19,14 @@ class ListWebhookResponse(TypedDict):
     webhooks: list["WebhookResponse"]
     context: "ListResponseContext"
     links: list["Link"]
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            "webhooks",
+            "context",
+            "links",
+        }

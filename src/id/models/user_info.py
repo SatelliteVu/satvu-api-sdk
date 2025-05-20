@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING, TypedDict, Union
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Union
 
 from ..types import UNSET, Unset
 
@@ -6,7 +7,8 @@ if TYPE_CHECKING:
     from ..models.user_metadata import UserMetadata
 
 
-class UserInfo(TypedDict):
+@dataclass
+class UserInfo:
     """
     Attributes:
         user_id (str): The ID of the user.
@@ -21,3 +23,14 @@ class UserInfo(TypedDict):
     email: str
     user_metadata: Union[Unset, "UserMetadata"] = UNSET
     last_login: Union[None, Unset, str] = UNSET
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            "user_id",
+            "name",
+            "email",
+        }

@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING, TypedDict, Union
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Union
 
 if TYPE_CHECKING:
     from ..models.stac_metadata_assets import StacMetadataAssets
@@ -6,7 +7,8 @@ if TYPE_CHECKING:
     from ..models.stac_properties_v5 import StacPropertiesV5
 
 
-class StacMetadata(TypedDict):
+@dataclass
+class StacMetadata:
     """
     Attributes:
         id (str): The unique image identifier.
@@ -21,3 +23,16 @@ class StacMetadata(TypedDict):
     assets: "StacMetadataAssets"
     bbox: list[Union[float, int]]
     properties: Union["StacPropertiesV4", "StacPropertiesV5"]
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            "id",
+            "collection",
+            "assets",
+            "bbox",
+            "properties",
+        }

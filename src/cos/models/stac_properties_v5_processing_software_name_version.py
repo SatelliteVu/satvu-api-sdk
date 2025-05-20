@@ -1,5 +1,13 @@
-from typing import TypedDict
+from dataclasses import dataclass
 
 
-class StacPropertiesV5ProcessingSoftwareNameVersion(TypedDict):
+@dataclass
+class StacPropertiesV5ProcessingSoftwareNameVersion:
     """ """
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {}

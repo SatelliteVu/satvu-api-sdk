@@ -1,5 +1,6 @@
 import datetime
-from typing import TYPE_CHECKING, TypedDict, Union
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Union
 from uuid import UUID
 
 from ..types import UNSET, Unset
@@ -9,7 +10,8 @@ if TYPE_CHECKING:
     from ..models.stac_metadata import StacMetadata
 
 
-class Order(TypedDict):
+@dataclass
+class Order:
     """
     Attributes:
         item_id (Union[list[str], str]): Item ID.
@@ -24,3 +26,15 @@ class Order(TypedDict):
     created_at: datetime.datetime
     price: "Price"
     stac_metadata: Union["StacMetadata", None, Unset] = UNSET
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            "item_id",
+            "order_id",
+            "created_at",
+            "price",
+        }

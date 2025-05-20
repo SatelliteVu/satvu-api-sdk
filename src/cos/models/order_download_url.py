@@ -1,7 +1,8 @@
-from typing import TypedDict
+from dataclasses import dataclass
 
 
-class OrderDownloadUrl(TypedDict):
+@dataclass
+class OrderDownloadUrl:
     """
     Attributes:
         url (str): The presigned download URL for the order.
@@ -10,3 +11,13 @@ class OrderDownloadUrl(TypedDict):
 
     url: str
     ttl: int
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            "url",
+            "ttl",
+        }

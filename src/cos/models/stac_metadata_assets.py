@@ -1,5 +1,13 @@
-from typing import TypedDict
+from dataclasses import dataclass
 
 
-class StacMetadataAssets(TypedDict):
+@dataclass
+class StacMetadataAssets:
     """A dictionary of asset objects that can be downloaded, each with a unique key."""
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {}

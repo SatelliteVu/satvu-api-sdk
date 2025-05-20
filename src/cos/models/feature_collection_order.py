@@ -1,5 +1,6 @@
 import datetime
-from typing import TYPE_CHECKING, Literal, TypedDict, Union
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Literal, Union
 from uuid import UUID
 
 from ..types import UNSET, Unset
@@ -9,7 +10,8 @@ if TYPE_CHECKING:
     from ..models.price import Price
 
 
-class FeatureCollectionOrder(TypedDict):
+@dataclass
+class FeatureCollectionOrder:
     """
     Attributes:
         id (UUID): Order ID.
@@ -18,7 +20,7 @@ class FeatureCollectionOrder(TypedDict):
         created_at (datetime.datetime): The datetime at which the order was created.
         contract_id (UUID): Contract ID.
         price (Price):
-        type_ (Union[Literal['FeatureCollection'], Unset]):  Default: 'FeatureCollection'.
+        type (Union[Literal['FeatureCollection'], Unset]):  Default: 'FeatureCollection'.
         updated_at (Union[None, Unset, datetime.datetime]): The datetime at which the order was updated.
     """
 
@@ -28,5 +30,19 @@ class FeatureCollectionOrder(TypedDict):
     created_at: datetime.datetime
     contract_id: UUID
     price: "Price"
-    type_: Union[Literal["FeatureCollection"], Unset] = "FeatureCollection"
+    type: Union[Literal["FeatureCollection"], Unset] = "FeatureCollection"
     updated_at: Union[None, Unset, datetime.datetime] = UNSET
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            "id",
+            "features",
+            "owned_by",
+            "created_at",
+            "contract_id",
+            "price",
+        }

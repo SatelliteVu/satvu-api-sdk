@@ -1,10 +1,20 @@
-from typing import TypedDict
+from dataclasses import dataclass
 
 
-class ClientID(TypedDict):
+@dataclass
+class ClientID:
     """
     Attributes:
         client_id (str):
     """
 
     client_id: str
+
+    @staticmethod
+    def get_required_fields() -> set[str]:
+        """
+        Returns the set of required fields for the model.
+        """
+        return {
+            "client_id",
+        }

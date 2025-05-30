@@ -66,6 +66,7 @@ params=params,
 {%- if follow_redirects -%}
 follow_redirects=redirect,
 timeout=60 if redirect else 5,
+{# TODO: probably want to allow users to choose timeout #}
 {%- endif -%}
 )
 {% endfilter %}
@@ -140,6 +141,7 @@ class {{ api_id | title }}Service(SDKClient):
     {% set success_responses = endpoint.responses | selectattr("status_code.is_success") | list %}
     {% set redirect_response = endpoint.responses | selectattr("status_code.is_redirection") | list %}
     {% set return_string = endpoint.responses[0].prop.get_type_string(quoted=False) %}
+    {# TODO: Update return_string to handle multiple success responses #}
     def {{ endpoint.method }}_{{ endpoint.name }}(self, {{ arguments(endpoint) }}) -> {{ return_string }}:
         {{ docstring(endpoint, return_string, is_detailed=true) }}
         {% if redirect_response | length > 0 %}
@@ -150,7 +152,7 @@ class {{ api_id | title }}Service(SDKClient):
 
         {% if redirect_response %}
         if response.headers.get("Content-Type") == 'application/zip':
-            import io
+            import io {# TODO: import at top of file #}
             zip_bytes = io.BytesIO(response.content)
             return zip_bytes
         {% endif %}

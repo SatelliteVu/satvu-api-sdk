@@ -103,6 +103,7 @@ class SatVuProject(Project):
     def body_docstrings(self, body: Body) -> list[str]:
         docstrings = []
         if isinstance(body.prop, UnionProperty):
+            # TODO: Agree a way to document unions
             models = body.prop.inner_properties
             docstring = "Either"
             for model in models:

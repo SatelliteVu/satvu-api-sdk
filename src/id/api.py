@@ -36,8 +36,8 @@ class IdService(SDKClient):
 
         Args:
 
-            Returns:
-                ClientID
+        Returns:
+            ClientID
         """
 
         response = self.make_request(
@@ -62,8 +62,8 @@ class IdService(SDKClient):
 
         Args:
 
-            Returns:
-                ClientCredentials
+        Returns:
+            ClientCredentials
         """
 
         response = self.make_request(
@@ -85,8 +85,8 @@ class IdService(SDKClient):
 
         Args:
 
-            Returns:
-                ClientCredentials
+        Returns:
+            ClientCredentials
         """
 
         response = self.make_request(
@@ -108,8 +108,8 @@ class IdService(SDKClient):
 
         Args:
 
-            Returns:
-                UserInfo
+        Returns:
+            UserInfo
         """
 
         response = self.make_request(
@@ -131,11 +131,11 @@ class IdService(SDKClient):
 
         Args:
             notifications (Union[None, Unset, list['NotificationUpdate']]): Update user notifications
-        settings.A full list of notification preferences can be found with the GET user details
-        endpoint. Sending empty or null objects will not modify existing preferences.
+                settings.A full list of notification preferences can be found with the GET user details
+                endpoint. Sending empty or null objects will not modify existing preferences.
 
-            Returns:
-                UserInfo
+        Returns:
+            UserInfo
         """
 
         response = self.make_request(
@@ -160,8 +160,8 @@ class IdService(SDKClient):
         Args:
             contract_id (UUID): Contract ID
 
-            Returns:
-                ClientID
+        Returns:
+            ClientID
         """
 
         response = self.make_request(
@@ -188,8 +188,8 @@ class IdService(SDKClient):
         Args:
             contract_id (UUID): Contract ID
 
-            Returns:
-                ClientCredentials
+        Returns:
+            ClientCredentials
         """
 
         response = self.make_request(
@@ -213,8 +213,8 @@ class IdService(SDKClient):
         Args:
             contract_id (UUID): Contract ID
 
-            Returns:
-                ClientCredentials
+        Returns:
+            ClientCredentials
         """
 
         response = self.make_request(
@@ -238,8 +238,8 @@ class IdService(SDKClient):
         Args:
             contract_id (UUID): Contract ID
 
-            Returns:
-                UserInfoDeprecated
+        Returns:
+            UserInfoDeprecated
         """
 
         response = self.make_request(
@@ -258,14 +258,14 @@ class IdService(SDKClient):
     ) -> CreditBalanceResponse:
         """Credit
 
-                Returns the credit balance for the current billing cycle (UTC calendar month). This is calculated
+        Returns the credit balance for the current billing cycle (UTC calendar month). This is calculated
         as the monthly credit limit for the contract minus the total credits used this month.
 
-                Args:
-                    contract_id (UUID): Contract ID.
+        Args:
+            contract_id (UUID): Contract ID.
 
-                    Returns:
-                        CreditBalanceResponse
+        Returns:
+            CreditBalanceResponse
         """
 
         response = self.make_request(
@@ -291,8 +291,8 @@ class IdService(SDKClient):
             per_page (Union[Unset, int]): The number of webhooks to return per page. Default: 25.
             token (Union[None, Unset, str]): The pagination token
 
-            Returns:
-                ListWebhookResponse
+        Returns:
+            ListWebhookResponse
         """
 
         params: dict[str, Any] = {}
@@ -325,13 +325,14 @@ class IdService(SDKClient):
         Create a webhook.
 
         Args:
-            event_types (list[WebhookEvent]): A list of events to subscribe to.
+            event_types (list[Union[ResellerWebhookEvent, WebhookEvent]]): A list of events to
+                subscribe to.
             name (str): The name of the webhook.
             url (str): The URL where you want to receive requests for events you are subscribed to.
-        Must be HTTPS.
+                Must be HTTPS.
 
-            Returns:
-                CreateWebhookResponse
+        Returns:
+            CreateWebhookResponse
         """
 
         response = self.make_request(
@@ -356,8 +357,8 @@ class IdService(SDKClient):
         Args:
             id (UUID): The webhook ID.
 
-            Returns:
-                WebhookResponse
+        Returns:
+            WebhookResponse
         """
 
         response = self.make_request(
@@ -381,8 +382,8 @@ class IdService(SDKClient):
         Args:
             id (UUID): The webhook ID.
 
-            Returns:
-                Any
+        Returns:
+            Any
         """
 
         response = self.make_request(
@@ -405,11 +406,12 @@ class IdService(SDKClient):
         Args:
             id (UUID): The webhook ID.
             active (Union[Unset, bool]): Whether the webhook should be active or not.
-            event_types (Union[Unset, list[WebhookEvent]]): A list of events to subscribe to.
+            event_types (Union[Unset, list[Union[ResellerWebhookEvent, WebhookEvent]]]): A list of
+                events to subscribe to.
             name (Union[Unset, str]): The name of the webhook.
 
-            Returns:
-                WebhookResponse
+        Returns:
+            WebhookResponse
         """
 
         response = self.make_request(
@@ -432,8 +434,8 @@ class IdService(SDKClient):
 
         Args:
 
-            Returns:
-                list['NotificationDescription']
+        Returns:
+            list['NotificationDescription']
         """
 
         response = self.make_request(
@@ -457,8 +459,8 @@ class IdService(SDKClient):
         Args:
             id (UUID): The webhook ID.
 
-            Returns:
-                PostWebhookResponse
+        Returns:
+            PostWebhookResponse
         """
 
         response = self.make_request(
@@ -482,8 +484,8 @@ class IdService(SDKClient):
         Args:
             id (UUID): The webhook ID.
 
-            Returns:
-                TestWebhookResponse
+        Returns:
+            TestWebhookResponse
         """
 
         response = self.make_request(

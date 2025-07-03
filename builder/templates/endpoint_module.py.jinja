@@ -52,7 +52,6 @@ params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
 {# Prepare request #}
 {%- macro make_request(endpoint, follow_redirects=False) %}
-{% filter indent(width=8) %}
 {%- if endpoint.query_parameters -%}
 {{ query_params(endpoint) }}
 {%- endif -%}
@@ -69,7 +68,6 @@ timeout=60 if redirect else 5,
 {# TODO: probably want to allow users to choose timeout #}
 {%- endif -%}
 )
-{% endfilter %}
 {% endmacro %}
 
 {%- macro docstring_content(endpoint, return_string) %}
@@ -99,7 +97,7 @@ Returns:
 {% endmacro %}
 
 {%- macro docstring(endpoint, return_string, is_detailed) %}
-{{ safe_docstring(docstring_content(endpoint, return_string)) }}
+{{ safe_docstring('\n' ~ docstring_content(endpoint, return_string)) | indent(8) }}
 {% endmacro %}
 
 {% set ns = namespace(types=[]) %}
@@ -119,11 +117,13 @@ Returns:
     [type_string]
 {% endif %}
 {% endmacro %}
+import io
 
 from collections.abc import Callable
 from typing import Any, Unpack
 
 from satvu_api_sdk.core import SDKClient
+from satvu_api_sdk.utils import disambiguate_union_response
 
 {% for endpoint in endpoints %}
 {% for relative in endpoint.relative_imports | sort %}
@@ -145,40 +145,29 @@ class {{ api_id | title }}Service(SDKClient):
     def {{ endpoint.method }}_{{ endpoint.name }}(self, {{ arguments(endpoint) }}) -> {{ return_string }}:
         {{ docstring(endpoint, return_string, is_detailed=true) }}
         {% if redirect_response | length > 0 %}
-        {{ make_request(endpoint, follow_redirects=True) }}
+        {{ make_request(endpoint, follow_redirects=True) | indent(8) }}
         {% else %}
-        {{ make_request(endpoint) }}
+        {{ make_request(endpoint) | indent(8) }}
         {% endif %}
 
         {% if redirect_response %}
         if response.headers.get("Content-Type") == 'application/zip':
-            import io {# TODO: import at top of file #}
             zip_bytes = io.BytesIO(response.content)
             return zip_bytes
         {% endif %}
 
         {% for response in success_responses %}
         if response.status_code == {{ response.status_code }}:
-        {% if response.prop.get_type_string(quoted=True).startswith("Union[") %}
-            # Handle Union of response types
-            response_data = response.json()
-            response_fields = list(response_data.keys())
-        {{ get_union_types(response.prop.get_type_string(quoted=True)) }}
-            response_models = [{{ ns.types | join(", ") }}]
-
-            for response_model in sorted(response_models, key=lambda x: len(response_model.get_required_fields()), reverse=True):
-                if response_model.get_required_fields().issubset(response_fields):
-                    return response_model(**response_data)
-
-        {% else %}
             {% set response_type = response.prop.get_type_string(quoted=False) %}
-            {% if response_type == 'Any' %}
+            {% if response_type.startswith("Union[") %}
+            # Use centrally-defined union disambiguation (handles recursive matching and discriminators)
+            response_data = response.json()
+            return disambiguate_union_response(response_data, {{ endpoint.response_disambiguation }})
+            {% elif response_type == 'Any' %}
             return response.json()
             {% else %}
-            return {{ response.prop.get_type_string(quoted=False) }}(**response.json())
+            return {{ response_type }}(**response.json())
             {% endif %}
-
-        {% endif %}
         {% endfor %}
         return response.json()
     {% endfor %}

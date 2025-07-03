@@ -1,0 +1,23 @@
+{% macro get_runtime_type(property) %}
+    {%- if property.get_base_type_string() == "str" -%}
+str
+    {%- elif property.get_base_type_string() == "int" -%}
+int
+    {%- elif property.get_base_type_string() == "float" -%}
+float
+    {%- elif property.get_base_type_string() == "bool" -%}
+bool
+    {%- elif property.get_base_type_string() == "UUID" -%}
+UUID
+    {%- elif property.is_enum -%}
+{{ property.get_type_string(quoted=False) }}
+    {%- elif property.is_list -%}
+list
+    {%- elif property.is_union -%}
+object
+    {%- elif property.is_model -%}
+{{ property.get_type_string(quoted=False) }}
+    {%- else -%}
+object
+    {%- endif %}
+{% endmacro %}

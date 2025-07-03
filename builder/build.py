@@ -131,6 +131,60 @@ def _load_openapi(api_id: str, use_cached: bool):
 @dataclass
 class SatVuEndpoint(Endpoint):
     body_docstrings: list[str] | None = None
+    response_disambiguation: dict | None = None
+
+
+def build_response_disambiguation(endpoint, models_by_name):
+    """
+    For each response, if a Union type, build a dict describing how to disambiguate.
+    Returns a dict for use in the template, or None if not needed.
+    """
+    # Find the first successful response (e.g. 200, 201, etc)
+    for resp in endpoint.responses:
+        # Only look at successful responses for now
+        if not resp.status_code.is_success:
+            continue
+        resp_type = resp.prop.get_type_string(quoted=False)
+        if resp_type.startswith("Union["):
+            # Parse the union types
+            inner = resp_type[len("Union["):-1]
+            model_names = [name.strip().replace("'", "") for name in inner.split(",")]
+            fallback_models = model_names
+            # Try to find discriminator info
+            # This requires looking up the OpenAPI schema for this response
+            discriminator_property = None
+            model_map = {}
+            uses_discriminator = False
+
+            # Try to find which model, if any, has a discriminator
+            for name in model_names:
+                model_cls = models_by_name.get(name)
+                if not model_cls:
+                    continue
+                # If your model dataclass has _discriminator info, use it (pseudo-code)
+                # This is OpenAPI specific: you might need to load this from schemas/components
+                # For now, let's assume you have model_cls._discriminator_property and model_cls._discriminator_mapping
+                discriminator = getattr(model_cls, "_discriminator_property", None)
+                mapping = getattr(model_cls, "_discriminator_mapping", None)
+                if discriminator and mapping:
+                    discriminator_property = discriminator
+                    model_map = mapping
+                    uses_discriminator = True
+                    break  # Use the first found
+
+            if uses_discriminator:
+                return {
+                    "uses_discriminator": True,
+                    "discriminator_property": discriminator_property,
+                    "model_map": model_map,
+                    "fallback_models": fallback_models,
+                }
+            else:
+                return {
+                    "uses_discriminator": False,
+                    "fallback_models": fallback_models,
+                }
+    return None
 
 
 # Override
@@ -147,12 +201,16 @@ class SatVuProject(Project):
             "endpoint_module.py.jinja", globals={"isbool": lambda obj: obj.get_base_type_string() == "bool"}
         )
         endpoints: list[Endpoint] = []
+
         for endpoint_collection in endpoint_collections_by_tag.values():
             for endpoint in endpoint_collection.endpoints:
                 body_docstrings = []
                 if endpoint.bodies:
                     body_docstrings = self.body_docstrings(endpoint.bodies[0])
-                endpoint = SatVuEndpoint(body_docstrings=body_docstrings, **vars(endpoint))
+                response_disambiguation = build_response_disambiguation(
+                    endpoint, {}
+                )
+                endpoint = SatVuEndpoint(body_docstrings=body_docstrings, response_disambiguation=response_disambiguation, **vars(endpoint))
                 endpoints.append(endpoint)
 
         api_class_path = api_dir / "api.py"

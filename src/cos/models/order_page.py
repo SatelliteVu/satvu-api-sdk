@@ -30,3 +30,20 @@ class OrderPage:
             "orders",
             "links",
         }
+
+    @staticmethod
+    def get_required_fields_and_types() -> dict:
+        """
+        Returns a mapping of required fields to their types or nested model classes.
+        """
+        return {
+            "orders": object,
+            "links": object,
+        }
+
+    @staticmethod
+    def get_optional_fields_and_types() -> dict:
+        """
+        Returns a mapping of optional fields to their types or nested model classes.
+        """
+        return {}

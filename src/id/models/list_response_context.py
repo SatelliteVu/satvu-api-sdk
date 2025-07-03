@@ -24,3 +24,21 @@ class ListResponseContext:
             "matched",
             "returned",
         }
+
+    @staticmethod
+    def get_required_fields_and_types() -> dict:
+        """
+        Returns a mapping of required fields to their types or nested model classes.
+        """
+        return {
+            "per_page": int,
+            "matched": int,
+            "returned": int,
+        }
+
+    @staticmethod
+    def get_optional_fields_and_types() -> dict:
+        """
+        Returns a mapping of optional fields to their types or nested model classes.
+        """
+        return {}

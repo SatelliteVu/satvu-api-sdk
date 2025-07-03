@@ -30,7 +30,8 @@ class IdService(SDKClient):
     def get_get_user_client_client_get(
         self,
     ) -> ClientID:
-        """Get User Client
+        """
+        Get User Client
 
         Retrieves the Client ID of an API user.
 
@@ -47,16 +48,15 @@ class IdService(SDKClient):
 
         if response.status_code == 200:
             return ClientID(**response.json())
-
         if response.status_code == 204:
             return response.json()
-
         return response.json()
 
     def post_create_user_client_client_post(
         self,
     ) -> ClientCredentials:
-        """Create User Client
+        """
+        Create User Client
 
         Creates an M2M client to grant API access to a user.
 
@@ -73,13 +73,13 @@ class IdService(SDKClient):
 
         if response.status_code == 201:
             return ClientCredentials(**response.json())
-
         return response.json()
 
     def post_rotate_client_secret_client_reset_post(
         self,
     ) -> ClientCredentials:
-        """Rotate Client Secret
+        """
+        Rotate Client Secret
 
         Generates a new client secret for the M2M client associated with an API user.
 
@@ -96,13 +96,13 @@ class IdService(SDKClient):
 
         if response.status_code == 200:
             return ClientCredentials(**response.json())
-
         return response.json()
 
     def get_get_user_details_user_details_get(
         self,
     ) -> UserInfo:
-        """Get User Details
+        """
+        Get User Details
 
         Retrieves the details of a user.
 
@@ -119,13 +119,13 @@ class IdService(SDKClient):
 
         if response.status_code == 200:
             return UserInfo(**response.json())
-
         return response.json()
 
     def put_edit_user_settings_user_settings_put(
         self, **kwargs: Unpack[UserSettings]
     ) -> UserInfo:
-        """Edit User Settings
+        """
+        Edit User Settings
 
         Updates user settings.
 
@@ -146,14 +146,14 @@ class IdService(SDKClient):
 
         if response.status_code == 200:
             return UserInfo(**response.json())
-
         return response.json()
 
     def get_get_user_client__contract_id__client_get(
         self,
         contract_id: UUID,
     ) -> ClientID:
-        """Get User Client
+        """
+        Get User Client
 
         Retrieves the Client ID of an API user.
 
@@ -171,17 +171,16 @@ class IdService(SDKClient):
 
         if response.status_code == 200:
             return ClientID(**response.json())
-
         if response.status_code == 204:
             return response.json()
-
         return response.json()
 
     def post_create_user_client__contract_id__client_post(
         self,
         contract_id: UUID,
     ) -> ClientCredentials:
-        """Create User Client
+        """
+        Create User Client
 
         Creates an M2M client to grant API access to a user.
 
@@ -199,14 +198,14 @@ class IdService(SDKClient):
 
         if response.status_code == 201:
             return ClientCredentials(**response.json())
-
         return response.json()
 
     def post_rotate_client_secret__contract_id__client_reset_post(
         self,
         contract_id: UUID,
     ) -> ClientCredentials:
-        """Rotate Client Secret
+        """
+        Rotate Client Secret
 
         Generates a new client secret for the M2M client associated with an API user.
 
@@ -224,14 +223,14 @@ class IdService(SDKClient):
 
         if response.status_code == 200:
             return ClientCredentials(**response.json())
-
         return response.json()
 
     def get_get_user_details__contract_id__user_details_get(
         self,
         contract_id: UUID,
     ) -> UserInfoDeprecated:
-        """Get User Details
+        """
+        Get User Details
 
         Retrieves the details of a user.
 
@@ -249,17 +248,20 @@ class IdService(SDKClient):
 
         if response.status_code == 200:
             return UserInfoDeprecated(**response.json())
-
         return response.json()
 
     def get_credit__contract_id__wallet_credit_get(
         self,
         contract_id: UUID,
     ) -> CreditBalanceResponse:
-        """Credit
+        """
+        Credit
 
         Returns the credit balance for the current billing cycle (UTC calendar month). This is calculated
         as the monthly credit limit for the contract minus the total credits used this month.
+
+        Note: This endpoint is deprecated and will be removed in a future release. Please use the
+        equivalent endpoint in the Wallet API - https://api.satellitevu.com/wallet/v1/docs.
 
         Args:
             contract_id (UUID): Contract ID.
@@ -275,7 +277,6 @@ class IdService(SDKClient):
 
         if response.status_code == 200:
             return CreditBalanceResponse(**response.json())
-
         return response.json()
 
     def get_list_webhooks_webhooks__get(
@@ -283,7 +284,8 @@ class IdService(SDKClient):
         per_page: Union[Unset, int] = 25,
         token: Union[None, Unset, str] = UNSET,
     ) -> ListWebhookResponse:
-        """List Webhooks
+        """
+        List Webhooks
 
         List all webhooks.
 
@@ -314,13 +316,13 @@ class IdService(SDKClient):
 
         if response.status_code == 200:
             return ListWebhookResponse(**response.json())
-
         return response.json()
 
     def post_create_webhook_webhooks__post(
         self, **kwargs: Unpack[CoreWebhook]
     ) -> CreateWebhookResponse:
-        """Create Webhook
+        """
+        Create Webhook
 
         Create a webhook.
 
@@ -343,14 +345,14 @@ class IdService(SDKClient):
 
         if response.status_code == 200:
             return CreateWebhookResponse(**response.json())
-
         return response.json()
 
     def get_get_webhook_webhooks__id__get(
         self,
         id: UUID,
     ) -> WebhookResponse:
-        """Get Webhook
+        """
+        Get Webhook
 
         Get information about an existing webhook.
 
@@ -368,14 +370,14 @@ class IdService(SDKClient):
 
         if response.status_code == 200:
             return WebhookResponse(**response.json())
-
         return response.json()
 
     def delete_delete_webhook_webhooks__id__delete(
         self,
         id: UUID,
     ) -> Any:
-        """Delete Webhook
+        """
+        Delete Webhook
 
         Delete a webhook.
 
@@ -393,13 +395,13 @@ class IdService(SDKClient):
 
         if response.status_code == 204:
             return response.json()
-
         return response.json()
 
     def patch_edit_webhook_webhooks__id__patch(
         self, id: UUID, **kwargs: Unpack[EditWebhookPayload]
     ) -> WebhookResponse:
-        """Edit Webhook
+        """
+        Edit Webhook
 
         Edit a webhook.
 
@@ -422,13 +424,13 @@ class IdService(SDKClient):
 
         if response.status_code == 200:
             return WebhookResponse(**response.json())
-
         return response.json()
 
     def get_get_webhook_events_webhooks_events_get(
         self,
     ) -> list["NotificationDescription"]:
-        """Get Webhook Events
+        """
+        Get Webhook Events
 
         View all webhook event types.
 
@@ -445,14 +447,14 @@ class IdService(SDKClient):
 
         if response.status_code == 200:
             return list["NotificationDescription"](**response.json())
-
         return response.json()
 
     def post_rotate_webhook_signing_key_webhooks__id__rotate_post(
         self,
         id: UUID,
     ) -> PostWebhookResponse:
-        """Rotate Webhook Signing Key
+        """
+        Rotate Webhook Signing Key
 
         Rotate the signing key for a webhook.
 
@@ -470,14 +472,14 @@ class IdService(SDKClient):
 
         if response.status_code == 200:
             return PostWebhookResponse(**response.json())
-
         return response.json()
 
     def post_test_webhook_webhooks__id__test_post(
         self,
         id: UUID,
     ) -> TestWebhookResponse:
-        """Test Webhook
+        """
+        Test Webhook
 
         Test a webhook.
 
@@ -495,5 +497,4 @@ class IdService(SDKClient):
 
         if response.status_code == 200:
             return TestWebhookResponse(**response.json())
-
         return response.json()

@@ -59,3 +59,30 @@ class StacPropertiesV4:
             "view:sun_azimuth",
             "view:sun_elevation",
         }
+
+    @staticmethod
+    def get_required_fields_and_types() -> dict:
+        """
+        Returns a mapping of required fields to their types or nested model classes.
+        """
+        return {
+            "datetime": object,
+            "eo:cloud_cover": float,
+            "gsd": float,
+            "platform": str,
+            "proj:epsg": int,
+            "proj:geometry": object,
+            "proj:shape": object,
+            "proj:transform": object,
+            "view:azimuth": float,
+            "view:off_nadir": float,
+            "view:sun_azimuth": float,
+            "view:sun_elevation": float,
+        }
+
+    @staticmethod
+    def get_optional_fields_and_types() -> dict:
+        """
+        Returns a mapping of optional fields to their types or nested model classes.
+        """
+        return {}

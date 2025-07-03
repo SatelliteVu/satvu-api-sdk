@@ -49,3 +49,28 @@ class ResellerFeatureCollectionOrder:
             "price",
             "reseller_end_user_id",
         }
+
+    @staticmethod
+    def get_required_fields_and_types() -> dict:
+        """
+        Returns a mapping of required fields to their types or nested model classes.
+        """
+        return {
+            "id": UUID,
+            "features": object,
+            "owned_by": str,
+            "created_at": object,
+            "contract_id": UUID,
+            "price": object,
+            "reseller_end_user_id": UUID,
+        }
+
+    @staticmethod
+    def get_optional_fields_and_types() -> dict:
+        """
+        Returns a mapping of optional fields to their types or nested model classes.
+        """
+        return {
+            "type": object,
+            "updated_at": object,
+        }

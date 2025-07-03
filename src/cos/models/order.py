@@ -38,3 +38,24 @@ class Order:
             "created_at",
             "price",
         }
+
+    @staticmethod
+    def get_required_fields_and_types() -> dict:
+        """
+        Returns a mapping of required fields to their types or nested model classes.
+        """
+        return {
+            "item_id": object,
+            "order_id": UUID,
+            "created_at": object,
+            "price": object,
+        }
+
+    @staticmethod
+    def get_optional_fields_and_types() -> dict:
+        """
+        Returns a mapping of optional fields to their types or nested model classes.
+        """
+        return {
+            "stac_metadata": object,
+        }

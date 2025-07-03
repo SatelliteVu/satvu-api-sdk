@@ -1,9 +1,14 @@
+import io
 from collections.abc import Callable
 from typing import Any, Union, Unpack
 from uuid import UUID
 
 from satvu_api_sdk.core import SDKClient
+from satvu_api_sdk.utils import disambiguate_union_response
 
+from cos.models.download_order_contract_id_order_id_download_get_collections_type_0_item import (
+    DownloadOrderContractIdOrderIdDownloadGetCollectionsType0Item,
+)
 from cos.models.feature_collection_order import FeatureCollectionOrder
 from cos.models.order_download_url import OrderDownloadUrl
 from cos.models.order_item_download_url import OrderItemDownloadUrl
@@ -25,7 +30,8 @@ class CosService(SDKClient):
         contract_id: UUID,
         order_id: UUID,
     ) -> Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"]:
-        """Order details
+        """
+        Order details
 
         Retrieve order details for a specified Order ID owned by the authenticated user.
 
@@ -45,20 +51,18 @@ class CosService(SDKClient):
         )
 
         if response.status_code == 200:
-            # Handle Union of response types
+            # Use centrally-defined union disambiguation (handles recursive matching and discriminators)
             response_data = response.json()
-            response_fields = list(response_data.keys())
-
-            response_models = [FeatureCollectionOrder, ResellerFeatureCollectionOrder]
-
-            for response_model in sorted(
-                response_models,
-                key=lambda x: len(response_model.get_required_fields()),
-                reverse=True,
-            ):
-                if response_model.get_required_fields().issubset(response_fields):
-                    return response_model(**response_data)
-
+            return disambiguate_union_response(
+                response_data,
+                {
+                    "uses_discriminator": False,
+                    "fallback_models": [
+                        "FeatureCollectionOrder",
+                        "ResellerFeatureCollectionOrder",
+                    ],
+                },
+            )
         return response.json()
 
     def get_query__contract_id___get(
@@ -67,7 +71,8 @@ class CosService(SDKClient):
         limit: Union[None, Unset, int] = 25,
         token: Union[None, Unset, str] = UNSET,
     ) -> OrderPage:
-        """Query orders
+        """
+        Query orders
 
         Retrieve all existing orders owned by the authenticated user.
 
@@ -104,7 +109,6 @@ class CosService(SDKClient):
 
         if response.status_code == 200:
             return OrderPage(**response.json())
-
         return response.json()
 
     def post_submit__contract_id___post(
@@ -112,7 +116,8 @@ class CosService(SDKClient):
         contract_id: UUID,
         **kwargs: Unpack[Union["OrderPayload", "ResellerOrderPayload"]],
     ) -> Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"]:
-        """Submit order
+        """
+        Submit order
 
         Create and submit a new imagery order of one or more items (maximum 100)
         from SatVu's imagery catalog. The order will be owned by the
@@ -137,20 +142,18 @@ class CosService(SDKClient):
         )
 
         if response.status_code == 201:
-            # Handle Union of response types
+            # Use centrally-defined union disambiguation (handles recursive matching and discriminators)
             response_data = response.json()
-            response_fields = list(response_data.keys())
-
-            response_models = [FeatureCollectionOrder, ResellerFeatureCollectionOrder]
-
-            for response_model in sorted(
-                response_models,
-                key=lambda x: len(response_model.get_required_fields()),
-                reverse=True,
-            ):
-                if response_model.get_required_fields().issubset(response_fields):
-                    return response_model(**response_data)
-
+            return disambiguate_union_response(
+                response_data,
+                {
+                    "uses_discriminator": False,
+                    "fallback_models": [
+                        "FeatureCollectionOrder",
+                        "ResellerFeatureCollectionOrder",
+                    ],
+                },
+            )
         return response.json()
 
     def get_download_item__contract_id___order_id___item_id__download_get(
@@ -160,7 +163,8 @@ class CosService(SDKClient):
         item_id: str,
         redirect: Union[Unset, bool] = True,
     ) -> OrderItemDownloadUrl:
-        """Item download
+        """
+        Item download
 
         Download an item, identified by its STAC ID, for a specified imagery order
         owned by the authenticated user.
@@ -195,26 +199,28 @@ class CosService(SDKClient):
         )
 
         if response.headers.get("Content-Type") == "application/zip":
-            import io
-
             zip_bytes = io.BytesIO(response.content)
             return zip_bytes
 
         if response.status_code == 200:
             return OrderItemDownloadUrl(**response.json())
-
         if response.status_code == 202:
             return response.json()
-
         return response.json()
 
     def get_download_order__contract_id___order_id__download_get(
         self,
         contract_id: UUID,
         order_id: UUID,
+        collections: Union[
+            None,
+            Unset,
+            list[DownloadOrderContractIdOrderIdDownloadGetCollectionsType0Item],
+        ] = UNSET,
         redirect: Union[Unset, bool] = True,
     ) -> OrderDownloadUrl:
-        """Order download
+        """
+        Order download
 
         Download all the items for a specified imagery order owned by the authenticated
         user.
@@ -226,6 +232,9 @@ class CosService(SDKClient):
         Args:
             contract_id (UUID): Contract ID.
             order_id (UUID): Order ID.
+            collections (Union[None, Unset,
+                list[DownloadOrderContractIdOrderIdDownloadGetCollectionsType0Item]]): Specify a subset of
+                collections to download. Defaults to None, which will download only the visual product.
             redirect (Union[Unset, bool]): If `true` download the image content locally, otherwise if
                 `false` return a presigned download URL with an expiry. Defaults to `true`. Default: True.
 
@@ -234,6 +243,19 @@ class CosService(SDKClient):
         """
 
         params: dict[str, Any] = {}
+        json_collections: Union[None, Unset, list[str]]
+        if isinstance(collections, Unset):
+            json_collections = UNSET
+        elif isinstance(collections, list):
+            json_collections = []
+            for collections_type_0_item_data in collections:
+                collections_type_0_item = collections_type_0_item_data.value
+                json_collections.append(collections_type_0_item)
+
+        else:
+            json_collections = collections
+        params["collections"] = json_collections
+
         params["redirect"] = redirect
 
         params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
@@ -248,15 +270,11 @@ class CosService(SDKClient):
         )
 
         if response.headers.get("Content-Type") == "application/zip":
-            import io
-
             zip_bytes = io.BytesIO(response.content)
             return zip_bytes
 
         if response.status_code == 200:
             return OrderDownloadUrl(**response.json())
-
         if response.status_code == 202:
             return response.json()
-
         return response.json()

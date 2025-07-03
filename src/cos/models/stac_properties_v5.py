@@ -1,6 +1,9 @@
 import datetime
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
+
+from ..models.satvu_filter import SatvuFilter
+from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
     from ..models.polygon import Polygon
@@ -16,40 +19,59 @@ class StacPropertiesV5:
         datetime_ (datetime.datetime): Acquisition datetime
         created (datetime.datetime): Time at which this STAC item was created
         created_at (datetime.datetime): Time at which this STAC item was created (deprecated - use 'created')
-        eocloud_cover (float): Estimate of cloud cover
         gsd (float): Ground Sampling Distance. Distance in metres between two consecutive pixel centers measured on the
             ground
         platform (str): Platform name. E.g. Hotsat-1
         processingsoftware (StacPropertiesV5ProcessingSoftwareNameVersion):
-        projbbox (list[float]):
         projepsg (int): EPSG code. Defines the geographic coordinate system
-        projgeometry (Polygon):
         projshape (list[int]): Number of pixels in Y and X directions for the default grid
-        projtransform (list[float]): The affine transformation coefficients for the default grid
         viewazimuth (float): Viewing azimuth angle. The angle between the scene centre and true north. Measured
             clockwise from north in degrees.
         viewoff_nadir (float): The angle between satellite nadir and the scene center. Measured in degrees.
         viewsun_azimuth (float): Sun azimuth angle. The angle between truth north and the sun at the scene centre.
             Measured clockwise in degrees.
         viewsun_elevation (float): Sun elevation angle. The angle from the tangent of the scene center to the sun
+        eocloud_cover (Union[None, Unset, float]): Estimate of cloud cover
+        projbbox (Union[None, Unset, list[float]]):
+        projgeometry (Union['Polygon', None, Unset]): Defines the projected footprint.
+        projtransform (Union[None, Unset, list[float]]): The affine transformation coefficients for the default grid
+        satvufilter (Union[None, SatvuFilter, Unset]): Filter used for earth view acquisition
+        satvugeometric_calibration (Union[None, Unset, bool]): Flag indiciating if refined geometric processing was
+            applied
+        satvuradiometric_calibration (Union[None, Unset, bool]): Flag indicating if radiometric calibration parameters
+            are available
+        satvuatmospheric_model (Union[None, Unset, bool]): Flag indicating if atmospheric model parameters are available
+        satvuatmospheric_model_transmission (Union[None, Unset, float]): Atmospheric model transmission
+        satvuatmospheric_model_upwelling (Union[None, Unset, float]): Model upwelling radiance term
+        satvuatmospheric_model_downwelling (Union[None, Unset, float]): Model downwelling radiance term
+        satvusensitivity (Union[None, Unset, float]): Modelled one-sigma brightness temperature temporal noise at 300 K
+            in kelvin
     """
 
     datetime_: datetime.datetime
     created: datetime.datetime
     created_at: datetime.datetime
-    eocloud_cover: float
     gsd: float
     platform: str
     processingsoftware: "StacPropertiesV5ProcessingSoftwareNameVersion"
-    projbbox: list[float]
     projepsg: int
-    projgeometry: "Polygon"
     projshape: list[int]
-    projtransform: list[float]
     viewazimuth: float
     viewoff_nadir: float
     viewsun_azimuth: float
     viewsun_elevation: float
+    eocloud_cover: Union[None, Unset, float] = UNSET
+    projbbox: Union[None, Unset, list[float]] = UNSET
+    projgeometry: Union["Polygon", None, Unset] = UNSET
+    projtransform: Union[None, Unset, list[float]] = UNSET
+    satvufilter: Union[None, SatvuFilter, Unset] = UNSET
+    satvugeometric_calibration: Union[None, Unset, bool] = UNSET
+    satvuradiometric_calibration: Union[None, Unset, bool] = UNSET
+    satvuatmospheric_model: Union[None, Unset, bool] = UNSET
+    satvuatmospheric_model_transmission: Union[None, Unset, float] = UNSET
+    satvuatmospheric_model_upwelling: Union[None, Unset, float] = UNSET
+    satvuatmospheric_model_downwelling: Union[None, Unset, float] = UNSET
+    satvusensitivity: Union[None, Unset, float] = UNSET
 
     @staticmethod
     def get_required_fields() -> set[str]:
@@ -60,17 +82,53 @@ class StacPropertiesV5:
             "datetime",
             "created",
             "created_at",
-            "eo:cloud_cover",
             "gsd",
             "platform",
             "processing:software",
-            "proj:bbox",
             "proj:epsg",
-            "proj:geometry",
             "proj:shape",
-            "proj:transform",
             "view:azimuth",
             "view:off_nadir",
             "view:sun_azimuth",
             "view:sun_elevation",
+        }
+
+    @staticmethod
+    def get_required_fields_and_types() -> dict:
+        """
+        Returns a mapping of required fields to their types or nested model classes.
+        """
+        return {
+            "datetime": object,
+            "created": object,
+            "created_at": object,
+            "gsd": float,
+            "platform": str,
+            "processing:software": object,
+            "proj:epsg": int,
+            "proj:shape": object,
+            "view:azimuth": float,
+            "view:off_nadir": float,
+            "view:sun_azimuth": float,
+            "view:sun_elevation": float,
+        }
+
+    @staticmethod
+    def get_optional_fields_and_types() -> dict:
+        """
+        Returns a mapping of optional fields to their types or nested model classes.
+        """
+        return {
+            "eo:cloud_cover": object,
+            "proj:bbox": object,
+            "proj:geometry": object,
+            "proj:transform": object,
+            "satvu:filter": object,
+            "satvu:geometric_calibration": object,
+            "satvu:radiometric_calibration": object,
+            "satvu:atmospheric_model": object,
+            "satvu:atmospheric_model_transmission": object,
+            "satvu:atmospheric_model_upwelling": object,
+            "satvu:atmospheric_model_downwelling": object,
+            "satvu:sensitivity": object,
         }

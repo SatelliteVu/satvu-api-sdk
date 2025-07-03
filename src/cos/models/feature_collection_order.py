@@ -46,3 +46,27 @@ class FeatureCollectionOrder:
             "contract_id",
             "price",
         }
+
+    @staticmethod
+    def get_required_fields_and_types() -> dict:
+        """
+        Returns a mapping of required fields to their types or nested model classes.
+        """
+        return {
+            "id": UUID,
+            "features": object,
+            "owned_by": str,
+            "created_at": object,
+            "contract_id": UUID,
+            "price": object,
+        }
+
+    @staticmethod
+    def get_optional_fields_and_types() -> dict:
+        """
+        Returns a mapping of optional fields to their types or nested model classes.
+        """
+        return {
+            "type": object,
+            "updated_at": object,
+        }

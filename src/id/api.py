@@ -305,7 +305,7 @@ class IdService(SDKClient):
             json_token = token
         params["token"] = json_token
 
-        params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
+        params = {k: v for k, v in params.items() if v is not None}
         response = self.make_request(
             method="get",
             url="/webhooks/",

@@ -100,7 +100,7 @@ class CosService(SDKClient):
             json_token = token
         params["token"] = json_token
 
-        params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
+        params = {k: v for k, v in params.items() if v is not None}
         response = self.make_request(
             method="get",
             url="/{contract_id}/".format(contract_id=contract_id),
@@ -187,7 +187,7 @@ class CosService(SDKClient):
         params: dict[str, Any] = {}
         params["redirect"] = redirect
 
-        params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
+        params = {k: v for k, v in params.items() if v is not None}
         response = self.make_request(
             method="get",
             url="/{contract_id}/{order_id}/{item_id}/download".format(
@@ -253,7 +253,7 @@ class CosService(SDKClient):
 
         params["redirect"] = redirect
 
-        params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
+        params = {k: v for k, v in params.items() if v is not None}
         response = self.make_request(
             method="get",
             url="/{contract_id}/{order_id}/download".format(

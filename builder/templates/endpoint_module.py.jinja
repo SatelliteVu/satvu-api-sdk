@@ -124,16 +124,19 @@ Returns:
 import io
 
 from collections.abc import Callable
-from typing import Any, Unpack
+from typing import Any, Unpack, Union, List, Dict
 
 from satvu_api_sdk.core import SDKClient
-from satvu_api_sdk.utils import disambiguate_union_response
 
 {% for endpoint in endpoints %}
 {% for relative in endpoint.relative_imports | sort %}
 {{ relative }}
 {% endfor %}
 {% endfor %}
+
+
+{% include 'macros/disambiguate_union_response.jinja' %}
+
 
 class {{ api_id | title }}Service(SDKClient):
     base_path = "{{ base_path }}"

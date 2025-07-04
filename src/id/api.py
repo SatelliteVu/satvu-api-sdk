@@ -128,7 +128,7 @@ class IdService(SDKClient):
         Updates user settings.
 
         Args:
-            notifications (Union[None, Unset, list['NotificationUpdate']]): Update user notifications
+            notifications (Union[None, list['NotificationUpdate']]): Update user notifications
                 settings.A full list of notification preferences can be found with the GET user details
                 endpoint. Sending empty or null objects will not modify existing preferences.
 
@@ -279,8 +279,8 @@ class IdService(SDKClient):
 
     def list_webhooks(
         self,
-        per_page: Union[Unset, int] = 25,
-        token: Union[None, Unset, str] = UNSET,
+        per_page: Union[None, int] = 25,
+        token: Union[None, str] = None,
     ) -> ListWebhookResponse:
         """
         List Webhooks
@@ -288,8 +288,8 @@ class IdService(SDKClient):
         List all webhooks.
 
         Args:
-            per_page (Union[Unset, int]): The number of webhooks to return per page. Default: 25.
-            token (Union[None, Unset, str]): The pagination token
+            per_page (Union[None, int]): The number of webhooks to return per page. Default: 25.
+            token (Union[None, str]): The pagination token
 
         Returns:
             ListWebhookResponse
@@ -298,7 +298,7 @@ class IdService(SDKClient):
         params: dict[str, Any] = {}
         params["per_page"] = per_page
 
-        json_token: Union[None, Unset, str]
+        json_token: Union[None, str]
         if isinstance(token, Unset):
             json_token = UNSET
         else:
@@ -403,10 +403,10 @@ class IdService(SDKClient):
 
         Args:
             id (UUID): The webhook ID.
-            active (Union[Unset, bool]): Whether the webhook should be active or not.
-            event_types (Union[Unset, list[Union[ResellerWebhookEvent, WebhookEvent]]]): A list of
+            active (Union[None, bool]): Whether the webhook should be active or not.
+            event_types (Union[None, list[Union[ResellerWebhookEvent, WebhookEvent]]]): A list of
                 events to subscribe to.
-            name (Union[Unset, str]): The name of the webhook.
+            name (Union[None, str]): The name of the webhook.
 
         Returns:
             WebhookResponse

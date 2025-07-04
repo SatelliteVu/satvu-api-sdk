@@ -114,6 +114,110 @@ def from_data(
 
 openapi_python_client.parser.openapi.Endpoint.from_data = from_data
 
+def get_type_string(
+    self,
+    no_optional: bool = False,
+    json: bool = False,
+    *,
+    quoted: bool = False,
+) -> str:
+    if json:
+        type_string = self.get_base_json_type_string()
+    else:
+        type_string = self.get_base_type_string()
+
+    if no_optional or self.required:
+        return type_string
+    return f"Union[None, {type_string}]"
+
+openapi_python_client.parser.properties.list_property.ListProperty.get_type_string = get_type_string
+
+def to_string(self) -> str:
+    """How this should be declared in a dataclass"""
+    default: str | None
+    if self.default is not None:
+        default = self.default.python_code
+        return f"{self.python_name}: {self.get_type_string(quoted=True)} = {default}"
+    elif not self.required:
+        default = None
+        return f"{self.python_name}: {self.get_type_string(quoted=True)} = {default}"
+    else:
+        return f"{self.python_name}: {self.get_type_string(quoted=True)}"
+
+def get_type_string(
+    self,
+    no_optional: bool = False,
+    json: bool = False,
+    *,
+    quoted: bool = False,
+) -> str:
+    """
+    Get a string representation of type that should be used when declaring this property
+
+    Args:
+        no_optional: Do not include Optional or Unset even if the value is optional (needed for isinstance checks)
+        json: True if the type refers to the property after JSON serialization
+        quoted: True if the type should be wrapped in quotes (if not a base type)
+    """
+    if json:
+        type_string = self.get_base_json_type_string(quoted=quoted)
+    else:
+        type_string = self.get_base_type_string(quoted=quoted)
+
+    if no_optional or self.required:
+        return type_string
+    return f"Union[None, {type_string}]"
+
+openapi_python_client.parser.properties.protocol.PropertyProtocol.to_string = to_string
+openapi_python_client.parser.properties.protocol.PropertyProtocol.get_type_string = get_type_string
+
+
+def get_type_string(
+    self,
+    no_optional: bool = False,
+    json: bool = False,
+    *,
+    quoted: bool = False,
+) -> str:
+    lit = f"Literal[{self.value.python_code}]"
+    if not no_optional and not self.required:
+        return f"Union[{lit}, None]"
+    return lit
+
+openapi_python_client.parser.properties.const.get_type_string = get_type_string
+
+def get_type_strings_in_union(
+    self, *, no_optional: bool = False, json: bool
+) -> set[str]:
+    type_strings = self._get_inner_type_strings(json=json)
+    if no_optional:
+        return type_strings
+    return type_strings
+
+openapi_python_client.parser.properties.union.UnionProperty.get_type_strings_in_union = get_type_strings_in_union
+
+def get_type_string(
+    self,
+    no_optional: bool = False,
+    json: bool = False,
+    *,
+    quoted: bool = False,
+) -> str:
+    if json:
+        type_string = self.get_base_json_type_string()
+    else:
+        type_string = self.get_base_type_string()
+
+    if quoted:
+        if type_string == self.class_info.name:
+            type_string = f"'{type_string}'"
+
+    if no_optional or self.required:
+        return type_string
+    return f"Union[None, {type_string}]"
+
+openapi_python_client.parser.properties.model_property.get_type_string = get_type_string
+
 def _load_openapi(api_id: str, use_cached: bool):
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     openapi_url = f"{BASE_URL.rstrip('/')}/{APIS[api_id]}/openapi.json"

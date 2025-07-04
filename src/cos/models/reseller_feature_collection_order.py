@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Literal, Union
 from uuid import UUID
 
-from ..types import UNSET, Unset
+from ..types import Unset
 
 if TYPE_CHECKING:
     from ..models.feature_order import FeatureOrder
@@ -22,8 +22,8 @@ class ResellerFeatureCollectionOrder:
         price (Price):
         reseller_end_user_id (UUID):
         type (Union[Literal['FeatureCollection'], Unset]):  Default: 'FeatureCollection'.
-        name (Union[None, Unset, str]): The name of the order.
-        updated_at (Union[None, Unset, datetime.datetime]): The datetime at which the order was updated.
+        name (Union[None, str]): The name of the order.
+        updated_at (Union[None, datetime.datetime]): The datetime at which the order was updated.
     """
 
     id: UUID
@@ -34,8 +34,8 @@ class ResellerFeatureCollectionOrder:
     price: "Price"
     reseller_end_user_id: UUID
     type: Union[Literal["FeatureCollection"], Unset] = "FeatureCollection"
-    name: Union[None, Unset, str] = UNSET
-    updated_at: Union[None, Unset, datetime.datetime] = UNSET
+    name: Union[None, str] = None
+    updated_at: Union[None, datetime.datetime] = None
 
     @staticmethod
     def get_required_fields() -> set[str]:

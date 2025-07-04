@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Union
 
-from ..types import UNSET, Unset
+from ..types import Unset
 
 if TYPE_CHECKING:
     from ..models.user_metadata import UserMetadata
@@ -15,14 +15,14 @@ class UserInfo:
         name (str): The name of the user.
         email (str): The email of the user.
         user_metadata (Union[Unset, UserMetadata]):
-        last_login (Union[None, Unset, str]): The datetime at which the user last logged in.
+        last_login (Union[None, str]): The datetime at which the user last logged in.
     """
 
     user_id: str
     name: str
     email: str
-    user_metadata: Union[Unset, "UserMetadata"] = UNSET
-    last_login: Union[None, Unset, str] = UNSET
+    user_metadata: Union[Unset, "UserMetadata"] = None
+    last_login: Union[None, str] = None
 
     @staticmethod
     def get_required_fields() -> set[str]:

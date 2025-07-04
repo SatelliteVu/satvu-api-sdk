@@ -1,4 +1,4 @@
-BASE_URL = "https://api.satellitevu.com/"
+BASE_URL = "https://api.qa.satellitevu.com/"
 
 APIS: dict[str, str] = {
     "catalog": "/catalog/v1",

@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Union
 
-from ..types import UNSET, Unset
-
 if TYPE_CHECKING:
     from ..models.validation_error import ValidationError
 
@@ -11,10 +9,10 @@ if TYPE_CHECKING:
 class HTTPValidationError:
     """
     Attributes:
-        detail (Union[Unset, list['ValidationError']]):
+        detail (Union[None, list['ValidationError']]):
     """
 
-    detail: Union[Unset, list["ValidationError"]] = UNSET
+    detail: Union[None, list["ValidationError"]] = None
 
     @staticmethod
     def get_required_fields() -> set[str]:

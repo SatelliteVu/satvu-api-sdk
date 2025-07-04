@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Union
 
 from ..models.satvu_filter import SatvuFilter
-from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
     from ..models.polygon import Polygon
@@ -31,21 +30,20 @@ class StacPropertiesV5:
         viewsun_azimuth (float): Sun azimuth angle. The angle between truth north and the sun at the scene centre.
             Measured clockwise in degrees.
         viewsun_elevation (float): Sun elevation angle. The angle from the tangent of the scene center to the sun
-        eocloud_cover (Union[None, Unset, float]): Estimate of cloud cover
-        projbbox (Union[None, Unset, list[float]]):
-        projgeometry (Union['Polygon', None, Unset]): Defines the projected footprint.
-        projtransform (Union[None, Unset, list[float]]): The affine transformation coefficients for the default grid
-        satvufilter (Union[None, SatvuFilter, Unset]): Filter used for earth view acquisition
-        satvugeometric_calibration (Union[None, Unset, bool]): Flag indiciating if refined geometric processing was
-            applied
-        satvuradiometric_calibration (Union[None, Unset, bool]): Flag indicating if radiometric calibration parameters
-            are available
-        satvuatmospheric_model (Union[None, Unset, bool]): Flag indicating if atmospheric model parameters are available
-        satvuatmospheric_model_transmission (Union[None, Unset, float]): Atmospheric model transmission
-        satvuatmospheric_model_upwelling (Union[None, Unset, float]): Model upwelling radiance term
-        satvuatmospheric_model_downwelling (Union[None, Unset, float]): Model downwelling radiance term
-        satvusensitivity (Union[None, Unset, float]): Modelled one-sigma brightness temperature temporal noise at 300 K
-            in kelvin
+        eocloud_cover (Union[None, float]): Estimate of cloud cover
+        projbbox (Union[None, list[float]]):
+        projgeometry (Union['Polygon', None]): Defines the projected footprint.
+        projtransform (Union[None, list[float]]): The affine transformation coefficients for the default grid
+        satvufilter (Union[None, SatvuFilter]): Filter used for earth view acquisition
+        satvugeometric_calibration (Union[None, bool]): Flag indiciating if refined geometric processing was applied
+        satvuradiometric_calibration (Union[None, bool]): Flag indicating if radiometric calibration parameters are
+            available
+        satvuatmospheric_model (Union[None, bool]): Flag indicating if atmospheric model parameters are available
+        satvuatmospheric_model_transmission (Union[None, float]): Atmospheric model transmission
+        satvuatmospheric_model_upwelling (Union[None, float]): Model upwelling radiance term
+        satvuatmospheric_model_downwelling (Union[None, float]): Model downwelling radiance term
+        satvusensitivity (Union[None, float]): Modelled one-sigma brightness temperature temporal noise at 300 K in
+            kelvin
     """
 
     datetime_: datetime.datetime
@@ -60,18 +58,18 @@ class StacPropertiesV5:
     viewoff_nadir: float
     viewsun_azimuth: float
     viewsun_elevation: float
-    eocloud_cover: Union[None, Unset, float] = UNSET
-    projbbox: Union[None, Unset, list[float]] = UNSET
-    projgeometry: Union["Polygon", None, Unset] = UNSET
-    projtransform: Union[None, Unset, list[float]] = UNSET
-    satvufilter: Union[None, SatvuFilter, Unset] = UNSET
-    satvugeometric_calibration: Union[None, Unset, bool] = UNSET
-    satvuradiometric_calibration: Union[None, Unset, bool] = UNSET
-    satvuatmospheric_model: Union[None, Unset, bool] = UNSET
-    satvuatmospheric_model_transmission: Union[None, Unset, float] = UNSET
-    satvuatmospheric_model_upwelling: Union[None, Unset, float] = UNSET
-    satvuatmospheric_model_downwelling: Union[None, Unset, float] = UNSET
-    satvusensitivity: Union[None, Unset, float] = UNSET
+    eocloud_cover: Union[None, float] = None
+    projbbox: Union[None, list[float]] = None
+    projgeometry: Union["Polygon", None] = None
+    projtransform: Union[None, list[float]] = None
+    satvufilter: Union[None, SatvuFilter] = None
+    satvugeometric_calibration: Union[None, bool] = None
+    satvuradiometric_calibration: Union[None, bool] = None
+    satvuatmospheric_model: Union[None, bool] = None
+    satvuatmospheric_model_transmission: Union[None, float] = None
+    satvuatmospheric_model_upwelling: Union[None, float] = None
+    satvuatmospheric_model_downwelling: Union[None, float] = None
+    satvusensitivity: Union[None, float] = None
 
     @staticmethod
     def get_required_fields() -> set[str]:

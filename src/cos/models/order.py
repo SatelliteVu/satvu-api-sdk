@@ -3,8 +3,6 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Union
 from uuid import UUID
 
-from ..types import UNSET, Unset
-
 if TYPE_CHECKING:
     from ..models.price import Price
     from ..models.stac_metadata import StacMetadata
@@ -18,16 +16,16 @@ class Order:
         order_id (UUID): Order ID.
         created_at (datetime.datetime): The datetime at which the order was created.
         price (Price):
-        name (Union[None, Unset, str]): Optional name of an order
-        stac_metadata (Union['StacMetadata', None, Unset]): Metadata about the item.
+        name (Union[None, str]): Optional name of an order
+        stac_metadata (Union['StacMetadata', None]): Metadata about the item.
     """
 
     item_id: Union[list[str], str]
     order_id: UUID
     created_at: datetime.datetime
     price: "Price"
-    name: Union[None, Unset, str] = UNSET
-    stac_metadata: Union["StacMetadata", None, Unset] = UNSET
+    name: Union[None, str] = None
+    stac_metadata: Union["StacMetadata", None] = None
 
     @staticmethod
     def get_required_fields() -> set[str]:

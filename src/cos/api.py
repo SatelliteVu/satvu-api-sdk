@@ -68,8 +68,8 @@ class CosService(SDKClient):
     def query_orders(
         self,
         contract_id: UUID,
-        limit: Union[None, Unset, int] = 25,
-        token: Union[None, Unset, str] = UNSET,
+        limit: Union[None, int] = 25,
+        token: Union[None, str] = None,
     ) -> OrderPage:
         """
         Query orders
@@ -78,22 +78,22 @@ class CosService(SDKClient):
 
         Args:
             contract_id (UUID): Contract ID.
-            limit (Union[None, Unset, int]): The number of orders to return per page. Default: 25.
-            token (Union[None, Unset, str]): The pagination token.
+            limit (Union[None, int]): The number of orders to return per page. Default: 25.
+            token (Union[None, str]): The pagination token.
 
         Returns:
             OrderPage
         """
 
         params: dict[str, Any] = {}
-        json_limit: Union[None, Unset, int]
+        json_limit: Union[None, int]
         if isinstance(limit, Unset):
             json_limit = UNSET
         else:
             json_limit = limit
         params["limit"] = json_limit
 
-        json_token: Union[None, Unset, str]
+        json_token: Union[None, str]
         if isinstance(token, Unset):
             json_token = UNSET
         else:
@@ -161,7 +161,7 @@ class CosService(SDKClient):
         contract_id: UUID,
         order_id: UUID,
         item_id: str,
-        redirect: Union[Unset, bool] = True,
+        redirect: Union[None, bool] = True,
     ) -> OrderItemDownloadUrl:
         """
         Item download
@@ -177,7 +177,7 @@ class CosService(SDKClient):
             contract_id (UUID): Contract ID.
             order_id (UUID): Order ID.
             item_id (str): Item ID.
-            redirect (Union[Unset, bool]): If `true` download the image content locally, otherwise if
+            redirect (Union[None, bool]): If `true` download the image content locally, otherwise if
                 `false` return a presigned download URL with an expiry. Defaults to `true`. Default: True.
 
         Returns:
@@ -212,10 +212,8 @@ class CosService(SDKClient):
         self,
         contract_id: UUID,
         order_id: UUID,
-        collections: Union[
-            None, Unset, list[DownloadOrderCollectionsType0Item]
-        ] = UNSET,
-        redirect: Union[Unset, bool] = True,
+        collections: Union[None, list[DownloadOrderCollectionsType0Item]] = None,
+        redirect: Union[None, bool] = True,
     ) -> OrderDownloadUrl:
         """
         Order download
@@ -230,10 +228,9 @@ class CosService(SDKClient):
         Args:
             contract_id (UUID): Contract ID.
             order_id (UUID): Order ID.
-            collections (Union[None, Unset, list[DownloadOrderCollectionsType0Item]]): Specify a
-                subset of collections to download. Defaults to None, which will download only the visual
-                product.
-            redirect (Union[Unset, bool]): If `true` download the image content locally, otherwise if
+            collections (Union[None, list[DownloadOrderCollectionsType0Item]]): Specify a subset of
+                collections to download. Defaults to None, which will download only the visual product.
+            redirect (Union[None, bool]): If `true` download the image content locally, otherwise if
                 `false` return a presigned download URL with an expiry. Defaults to `true`. Default: True.
 
         Returns:
@@ -241,7 +238,7 @@ class CosService(SDKClient):
         """
 
         params: dict[str, Any] = {}
-        json_collections: Union[None, Unset, list[str]]
+        json_collections: Union[None, list[str]]
         if isinstance(collections, Unset):
             json_collections = UNSET
         elif isinstance(collections, list):

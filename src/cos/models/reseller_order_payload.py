@@ -2,8 +2,6 @@ from dataclasses import dataclass
 from typing import Union
 from uuid import UUID
 
-from ..types import UNSET, Unset
-
 
 @dataclass
 class ResellerOrderPayload:
@@ -11,12 +9,12 @@ class ResellerOrderPayload:
     Attributes:
         item_id (Union[list[str], str]): Item ID.
         reseller_end_user_id (UUID):
-        name (Union[None, Unset, str]): Optional name of an order
+        name (Union[None, str]): Optional name of an order
     """
 
     item_id: Union[list[str], str]
     reseller_end_user_id: UUID
-    name: Union[None, Unset, str] = UNSET
+    name: Union[None, str] = None
 
     @staticmethod
     def get_required_fields() -> set[str]:

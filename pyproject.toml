@@ -8,7 +8,7 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
-    "openapi-python-client>=0.24.3",
+    "openapi-python-client>=0.25.2",
 ]
 
 [project.optional-dependencies]

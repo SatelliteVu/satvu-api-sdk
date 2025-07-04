@@ -16,7 +16,6 @@ from cos.models.order_page import OrderPage
 from cos.models.order_payload import OrderPayload
 from cos.models.reseller_feature_collection_order import ResellerFeatureCollectionOrder
 from cos.models.reseller_order_payload import ResellerOrderPayload
-from cos.types import UNSET, Unset
 
 
 class CosService(SDKClient):
@@ -86,18 +85,12 @@ class CosService(SDKClient):
         """
 
         params: dict[str, Any] = {}
-        json_limit: Union[None, int]
-        if isinstance(limit, Unset):
-            json_limit = UNSET
-        else:
-            json_limit = limit
+        json_limit: Union[None, int] = limit
+
         params["limit"] = json_limit
 
-        json_token: Union[None, str]
-        if isinstance(token, Unset):
-            json_token = UNSET
-        else:
-            json_token = token
+        json_token: Union[None, str] = token
+
         params["token"] = json_token
 
         params = {k: v for k, v in params.items() if v is not None}
@@ -238,17 +231,14 @@ class CosService(SDKClient):
         """
 
         params: dict[str, Any] = {}
-        json_collections: Union[None, list[str]]
-        if isinstance(collections, Unset):
-            json_collections = UNSET
-        elif isinstance(collections, list):
+        json_collections: Union[None, list[str]] = collections
+
+        if isinstance(collections, list):
             json_collections = []
             for collections_type_0_item_data in collections:
                 collections_type_0_item = collections_type_0_item_data.value
                 json_collections.append(collections_type_0_item)
 
-        else:
-            json_collections = collections
         params["collections"] = json_collections
 
         params["redirect"] = redirect

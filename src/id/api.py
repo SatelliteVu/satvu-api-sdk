@@ -18,7 +18,6 @@ from id.models.user_info import UserInfo
 from id.models.user_info_deprecated import UserInfoDeprecated
 from id.models.user_settings import UserSettings
 from id.models.webhook_response import WebhookResponse
-from id.types import UNSET, Unset
 
 
 class IdService(SDKClient):
@@ -298,11 +297,8 @@ class IdService(SDKClient):
         params: dict[str, Any] = {}
         params["per_page"] = per_page
 
-        json_token: Union[None, str]
-        if isinstance(token, Unset):
-            json_token = UNSET
-        else:
-            json_token = token
+        json_token: Union[None, str] = token
+
         params["token"] = json_token
 
         params = {k: v for k, v in params.items() if v is not None}

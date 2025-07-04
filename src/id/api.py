@@ -27,7 +27,7 @@ class IdService(SDKClient):
     def __init__(self, get_token: Callable[[], str], env: str | None):
         super().__init__(env=env, get_token=get_token)
 
-    def get_get_user_client_client_get(
+    def get_user_client(
         self,
     ) -> ClientID:
         """
@@ -52,7 +52,7 @@ class IdService(SDKClient):
             return response.json()
         return response.json()
 
-    def post_create_user_client_client_post(
+    def create_user_client(
         self,
     ) -> ClientCredentials:
         """
@@ -75,7 +75,7 @@ class IdService(SDKClient):
             return ClientCredentials(**response.json())
         return response.json()
 
-    def post_rotate_client_secret_client_reset_post(
+    def rotate_client_secret(
         self,
     ) -> ClientCredentials:
         """
@@ -98,7 +98,7 @@ class IdService(SDKClient):
             return ClientCredentials(**response.json())
         return response.json()
 
-    def get_get_user_details_user_details_get(
+    def get_user_details(
         self,
     ) -> UserInfo:
         """
@@ -121,9 +121,7 @@ class IdService(SDKClient):
             return UserInfo(**response.json())
         return response.json()
 
-    def put_edit_user_settings_user_settings_put(
-        self, **kwargs: Unpack[UserSettings]
-    ) -> UserInfo:
+    def edit_user_settings(self, **kwargs: Unpack[UserSettings]) -> UserInfo:
         """
         Edit User Settings
 
@@ -148,7 +146,7 @@ class IdService(SDKClient):
             return UserInfo(**response.json())
         return response.json()
 
-    def get_get_user_client__contract_id__client_get(
+    def get_user_client__contract_id__client_get(
         self,
         contract_id: UUID,
     ) -> ClientID:
@@ -175,7 +173,7 @@ class IdService(SDKClient):
             return response.json()
         return response.json()
 
-    def post_create_user_client__contract_id__client_post(
+    def create_user_client__contract_id__client_post(
         self,
         contract_id: UUID,
     ) -> ClientCredentials:
@@ -200,7 +198,7 @@ class IdService(SDKClient):
             return ClientCredentials(**response.json())
         return response.json()
 
-    def post_rotate_client_secret__contract_id__client_reset_post(
+    def rotate_client_secret__contract_id__client_reset_post(
         self,
         contract_id: UUID,
     ) -> ClientCredentials:
@@ -225,7 +223,7 @@ class IdService(SDKClient):
             return ClientCredentials(**response.json())
         return response.json()
 
-    def get_get_user_details__contract_id__user_details_get(
+    def get_user_details__contract_id__user_details_get(
         self,
         contract_id: UUID,
     ) -> UserInfoDeprecated:
@@ -250,7 +248,7 @@ class IdService(SDKClient):
             return UserInfoDeprecated(**response.json())
         return response.json()
 
-    def get_credit__contract_id__wallet_credit_get(
+    def credit__contract_id__wallet_credit_get(
         self,
         contract_id: UUID,
     ) -> CreditBalanceResponse:
@@ -279,7 +277,7 @@ class IdService(SDKClient):
             return CreditBalanceResponse(**response.json())
         return response.json()
 
-    def get_list_webhooks_webhooks__get(
+    def list_webhooks(
         self,
         per_page: Union[Unset, int] = 25,
         token: Union[None, Unset, str] = UNSET,
@@ -318,9 +316,7 @@ class IdService(SDKClient):
             return ListWebhookResponse(**response.json())
         return response.json()
 
-    def post_create_webhook_webhooks__post(
-        self, **kwargs: Unpack[CoreWebhook]
-    ) -> CreateWebhookResponse:
+    def create_webhook(self, **kwargs: Unpack[CoreWebhook]) -> CreateWebhookResponse:
         """
         Create Webhook
 
@@ -347,7 +343,7 @@ class IdService(SDKClient):
             return CreateWebhookResponse(**response.json())
         return response.json()
 
-    def get_get_webhook_webhooks__id__get(
+    def get_webhook(
         self,
         id: UUID,
     ) -> WebhookResponse:
@@ -372,7 +368,7 @@ class IdService(SDKClient):
             return WebhookResponse(**response.json())
         return response.json()
 
-    def delete_delete_webhook_webhooks__id__delete(
+    def delete_webhook(
         self,
         id: UUID,
     ) -> Any:
@@ -397,7 +393,7 @@ class IdService(SDKClient):
             return response.json()
         return response.json()
 
-    def patch_edit_webhook_webhooks__id__patch(
+    def edit_webhook(
         self, id: UUID, **kwargs: Unpack[EditWebhookPayload]
     ) -> WebhookResponse:
         """
@@ -426,7 +422,7 @@ class IdService(SDKClient):
             return WebhookResponse(**response.json())
         return response.json()
 
-    def get_get_webhook_events_webhooks_events_get(
+    def get_webhook_events(
         self,
     ) -> list["NotificationDescription"]:
         """
@@ -449,7 +445,7 @@ class IdService(SDKClient):
             return list["NotificationDescription"](**response.json())
         return response.json()
 
-    def post_rotate_webhook_signing_key_webhooks__id__rotate_post(
+    def rotate_webhook_signing_key(
         self,
         id: UUID,
     ) -> PostWebhookResponse:
@@ -474,7 +470,7 @@ class IdService(SDKClient):
             return PostWebhookResponse(**response.json())
         return response.json()
 
-    def post_test_webhook_webhooks__id__test_post(
+    def test_webhook(
         self,
         id: UUID,
     ) -> TestWebhookResponse:

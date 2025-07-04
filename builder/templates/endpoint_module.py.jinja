@@ -18,6 +18,9 @@
 
 {# Build url #}
 {%- macro url(endpoint) %}
+{% if endpoint.path_parameters | length == 0 %}
+"{{ endpoint.path }}"
+{% else %}
 "{{ endpoint.path }}".format(
     {%- for parameter in endpoint.path_parameters -%}
     {{parameter.python_name}}={{parameter.python_name}}
@@ -26,6 +29,7 @@
     {%- endif -%}
     {%- endfor -%}
     )
+{% endif %}
 {%- endmacro %}
 
 {# Prepare query params #}

@@ -43,7 +43,7 @@ class IdService(SDKClient):
 
         response = self.make_request(
             method="get",
-            url="/client".format(),
+            url="/client",
         )
 
         if response.status_code == 200:
@@ -68,7 +68,7 @@ class IdService(SDKClient):
 
         response = self.make_request(
             method="post",
-            url="/client".format(),
+            url="/client",
         )
 
         if response.status_code == 201:
@@ -91,7 +91,7 @@ class IdService(SDKClient):
 
         response = self.make_request(
             method="post",
-            url="/client/reset".format(),
+            url="/client/reset",
         )
 
         if response.status_code == 200:
@@ -114,7 +114,7 @@ class IdService(SDKClient):
 
         response = self.make_request(
             method="get",
-            url="/user/details".format(),
+            url="/user/details",
         )
 
         if response.status_code == 200:
@@ -138,7 +138,7 @@ class IdService(SDKClient):
 
         response = self.make_request(
             method="put",
-            url="/user/settings".format(),
+            url="/user/settings",
             json=kwargs,
         )
 
@@ -308,7 +308,7 @@ class IdService(SDKClient):
         params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
         response = self.make_request(
             method="get",
-            url="/webhooks/".format(),
+            url="/webhooks/",
             params=params,
         )
 
@@ -335,7 +335,7 @@ class IdService(SDKClient):
 
         response = self.make_request(
             method="post",
-            url="/webhooks/".format(),
+            url="/webhooks/",
             json=kwargs,
         )
 
@@ -438,7 +438,7 @@ class IdService(SDKClient):
 
         response = self.make_request(
             method="get",
-            url="/webhooks/events".format(),
+            url="/webhooks/events",
         )
 
         if response.status_code == 200:

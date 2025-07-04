@@ -25,7 +25,7 @@ class CosService(SDKClient):
     def __init__(self, get_token: Callable[[], str], env: str | None):
         super().__init__(env=env, get_token=get_token)
 
-    def get_orders_api_details__contract_id___order_id__get(
+    def orders_api_details__contract_id___order_id__get(
         self,
         contract_id: UUID,
         order_id: UUID,
@@ -65,7 +65,7 @@ class CosService(SDKClient):
             )
         return response.json()
 
-    def get_query__contract_id___get(
+    def query__contract_id___get(
         self,
         contract_id: UUID,
         limit: Union[None, Unset, int] = 25,
@@ -111,7 +111,7 @@ class CosService(SDKClient):
             return OrderPage(**response.json())
         return response.json()
 
-    def post_submit__contract_id___post(
+    def submit__contract_id___post(
         self,
         contract_id: UUID,
         **kwargs: Unpack[Union["OrderPayload", "ResellerOrderPayload"]],
@@ -156,7 +156,7 @@ class CosService(SDKClient):
             )
         return response.json()
 
-    def get_download_item__contract_id___order_id___item_id__download_get(
+    def download_item__contract_id___order_id___item_id__download_get(
         self,
         contract_id: UUID,
         order_id: UUID,
@@ -208,7 +208,7 @@ class CosService(SDKClient):
             return response.json()
         return response.json()
 
-    def get_download_order__contract_id___order_id__download_get(
+    def download_order__contract_id___order_id__download_get(
         self,
         contract_id: UUID,
         order_id: UUID,

@@ -22,6 +22,7 @@ class ResellerFeatureCollectionOrder:
         price (Price):
         reseller_end_user_id (UUID):
         type (Union[Literal['FeatureCollection'], Unset]):  Default: 'FeatureCollection'.
+        name (Union[None, Unset, str]): The name of the order.
         updated_at (Union[None, Unset, datetime.datetime]): The datetime at which the order was updated.
     """
 
@@ -33,6 +34,7 @@ class ResellerFeatureCollectionOrder:
     price: "Price"
     reseller_end_user_id: UUID
     type: Union[Literal["FeatureCollection"], Unset] = "FeatureCollection"
+    name: Union[None, Unset, str] = UNSET
     updated_at: Union[None, Unset, datetime.datetime] = UNSET
 
     @staticmethod
@@ -72,5 +74,6 @@ class ResellerFeatureCollectionOrder:
         """
         return {
             "type": object,
+            "name": object,
             "updated_at": object,
         }

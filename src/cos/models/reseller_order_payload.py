@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from typing import Union
 from uuid import UUID
 
+from ..types import UNSET, Unset
+
 
 @dataclass
 class ResellerOrderPayload:
@@ -9,10 +11,12 @@ class ResellerOrderPayload:
     Attributes:
         item_id (Union[list[str], str]): Item ID.
         reseller_end_user_id (UUID):
+        name (Union[None, Unset, str]): Optional name of an order
     """
 
     item_id: Union[list[str], str]
     reseller_end_user_id: UUID
+    name: Union[None, Unset, str] = UNSET
 
     @staticmethod
     def get_required_fields() -> set[str]:
@@ -39,4 +43,6 @@ class ResellerOrderPayload:
         """
         Returns a mapping of optional fields to their types or nested model classes.
         """
-        return {}
+        return {
+            "name": object,
+        }

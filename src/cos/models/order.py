@@ -18,6 +18,7 @@ class Order:
         order_id (UUID): Order ID.
         created_at (datetime.datetime): The datetime at which the order was created.
         price (Price):
+        name (Union[None, Unset, str]): Optional name of an order
         stac_metadata (Union['StacMetadata', None, Unset]): Metadata about the item.
     """
 
@@ -25,6 +26,7 @@ class Order:
     order_id: UUID
     created_at: datetime.datetime
     price: "Price"
+    name: Union[None, Unset, str] = UNSET
     stac_metadata: Union["StacMetadata", None, Unset] = UNSET
 
     @staticmethod
@@ -57,5 +59,6 @@ class Order:
         Returns a mapping of optional fields to their types or nested model classes.
         """
         return {
+            "name": object,
             "stac_metadata": object,
         }

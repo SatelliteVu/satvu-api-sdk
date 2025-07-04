@@ -1,8 +1,6 @@
 """Contains all the data models used in inputs/outputs"""
 
-from .download_order_contract_id_order_id_download_get_collections_type_0_item import (
-    DownloadOrderContractIdOrderIdDownloadGetCollectionsType0Item,
-)
+from .download_order_collections_type_0_item import DownloadOrderCollectionsType0Item
 from .feature_collection_order import FeatureCollectionOrder
 from .feature_order import FeatureOrder
 from .geojson_polygon import GeojsonPolygon
@@ -33,7 +31,7 @@ from .stac_properties_v5_processing_software_name_version import (
 from .validation_error import ValidationError
 
 __all__ = (
-    "DownloadOrderContractIdOrderIdDownloadGetCollectionsType0Item",
+    "DownloadOrderCollectionsType0Item",
     "FeatureCollectionOrder",
     "FeatureOrder",
     "GeojsonPolygon",

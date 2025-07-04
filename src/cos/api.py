@@ -6,8 +6,8 @@ from uuid import UUID
 from satvu_api_sdk.core import SDKClient
 from satvu_api_sdk.utils import disambiguate_union_response
 
-from cos.models.download_order_contract_id_order_id_download_get_collections_type_0_item import (
-    DownloadOrderContractIdOrderIdDownloadGetCollectionsType0Item,
+from cos.models.download_order_collections_type_0_item import (
+    DownloadOrderCollectionsType0Item,
 )
 from cos.models.feature_collection_order import FeatureCollectionOrder
 from cos.models.order_download_url import OrderDownloadUrl
@@ -25,7 +25,7 @@ class CosService(SDKClient):
     def __init__(self, get_token: Callable[[], str], env: str | None):
         super().__init__(env=env, get_token=get_token)
 
-    def orders_api_details__contract_id___order_id__get(
+    def get_order_details(
         self,
         contract_id: UUID,
         order_id: UUID,
@@ -65,7 +65,7 @@ class CosService(SDKClient):
             )
         return response.json()
 
-    def query__contract_id___get(
+    def query_orders(
         self,
         contract_id: UUID,
         limit: Union[None, Unset, int] = 25,
@@ -111,7 +111,7 @@ class CosService(SDKClient):
             return OrderPage(**response.json())
         return response.json()
 
-    def submit__contract_id___post(
+    def submit_order(
         self,
         contract_id: UUID,
         **kwargs: Unpack[Union["OrderPayload", "ResellerOrderPayload"]],
@@ -156,7 +156,7 @@ class CosService(SDKClient):
             )
         return response.json()
 
-    def download_item__contract_id___order_id___item_id__download_get(
+    def download_item(
         self,
         contract_id: UUID,
         order_id: UUID,
@@ -208,14 +208,12 @@ class CosService(SDKClient):
             return response.json()
         return response.json()
 
-    def download_order__contract_id___order_id__download_get(
+    def download_order(
         self,
         contract_id: UUID,
         order_id: UUID,
         collections: Union[
-            None,
-            Unset,
-            list[DownloadOrderContractIdOrderIdDownloadGetCollectionsType0Item],
+            None, Unset, list[DownloadOrderCollectionsType0Item]
         ] = UNSET,
         redirect: Union[Unset, bool] = True,
     ) -> OrderDownloadUrl:
@@ -232,9 +230,9 @@ class CosService(SDKClient):
         Args:
             contract_id (UUID): Contract ID.
             order_id (UUID): Order ID.
-            collections (Union[None, Unset,
-                list[DownloadOrderContractIdOrderIdDownloadGetCollectionsType0Item]]): Specify a subset of
-                collections to download. Defaults to None, which will download only the visual product.
+            collections (Union[None, Unset, list[DownloadOrderCollectionsType0Item]]): Specify a
+                subset of collections to download. Defaults to None, which will download only the visual
+                product.
             redirect (Union[Unset, bool]): If `true` download the image content locally, otherwise if
                 `false` return a presigned download URL with an expiry. Defaults to `true`. Default: True.
 

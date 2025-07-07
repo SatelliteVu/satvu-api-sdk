@@ -14,7 +14,13 @@ from openapi_python_client.config import Config, MetaType, ConfigFile
 from openapi_python_client.parser.bodies import Body, body_from_data
 from openapi_python_client.parser.openapi import GeneratorData, Endpoint
 from openapi_python_client.parser.errors import GeneratorError, ParseError
-from openapi_python_client.parser.properties import UnionProperty, Schemas, Parameters
+from openapi_python_client.parser.properties import (
+    UnionProperty,
+    Schemas,
+    Parameters,
+    ModelProperty,
+    ListProperty,
+)
 
 from builder.config import APIS, BASE_URL
 
@@ -359,7 +365,8 @@ class SatVuProject(Project):
                 docstrings.append(docstring)
                 docstring = "Or:"
         else:
-            props = body.prop.required_properties + body.prop.optional_properties
+            body_prop = body.prop.inner_property if isinstance(body.prop, ListProperty) else body.prop
+            props = body_prop.required_properties + body_prop.optional_properties
             for prop in props:
                 docstring = f"{prop.python_name} ({prop.get_type_string()}): {prop.description or ''}"
                 docstrings.append(docstring)

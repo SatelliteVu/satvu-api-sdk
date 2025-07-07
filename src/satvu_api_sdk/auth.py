@@ -121,7 +121,7 @@ class AuthService(SDKClient):
 
         token = self.cache.load(cache_key.hexdigest())
 
-        if not token or self.is_expired_token(token):
+        if not token or self.is_expired_token(token["access_token"]):
             token = self._auth(client_id, client_secret, scopes)
             self.cache.save(cache_key.hexdigest(), token)
 

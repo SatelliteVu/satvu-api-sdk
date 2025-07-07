@@ -1,27 +1,26 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Union
+from typing import Union
 
-if TYPE_CHECKING:
-    from ..models.user_info_deprecated_user_metadata_type_0 import (
-        UserInfoDeprecatedUserMetadataType0,
-    )
+from pydantic import BaseModel
+
+from ..models.user_info_deprecated_user_metadata_type_0 import (
+    UserInfoDeprecatedUserMetadataType0,
+)
 
 
-@dataclass
-class UserInfoDeprecated:
+class UserInfoDeprecated(BaseModel):
     """
     Attributes:
         user_id (str):
         name (str):
         email (str):
-        user_metadata (Union['UserInfoDeprecatedUserMetadataType0', None]):
+        user_metadata (Union[None, UserInfoDeprecatedUserMetadataType0]):
         last_login (Union[None, str]):
     """
 
     user_id: str
     name: str
     email: str
-    user_metadata: Union["UserInfoDeprecatedUserMetadataType0", None] = None
+    user_metadata: Union[None, UserInfoDeprecatedUserMetadataType0] = None
     last_login: Union[None, str] = None
 
     @staticmethod

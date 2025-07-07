@@ -1,13 +1,13 @@
 import datetime
-from dataclasses import dataclass
 from typing import Union
 from uuid import UUID
+
+from pydantic import BaseModel
 
 from ..models.kyc_status import KYCStatus
 
 
-@dataclass
-class GetCompany:
+class GetCompany(BaseModel):
     """
     Attributes:
         name (str): Name of the company.

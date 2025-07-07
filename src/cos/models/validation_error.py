@@ -1,9 +1,9 @@
-from dataclasses import dataclass
 from typing import Union
 
+from pydantic import BaseModel
 
-@dataclass
-class ValidationError:
+
+class ValidationError(BaseModel):
     """
     Attributes:
         loc (list[Union[int, str]]):

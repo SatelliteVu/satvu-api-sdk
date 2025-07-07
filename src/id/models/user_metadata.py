@@ -1,12 +1,11 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Union
+from typing import Union
 
-if TYPE_CHECKING:
-    from ..models.verbose_notification import VerboseNotification
+from pydantic import BaseModel
+
+from ..models.verbose_notification import VerboseNotification
 
 
-@dataclass
-class UserMetadata:
+class UserMetadata(BaseModel):
     """
     Attributes:
         client_id (Union[None, str]): The client ID of the user

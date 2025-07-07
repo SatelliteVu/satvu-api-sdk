@@ -1,11 +1,11 @@
-from dataclasses import dataclass
 from typing import Union
+
+from pydantic import BaseModel
 
 from ..models.webhook_failure_title import WebhookFailureTitle
 
 
-@dataclass
-class WebhookResult:
+class WebhookResult(BaseModel):
     """
     Attributes:
         success (bool): Whether the request to the webhook URL was successful.

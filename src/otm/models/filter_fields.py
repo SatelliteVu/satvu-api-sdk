@@ -1,9 +1,9 @@
-from dataclasses import dataclass
 from typing import Union
 
+from pydantic import BaseModel
 
-@dataclass
-class FilterFields:
+
+class FilterFields(BaseModel):
     """
     Attributes:
         status (Union[None, list[str], str]):

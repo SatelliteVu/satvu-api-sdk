@@ -1,16 +1,15 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Literal
+from typing import Literal
 from uuid import UUID
 
-if TYPE_CHECKING:
-    from ..models.point import Point
-    from ..models.standard_order_request_properties_with_addons import (
-        StandardOrderRequestPropertiesWithAddons,
-    )
+from pydantic import BaseModel
+
+from ..models.point import Point
+from ..models.standard_order_request_properties_with_addons import (
+    StandardOrderRequestPropertiesWithAddons,
+)
 
 
-@dataclass
-class ResellerStandardOrderRequest:
+class ResellerStandardOrderRequest(BaseModel):
     """
     Attributes:
         type (Literal['Feature']):

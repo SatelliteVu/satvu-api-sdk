@@ -1,12 +1,9 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pydantic import BaseModel
 
-if TYPE_CHECKING:
-    from ..models.order_name import OrderName
+from ..models.order_name import OrderName
 
 
-@dataclass
-class EditOrderPayload:
+class EditOrderPayload(BaseModel):
     """Payload for editing an order.
 
     Attributes:

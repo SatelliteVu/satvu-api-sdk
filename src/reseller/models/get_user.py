@@ -1,13 +1,13 @@
 import datetime
-from dataclasses import dataclass
 from typing import Union
 from uuid import UUID
+
+from pydantic import BaseModel
 
 from ..models.kyc_status import KYCStatus
 
 
-@dataclass
-class GetUser:
+class GetUser(BaseModel):
     """Represents response to user
 
     Attributes:

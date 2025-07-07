@@ -1,14 +1,12 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Union
+from typing import Union
+
+from pydantic import BaseModel
 
 from ..models.notification_category import NotificationCategory
-
-if TYPE_CHECKING:
-    from ..models.notification_config import NotificationConfig
+from ..models.notification_config import NotificationConfig
 
 
-@dataclass
-class NotificationUpdate:
+class NotificationUpdate(BaseModel):
     """
     Attributes:
         category (Union[None, NotificationCategory]): Category for notification topic

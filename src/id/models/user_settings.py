@@ -1,12 +1,11 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Union
+from typing import Union
 
-if TYPE_CHECKING:
-    from ..models.notification_update import NotificationUpdate
+from pydantic import BaseModel
+
+from ..models.notification_update import NotificationUpdate
 
 
-@dataclass
-class UserSettings:
+class UserSettings(BaseModel):
     """
     Attributes:
         notifications (Union[None, list['NotificationUpdate']]): Update user notifications settings.A full list of

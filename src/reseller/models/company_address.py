@@ -1,11 +1,11 @@
-from dataclasses import dataclass
 from typing import Union
+
+from pydantic import BaseModel
 
 from ..models.company_address_country_code import CompanyAddressCountryCode
 
 
-@dataclass
-class CompanyAddress:
+class CompanyAddress(BaseModel):
     """
     Attributes:
         country_code (CompanyAddressCountryCode): 2-digit country code of company.

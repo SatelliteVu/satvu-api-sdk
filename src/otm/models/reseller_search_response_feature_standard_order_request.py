@@ -1,20 +1,19 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Literal, Union
+from typing import Literal, Union
 from uuid import UUID
 
-if TYPE_CHECKING:
-    from ..models.point import Point
-    from ..models.price import Price
-    from ..models.search_standard_order_properties import SearchStandardOrderProperties
+from pydantic import BaseModel
+
+from ..models.point import Point
+from ..models.price import Price
+from ..models.search_standard_order_properties import SearchStandardOrderProperties
 
 
-@dataclass
-class ResellerSearchResponseFeatureStandardOrderRequest:
+class ResellerSearchResponseFeatureStandardOrderRequest(BaseModel):
     """
     Attributes:
         type (Literal['Feature']):
-        geometry (Union['Point', None]):
-        properties (Union['SearchStandardOrderProperties', None]):
+        geometry (Union[None, Point]):
+        properties (Union[None, SearchStandardOrderProperties]):
         id (UUID): ID of an item associated with the search parameters.
         contract_id (UUID): Contract ID associated with the search.
         collection (str): Name of collection associated with the search result item.
@@ -24,8 +23,8 @@ class ResellerSearchResponseFeatureStandardOrderRequest:
     """
 
     type: Literal["Feature"]
-    geometry: Union["Point", None]
-    properties: Union["SearchStandardOrderProperties", None]
+    geometry: Union[None, Point]
+    properties: Union[None, SearchStandardOrderProperties]
     id: UUID
     contract_id: UUID
     collection: str

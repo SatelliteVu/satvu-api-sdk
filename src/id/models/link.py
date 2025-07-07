@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class Link:
+class Link(BaseModel):
     """
     Attributes:
         href (str): The link in the format of a URL.

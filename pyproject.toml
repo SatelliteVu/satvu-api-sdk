@@ -9,6 +9,7 @@ authors = [
 requires-python = ">=3.13"
 dependencies = [
     "openapi-python-client>=0.25.2",
+    "pydantic>=2.11.7",
 ]
 
 [project.optional-dependencies]
@@ -23,5 +24,4 @@ build-backend = "hatchling.build"
 [tool.uv]
 dev-dependencies = [
     "httpx>=0.28.1",
-    "pydantic>=2.10.4",
 ]

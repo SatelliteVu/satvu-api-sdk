@@ -1,9 +1,9 @@
-from dataclasses import dataclass
 from typing import Any, Union
 
+from pydantic import BaseModel
 
-@dataclass
-class RouterQueryResult:
+
+class RouterQueryResult(BaseModel):
     """
     Attributes:
         message (Union[None, str]):

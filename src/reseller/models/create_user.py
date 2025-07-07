@@ -1,12 +1,9 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pydantic import BaseModel
 
-if TYPE_CHECKING:
-    from ..models.company_address import CompanyAddress
+from ..models.company_address import CompanyAddress
 
 
-@dataclass
-class CreateUser:
+class CreateUser(BaseModel):
     """Represents payload to create a user
 
     Attributes:

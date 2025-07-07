@@ -1,17 +1,16 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Literal, Union
+from typing import Literal, Union
 
-if TYPE_CHECKING:
-    from ..models.line_string import LineString
-    from ..models.multi_line_string import MultiLineString
-    from ..models.multi_point import MultiPoint
-    from ..models.multi_polygon import MultiPolygon
-    from ..models.point import Point
-    from ..models.polygon import Polygon
+from pydantic import BaseModel
+
+from ..models.line_string import LineString
+from ..models.multi_line_string import MultiLineString
+from ..models.multi_point import MultiPoint
+from ..models.multi_polygon import MultiPolygon
+from ..models.point import Point
+from ..models.polygon import Polygon
 
 
-@dataclass
-class GeometryCollection:
+class GeometryCollection(BaseModel):
     """GeometryCollection Model
 
     Attributes:

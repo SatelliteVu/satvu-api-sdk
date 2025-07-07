@@ -1,12 +1,12 @@
-from dataclasses import dataclass
 from typing import Literal, Union
+
+from pydantic import BaseModel
 
 from ..models.match_type import MatchType
 from ..models.user_search_fields import UserSearchFields
 
 
-@dataclass
-class UserSearch:
+class UserSearch(BaseModel):
     """
     Attributes:
         string (str): Search string.

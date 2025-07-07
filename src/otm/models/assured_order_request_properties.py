@@ -1,21 +1,21 @@
-from dataclasses import dataclass
 from typing import Literal, Union
 
+from pydantic import BaseModel
 
-@dataclass
-class AssuredOrderRequestProperties:
+
+class AssuredOrderRequestProperties(BaseModel):
     """
     Attributes:
         product (Literal['assured']): Assured Priority.
         signature (str): Signature token.
-        addonwithhold (Union[None, str]): Optional ISO8601 string describing the duration that an order will be withheld
-            from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set
-            to the default specified in the relevant contract.
+        addon_withhold (Union[None, str]): Optional ISO8601 string describing the duration that an order will be
+            withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option
+            will be set to the default specified in the relevant contract.
     """
 
     product: Literal["assured"]
     signature: str
-    addonwithhold: Union[None, str] = None
+    addon_withhold: Union[None, str] = None
 
     @staticmethod
     def get_required_fields() -> set[str]:

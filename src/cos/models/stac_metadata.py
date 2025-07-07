@@ -1,28 +1,27 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Union
+from typing import Union
 
-if TYPE_CHECKING:
-    from ..models.stac_metadata_assets import StacMetadataAssets
-    from ..models.stac_properties_v4 import StacPropertiesV4
-    from ..models.stac_properties_v5 import StacPropertiesV5
+from pydantic import BaseModel
+
+from ..models.stac_metadata_assets import StacMetadataAssets
+from ..models.stac_properties_v4 import StacPropertiesV4
+from ..models.stac_properties_v5 import StacPropertiesV5
 
 
-@dataclass
-class StacMetadata:
+class StacMetadata(BaseModel):
     """
     Attributes:
         id (str): The unique image identifier.
         collection (str): Collection ID.
         assets (StacMetadataAssets): A dictionary of asset objects that can be downloaded, each with a unique key.
         bbox (list[Union[float, int]]): The bounding box of the asset represented by this item.
-        properties (Union['StacPropertiesV4', 'StacPropertiesV5']): A dictionary of additional metadata for the item.
+        properties (Union[StacPropertiesV4, StacPropertiesV5]): A dictionary of additional metadata for the item.
     """
 
     id: str
     collection: str
     assets: "StacMetadataAssets"
     bbox: list[Union[float, int]]
-    properties: Union["StacPropertiesV4", "StacPropertiesV5"]
+    properties: Union[StacPropertiesV4, StacPropertiesV5]
 
     @staticmethod
     def get_required_fields() -> set[str]:

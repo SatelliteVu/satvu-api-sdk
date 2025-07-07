@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class Price:
+class Price(BaseModel):
     """
     Attributes:
         value (int): The price of the order in minor units of the currency e.g. pence, cents.

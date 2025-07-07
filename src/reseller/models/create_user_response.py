@@ -1,16 +1,14 @@
 import datetime
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Union
+from typing import Union
 from uuid import UUID
 
+from pydantic import BaseModel
+
+from ..models.company_address import CompanyAddress
 from ..models.kyc_status import KYCStatus
 
-if TYPE_CHECKING:
-    from ..models.company_address import CompanyAddress
 
-
-@dataclass
-class CreateUserResponse:
+class CreateUserResponse(BaseModel):
     """Represents response when creating user
 
     Attributes:

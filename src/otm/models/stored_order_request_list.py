@@ -1,25 +1,24 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Literal, Union
+from typing import Literal, Union
 
-if TYPE_CHECKING:
-    from ..models.link import Link
-    from ..models.reseller_stored_order_request import ResellerStoredOrderRequest
-    from ..models.response_context import ResponseContext
-    from ..models.stored_order_request import StoredOrderRequest
+from pydantic import BaseModel
+
+from ..models.link import Link
+from ..models.reseller_stored_order_request import ResellerStoredOrderRequest
+from ..models.response_context import ResponseContext
+from ..models.stored_order_request import StoredOrderRequest
 
 
-@dataclass
-class StoredOrderRequestList:
+class StoredOrderRequestList(BaseModel):
     """
     Attributes:
         type (Literal['FeatureCollection']):
-        features (list[Union['ResellerStoredOrderRequest', 'StoredOrderRequest']]): List of stored order requests.
+        features (list[Union[ResellerStoredOrderRequest, StoredOrderRequest]]): List of stored order requests.
         links (list['Link']): Links to previous and/or next page.
         context (ResponseContext):
     """
 
     type: Literal["FeatureCollection"]
-    features: list[Union["ResellerStoredOrderRequest", "StoredOrderRequest"]]
+    features: list[Union[ResellerStoredOrderRequest, StoredOrderRequest]]
     links: list["Link"]
     context: "ResponseContext"
 

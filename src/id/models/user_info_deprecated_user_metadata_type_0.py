@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class UserInfoDeprecatedUserMetadataType0:
+class UserInfoDeprecatedUserMetadataType0(BaseModel):
     """ """
 
     @staticmethod

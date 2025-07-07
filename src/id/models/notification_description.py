@@ -1,9 +1,9 @@
-from dataclasses import dataclass
 from typing import Literal
 
+from pydantic import BaseModel
 
-@dataclass
-class NotificationDescription:
+
+class NotificationDescription(BaseModel):
     """
     Attributes:
         topic (Literal['tasking:order_status']): Notification topic.

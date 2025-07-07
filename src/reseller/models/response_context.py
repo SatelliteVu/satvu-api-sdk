@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class ResponseContext:
+class ResponseContext(BaseModel):
     """Contextual information for pagination responses
 
     Attributes:

@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class HttpExceptionResponse:
+class HttpExceptionResponse(BaseModel):
     """
     Attributes:
         detail (str):

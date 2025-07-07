@@ -1,18 +1,16 @@
-from dataclasses import dataclass
 from typing import Literal, Union
 
-from ..types import Unset
+from pydantic import BaseModel
 
 
-@dataclass
-class PolygonGeometry:
+class PolygonGeometry(BaseModel):
     """
     Attributes:
-        type (Union[Literal['Polygon'], Unset]):  Default: 'Polygon'.
+        type (Union[Literal['Polygon'], None]):  Default: 'Polygon'.
         coordinates (Union[None, list[list[list[Union[float, int]]]]]): The coordinates of the item.
     """
 
-    type: Union[Literal["Polygon"], Unset] = "Polygon"
+    type: Union[Literal["Polygon"], None] = "Polygon"
     coordinates: Union[None, list[list[list[Union[float, int]]]]] = None
 
     @staticmethod

@@ -1,13 +1,11 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING
 from uuid import UUID
 
-if TYPE_CHECKING:
-    from ..models.assured_order_request_properties import AssuredOrderRequestProperties
+from pydantic import BaseModel
+
+from ..models.assured_order_request_properties import AssuredOrderRequestProperties
 
 
-@dataclass
-class ResellerAssuredOrderRequest:
+class ResellerAssuredOrderRequest(BaseModel):
     """
     Attributes:
         properties (AssuredOrderRequestProperties):

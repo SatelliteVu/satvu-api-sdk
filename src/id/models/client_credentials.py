@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class ClientCredentials:
+class ClientCredentials(BaseModel):
     """
     Attributes:
         client_id (str):

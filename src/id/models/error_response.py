@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class ErrorResponse:
+class ErrorResponse(BaseModel):
     """
     Attributes:
         detail (str):

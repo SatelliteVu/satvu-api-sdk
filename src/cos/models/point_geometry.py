@@ -1,19 +1,17 @@
-from dataclasses import dataclass
 from typing import Literal, Union
 
-from ..types import Unset
+from pydantic import BaseModel
 
 
-@dataclass
-class PointGeometry:
+class PointGeometry(BaseModel):
     """
     Attributes:
         coordinates (list[Union[float, int]]): The coordinates of the item.
-        type (Union[Literal['Point'], Unset]):  Default: 'Point'.
+        type (Union[Literal['Point'], None]):  Default: 'Point'.
     """
 
     coordinates: list[Union[float, int]]
-    type: Union[Literal["Point"], Unset] = "Point"
+    type: Union[Literal["Point"], None] = "Point"
 
     @staticmethod
     def get_required_fields() -> set[str]:

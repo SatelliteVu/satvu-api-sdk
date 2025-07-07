@@ -1,18 +1,15 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Literal, Union
+from typing import Literal, Union
 
-from ..types import Unset
+from pydantic import BaseModel
 
-if TYPE_CHECKING:
-    from ..models.link import Link
-    from ..models.point_geometry import PointGeometry
-    from ..models.polygon_geometry import PolygonGeometry
-    from ..models.stac_feature_assets import StacFeatureAssets
-    from ..models.stac_feature_properties import StacFeatureProperties
+from ..models.link import Link
+from ..models.point_geometry import PointGeometry
+from ..models.polygon_geometry import PolygonGeometry
+from ..models.stac_feature_assets import StacFeatureAssets
+from ..models.stac_feature_properties import StacFeatureProperties
 
 
-@dataclass
-class StacFeature:
+class StacFeature(BaseModel):
     """
     Attributes:
         id (str): The unique identifier for this item within the collection.
@@ -21,9 +18,9 @@ class StacFeature:
         links (list['Link']): A list of link objects to resources and related URLs.
         assets (StacFeatureAssets): A dictionary of asset objects that can be downloaded, each with a unique key.
         bbox (list[Union[float, int]]): The bounding box of the asset represented by this item.
-        type (Union[Literal['Feature'], Unset]):  Default: 'Feature'.
-        geometry (Union['PointGeometry', 'PolygonGeometry', None]): Defines the full footprint of the asset represented
-            by the item.
+        type (Union[Literal['Feature'], None]):  Default: 'Feature'.
+        geometry (Union[None, PointGeometry, PolygonGeometry]): Defines the full footprint of the asset represented by
+            the item.
     """
 
     id: str
@@ -32,8 +29,8 @@ class StacFeature:
     links: list["Link"]
     assets: "StacFeatureAssets"
     bbox: list[Union[float, int]]
-    type: Union[Literal["Feature"], Unset] = "Feature"
-    geometry: Union["PointGeometry", "PolygonGeometry", None] = None
+    type: Union[Literal["Feature"], None] = "Feature"
+    geometry: Union[None, PointGeometry, PolygonGeometry] = None
 
     @staticmethod
     def get_required_fields() -> set[str]:

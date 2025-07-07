@@ -1,26 +1,25 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Literal, Union
+from typing import Literal, Union
 from uuid import UUID
 
-if TYPE_CHECKING:
-    from ..models.assured_stored_feasibility_request_properties import (
-        AssuredStoredFeasibilityRequestProperties,
-    )
-    from ..models.link import Link
-    from ..models.point import Point
-    from ..models.standard_stored_feasibility_request_properties import (
-        StandardStoredFeasibilityRequestProperties,
-    )
+from pydantic import BaseModel
+
+from ..models.assured_stored_feasibility_request_properties import (
+    AssuredStoredFeasibilityRequestProperties,
+)
+from ..models.link import Link
+from ..models.point import Point
+from ..models.standard_stored_feasibility_request_properties import (
+    StandardStoredFeasibilityRequestProperties,
+)
 
 
-@dataclass
-class StoredFeasibilityRequest:
+class StoredFeasibilityRequest(BaseModel):
     """Object representing a stored feasibility request.
 
     Attributes:
         type (Literal['Feature']):
         geometry (Point): Point Model
-        properties (Union['AssuredStoredFeasibilityRequestProperties', 'StandardStoredFeasibilityRequestProperties']): A
+        properties (Union[AssuredStoredFeasibilityRequestProperties, StandardStoredFeasibilityRequestProperties]): A
             dictionary of additional metadata about the requested image.
         id (UUID): Feasibility Request ID.
         links (list['Link']): A list of related links for the feasibility request.
@@ -31,8 +30,8 @@ class StoredFeasibilityRequest:
     type: Literal["Feature"]
     geometry: "Point"
     properties: Union[
-        "AssuredStoredFeasibilityRequestProperties",
-        "StandardStoredFeasibilityRequestProperties",
+        AssuredStoredFeasibilityRequestProperties,
+        StandardStoredFeasibilityRequestProperties,
     ]
     id: UUID
     links: list["Link"]

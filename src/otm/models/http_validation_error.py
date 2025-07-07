@@ -1,12 +1,11 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Union
+from typing import Union
 
-if TYPE_CHECKING:
-    from ..models.validation_error import ValidationError
+from pydantic import BaseModel
+
+from ..models.validation_error import ValidationError
 
 
-@dataclass
-class HTTPValidationError:
+class HTTPValidationError(BaseModel):
     """
     Attributes:
         detail (Union[None, list['ValidationError']]):

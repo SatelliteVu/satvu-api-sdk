@@ -1,14 +1,13 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Literal, Union
+from typing import Literal, Union
 
-if TYPE_CHECKING:
-    from ..models.link import Link
-    from ..models.response_context import ResponseContext
-    from ..models.stored_feasibility_request import StoredFeasibilityRequest
+from pydantic import BaseModel
+
+from ..models.link import Link
+from ..models.response_context import ResponseContext
+from ..models.stored_feasibility_request import StoredFeasibilityRequest
 
 
-@dataclass
-class StoredFeasibilityFeatureCollection:
+class StoredFeasibilityFeatureCollection(BaseModel):
     """
     Attributes:
         type (Literal['FeatureCollection']):

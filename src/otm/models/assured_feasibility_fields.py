@@ -1,17 +1,17 @@
-from dataclasses import dataclass
 from typing import Literal
 
+from pydantic import BaseModel
 
-@dataclass
-class AssuredFeasibilityFields:
+
+class AssuredFeasibilityFields(BaseModel):
     """
     Attributes:
         product (Literal['assured']): Assured Priority.
-        datetime_ (str): The closed date-time interval of the request.
+        datetime (str): The closed date-time interval of the request.
     """
 
     product: Literal["assured"]
-    datetime_: str
+    datetime: str
 
     @staticmethod
     def get_required_fields() -> set[str]:

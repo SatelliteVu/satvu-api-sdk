@@ -1,9 +1,9 @@
-from dataclasses import dataclass
 from typing import Union
 
+from pydantic import BaseModel
 
-@dataclass
-class CreditBalanceResponse:
+
+class CreditBalanceResponse(BaseModel):
     """
     Attributes:
         currency (str): The currency of the credit balance.

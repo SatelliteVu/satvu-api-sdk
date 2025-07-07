@@ -1,14 +1,11 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pydantic import BaseModel
 
-if TYPE_CHECKING:
-    from ..models.get_company import GetCompany
-    from ..models.link import Link
-    from ..models.response_context import ResponseContext
+from ..models.get_company import GetCompany
+from ..models.link import Link
+from ..models.response_context import ResponseContext
 
 
-@dataclass
-class GetCompanies:
+class GetCompanies(BaseModel):
     """Represents response to GET companies request
 
     Attributes:

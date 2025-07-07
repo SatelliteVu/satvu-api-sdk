@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class StacFeatureProperties:
+class StacFeatureProperties(BaseModel):
     """A dictionary of additional metadata for the item."""
 
     @staticmethod

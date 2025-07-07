@@ -1,9 +1,9 @@
-from dataclasses import dataclass
 from typing import Union
 
+from pydantic import BaseModel
 
-@dataclass
-class CivilDate:
+
+class CivilDate(BaseModel):
     """Contract end date
 
     Attributes:

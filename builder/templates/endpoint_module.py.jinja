@@ -128,15 +128,13 @@ from typing import Any, Unpack, Union, List, Dict
 from uuid import UUID
 
 from satvu_api_sdk.core import SDKClient
+from shared.utils import normalize_keys, deep_parse_from_annotation
 
 {% for endpoint in endpoints %}
 {% for relative in endpoint.relative_imports | sort %}
 {{ relative }}
 {% endfor %}
 {% endfor %}
-
-
-{% include 'macros/disambiguate_union_response.jinja' %}
 
 
 class {{ api_id | title }}Service(SDKClient):
@@ -148,7 +146,7 @@ class {{ api_id | title }}Service(SDKClient):
     {% for endpoint in endpoints %}
     {% set success_responses = endpoint.responses | selectattr("status_code.is_success") | list %}
     {% set redirect_response = endpoint.responses | selectattr("status_code.is_redirection") | list %}
-    {% set return_string = endpoint.responses[0].prop.get_type_string(quoted=False) %}
+    {% set return_string = endpoint.responses[0].prop.get_type_string(quoted=False).rstrip('"').lstrip('"') %}
     {# TODO: Update return_string to handle multiple success responses #}
     def {{ endpoint.name }}(self, {{ arguments(endpoint) }}) -> {{ return_string }}:
         {{ docstring(endpoint, return_string, is_detailed=true) }}
@@ -167,14 +165,10 @@ class {{ api_id | title }}Service(SDKClient):
         {% for response in success_responses %}
         if response.status_code == {{ response.status_code }}:
             {% set response_type = response.prop.get_type_string(quoted=False) %}
-            {% if response_type.startswith("Union[") %}
-            # Use centrally-defined union disambiguation (handles recursive matching and discriminators)
-            response_data = response.json()
-            return disambiguate_union_response(response_data, {{ endpoint.response_disambiguation }})
-            {% elif response_type == 'Any' %}
+            {% if response_type == 'Any' %}
             return response.json()
             {% else %}
-            return {{ response_type }}(**response.json())
+            return deep_parse_from_annotation(normalize_keys(response.json()), {{ response_type }})
             {% endif %}
         {% endfor %}
         return response.json()

@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class RouterHttpError:
+class RouterHttpError(BaseModel):
     """
     Attributes:
         id (str): A unique identifier for the type of error

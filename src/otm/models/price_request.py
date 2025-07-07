@@ -1,31 +1,30 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Literal, Union
+from typing import Literal, Union
 
-if TYPE_CHECKING:
-    from ..models.assured_feasibility_fields_with_addons import (
-        AssuredFeasibilityFieldsWithAddons,
-    )
-    from ..models.point import Point
-    from ..models.standard_order_request_properties_with_addons import (
-        StandardOrderRequestPropertiesWithAddons,
-    )
+from pydantic import BaseModel
+
+from ..models.assured_feasibility_fields_with_addons import (
+    AssuredFeasibilityFieldsWithAddons,
+)
+from ..models.point import Point
+from ..models.standard_order_request_properties_with_addons import (
+    StandardOrderRequestPropertiesWithAddons,
+)
 
 
-@dataclass
-class PriceRequest:
+class PriceRequest(BaseModel):
     """Feature model for incoming price request
 
     Attributes:
         type (Literal['Feature']):
         geometry (Point): Point Model
-        properties (Union['AssuredFeasibilityFieldsWithAddons', 'StandardOrderRequestPropertiesWithAddons']): A
-            dictionary of additional metadata about the requested image.
+        properties (Union[AssuredFeasibilityFieldsWithAddons, StandardOrderRequestPropertiesWithAddons]): A dictionary
+            of additional metadata about the requested image.
     """
 
     type: Literal["Feature"]
     geometry: "Point"
     properties: Union[
-        "AssuredFeasibilityFieldsWithAddons", "StandardOrderRequestPropertiesWithAddons"
+        AssuredFeasibilityFieldsWithAddons, StandardOrderRequestPropertiesWithAddons
     ]
 
     @staticmethod

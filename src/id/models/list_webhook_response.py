@@ -1,14 +1,11 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pydantic import BaseModel
 
-if TYPE_CHECKING:
-    from ..models.link import Link
-    from ..models.list_response_context import ListResponseContext
-    from ..models.webhook_response import WebhookResponse
+from ..models.link import Link
+from ..models.list_response_context import ListResponseContext
+from ..models.webhook_response import WebhookResponse
 
 
-@dataclass
-class ListWebhookResponse:
+class ListWebhookResponse(BaseModel):
     """
     Attributes:
         webhooks (list['WebhookResponse']): List of webhooks.

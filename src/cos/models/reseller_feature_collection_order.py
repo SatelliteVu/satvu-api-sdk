@@ -1,17 +1,14 @@
 import datetime
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Literal, Union
+from typing import Literal, Union
 from uuid import UUID
 
-from ..types import Unset
+from pydantic import BaseModel
 
-if TYPE_CHECKING:
-    from ..models.feature_order import FeatureOrder
-    from ..models.price import Price
+from ..models.feature_order import FeatureOrder
+from ..models.price import Price
 
 
-@dataclass
-class ResellerFeatureCollectionOrder:
+class ResellerFeatureCollectionOrder(BaseModel):
     """
     Attributes:
         id (UUID): Order ID.
@@ -21,7 +18,7 @@ class ResellerFeatureCollectionOrder:
         contract_id (UUID): Contract ID.
         price (Price):
         reseller_end_user_id (UUID):
-        type (Union[Literal['FeatureCollection'], Unset]):  Default: 'FeatureCollection'.
+        type (Union[Literal['FeatureCollection'], None]):  Default: 'FeatureCollection'.
         name (Union[None, str]): The name of the order.
         updated_at (Union[None, datetime.datetime]): The datetime at which the order was updated.
     """
@@ -33,7 +30,7 @@ class ResellerFeatureCollectionOrder:
     contract_id: UUID
     price: "Price"
     reseller_end_user_id: UUID
-    type: Union[Literal["FeatureCollection"], Unset] = "FeatureCollection"
+    type: Union[Literal["FeatureCollection"], None] = "FeatureCollection"
     name: Union[None, str] = None
     updated_at: Union[None, datetime.datetime] = None
 

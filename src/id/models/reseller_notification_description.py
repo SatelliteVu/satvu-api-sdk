@@ -1,12 +1,11 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 from ..models.reseller_notification_description_topic import (
     ResellerNotificationDescriptionTopic,
 )
 
 
-@dataclass
-class ResellerNotificationDescription:
+class ResellerNotificationDescription(BaseModel):
     """
     Attributes:
         topic (ResellerNotificationDescriptionTopic): Notification topic.

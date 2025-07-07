@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class StacPropertiesV5ProcessingSoftwareNameVersion:
+class StacPropertiesV5ProcessingSoftwareNameVersion(BaseModel):
     """ """
 
     @staticmethod

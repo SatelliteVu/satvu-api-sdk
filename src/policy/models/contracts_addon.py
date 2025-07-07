@@ -1,12 +1,9 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pydantic import BaseModel
 
-if TYPE_CHECKING:
-    from ..models.contracts_addon_option import ContractsAddonOption
+from ..models.contracts_addon_option import ContractsAddonOption
 
 
-@dataclass
-class ContractsAddon:
+class ContractsAddon(BaseModel):
     """
     Attributes:
         name (str): Name of the addon option Example: Withhold.

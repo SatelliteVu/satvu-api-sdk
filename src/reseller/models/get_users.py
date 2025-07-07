@@ -1,14 +1,11 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pydantic import BaseModel
 
-if TYPE_CHECKING:
-    from ..models.get_user import GetUser
-    from ..models.link import Link
-    from ..models.response_context import ResponseContext
+from ..models.get_user import GetUser
+from ..models.link import Link
+from ..models.response_context import ResponseContext
 
 
-@dataclass
-class GetUsers:
+class GetUsers(BaseModel):
     """Represents response to GET users request
 
     Attributes:

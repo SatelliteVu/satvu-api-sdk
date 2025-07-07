@@ -1,12 +1,9 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pydantic import BaseModel
 
-if TYPE_CHECKING:
-    from ..models.contracts_contract_with_products import ContractsContractWithProducts
+from ..models.contracts_contract_with_products import ContractsContractWithProducts
 
 
-@dataclass
-class RouterActiveContractsResponse:
+class RouterActiveContractsResponse(BaseModel):
     """
     Attributes:
         result (list['ContractsContractWithProducts']): Result of the active contracts query

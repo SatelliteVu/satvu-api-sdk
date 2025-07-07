@@ -1,9 +1,9 @@
-from dataclasses import dataclass
 from typing import Union
 
+from pydantic import BaseModel
 
-@dataclass
-class TermsUserTermsAccepted:
+
+class TermsUserTermsAccepted(BaseModel):
     """
     Attributes:
         accepted (Union[None, bool]):

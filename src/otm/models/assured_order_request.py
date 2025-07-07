@@ -1,12 +1,9 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pydantic import BaseModel
 
-if TYPE_CHECKING:
-    from ..models.assured_order_request_properties import AssuredOrderRequestProperties
+from ..models.assured_order_request_properties import AssuredOrderRequestProperties
 
 
-@dataclass
-class AssuredOrderRequest:
+class AssuredOrderRequest(BaseModel):
     """
     Attributes:
         properties (AssuredOrderRequestProperties):

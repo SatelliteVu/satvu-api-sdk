@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class PostActiveContractsInput:
+class PostActiveContractsInput(BaseModel):
     """
     Attributes:
         token (str): User access token

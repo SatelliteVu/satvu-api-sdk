@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class ContractsProduct:
+class ContractsProduct(BaseModel):
     """
     Attributes:
         code (str): Product code Example: PRODUCT.

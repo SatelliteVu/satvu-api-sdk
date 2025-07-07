@@ -1,9 +1,9 @@
-from dataclasses import dataclass
 from typing import Union
 
+from pydantic import BaseModel
 
-@dataclass
-class Price:
+
+class Price(BaseModel):
     """
     Attributes:
         value (Union[None, int]): Price of the order in minor units of the currency e.g. pence, cents.

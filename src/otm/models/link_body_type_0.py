@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class LinkBodyType0:
+class LinkBodyType0(BaseModel):
     """ """
 
     @staticmethod

@@ -1,22 +1,21 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Literal, Union
+from typing import Literal, Union
 from uuid import UUID
 
-if TYPE_CHECKING:
-    from ..models.assured_stored_feasibility_request_properties import (
-        AssuredStoredFeasibilityRequestProperties,
-    )
-    from ..models.point import Point
-    from ..models.price import Price
+from pydantic import BaseModel
+
+from ..models.assured_stored_feasibility_request_properties import (
+    AssuredStoredFeasibilityRequestProperties,
+)
+from ..models.point import Point
+from ..models.price import Price
 
 
-@dataclass
-class SearchResponseFeatureAssuredFeasibilityRequest:
+class SearchResponseFeatureAssuredFeasibilityRequest(BaseModel):
     """
     Attributes:
         type (Literal['Feature']):
-        geometry (Union['Point', None]):
-        properties (Union['AssuredStoredFeasibilityRequestProperties', None]):
+        geometry (Union[None, Point]):
+        properties (Union[AssuredStoredFeasibilityRequestProperties, None]):
         id (UUID): ID of an item associated with the search parameters.
         contract_id (UUID): Contract ID associated with the search.
         collection (str): Name of collection associated with the search result item.
@@ -25,8 +24,8 @@ class SearchResponseFeatureAssuredFeasibilityRequest:
     """
 
     type: Literal["Feature"]
-    geometry: Union["Point", None]
-    properties: Union["AssuredStoredFeasibilityRequestProperties", None]
+    geometry: Union[None, Point]
+    properties: Union[AssuredStoredFeasibilityRequestProperties, None]
     id: UUID
     contract_id: UUID
     collection: str

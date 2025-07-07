@@ -1,12 +1,7 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    pass
+from pydantic import BaseModel
 
 
-@dataclass
-class StacFeatureAssets:
+class StacFeatureAssets(BaseModel):
     """A dictionary of asset objects that can be downloaded, each with a unique key."""
 
     @staticmethod

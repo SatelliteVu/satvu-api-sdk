@@ -27,7 +27,7 @@
     {% endfor %}{% endif %}
 {% endmacro %}
 
-from dataclasses import dataclass
+from pydantic import BaseModel
 from typing import TYPE_CHECKING, TypedDict, Any
 
 {% for relative in model.relative_imports | sort %}
@@ -35,14 +35,10 @@ from typing import TYPE_CHECKING, TypedDict, Any
 {% endfor %}
 
 {% for lazy_import in model.lazy_imports %}
-{% if loop.first %}
-if TYPE_CHECKING:
-{% endif %}
-  {{ lazy_import }}
+{{ lazy_import }}
 {% endfor %}
 
-@dataclass
-class {{ class_name }}:
+class {{ class_name }}(BaseModel):
     {{ safe_docstring(class_docstring_content(model)) | indent(4) }}
 
     {% for property in model.required_properties + model.optional_properties %}

@@ -1,15 +1,12 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pydantic import BaseModel
 
-if TYPE_CHECKING:
-    from ..models.civil_date import CivilDate
-    from ..models.contracts_addon import ContractsAddon
-    from ..models.contracts_geometry import ContractsGeometry
-    from ..models.contracts_product import ContractsProduct
+from ..models.civil_date import CivilDate
+from ..models.contracts_addon import ContractsAddon
+from ..models.contracts_geometry import ContractsGeometry
+from ..models.contracts_product import ContractsProduct
 
 
-@dataclass
-class ContractsContractWithProducts:
+class ContractsContractWithProducts(BaseModel):
     """
     Attributes:
         active (bool): Whether the contract is active Example: True.

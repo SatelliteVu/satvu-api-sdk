@@ -11,3 +11,5 @@ wheels/
 
 # Cache
 .cache
+
+.idea/

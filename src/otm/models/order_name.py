@@ -1,9 +1,9 @@
-from dataclasses import dataclass
 from typing import Union
 
+from pydantic import BaseModel
 
-@dataclass
-class OrderName:
+
+class OrderName(BaseModel):
     """
     Attributes:
         name (Union[None, str]): The name of the order.

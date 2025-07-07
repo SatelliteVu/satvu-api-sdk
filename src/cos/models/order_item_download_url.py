@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class OrderItemDownloadUrl:
+class OrderItemDownloadUrl(BaseModel):
     """
     Attributes:
         url (str): The presigned download URL for the item.

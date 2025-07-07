@@ -1,9 +1,9 @@
-from dataclasses import dataclass
 from typing import Literal
 
+from pydantic import BaseModel
 
-@dataclass
-class Polygon:
+
+class Polygon(BaseModel):
     """
     Attributes:
         type (Literal['Polygon']):

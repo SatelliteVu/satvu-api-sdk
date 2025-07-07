@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class StacMetadataAssets:
+class StacMetadataAssets(BaseModel):
     """A dictionary of asset objects that can be downloaded, each with a unique key."""
 
     @staticmethod

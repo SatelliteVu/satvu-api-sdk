@@ -1,11 +1,10 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 from ..models.sort_entities_direction import SortEntitiesDirection
 from ..models.sortable_field import SortableField
 
 
-@dataclass
-class SortEntities:
+class SortEntities(BaseModel):
     """
     Attributes:
         field (SortableField):

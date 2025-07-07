@@ -1,14 +1,12 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Union
+from typing import Union
 
+from pydantic import BaseModel
+
+from ..models.link_body_type_0 import LinkBodyType0
 from ..models.link_method import LinkMethod
 
-if TYPE_CHECKING:
-    from ..models.link_body_type_0 import LinkBodyType0
 
-
-@dataclass
-class Link:
+class Link(BaseModel):
     """Inherits from the latest Links object defined in the event schema registry.
 
     Attributes:
@@ -17,7 +15,7 @@ class Link:
         type (str): Media type of the referenced entity.
         title (Union[None, str]): A human readable title to be used in rendered displays of the link.
         method (Union[None, LinkMethod]): The HTTP method of the request. Default: LinkMethod.GET.
-        body (Union['LinkBodyType0', None]): A JSON object containing fields/values that must be included in the body of
+        body (Union[LinkBodyType0, None]): A JSON object containing fields/values that must be included in the body of
             the next request.
         merge (Union[None, bool]): If `true`, the headers/body fields in the `next` link must be merged into the
             original request and be sent combined in the next request. Default: False.
@@ -28,7 +26,7 @@ class Link:
     type: str
     title: Union[None, str] = None
     method: Union[None, LinkMethod] = LinkMethod.GET
-    body: Union["LinkBodyType0", None] = None
+    body: Union[LinkBodyType0, None] = None
     merge: Union[None, bool] = False
 
     @staticmethod

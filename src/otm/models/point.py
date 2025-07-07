@@ -1,9 +1,9 @@
-from dataclasses import dataclass
 from typing import Literal, Union
 
+from pydantic import BaseModel
 
-@dataclass
-class Point:
+
+class Point(BaseModel):
     """Point Model
 
     Attributes:

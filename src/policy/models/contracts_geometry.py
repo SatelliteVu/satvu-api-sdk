@@ -1,9 +1,9 @@
-from dataclasses import dataclass
 from typing import Any, Union
 
+from pydantic import BaseModel
 
-@dataclass
-class ContractsGeometry:
+
+class ContractsGeometry(BaseModel):
     """Allowed geographical area of the contract
 
     Attributes:

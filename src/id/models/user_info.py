@@ -1,27 +1,24 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Union
+from typing import Union
 
-from ..types import Unset
+from pydantic import BaseModel
 
-if TYPE_CHECKING:
-    from ..models.user_metadata import UserMetadata
+from ..models.user_metadata import UserMetadata
 
 
-@dataclass
-class UserInfo:
+class UserInfo(BaseModel):
     """
     Attributes:
         user_id (str): The ID of the user.
         name (str): The name of the user.
         email (str): The email of the user.
-        user_metadata (Union[Unset, UserMetadata]):
+        user_metadata (Union[None, UserMetadata]):
         last_login (Union[None, str]): The datetime at which the user last logged in.
     """
 
     user_id: str
     name: str
     email: str
-    user_metadata: Union[Unset, "UserMetadata"] = None
+    user_metadata: Union[None, "UserMetadata"] = None
     last_login: Union[None, str] = None
 
     @staticmethod

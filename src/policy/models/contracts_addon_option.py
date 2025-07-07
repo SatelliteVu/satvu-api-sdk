@@ -1,9 +1,9 @@
-from dataclasses import dataclass
 from typing import Union
 
+from pydantic import BaseModel
 
-@dataclass
-class ContractsAddonOption:
+
+class ContractsAddonOption(BaseModel):
     """
     Attributes:
         label (str): Label assigned to addon option Example: Withhold - 3 days.

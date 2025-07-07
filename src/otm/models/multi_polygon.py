@@ -1,9 +1,9 @@
-from dataclasses import dataclass
 from typing import Literal, Union
 
+from pydantic import BaseModel
 
-@dataclass
-class MultiPolygon:
+
+class MultiPolygon(BaseModel):
     """MultiPolygon Model
 
     Attributes:

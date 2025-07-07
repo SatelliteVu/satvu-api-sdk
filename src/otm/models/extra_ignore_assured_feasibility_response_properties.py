@@ -1,17 +1,16 @@
 import datetime
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Literal, Union
+from typing import Literal, Union
 
-if TYPE_CHECKING:
-    from ..models.price import Price
+from pydantic import BaseModel
+
+from ..models.price import Price
 
 
-@dataclass
-class ExtraIgnoreAssuredFeasibilityResponseProperties:
+class ExtraIgnoreAssuredFeasibilityResponseProperties(BaseModel):
     """
     Attributes:
         product (Literal['assured']): Assured Priority.
-        datetime_ (str): The closed date-time interval of the request.
+        datetime (str): The closed date-time interval of the request.
         created_at (datetime.datetime): The datetime at which the feasibility response was created.
         updated_at (datetime.datetime): The datetime at which the feasibility response was last updated.
         min_sun_el (float): The minimum sun elevation angle of the pass. Measured in decimal degrees from the
@@ -26,11 +25,11 @@ class ExtraIgnoreAssuredFeasibilityResponseProperties:
             degrees.
         max_off_nadir (float): The maximum angle from the sensor between nadir and the scene center. Measured in decimal
             degrees.
-        price (Union['Price', None]): Pricing information.
+        price (Union[None, Price]): Pricing information.
     """
 
     product: Literal["assured"]
-    datetime_: str
+    datetime: str
     created_at: datetime.datetime
     updated_at: datetime.datetime
     min_sun_el: float
@@ -39,7 +38,7 @@ class ExtraIgnoreAssuredFeasibilityResponseProperties:
     max_gsd: float
     min_off_nadir: float
     max_off_nadir: float
-    price: Union["Price", None] = None
+    price: Union[None, Price] = None
 
     @staticmethod
     def get_required_fields() -> set[str]:

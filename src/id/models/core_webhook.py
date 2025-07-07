@@ -1,12 +1,12 @@
-from dataclasses import dataclass
 from typing import Union
+
+from pydantic import BaseModel
 
 from ..models.reseller_webhook_event import ResellerWebhookEvent
 from ..models.webhook_event import WebhookEvent
 
 
-@dataclass
-class CoreWebhook:
+class CoreWebhook(BaseModel):
     """
     Attributes:
         event_types (list[Union[ResellerWebhookEvent, WebhookEvent]]): A list of events to subscribe to.

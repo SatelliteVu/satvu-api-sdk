@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class ListResponseContext:
+class ListResponseContext(BaseModel):
     """
     Attributes:
         per_page (int): Applied per page webhook limit.

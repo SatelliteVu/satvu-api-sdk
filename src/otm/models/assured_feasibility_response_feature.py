@@ -1,16 +1,15 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Literal, Union
+from typing import Literal, Union
 from uuid import UUID
 
-if TYPE_CHECKING:
-    from ..models.assured_feasibility_response_properties import (
-        AssuredFeasibilityResponseProperties,
-    )
-    from ..models.point import Point
+from pydantic import BaseModel
+
+from ..models.assured_feasibility_response_properties import (
+    AssuredFeasibilityResponseProperties,
+)
+from ..models.point import Point
 
 
-@dataclass
-class AssuredFeasibilityResponseFeature:
+class AssuredFeasibilityResponseFeature(BaseModel):
     """Object representing an assured feasibility response.
 
     Attributes:

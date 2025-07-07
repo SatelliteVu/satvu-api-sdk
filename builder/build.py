@@ -1,4 +1,5 @@
 import builtins
+import re
 from dataclasses import dataclass
 from hashlib import sha1
 from json import dumps, loads
@@ -40,7 +41,7 @@ TEMPLATE_DIR = Path(__file__).parent / "templates"
 SRC_DIR = BASE_DIR / "src"
 
 # Override reserved words - we want to still use "type"
-RESERVED_WORDS = (set(dir(builtins)) | {"self", "true", "false", "datetime"}) - {
+RESERVED_WORDS = (set(dir(builtins)) | {"self", "true", "false"}) - {
     "id", "type"
 }
 
@@ -149,7 +150,6 @@ def get_type_string(
 openapi_python_client.parser.properties.list_property.ListProperty.get_type_string = get_type_string
 
 def to_string(self) -> str:
-    """How this should be declared in a dataclass"""
     default: str | None
     if self.default is not None:
         default = self.default.python_code
@@ -167,14 +167,6 @@ def get_type_string(
     *,
     quoted: bool = False,
 ) -> str:
-    """
-    Get a string representation of type that should be used when declaring this property
-
-    Args:
-        no_optional: Do not include Optional or Unset even if the value is optional (needed for isinstance checks)
-        json: True if the type refers to the property after JSON serialization
-        quoted: True if the type should be wrapped in quotes (if not a base type)
-    """
     if json:
         type_string = self.get_base_json_type_string(quoted=quoted)
     else:
@@ -210,7 +202,13 @@ def get_type_strings_in_union(
         return type_strings
     return type_strings
 
+def _get_inner_type_strings(self, json: bool) -> set[str]:
+    return {
+        p.get_type_string(no_optional=True, json=json, quoted=True) if "geometries_item_type" in p.name else p.get_type_string(no_optional=True, json=json, quoted=False) for p in self.inner_properties
+    }
+
 openapi_python_client.parser.properties.union.UnionProperty.get_type_strings_in_union = get_type_strings_in_union
+openapi_python_client.parser.properties.union.UnionProperty._get_inner_type_strings = _get_inner_type_strings
 
 def get_type_string(
     self,
@@ -321,8 +319,29 @@ def build(
     )
     return prop, schemas
 
-openapi_python_client.parser.properties.model_property.get_type_string = get_type_string
+openapi_python_client.parser.properties.model_property.ModelProperty.get_type_string = get_type_string
 openapi_python_client.parser.properties.model_property.ModelProperty.build = build
+
+def get_type_string(
+    self,
+    no_optional: bool = False,
+    json: bool = False,
+    *,
+    quoted: bool = False,
+) -> str:
+    lit = f"Literal[{self.value.python_code}]"
+    if not no_optional and not self.required:
+        return f"Union[{lit}, None]"
+    return lit
+
+openapi_python_client.parser.properties.const.ConstProperty.get_type_string = get_type_string
+
+def sanitize(value: str) -> str:
+    """Removes every character that isn't 0-9, A-Z, a-z, or a known delimiter"""
+    value = value.replace(":", "_")  # Replace colons with underscores
+    return re.sub(rf"[^\w{utils.DELIMITERS}]+", "", value)
+
+openapi_python_client.utils.sanitize = sanitize
 
 def _load_openapi(api_id: str, use_cached: bool):
     CACHE_DIR.mkdir(parents=True, exist_ok=True)

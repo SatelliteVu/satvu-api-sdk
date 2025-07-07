@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class Asset:
+class Asset(BaseModel):
     """
     Attributes:
         href (str): The URI to the asset object.

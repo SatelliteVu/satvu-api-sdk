@@ -1,12 +1,12 @@
-from dataclasses import dataclass
 from typing import Union
+
+from pydantic import BaseModel
 
 from ..models.reseller_webhook_event import ResellerWebhookEvent
 from ..models.webhook_event import WebhookEvent
 
 
-@dataclass
-class EditWebhookPayload:
+class EditWebhookPayload(BaseModel):
     """
     Attributes:
         active (Union[None, bool]): Whether the webhook should be active or not.

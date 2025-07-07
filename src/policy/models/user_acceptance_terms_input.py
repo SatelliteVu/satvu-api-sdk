@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class UserAcceptanceTermsInput:
+class UserAcceptanceTermsInput(BaseModel):
     """
     Attributes:
         accepted (bool): Terms and Conditions have been accepted

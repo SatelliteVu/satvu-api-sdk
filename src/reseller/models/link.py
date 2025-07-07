@@ -1,21 +1,19 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Union
+from typing import Union
 
+from pydantic import BaseModel
+
+from ..models.link_body_type_0 import LinkBodyType0
 from ..models.request_method import RequestMethod
 
-if TYPE_CHECKING:
-    from ..models.link_body_type_0 import LinkBodyType0
 
-
-@dataclass
-class Link:
+class Link(BaseModel):
     """
     Attributes:
         href (str): The link in the format of a URL.
         rel (str): The relationship between the current document and the linked document.
         title (str): Title of the link.
         method (Union[None, RequestMethod]):
-        body (Union['LinkBodyType0', None]): A JSON object containing fields/values that must be included in the body of
+        body (Union[LinkBodyType0, None]): A JSON object containing fields/values that must be included in the body of
             the next request.
         merge (Union[None, bool]): If `true`, the headers/body fields in the `next` link must be merged into the
             original request and be sent combined in the next request. Default: False.
@@ -26,7 +24,7 @@ class Link:
     rel: str
     title: str
     method: Union[None, RequestMethod] = None
-    body: Union["LinkBodyType0", None] = None
+    body: Union[LinkBodyType0, None] = None
     merge: Union[None, bool] = False
     type: Union[None, str] = None
 

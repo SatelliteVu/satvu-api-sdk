@@ -16,31 +16,3 @@ class CompanyAddress(BaseModel):
     country_code: CompanyAddressCountryCode
     postcode: Union[None, str] = None
     street: Union[None, str] = None
-
-    @staticmethod
-    def get_required_fields() -> set[str]:
-        """
-        Returns the set of required fields for the model.
-        """
-        return {
-            "country_code",
-        }
-
-    @staticmethod
-    def get_required_fields_and_types() -> dict:
-        """
-        Returns a mapping of required fields to their types or nested model classes.
-        """
-        return {
-            "country_code": object,
-        }
-
-    @staticmethod
-    def get_optional_fields_and_types() -> dict:
-        """
-        Returns a mapping of optional fields to their types or nested model classes.
-        """
-        return {
-            "postcode": object,
-            "street": object,
-        }

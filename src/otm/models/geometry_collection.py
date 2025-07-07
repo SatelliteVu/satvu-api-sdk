@@ -33,32 +33,3 @@ class GeometryCollection(BaseModel):
         ]
     ]
     bbox: Union[None, list[float]] = None
-
-    @staticmethod
-    def get_required_fields() -> set[str]:
-        """
-        Returns the set of required fields for the model.
-        """
-        return {
-            "type",
-            "geometries",
-        }
-
-    @staticmethod
-    def get_required_fields_and_types() -> dict:
-        """
-        Returns a mapping of required fields to their types or nested model classes.
-        """
-        return {
-            "type": object,
-            "geometries": object,
-        }
-
-    @staticmethod
-    def get_optional_fields_and_types() -> dict:
-        """
-        Returns a mapping of optional fields to their types or nested model classes.
-        """
-        return {
-            "bbox": object,
-        }

@@ -17,34 +17,3 @@ class CreateUser(BaseModel):
     user_name: str
     company_name: str
     company_address: "CompanyAddress"
-
-    @staticmethod
-    def get_required_fields() -> set[str]:
-        """
-        Returns the set of required fields for the model.
-        """
-        return {
-            "user_email",
-            "user_name",
-            "company_name",
-            "company_address",
-        }
-
-    @staticmethod
-    def get_required_fields_and_types() -> dict:
-        """
-        Returns a mapping of required fields to their types or nested model classes.
-        """
-        return {
-            "user_email": str,
-            "user_name": str,
-            "company_name": str,
-            "company_address": object,
-        }
-
-    @staticmethod
-    def get_optional_fields_and_types() -> dict:
-        """
-        Returns a mapping of optional fields to their types or nested model classes.
-        """
-        return {}

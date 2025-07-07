@@ -22,36 +22,3 @@ class StoredFeasibilityFeatureCollection(BaseModel):
     links: list["Link"]
     context: "ResponseContext"
     bbox: Union[None, list[float]] = None
-
-    @staticmethod
-    def get_required_fields() -> set[str]:
-        """
-        Returns the set of required fields for the model.
-        """
-        return {
-            "type",
-            "features",
-            "links",
-            "context",
-        }
-
-    @staticmethod
-    def get_required_fields_and_types() -> dict:
-        """
-        Returns a mapping of required fields to their types or nested model classes.
-        """
-        return {
-            "type": object,
-            "features": object,
-            "links": object,
-            "context": object,
-        }
-
-    @staticmethod
-    def get_optional_fields_and_types() -> dict:
-        """
-        Returns a mapping of optional fields to their types or nested model classes.
-        """
-        return {
-            "bbox": object,
-        }

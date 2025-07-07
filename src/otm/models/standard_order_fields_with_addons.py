@@ -31,36 +31,3 @@ class StandardOrderFieldsWithAddons(BaseModel):
     max_cloud_cover: Union[None, int] = 15
     min_off_nadir: Union[None, int] = 0
     max_off_nadir: Union[None, int] = 30
-
-    @staticmethod
-    def get_required_fields() -> set[str]:
-        """
-        Returns the set of required fields for the model.
-        """
-        return {
-            "datetime",
-        }
-
-    @staticmethod
-    def get_required_fields_and_types() -> dict:
-        """
-        Returns a mapping of required fields to their types or nested model classes.
-        """
-        return {
-            "datetime": str,
-        }
-
-    @staticmethod
-    def get_optional_fields_and_types() -> dict:
-        """
-        Returns a mapping of optional fields to their types or nested model classes.
-        """
-        return {
-            "addon:withhold": object,
-            "name": object,
-            "product": object,
-            "satvu:day_night_mode": object,
-            "max_cloud_cover": int,
-            "min_off_nadir": int,
-            "max_off_nadir": int,
-        }

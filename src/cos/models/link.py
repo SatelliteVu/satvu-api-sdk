@@ -28,37 +28,3 @@ class Link(BaseModel):
     method: Union[None, LinkMethod] = LinkMethod.GET
     body: Union[LinkBodyType0, None] = None
     merge: Union[None, bool] = False
-
-    @staticmethod
-    def get_required_fields() -> set[str]:
-        """
-        Returns the set of required fields for the model.
-        """
-        return {
-            "href",
-            "rel",
-            "type",
-        }
-
-    @staticmethod
-    def get_required_fields_and_types() -> dict:
-        """
-        Returns a mapping of required fields to their types or nested model classes.
-        """
-        return {
-            "href": str,
-            "rel": str,
-            "type": str,
-        }
-
-    @staticmethod
-    def get_optional_fields_and_types() -> dict:
-        """
-        Returns a mapping of optional fields to their types or nested model classes.
-        """
-        return {
-            "title": object,
-            "method": object,
-            "body": object,
-            "merge": bool,
-        }

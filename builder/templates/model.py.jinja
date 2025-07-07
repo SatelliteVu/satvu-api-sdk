@@ -51,36 +51,3 @@ class {{ class_name }}(BaseModel):
     {{ property.to_string() }}
     {% endif %}
     {% endfor %}
-
-    @staticmethod
-    def get_required_fields() -> set[str]:
-        """
-        Returns the set of required fields for the model.
-        """
-        return {
-            {% for property in model.required_properties %}
-            "{{ property.name }}",
-            {% endfor %}
-        }
-
-    @staticmethod
-    def get_required_fields_and_types() -> dict:
-        """
-        Returns a mapping of required fields to their types or nested model classes.
-        """
-        return {
-            {% for property in model.required_properties %}
-            "{{ property.name }}": {{ runtime_macros.get_runtime_type(property) }},
-            {% endfor %}
-        }
-
-    @staticmethod
-    def get_optional_fields_and_types() -> dict:
-        """
-        Returns a mapping of optional fields to their types or nested model classes.
-        """
-        return {
-            {% for property in model.optional_properties %}
-            "{{ property.name }}": {{ runtime_macros.get_runtime_type(property) }},
-            {% endfor %}
-        }

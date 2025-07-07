@@ -27,36 +27,3 @@ class OrderPrice(BaseModel):
     properties: Union[AssuredFeasibilityFieldsWithAddons, StandardOrderFieldsWithAddons]
     created_at: datetime.datetime
     price: "Price1"
-
-    @staticmethod
-    def get_required_fields() -> set[str]:
-        """
-        Returns the set of required fields for the model.
-        """
-        return {
-            "type",
-            "geometry",
-            "properties",
-            "created_at",
-            "price",
-        }
-
-    @staticmethod
-    def get_required_fields_and_types() -> dict:
-        """
-        Returns a mapping of required fields to their types or nested model classes.
-        """
-        return {
-            "type": object,
-            "geometry": object,
-            "properties": object,
-            "created_at": object,
-            "price": object,
-        }
-
-    @staticmethod
-    def get_optional_fields_and_types() -> dict:
-        """
-        Returns a mapping of optional fields to their types or nested model classes.
-        """
-        return {}

@@ -20,35 +20,3 @@ class UserInfo(BaseModel):
     email: str
     user_metadata: Union[None, "UserMetadata"] = None
     last_login: Union[None, str] = None
-
-    @staticmethod
-    def get_required_fields() -> set[str]:
-        """
-        Returns the set of required fields for the model.
-        """
-        return {
-            "user_id",
-            "name",
-            "email",
-        }
-
-    @staticmethod
-    def get_required_fields_and_types() -> dict:
-        """
-        Returns a mapping of required fields to their types or nested model classes.
-        """
-        return {
-            "user_id": str,
-            "name": str,
-            "email": str,
-        }
-
-    @staticmethod
-    def get_optional_fields_and_types() -> dict:
-        """
-        Returns a mapping of optional fields to their types or nested model classes.
-        """
-        return {
-            "user_metadata": object,
-            "last_login": object,
-        }

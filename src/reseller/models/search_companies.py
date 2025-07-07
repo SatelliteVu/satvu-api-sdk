@@ -19,29 +19,3 @@ class SearchCompanies(BaseModel):
     token: Union[None, str] = None
     search: Union[CompanySearch, None, list["CompanySearch"]] = None
     kyc_status: Union[KYCStatus, None, list[KYCStatus]] = None
-
-    @staticmethod
-    def get_required_fields() -> set[str]:
-        """
-        Returns the set of required fields for the model.
-        """
-        return {}
-
-    @staticmethod
-    def get_required_fields_and_types() -> dict:
-        """
-        Returns a mapping of required fields to their types or nested model classes.
-        """
-        return {}
-
-    @staticmethod
-    def get_optional_fields_and_types() -> dict:
-        """
-        Returns a mapping of optional fields to their types or nested model classes.
-        """
-        return {
-            "limit": int,
-            "token": object,
-            "search": object,
-            "kyc_status": object,
-        }

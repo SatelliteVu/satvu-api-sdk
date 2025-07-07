@@ -26,38 +26,3 @@ class TestWebhookResponse(BaseModel):
     url: str
     id: UUID
     webhook_result: "WebhookResult"
-
-    @staticmethod
-    def get_required_fields() -> set[str]:
-        """
-        Returns the set of required fields for the model.
-        """
-        return {
-            "active",
-            "event_types",
-            "name",
-            "url",
-            "id",
-            "webhook_result",
-        }
-
-    @staticmethod
-    def get_required_fields_and_types() -> dict:
-        """
-        Returns a mapping of required fields to their types or nested model classes.
-        """
-        return {
-            "active": bool,
-            "event_types": object,
-            "name": str,
-            "url": str,
-            "id": UUID,
-            "webhook_result": object,
-        }
-
-    @staticmethod
-    def get_optional_fields_and_types() -> dict:
-        """
-        Returns a mapping of optional fields to their types or nested model classes.
-        """
-        return {}

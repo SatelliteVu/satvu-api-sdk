@@ -22,32 +22,3 @@ class FeatureOrder(BaseModel):
     type: Union[Literal["Feature"], None] = "Feature"
     geometry: Union[None, PointGeometry, PolygonGeometry] = None
     properties: Union[None, Order] = None
-
-    @staticmethod
-    def get_required_fields() -> set[str]:
-        """
-        Returns the set of required fields for the model.
-        """
-        return {
-            "id",
-        }
-
-    @staticmethod
-    def get_required_fields_and_types() -> dict:
-        """
-        Returns a mapping of required fields to their types or nested model classes.
-        """
-        return {
-            "id": object,
-        }
-
-    @staticmethod
-    def get_optional_fields_and_types() -> dict:
-        """
-        Returns a mapping of optional fields to their types or nested model classes.
-        """
-        return {
-            "type": object,
-            "geometry": object,
-            "properties": object,
-        }

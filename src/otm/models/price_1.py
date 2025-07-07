@@ -18,36 +18,3 @@ class Price1(BaseModel):
     addon_withhold: int
     total: int
     value: int
-
-    @staticmethod
-    def get_required_fields() -> set[str]:
-        """
-        Returns the set of required fields for the model.
-        """
-        return {
-            "currency",
-            "base",
-            "addon:withhold",
-            "total",
-            "value",
-        }
-
-    @staticmethod
-    def get_required_fields_and_types() -> dict:
-        """
-        Returns a mapping of required fields to their types or nested model classes.
-        """
-        return {
-            "currency": str,
-            "base": int,
-            "addon:withhold": int,
-            "total": int,
-            "value": int,
-        }
-
-    @staticmethod
-    def get_optional_fields_and_types() -> dict:
-        """
-        Returns a mapping of optional fields to their types or nested model classes.
-        """
-        return {}

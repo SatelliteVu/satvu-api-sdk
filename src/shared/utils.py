@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from typing import Type, List, Union, get_args, get_origin, Any, Literal
 from pydantic import BaseModel, ValidationError
 
@@ -47,6 +47,9 @@ def deep_parse_from_annotation(
 
     elif annotation is datetime:
         return datetime.fromisoformat(data)
+
+    elif annotation is date:
+        return date.fromisoformat(data)
 
     else:
         # Assume primitive type

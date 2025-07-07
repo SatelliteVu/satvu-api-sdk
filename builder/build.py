@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Sequence, Union
 
 import openapi_python_client.parser.openapi
+from attr._make import evolve
 from httpx import get
 
 import openapi_python_client.utils
@@ -13,14 +14,23 @@ from openapi_python_client import Project, schema, utils
 from openapi_python_client.config import Config, MetaType, ConfigFile
 from openapi_python_client.parser.bodies import Body, body_from_data
 from openapi_python_client.parser.openapi import GeneratorData, Endpoint
-from openapi_python_client.parser.errors import GeneratorError, ParseError
+from openapi_python_client.parser.errors import (
+    GeneratorError,
+    ParseError,
+    PropertyError,
+)
 from openapi_python_client.parser.properties import (
     UnionProperty,
     Schemas,
     Parameters,
     ModelProperty,
     ListProperty,
+    Property,
+    Class,
+    ReferencePath,
 )
+from openapi_python_client.parser.properties.model_property import _process_property_data
+from openapi_python_client.schema import Schema
 
 from builder.config import APIS, BASE_URL
 
@@ -222,7 +232,97 @@ def get_type_string(
         return type_string
     return f"Union[None, {type_string}]"
 
+def build(
+    data: Schema,
+    name: str,
+    schemas: Schemas,
+    required: bool,
+    parent_name: str | None,
+    config: Config,
+    process_properties: bool,
+    roots: set[ReferencePath | utils.ClassName],
+) -> tuple[ModelProperty | PropertyError, Schemas]:
+    """
+    A single ModelProperty from its OAI data
+
+    Args:
+        data: Data of a single Schema
+        name: Name by which the schema is referenced, such as a model name.
+            Used to infer the type name if a `title` property is not available.
+        schemas: Existing Schemas which have already been processed (to check name conflicts)
+        required: Whether or not this property is required by the parent (affects typing)
+        parent_name: The name of the property that this property is inside of (affects class naming)
+        config: Config data for this run of the generator, used to modifying names
+        roots: Set of strings that identify schema objects on which the new ModelProperty will depend
+        process_properties: Determines whether the new ModelProperty will be initialized with property data
+    """
+    if not config.use_path_prefixes_for_title_model_names and data.title:
+        class_string = data.title
+    else:
+        title = data.title or name
+        if parent_name:
+            class_string = f"{utils.pascal_case(parent_name)}{utils.pascal_case(title)}"
+        else:
+            class_string = title
+    class_info = Class.from_string(string=class_string, config=config)
+    # see https://github.com/openapi-generators/openapi-python-client/issues/652
+    suffix = 1
+    while class_info.name in schemas.classes_by_name:
+        class_info = Class.from_string(string=class_string + str(suffix), config=config)
+        suffix += 1
+    model_roots = {*roots, class_info.name}
+    required_properties: list[Property] | None = None
+    optional_properties: list[Property] | None = None
+    relative_imports: set[str] | None = None
+    lazy_imports: set[str] | None = None
+    additional_properties: Property | None = None
+    if process_properties:
+        data_or_err, schemas = _process_property_data(
+            data=data, schemas=schemas, class_info=class_info, config=config, roots=model_roots
+        )
+        if isinstance(data_or_err, PropertyError):
+            return data_or_err, schemas
+        property_data, additional_properties = data_or_err
+        required_properties = property_data.required_props
+        optional_properties = property_data.optional_props
+        relative_imports = property_data.relative_imports
+        lazy_imports = property_data.lazy_imports
+        for root in roots:
+            if isinstance(root, utils.ClassName):
+                continue
+            schemas.add_dependencies(root, {class_info.name})
+
+    prop = ModelProperty(
+        class_info=class_info,
+        data=data,
+        roots=model_roots,
+        required_properties=required_properties,
+        optional_properties=optional_properties,
+        relative_imports=relative_imports,
+        lazy_imports=lazy_imports,
+        additional_properties=additional_properties,
+        description=data.description or "",
+        default=None,
+        required=required,
+        name=name,
+        python_name=utils.PythonIdentifier(value=name, prefix=config.field_prefix),
+        example=data.example,
+    )
+    if class_info.name in schemas.classes_by_name:
+        error = PropertyError(
+            data=data, detail=f'Attempted to generate duplicate models with name "{class_info.name}"'
+        )
+        return error, schemas
+
+    schemas = evolve(
+        schemas,
+        classes_by_name={**schemas.classes_by_name, class_info.name: prop},
+        models_to_process=[*schemas.models_to_process, prop],
+    )
+    return prop, schemas
+
 openapi_python_client.parser.properties.model_property.get_type_string = get_type_string
+openapi_python_client.parser.properties.model_property.ModelProperty.build = build
 
 def _load_openapi(api_id: str, use_cached: bool):
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -378,7 +478,9 @@ def build(api_id: str, use_cached: False):
     openapi_python_client.parser.openapi.models_relative_prefix = f"{api_id}."
     openapi_dict, openapi_src = _load_openapi(api_id, use_cached)
     config = Config.from_sources(
-        config_file=ConfigFile(),
+        config_file=ConfigFile(
+            # class_overrides={"Price": {"class_name": "OrderPrice2", "module_name": "order_price_2"}},
+        ),
         meta_type=MetaType.NONE,
         document_source=openapi_src,
         file_encoding="utf-8",

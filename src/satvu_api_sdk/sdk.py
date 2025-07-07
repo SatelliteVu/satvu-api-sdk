@@ -1,5 +1,6 @@
 from cos.api import CosService
 from id.api import IdService
+from otm.api import OtmService
 from policy.api import PolicyService
 from reseller.api import ResellerService
 from satvu_api_sdk.auth import AuthService, TokenCache
@@ -22,8 +23,9 @@ class SatVuSDK:
 
         # for lazy service initialisation
         self._auth = None
-        self._id = None
         self._cos = None
+        self._id = None
+        self._otm = None
         self._policy = None
         self._reseller = None
 
@@ -37,6 +39,14 @@ class SatVuSDK:
         return self._auth
 
     @property
+    def cos(self) -> CosService:
+        if not self._cos:
+            self._cos = CosService(
+                env=self.env, get_token=self.get_token
+            )
+        return self._cos
+
+    @property
     def id(self) -> IdService:
         if not self._id:
             self._id = IdService(
@@ -45,12 +55,10 @@ class SatVuSDK:
         return self._id
 
     @property
-    def cos(self) -> CosService:
-        if not self._cos:
-            self._cos = CosService(
-                env=self.env, get_token=self.get_token
-            )
-        return self._cos
+    def otm(self) -> OtmService:
+        if not self._otm:
+            self._otm = OtmService(env=self.env, get_token=self.get_token)
+        return self._otm
 
     @property
     def policy(self) -> PolicyService:

@@ -1,6 +1,7 @@
 from cos.api import CosService
 from id.api import IdService
 from policy.api import PolicyService
+from reseller.api import ResellerService
 from satvu_api_sdk.auth import AuthService, TokenCache
 
 
@@ -24,6 +25,7 @@ class SatVuSDK:
         self._id = None
         self._cos = None
         self._policy = None
+        self._reseller = None
 
     def get_token(self):
         return self.auth.token(self.client_id, self.client_secret)
@@ -55,3 +57,10 @@ class SatVuSDK:
         if not self._policy:
             self._policy = PolicyService(env=self.env, get_token=self.get_token)
         return self._policy
+
+    @property
+    def reseller(self) -> ResellerService:
+        if not self._reseller:
+            from reseller.api import ResellerService
+            self._reseller = ResellerService(env=self.env, get_token=self.get_token)
+        return self._reseller

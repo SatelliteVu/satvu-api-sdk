@@ -1,5 +1,6 @@
 from cos.api import CosService
 from id.api import IdService
+from policy.api import PolicyService
 from satvu_api_sdk.auth import AuthService, TokenCache
 
 
@@ -22,6 +23,7 @@ class SatVuSDK:
         self._auth = None
         self._id = None
         self._cos = None
+        self._policy = None
 
     def get_token(self):
         return self.auth.token(self.client_id, self.client_secret)
@@ -47,3 +49,9 @@ class SatVuSDK:
                 env=self.env, get_token=self.get_token
             )
         return self._cos
+
+    @property
+    def policy(self) -> PolicyService:
+        if not self._policy:
+            self._policy = PolicyService(env=self.env, get_token=self.get_token)
+        return self._policy

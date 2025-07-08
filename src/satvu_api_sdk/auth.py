@@ -116,7 +116,7 @@ class AuthService(SDKClient):
         self, client_id: str, client_secret: str, scopes: list[str] | None = None
     ) -> str:
         scopes = scopes or []
-        cache_key = sha1(client_id.encode("utf-8"))
+        cache_key = sha1(client_id.encode("utf-8"), usedforsecurity=False)
         cache_key.update("".join(scopes).encode("utf-8"))
 
         token = self.cache.load(cache_key.hexdigest())

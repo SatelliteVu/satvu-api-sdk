@@ -14,10 +14,12 @@ class SDKClient:
         get_token: Callable[[], str] | None = None,
         subdomain: str = "api",
     ):
-        base_url = f"{self.build_url(subdomain, env=env).rstrip("/")}/{self.base_path.lstrip("/")}"
+        base_url = f"{self.build_url(subdomain, env=env).rstrip('/')}/{self.base_path.lstrip('/')}"
         if get_token:
             auth_token = get_token()
-            self.client = httpx.Client(base_url=base_url, headers={"Authorization": f"Bearer {auth_token}"})
+            self.client = httpx.Client(
+                base_url=base_url, headers={"Authorization": f"Bearer {auth_token}"}
+            )
         else:
             self.client = httpx.Client(base_url=base_url)
 
@@ -38,4 +40,11 @@ class SDKClient:
         follow_redirects: bool = False,
         timeout: int = 5,
     ):
-        return self.client.request(method=method, url=url, json=json, params=params, follow_redirects=follow_redirects, timeout=timeout)
+        return self.client.request(
+            method=method,
+            url=url,
+            json=json,
+            params=params,
+            follow_redirects=follow_redirects,
+            timeout=timeout,
+        )

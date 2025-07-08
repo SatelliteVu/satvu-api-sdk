@@ -1,8 +1,8 @@
 from collections.abc import Callable
 from typing import Any, Union, Unpack
 
-from satvu_api_sdk.core import SDKClient
-from shared.utils import deep_parse_from_annotation, normalize_keys
+from src.satvu_api_sdk.core import SDKClient
+from src.shared.utils import deep_parse_from_annotation, normalize_keys
 
 from reseller.models.create_user import CreateUser
 from reseller.models.create_user_response import CreateUserResponse

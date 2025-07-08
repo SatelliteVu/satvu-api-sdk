@@ -11,4 +11,4 @@
 - [ ] urllib/httpx/requests support
 - [ ] Better logic for choosing response type from a union
 - [ ] Documenting unions?
-- [ ] 
+- [ ]

@@ -1,12 +1,9 @@
 from datetime import datetime, date
-from typing import Type, List, Union, get_args, get_origin, Any, Literal
-from pydantic import BaseModel, ValidationError
+from typing import Type, Union, get_args, get_origin, Any, Literal
+from pydantic import BaseModel
 
 
-def deep_parse_from_annotation(
-    data: Any,
-    annotation: Any
-) -> Any:
+def deep_parse_from_annotation(data: Any, annotation: Any) -> Any:
     """
     Recursively parses the input data using the provided type annotation.
 
@@ -23,12 +20,22 @@ def deep_parse_from_annotation(
         The parsed object according to the annotation.
     """
     origin = get_origin(annotation)
+    print(data)
     args = get_args(annotation)
 
+    # If data is None, return None directly if the annotation allows it
+    # otherwise, raise an error
+    if data is None:
+        if annotation is type(None):
+            return None
+        if origin is Union and type(None) in args:
+            return None
+        raise ValueError(f"Received None for non-optional type {annotation}")
+
+    # If annotation is a Union, try each type in the Union
     if origin is Union:
         for arg in args:
             try:
-                print(f"Trying to parse as {arg}")
                 return deep_parse_from_annotation(data, arg)
             except Exception:
                 continue
@@ -73,7 +80,9 @@ def _recursive_parse_dict(data: dict, model_cls: Type[BaseModel]) -> BaseModel:
         try:
             new_data[field_name] = deep_parse_from_annotation(field_value, field_type)
         except Exception as e:
-            raise ValueError(f"Failed to parse field '{field_name}' in {model_cls.__name__}: {e}")
+            raise ValueError(
+                f"Failed to parse field '{field_name}' in {model_cls.__name__}: {e}"
+            )
 
     return model_cls(**new_data)
 
@@ -84,10 +93,7 @@ def normalize_keys(obj: Any) -> Any:
     for a nested JSON-like object (dicts, lists, primitives).
     """
     if isinstance(obj, dict):
-        return {
-            k.replace(":", "_"): normalize_keys(v)
-            for k, v in obj.items()
-        }
+        return {k.replace(":", "_"): normalize_keys(v) for k, v in obj.items()}
     elif isinstance(obj, list):
         return [normalize_keys(item) for item in obj]
     else:

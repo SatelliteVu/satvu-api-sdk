@@ -30,7 +30,9 @@ from openapi_python_client.parser.properties import (
     Class,
     ReferencePath,
 )
-from openapi_python_client.parser.properties.model_property import _process_property_data
+from openapi_python_client.parser.properties.model_property import (
+    _process_property_data,
+)
 from openapi_python_client.schema import Schema
 
 from builder.config import APIS, BASE_URL
@@ -41,11 +43,10 @@ TEMPLATE_DIR = Path(__file__).parent / "templates"
 SRC_DIR = BASE_DIR / "src"
 
 # Override reserved words - we want to still use "type"
-RESERVED_WORDS = (set(dir(builtins)) | {"self", "true", "false"}) - {
-    "id", "type"
-}
+RESERVED_WORDS = (set(dir(builtins)) | {"self", "true", "false"}) - {"id", "type"}
 
 openapi_python_client.utils.RESERVED_WORDS = RESERVED_WORDS
+
 
 def from_data(
     *,
@@ -62,7 +63,9 @@ def from_data(
     """Construct an endpoint from the OpenAPI data"""
 
     if data.operationId is None:
-        name = openapi_python_client.parser.generate_operation_id(path=path, method=method)
+        name = openapi_python_client.parser.generate_operation_id(
+            path=path, method=method
+        )
     else:
         name = data.operationId.replace("-", "_")
 
@@ -110,10 +113,14 @@ def from_data(
             continue
         result.bodies.append(body)
         result.relative_imports.update(
-            body.prop.get_imports(prefix=openapi_python_client.parser.openapi.models_relative_prefix)
+            body.prop.get_imports(
+                prefix=openapi_python_client.parser.openapi.models_relative_prefix
+            )
         )
         result.relative_imports.update(
-            body.prop.get_lazy_imports(prefix=openapi_python_client.parser.openapi.models_relative_prefix)
+            body.prop.get_lazy_imports(
+                prefix=openapi_python_client.parser.openapi.models_relative_prefix
+            )
         )
     if len(result.bodies) > 0:
         result.errors.extend(body_errors)
@@ -129,7 +136,9 @@ def from_data(
 
     return result, schemas, parameters
 
+
 openapi_python_client.parser.openapi.Endpoint.from_data = from_data
+
 
 def get_type_string(
     self,
@@ -147,7 +156,11 @@ def get_type_string(
         return type_string
     return f"Union[None, {type_string}]"
 
-openapi_python_client.parser.properties.list_property.ListProperty.get_type_string = get_type_string
+
+openapi_python_client.parser.properties.list_property.ListProperty.get_type_string = (
+    get_type_string
+)
+
 
 def to_string(self) -> str:
     default: str | None
@@ -159,6 +172,7 @@ def to_string(self) -> str:
         return f"{self.python_name}: {self.get_type_string(quoted=True)} = {default}"
     else:
         return f"{self.python_name}: {self.get_type_string(quoted=True)}"
+
 
 def get_type_string(
     self,
@@ -176,8 +190,11 @@ def get_type_string(
         return type_string
     return f"Union[None, {type_string}]"
 
+
 openapi_python_client.parser.properties.protocol.PropertyProtocol.to_string = to_string
-openapi_python_client.parser.properties.protocol.PropertyProtocol.get_type_string = get_type_string
+openapi_python_client.parser.properties.protocol.PropertyProtocol.get_type_string = (
+    get_type_string
+)
 
 
 def get_type_string(
@@ -192,7 +209,9 @@ def get_type_string(
         return f"Union[{lit}, None]"
     return lit
 
+
 openapi_python_client.parser.properties.const.get_type_string = get_type_string
+
 
 def get_type_strings_in_union(
     self, *, no_optional: bool = False, json: bool
@@ -202,13 +221,21 @@ def get_type_strings_in_union(
         return type_strings
     return type_strings
 
+
 def _get_inner_type_strings(self, json: bool) -> set[str]:
     return {
-        p.get_type_string(no_optional=True, json=json, quoted=True) if "geometries_item_type" in p.name else p.get_type_string(no_optional=True, json=json, quoted=False) for p in self.inner_properties
+        p.get_type_string(no_optional=True, json=json, quoted=True)
+        if "geometries_item_type" in p.name
+        else p.get_type_string(no_optional=True, json=json, quoted=False)
+        for p in self.inner_properties
     }
 
+
 openapi_python_client.parser.properties.union.UnionProperty.get_type_strings_in_union = get_type_strings_in_union
-openapi_python_client.parser.properties.union.UnionProperty._get_inner_type_strings = _get_inner_type_strings
+openapi_python_client.parser.properties.union.UnionProperty._get_inner_type_strings = (
+    _get_inner_type_strings
+)
+
 
 def get_type_string(
     self,
@@ -229,6 +256,7 @@ def get_type_string(
     if no_optional or self.required:
         return type_string
     return f"Union[None, {type_string}]"
+
 
 def build(
     data: Schema,
@@ -276,7 +304,11 @@ def build(
     additional_properties: Property | None = None
     if process_properties:
         data_or_err, schemas = _process_property_data(
-            data=data, schemas=schemas, class_info=class_info, config=config, roots=model_roots
+            data=data,
+            schemas=schemas,
+            class_info=class_info,
+            config=config,
+            roots=model_roots,
         )
         if isinstance(data_or_err, PropertyError):
             return data_or_err, schemas
@@ -308,7 +340,8 @@ def build(
     )
     if class_info.name in schemas.classes_by_name:
         error = PropertyError(
-            data=data, detail=f'Attempted to generate duplicate models with name "{class_info.name}"'
+            data=data,
+            detail=f'Attempted to generate duplicate models with name "{class_info.name}"',
         )
         return error, schemas
 
@@ -319,8 +352,12 @@ def build(
     )
     return prop, schemas
 
-openapi_python_client.parser.properties.model_property.ModelProperty.get_type_string = get_type_string
+
+openapi_python_client.parser.properties.model_property.ModelProperty.get_type_string = (
+    get_type_string
+)
 openapi_python_client.parser.properties.model_property.ModelProperty.build = build
+
 
 def get_type_string(
     self,
@@ -334,19 +371,28 @@ def get_type_string(
         return f"Union[{lit}, None]"
     return lit
 
-openapi_python_client.parser.properties.const.ConstProperty.get_type_string = get_type_string
+
+openapi_python_client.parser.properties.const.ConstProperty.get_type_string = (
+    get_type_string
+)
+
 
 def sanitize(value: str) -> str:
     """Removes every character that isn't 0-9, A-Z, a-z, or a known delimiter"""
     value = value.replace(":", "_")  # Replace colons with underscores
     return re.sub(rf"[^\w{utils.DELIMITERS}]+", "", value)
 
+
 openapi_python_client.utils.sanitize = sanitize
+
 
 def _load_openapi(api_id: str, use_cached: bool):
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     openapi_url = f"{BASE_URL.rstrip('/')}/{APIS[api_id]}/openapi.json"
-    cache_file = CACHE_DIR / f"{api_id}-{sha1(openapi_url.encode()).hexdigest()}.json"
+    cache_file = (
+        CACHE_DIR
+        / f"{api_id}-{sha1(openapi_url.encode(), usedforsecurity=False).hexdigest()}.json"
+    )
 
     if not use_cached:
         response = get(openapi_url)
@@ -376,7 +422,7 @@ def build_response_disambiguation(endpoint, models_by_name):
         resp_type = resp.prop.get_type_string(quoted=False)
         if resp_type.startswith("Union["):
             # Parse the union types
-            inner = resp_type[len("Union["):-1]
+            inner = resp_type[len("Union[") : -1]
             model_names = [name.strip().replace("'", "") for name in inner.split(",")]
             fallback_models = model_names
             # Try to find discriminator info
@@ -423,11 +469,14 @@ class SatVuProject(Project):
         api_dir = self.package_dir
         api_init_path = api_dir / "__init__.py"
         api_init_template = self.env.get_template("api_init.py.jinja")
-        api_init_path.write_text(api_init_template.render(), encoding=self.config.file_encoding)
+        api_init_path.write_text(
+            api_init_template.render(), encoding=self.config.file_encoding
+        )
 
         endpoint_collections_by_tag = self.openapi.endpoint_collections_by_tag
         endpoint_template = self.env.get_template(
-            "endpoint_module.py.jinja", globals={"isbool": lambda obj: obj.get_base_type_string() == "bool"}
+            "endpoint_module.py.jinja",
+            globals={"isbool": lambda obj: obj.get_base_type_string() == "bool"},
         )
         endpoints: list[Endpoint] = []
 
@@ -436,19 +485,19 @@ class SatVuProject(Project):
                 body_docstrings = []
                 if endpoint.bodies:
                     body_docstrings = self.body_docstrings(endpoint.bodies[0])
-                response_disambiguation = build_response_disambiguation(
-                    endpoint, {}
+                response_disambiguation = build_response_disambiguation(endpoint, {})
+                endpoint = SatVuEndpoint(
+                    body_docstrings=body_docstrings,
+                    response_disambiguation=response_disambiguation,
+                    **vars(endpoint),
                 )
-                endpoint = SatVuEndpoint(body_docstrings=body_docstrings, response_disambiguation=response_disambiguation, **vars(endpoint))
                 endpoints.append(endpoint)
 
         api_class_path = api_dir / "api.py"
         endpoint_template.environment.filters["split"] = lambda s, sep: s.split(sep)
         api_class_path.write_text(
             endpoint_template.render(
-                endpoints=endpoints,
-                api_id=api_id,
-                base_path=APIS[api_id]
+                endpoints=endpoints, api_id=api_id, base_path=APIS[api_id]
             ),
             encoding=self.config.file_encoding,
         )
@@ -461,13 +510,19 @@ class SatVuProject(Project):
             self.project_dir.mkdir()
         except FileExistsError:
             if not self.config.overwrite:
-                return [GeneratorError(detail="Directory already exists. Delete it or use the --overwrite option.")]
+                return [
+                    GeneratorError(
+                        detail="Directory already exists. Delete it or use the --overwrite option."
+                    )
+                ]
 
         self._build_models()
         self._build_api(api_id, config)
         types_template = self.env.get_template("types.py.jinja")
         types_path = self.package_dir / "types.py"
-        types_path.write_text(types_template.render(), encoding=self.config.file_encoding)
+        types_path.write_text(
+            types_template.render(), encoding=self.config.file_encoding
+        )
         self._run_post_hooks()
         return self._get_errors()
 
@@ -484,7 +539,11 @@ class SatVuProject(Project):
                 docstrings.append(docstring)
                 docstring = "Or:"
         else:
-            body_prop = body.prop.inner_property if isinstance(body.prop, ListProperty) else body.prop
+            body_prop = (
+                body.prop.inner_property
+                if isinstance(body.prop, ListProperty)
+                else body.prop
+            )
             props = body_prop.required_properties + body_prop.optional_properties
             for prop in props:
                 docstring = f"{prop.python_name} ({prop.get_type_string()}): {prop.description or ''}"

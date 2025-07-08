@@ -8,6 +8,8 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
+    "attrs>=25.3.0",
+    "httpx>=0.28.1",
     "openapi-python-client>=0.25.2",
     "pydantic>=2.11.7",
 ]
@@ -23,5 +25,9 @@ build-backend = "hatchling.build"
 
 [tool.uv]
 dev-dependencies = [
+    "bandit>=1.8.6",
+    "fawltydeps>=0.20.0",
     "httpx>=0.28.1",
+    "pre-commit>=4.2.0",
+    "ruff>=0.12.2",
 ]

@@ -12,7 +12,11 @@
 {%- endfor -%}
 {# Any allowed bodies #}
 {%- if endpoint.bodies | length -%}
-**kwargs: Unpack[{% for body in endpoint.bodies %}{{ body.prop.get_type_string() }}{% if not loop.last %}|{% endif %}{% endfor %}]
+{%- if endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[") -%}
+items: {{ endpoint.bodies[0].prop.get_type_string() }},
+{%- else -%}
+body: {% for body in endpoint.bodies %}{{ body.prop.get_type_string() }}{% if not loop.last %}|{% endif %}{% endfor %}
+{% endif %}
 {% endif %}
 {% endmacro %}
 
@@ -54,6 +58,14 @@ params = {k: v for k, v in params.items() if v is not None}
 {% endif %}
 {% endmacro %}
 
+{%- macro build_json(endpoint) %}
+{%- if endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[") %}
+json_body = [item.model_dump() for item in items]
+{%- elif endpoint.bodies | length %}
+json_body = body.model_dump()
+{% endif %}
+{%- endmacro %}
+
 {# Prepare request #}
 {%- macro make_request(endpoint, follow_redirects=False) %}
 {%- if endpoint.query_parameters -%}
@@ -61,7 +73,7 @@ params = {k: v for k, v in params.items() if v is not None}
 {%- endif -%}
 response = self.make_request(method="{{ endpoint.method }}", url={{ url(endpoint) }},
 {%- if endpoint.bodies | length -%}
-json=kwargs,
+json=json_body,
 {%- endif -%}
 {%- if endpoint.query_parameters -%}
 params=params,
@@ -150,6 +162,11 @@ class {{ api_id | title }}Service(SDKClient):
     {# TODO: Update return_string to handle multiple success responses #}
     def {{ endpoint.name }}(self, {{ arguments(endpoint) }}) -> {{ return_string }}:
         {{ docstring(endpoint, return_string, is_detailed=true) }}
+
+        {% if endpoint.bodies | length %}
+        {{ build_json(endpoint) }}
+        {% endif %}
+
         {% if redirect_response | length > 0 %}
         {{ make_request(endpoint, follow_redirects=True) | indent(8) }}
         {% else %}

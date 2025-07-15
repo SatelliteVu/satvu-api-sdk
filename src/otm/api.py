@@ -1,33 +1,33 @@
 import io
 from collections.abc import Callable
-from typing import Any, Union, Unpack
+from typing import Any, Union
 from uuid import UUID
 
-from src.satvu_api_sdk.core import SDKClient
-from src.shared.utils import deep_parse_from_annotation, normalize_keys
+from satvu_api_sdk.core import SDKClient
+from shared.utils import deep_parse_from_annotation, normalize_keys
 
-from src.otm.models.assured_order_request import AssuredOrderRequest
-from src.otm.models.edit_order_payload import EditOrderPayload
-from src.otm.models.feasibility_request import FeasibilityRequest
-from src.otm.models.feasibility_response import FeasibilityResponse
-from src.otm.models.get_order import GetOrder
-from src.otm.models.order_item_download_url import OrderItemDownloadUrl
-from src.otm.models.order_price import OrderPrice
-from src.otm.models.price_request import PriceRequest
-from src.otm.models.reseller_assured_order_request import ResellerAssuredOrderRequest
-from src.otm.models.reseller_get_order import ResellerGetOrder
-from src.otm.models.reseller_standard_order_request import ResellerStandardOrderRequest
-from src.otm.models.reseller_stored_order_request import ResellerStoredOrderRequest
-from src.otm.models.search_request import SearchRequest
-from src.otm.models.search_response import SearchResponse
-from src.otm.models.stac_feature import StacFeature
-from src.otm.models.standard_order_request import StandardOrderRequest
-from src.otm.models.stored_feasibility_feature_collection import (
+from otm.models.assured_order_request import AssuredOrderRequest
+from otm.models.edit_order_payload import EditOrderPayload
+from otm.models.feasibility_request import FeasibilityRequest
+from otm.models.feasibility_response import FeasibilityResponse
+from otm.models.get_order import GetOrder
+from otm.models.order_item_download_url import OrderItemDownloadUrl
+from otm.models.order_price import OrderPrice
+from otm.models.price_request import PriceRequest
+from otm.models.reseller_assured_order_request import ResellerAssuredOrderRequest
+from otm.models.reseller_get_order import ResellerGetOrder
+from otm.models.reseller_standard_order_request import ResellerStandardOrderRequest
+from otm.models.reseller_stored_order_request import ResellerStoredOrderRequest
+from otm.models.search_request import SearchRequest
+from otm.models.search_response import SearchResponse
+from otm.models.stac_feature import StacFeature
+from otm.models.standard_order_request import StandardOrderRequest
+from otm.models.stored_feasibility_feature_collection import (
     StoredFeasibilityFeatureCollection,
 )
-from src.otm.models.stored_feasibility_request import StoredFeasibilityRequest
-from src.otm.models.stored_order_request import StoredOrderRequest
-from src.otm.models.stored_order_request_list import StoredOrderRequestList
+from otm.models.stored_feasibility_request import StoredFeasibilityRequest
+from otm.models.stored_order_request import StoredOrderRequest
+from otm.models.stored_order_request_list import StoredOrderRequestList
 
 
 class OtmService(SDKClient):
@@ -80,13 +80,11 @@ class OtmService(SDKClient):
     def post_tasking_orders(
         self,
         contract_id: UUID,
-        **kwargs: Unpack[
-            Union[
-                AssuredOrderRequest,
-                ResellerAssuredOrderRequest,
-                ResellerStandardOrderRequest,
-                StandardOrderRequest,
-            ]
+        body: Union[
+            AssuredOrderRequest,
+            ResellerAssuredOrderRequest,
+            ResellerStandardOrderRequest,
+            StandardOrderRequest,
         ],
     ) -> Union[ResellerStoredOrderRequest, StoredOrderRequest]:
         """
@@ -115,10 +113,12 @@ class OtmService(SDKClient):
             Union[ResellerStoredOrderRequest, StoredOrderRequest]
         """
 
+        json_body = body.model_dump()
+
         response = self.make_request(
             method="post",
             url="/{contract_id}/tasking/orders/".format(contract_id=contract_id),
-            json=kwargs,
+            json=json_body,
         )
 
         if response.status_code == 201:
@@ -160,7 +160,7 @@ class OtmService(SDKClient):
         return response.json()
 
     def edit_tasking_order(
-        self, contract_id: UUID, order_id: UUID, **kwargs: Unpack[EditOrderPayload]
+        self, contract_id: UUID, order_id: UUID, body: EditOrderPayload
     ) -> Union[GetOrder, ResellerGetOrder]:
         """
         Edit a tasking order request.
@@ -176,12 +176,14 @@ class OtmService(SDKClient):
             Union[GetOrder, ResellerGetOrder]
         """
 
+        json_body = body.model_dump()
+
         response = self.make_request(
             method="patch",
             url="/{contract_id}/tasking/orders/{order_id}".format(
                 contract_id=contract_id, order_id=order_id
             ),
-            json=kwargs,
+            json=json_body,
         )
 
         if response.status_code == 200:
@@ -343,7 +345,7 @@ class OtmService(SDKClient):
         return response.json()
 
     def post_tasking_feasibility(
-        self, contract_id: UUID, **kwargs: Unpack[FeasibilityRequest]
+        self, contract_id: UUID, body: FeasibilityRequest
     ) -> StoredFeasibilityRequest:
         """
         Create feasibility request.
@@ -361,10 +363,12 @@ class OtmService(SDKClient):
             StoredFeasibilityRequest
         """
 
+        json_body = body.model_dump()
+
         response = self.make_request(
             method="post",
             url="/{contract_id}/tasking/feasibilities/".format(contract_id=contract_id),
-            json=kwargs,
+            json=json_body,
         )
 
         if response.status_code == 202:
@@ -436,9 +440,7 @@ class OtmService(SDKClient):
             )
         return response.json()
 
-    def get_price(
-        self, contract_id: UUID, **kwargs: Unpack[PriceRequest]
-    ) -> OrderPrice:
+    def get_price(self, contract_id: UUID, body: PriceRequest) -> OrderPrice:
         """
         Get price for a set of ordering parameters.
 
@@ -456,10 +458,12 @@ class OtmService(SDKClient):
             OrderPrice
         """
 
+        json_body = body.model_dump()
+
         response = self.make_request(
             method="post",
             url="/{contract_id}/tasking/price/".format(contract_id=contract_id),
-            json=kwargs,
+            json=json_body,
         )
 
         if response.status_code == 200:
@@ -468,11 +472,9 @@ class OtmService(SDKClient):
             )
         return response.json()
 
-    def post_search__contract_id__search__post(
-        self, contract_id: UUID, **kwargs: Unpack[SearchRequest]
-    ) -> SearchResponse:
+    def search(self, contract_id: UUID, body: SearchRequest) -> SearchResponse:
         """
-        Post Search
+        Search
 
         Search for feasibility requests/responses and tasking orders owned by the user.
 
@@ -498,14 +500,17 @@ class OtmService(SDKClient):
             SearchResponse
         """
 
+        json_body = body.model_dump()
+
         response = self.make_request(
             method="post",
             url="/{contract_id}/search/".format(contract_id=contract_id),
-            json=kwargs,
+            json=json_body,
         )
 
         if response.status_code == 200:
             return deep_parse_from_annotation(
                 normalize_keys(response.json()), SearchResponse
             )
+        print(response.status_code, response.text)
         return response.json()

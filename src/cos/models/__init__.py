@@ -17,6 +17,7 @@ from .order_page import OrderPage
 from .order_submission_payload import OrderSubmissionPayload
 from .point_geometry import PointGeometry
 from .polygon import Polygon
+from .polygon_1 import Polygon1
 from .polygon_geometry import PolygonGeometry
 from .price import Price
 from .reseller_feature_collection_order import ResellerFeatureCollectionOrder
@@ -25,9 +26,13 @@ from .satvu_filter import SatvuFilter
 from .stac_metadata import StacMetadata
 from .stac_metadata_assets import StacMetadataAssets
 from .stac_properties_v4 import StacPropertiesV4
-from .stac_properties_v5 import StacPropertiesV5
-from .stac_properties_v5_processing_software_name_version import (
-    StacPropertiesV5ProcessingSoftwareNameVersion,
+from .stac_properties_v6 import StacPropertiesV6
+from .stac_properties_v6_processing_software_name_version import (
+    StacPropertiesV6ProcessingSoftwareNameVersion,
+)
+from .stac_properties_v7 import StacPropertiesV7
+from .stac_properties_v7_processing_software_name_version import (
+    StacPropertiesV7ProcessingSoftwareNameVersion,
 )
 from .validation_error import ValidationError
 
@@ -49,6 +54,7 @@ __all__ = (
     "OrderSubmissionPayload",
     "PointGeometry",
     "Polygon",
+    "Polygon1",
     "PolygonGeometry",
     "Price",
     "ResellerFeatureCollectionOrder",
@@ -57,7 +63,9 @@ __all__ = (
     "StacMetadata",
     "StacMetadataAssets",
     "StacPropertiesV4",
-    "StacPropertiesV5",
-    "StacPropertiesV5ProcessingSoftwareNameVersion",
+    "StacPropertiesV6",
+    "StacPropertiesV6ProcessingSoftwareNameVersion",
+    "StacPropertiesV7",
+    "StacPropertiesV7ProcessingSoftwareNameVersion",
     "ValidationError",
 )

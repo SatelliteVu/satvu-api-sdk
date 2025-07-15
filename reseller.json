@@ -1,0 +1,1352 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Reseller API",
+        "description": "Interface for resellers.",
+        "version": "0.1.0",
+        "x-logo": {
+            "url": "https://cdn.satellitevu.com/dark-logo.svg"
+        }
+    },
+    "servers": [
+        {
+            "url": "https://api.qa.satellitevu.com/resellers/v1"
+        }
+    ],
+    "paths": {
+        "/user": {
+            "post": {
+                "summary": "Create end users",
+                "description": "Create end users.",
+                "operationId": "post-create-users",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "items": {
+                                    "$ref": "#/components/schemas/CreateUser"
+                                },
+                                "type": "array",
+                                "title": "Payload"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/CreateUserResponse"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Post-Create-Users"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "SatVuAuth": []
+                    }
+                ]
+            }
+        },
+        "/users": {
+            "get": {
+                "summary": "Get end users",
+                "description": "List end users.",
+                "operationId": "get-users",
+                "security": [
+                    {
+                        "SatVuAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 1000,
+                            "minimum": 1,
+                            "description": "The number of end users to return per page.",
+                            "default": 100,
+                            "title": "Limit"
+                        },
+                        "description": "The number of end users to return per page."
+                    },
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "The pagination token.",
+                            "title": "Token"
+                        },
+                        "description": "The pagination token."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetUsers"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/companies": {
+            "get": {
+                "summary": "Get end user companies",
+                "description": "List end user companies.",
+                "operationId": "get-companies",
+                "security": [
+                    {
+                        "SatVuAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 1000,
+                            "minimum": 1,
+                            "description": "The number of end user companies to return per page.",
+                            "default": 100,
+                            "title": "Limit"
+                        },
+                        "description": "The number of end user companies to return per page."
+                    },
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "The pagination token.",
+                            "title": "Token"
+                        },
+                        "description": "The pagination token."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetCompanies"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/search/users": {
+            "post": {
+                "summary": "Search end users",
+                "description": "Search end users.",
+                "operationId": "search-users",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SearchUsers",
+                                "description": "Search criteria"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetUsers"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "SatVuAuth": []
+                    }
+                ]
+            }
+        },
+        "/search/companies": {
+            "post": {
+                "summary": "Search end user companies",
+                "description": "Search end user companies.",
+                "operationId": "search-companies",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SearchCompanies",
+                                "description": "Search criteria"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetCompanies"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "SatVuAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "CompanyAddress": {
+                "properties": {
+                    "country_code": {
+                        "type": "string",
+                        "enum": [
+                            "AD",
+                            "AE",
+                            "AF",
+                            "AG",
+                            "AI",
+                            "AL",
+                            "AM",
+                            "AO",
+                            "AQ",
+                            "AR",
+                            "AT",
+                            "AU",
+                            "AW",
+                            "AX",
+                            "AZ",
+                            "BA",
+                            "BB",
+                            "BD",
+                            "BE",
+                            "BF",
+                            "BG",
+                            "BH",
+                            "BI",
+                            "BJ",
+                            "BL",
+                            "BM",
+                            "BN",
+                            "BO",
+                            "BQ",
+                            "BR",
+                            "BS",
+                            "BT",
+                            "BV",
+                            "BW",
+                            "BY",
+                            "BZ",
+                            "CA",
+                            "CC",
+                            "CD",
+                            "CF",
+                            "CG",
+                            "CH",
+                            "CI",
+                            "CK",
+                            "CL",
+                            "CM",
+                            "CN",
+                            "CO",
+                            "CR",
+                            "CV",
+                            "CW",
+                            "CX",
+                            "CY",
+                            "CZ",
+                            "DE",
+                            "DJ",
+                            "DK",
+                            "DM",
+                            "DO",
+                            "DZ",
+                            "EC",
+                            "EE",
+                            "EG",
+                            "EH",
+                            "ER",
+                            "ES",
+                            "ET",
+                            "FI",
+                            "FJ",
+                            "FK",
+                            "FO",
+                            "FR",
+                            "GA",
+                            "GB",
+                            "GD",
+                            "GE",
+                            "GF",
+                            "GG",
+                            "GH",
+                            "GI",
+                            "GL",
+                            "GM",
+                            "GN",
+                            "GP",
+                            "GQ",
+                            "GR",
+                            "GS",
+                            "GT",
+                            "GW",
+                            "GY",
+                            "HM",
+                            "HN",
+                            "HR",
+                            "HT",
+                            "HU",
+                            "ID",
+                            "IE",
+                            "IL",
+                            "IM",
+                            "IN",
+                            "IO",
+                            "IQ",
+                            "IS",
+                            "IT",
+                            "JE",
+                            "JM",
+                            "JO",
+                            "JP",
+                            "KE",
+                            "KG",
+                            "KH",
+                            "KI",
+                            "KM",
+                            "KN",
+                            "KR",
+                            "KW",
+                            "KY",
+                            "KZ",
+                            "LA",
+                            "LB",
+                            "LC",
+                            "LI",
+                            "LK",
+                            "LR",
+                            "LS",
+                            "LT",
+                            "LU",
+                            "LV",
+                            "LY",
+                            "MA",
+                            "MC",
+                            "MD",
+                            "ME",
+                            "MF",
+                            "MG",
+                            "MK",
+                            "ML",
+                            "MM",
+                            "MN",
+                            "MO",
+                            "MQ",
+                            "MR",
+                            "MS",
+                            "MT",
+                            "MU",
+                            "MV",
+                            "MW",
+                            "MX",
+                            "MY",
+                            "MZ",
+                            "NA",
+                            "NC",
+                            "NE",
+                            "NF",
+                            "NG",
+                            "NI",
+                            "NL",
+                            "NO",
+                            "NP",
+                            "NR",
+                            "NU",
+                            "NZ",
+                            "OM",
+                            "PA",
+                            "PE",
+                            "PF",
+                            "PG",
+                            "PH",
+                            "PK",
+                            "PL",
+                            "PM",
+                            "PN",
+                            "PS",
+                            "PT",
+                            "PY",
+                            "QA",
+                            "RE",
+                            "RO",
+                            "RS",
+                            "RU",
+                            "RW",
+                            "SA",
+                            "SB",
+                            "SC",
+                            "SE",
+                            "SG",
+                            "SH",
+                            "SI",
+                            "SJ",
+                            "SK",
+                            "SL",
+                            "SM",
+                            "SN",
+                            "SO",
+                            "SR",
+                            "SS",
+                            "ST",
+                            "SV",
+                            "SX",
+                            "SZ",
+                            "TC",
+                            "TD",
+                            "TF",
+                            "TG",
+                            "TH",
+                            "TJ",
+                            "TK",
+                            "TL",
+                            "TM",
+                            "TN",
+                            "TO",
+                            "TR",
+                            "TT",
+                            "TV",
+                            "TW",
+                            "TZ",
+                            "UA",
+                            "UG",
+                            "US",
+                            "UY",
+                            "UZ",
+                            "VA",
+                            "VC",
+                            "VE",
+                            "VG",
+                            "VN",
+                            "VU",
+                            "WF",
+                            "WS",
+                            "XK",
+                            "YE",
+                            "YT",
+                            "ZA",
+                            "ZM",
+                            "ZW"
+                        ],
+                        "title": "Country Code",
+                        "description": "2-digit country code of company.",
+                        "examples": [
+                            "GB"
+                        ]
+                    },
+                    "postcode": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Postcode",
+                        "description": "The postcode/zip code of the company.",
+                        "examples": [
+                            "J1 ABC"
+                        ]
+                    },
+                    "street": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Street",
+                        "description": "The street of the company.",
+                        "examples": [
+                            "1 John Lane"
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "country_code"
+                ],
+                "title": "CompanyAddress"
+            },
+            "CompanySearch": {
+                "properties": {
+                    "type": {
+                        "$ref": "#/components/schemas/MatchType",
+                        "description": "Type of search.",
+                        "default": "partial"
+                    },
+                    "string": {
+                        "type": "string",
+                        "title": "String",
+                        "description": "Search string."
+                    },
+                    "fields": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/CompanySearchFields"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "string",
+                                "const": "all"
+                            }
+                        ],
+                        "title": "Fields",
+                        "description": "Fields to search against. Either a list of fields or `all`. Defaults to `all`.",
+                        "default": "all",
+                        "examples": [
+                            "all"
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "string"
+                ],
+                "title": "CompanySearch"
+            },
+            "CompanySearchFields": {
+                "type": "string",
+                "enum": [
+                    "name",
+                    "id"
+                ],
+                "title": "CompanySearchFields"
+            },
+            "CreateUser": {
+                "properties": {
+                    "user_email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "User Email",
+                        "description": "The email address of the user.",
+                        "examples": [
+                            "john@smith.com"
+                        ]
+                    },
+                    "user_name": {
+                        "type": "string",
+                        "title": "User Name",
+                        "description": "The full name of the user.",
+                        "examples": [
+                            "John Smith"
+                        ]
+                    },
+                    "company_name": {
+                        "type": "string",
+                        "title": "Company Name",
+                        "description": "The name of the company.",
+                        "examples": [
+                            "John Smith's Company"
+                        ]
+                    },
+                    "company_address": {
+                        "$ref": "#/components/schemas/CompanyAddress",
+                        "description": "The address of the company."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "user_email",
+                    "user_name",
+                    "company_name",
+                    "company_address"
+                ],
+                "title": "CreateUser",
+                "description": "Represents payload to create a user"
+            },
+            "CreateUserResponse": {
+                "properties": {
+                    "company_kyc_status": {
+                        "$ref": "#/components/schemas/KYCStatus",
+                        "description": "The KYC status of the company."
+                    },
+                    "company_kyc_completed_on": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Company Kyc Completed On",
+                        "description": "The date when KYC was completed for the company, if applicable. In YYYY-MM-DD format."
+                    },
+                    "company_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Company Id",
+                        "description": "The unique identifier for the company.",
+                        "examples": [
+                            "666607ef-5c29-42fc-ba1b-90bb451c86c7"
+                        ]
+                    },
+                    "company_name": {
+                        "type": "string",
+                        "title": "Company Name",
+                        "description": "The name of the company.",
+                        "examples": [
+                            "John Smith's Company"
+                        ]
+                    },
+                    "company_address": {
+                        "$ref": "#/components/schemas/CompanyAddress",
+                        "description": "The address of the company."
+                    },
+                    "user_kyc_status": {
+                        "$ref": "#/components/schemas/KYCStatus",
+                        "description": "The KYC status of the user."
+                    },
+                    "user_kyc_completed_on": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "User Kyc Completed On",
+                        "description": "The date when KYC was completed for the user, if applicable. In YYYY-MM-DD format."
+                    },
+                    "user_email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "User Email",
+                        "description": "The email address of the user.",
+                        "examples": [
+                            "john@smith.com"
+                        ]
+                    },
+                    "user_name": {
+                        "type": "string",
+                        "title": "User Name",
+                        "description": "The full name of the user.",
+                        "examples": [
+                            "John Smith"
+                        ]
+                    },
+                    "user_id": {
+                        "type": "string",
+                        "title": "User Id",
+                        "description": "The unique identifier for the user.",
+                        "examples": [
+                            "9814613e-3b32-4cc4-a60b-86c16eac1cd4"
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "company_kyc_status",
+                    "company_id",
+                    "company_name",
+                    "company_address",
+                    "user_kyc_status",
+                    "user_email",
+                    "user_name",
+                    "user_id"
+                ],
+                "title": "CreateUserResponse",
+                "description": "Represents response when creating user"
+            },
+            "GetCompanies": {
+                "properties": {
+                    "companies": {
+                        "items": {
+                            "$ref": "#/components/schemas/GetCompany"
+                        },
+                        "type": "array",
+                        "title": "Companies",
+                        "description": "All end user companies associated with the reseller."
+                    },
+                    "links": {
+                        "items": {
+                            "$ref": "#/components/schemas/Link"
+                        },
+                        "type": "array",
+                        "title": "Links",
+                        "description": "Links to previous and/or next page."
+                    },
+                    "context": {
+                        "$ref": "#/components/schemas/ResponseContext",
+                        "description": "Context about the response."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "companies",
+                    "links",
+                    "context"
+                ],
+                "title": "GetCompanies",
+                "description": "Represents response to GET companies request"
+            },
+            "GetCompany": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name",
+                        "description": "Name of the company.",
+                        "examples": [
+                            "John Smith's Company"
+                        ]
+                    },
+                    "country": {
+                        "type": "string",
+                        "title": "Country",
+                        "description": "Country of the company.",
+                        "examples": [
+                            "United Kingdom"
+                        ]
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id",
+                        "description": "Unique identifier of the company.",
+                        "examples": [
+                            "666607ef-5c29-42fc-ba1b-90bb451c86c7"
+                        ]
+                    },
+                    "kyc_status": {
+                        "$ref": "#/components/schemas/KYCStatus",
+                        "description": "KYC status of the company."
+                    },
+                    "kyc_completed_on": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Kyc Completed On",
+                        "description": "The date when KYC was completed for the company, if applicable. In YYYY-MM-DD format."
+                    },
+                    "created_date": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Created Date",
+                        "description": "The date when the user was created."
+                    },
+                    "updated_date": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Updated Date",
+                        "description": "The date when the user was last updated."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "country",
+                    "id",
+                    "kyc_status",
+                    "created_date",
+                    "updated_date"
+                ],
+                "title": "GetCompany"
+            },
+            "GetUser": {
+                "properties": {
+                    "company_kyc_status": {
+                        "$ref": "#/components/schemas/KYCStatus",
+                        "description": "The KYC status of the company."
+                    },
+                    "company_kyc_completed_on": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Company Kyc Completed On",
+                        "description": "The date when KYC was completed for the company, if applicable. In YYYY-MM-DD format."
+                    },
+                    "company_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Company Id",
+                        "description": "The unique identifier for the company.",
+                        "examples": [
+                            "666607ef-5c29-42fc-ba1b-90bb451c86c7"
+                        ]
+                    },
+                    "company_name": {
+                        "type": "string",
+                        "title": "Company Name",
+                        "description": "The name of the company.",
+                        "examples": [
+                            "John Smith's Company"
+                        ]
+                    },
+                    "user_kyc_status": {
+                        "$ref": "#/components/schemas/KYCStatus",
+                        "description": "The KYC status of the user."
+                    },
+                    "user_kyc_completed_on": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "User Kyc Completed On",
+                        "description": "The date when KYC was completed for the user, if applicable. In YYYY-MM-DD format."
+                    },
+                    "user_email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "User Email",
+                        "description": "The email address of the user.",
+                        "examples": [
+                            "john@smith.com"
+                        ]
+                    },
+                    "user_name": {
+                        "type": "string",
+                        "title": "User Name",
+                        "description": "The full name of the user.",
+                        "examples": [
+                            "John Smith"
+                        ]
+                    },
+                    "user_id": {
+                        "type": "string",
+                        "title": "User Id",
+                        "description": "The unique identifier for the user.",
+                        "examples": [
+                            "9814613e-3b32-4cc4-a60b-86c16eac1cd4"
+                        ]
+                    },
+                    "user_created_date": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "User Created Date",
+                        "description": "The date when the user was created."
+                    },
+                    "user_updated_date": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "User Updated Date",
+                        "description": "The date when the user was last updated."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "company_kyc_status",
+                    "company_id",
+                    "company_name",
+                    "user_kyc_status",
+                    "user_email",
+                    "user_name",
+                    "user_id",
+                    "user_created_date",
+                    "user_updated_date"
+                ],
+                "title": "GetUser",
+                "description": "Represents response to user"
+            },
+            "GetUsers": {
+                "properties": {
+                    "users": {
+                        "items": {
+                            "$ref": "#/components/schemas/GetUser"
+                        },
+                        "type": "array",
+                        "title": "Users",
+                        "description": "All end users associated with the reseller."
+                    },
+                    "links": {
+                        "items": {
+                            "$ref": "#/components/schemas/Link"
+                        },
+                        "type": "array",
+                        "title": "Links",
+                        "description": "Links to previous and/or next page."
+                    },
+                    "context": {
+                        "$ref": "#/components/schemas/ResponseContext",
+                        "description": "Context about the response."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "users",
+                    "links",
+                    "context"
+                ],
+                "title": "GetUsers",
+                "description": "Represents response to GET users request"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "KYCStatus": {
+                "type": "string",
+                "enum": [
+                    "Passed",
+                    "Not completed",
+                    "Failed"
+                ],
+                "title": "KYCStatus"
+            },
+            "Link": {
+                "properties": {
+                    "href": {
+                        "type": "string",
+                        "minLength": 1,
+                        "format": "uri",
+                        "title": "Href",
+                        "description": "The link in the format of a URL."
+                    },
+                    "rel": {
+                        "type": "string",
+                        "title": "Rel",
+                        "description": "The relationship between the current document and the linked document."
+                    },
+                    "method": {
+                        "$ref": "#/components/schemas/RequestMethod",
+                        "description": "The HTTP method of the request.",
+                        "default": "GET"
+                    },
+                    "body": {
+                        "anyOf": [
+                            {
+                                "additionalProperties": true,
+                                "type": "object"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Body",
+                        "description": "A JSON object containing fields/values that must be included in the body of the next request."
+                    },
+                    "merge": {
+                        "type": "boolean",
+                        "title": "Merge",
+                        "description": "If `true`, the headers/body fields in the `next` link must be merged into the original request and be sent combined in the next request.",
+                        "default": false
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Type",
+                        "description": "The media type of the referenced entity."
+                    },
+                    "title": {
+                        "type": "string",
+                        "title": "Title",
+                        "description": "Title of the link."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "href",
+                    "rel",
+                    "title"
+                ],
+                "title": "Link"
+            },
+            "MatchType": {
+                "type": "string",
+                "enum": [
+                    "exact",
+                    "partial"
+                ],
+                "title": "MatchType"
+            },
+            "RequestMethod": {
+                "type": "string",
+                "enum": [
+                    "GET"
+                ],
+                "title": "RequestMethod"
+            },
+            "ResponseContext": {
+                "properties": {
+                    "limit": {
+                        "type": "integer",
+                        "title": "Limit",
+                        "description": "Applied per page results limit.",
+                        "examples": [
+                            25
+                        ]
+                    },
+                    "matched": {
+                        "type": "integer",
+                        "title": "Matched",
+                        "description": "Total number of results.",
+                        "examples": [
+                            10
+                        ]
+                    },
+                    "returned": {
+                        "type": "integer",
+                        "title": "Returned",
+                        "description": "Number of returned users in page.",
+                        "examples": [
+                            10
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "limit",
+                    "matched",
+                    "returned"
+                ],
+                "title": "ResponseContext",
+                "description": "Contextual information for pagination responses"
+            },
+            "SearchCompanies": {
+                "properties": {
+                    "limit": {
+                        "type": "integer",
+                        "maximum": 1000.0,
+                        "minimum": 1.0,
+                        "title": "Limit",
+                        "description": "The number of results to return per page.",
+                        "default": 100
+                    },
+                    "token": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Token",
+                        "description": "The pagination token."
+                    },
+                    "search": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/CompanySearch"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "$ref": "#/components/schemas/CompanySearch"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Search",
+                        "description": "Search criteria."
+                    },
+                    "kyc_status": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/KYCStatus"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "$ref": "#/components/schemas/KYCStatus"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Kyc Status",
+                        "description": "The KYC status of the company."
+                    }
+                },
+                "additionalProperties": false,
+                "type": "object",
+                "title": "SearchCompanies"
+            },
+            "SearchUsers": {
+                "properties": {
+                    "limit": {
+                        "type": "integer",
+                        "maximum": 1000.0,
+                        "minimum": 1.0,
+                        "title": "Limit",
+                        "description": "The number of results to return per page.",
+                        "default": 100
+                    },
+                    "token": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Token",
+                        "description": "The pagination token."
+                    },
+                    "search": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/UserSearch"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "$ref": "#/components/schemas/UserSearch"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Search",
+                        "description": "Search criteria."
+                    },
+                    "kyc_status": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/KYCStatus"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "$ref": "#/components/schemas/KYCStatus"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Kyc Status",
+                        "description": "The KYC status of the user."
+                    }
+                },
+                "additionalProperties": false,
+                "type": "object",
+                "title": "SearchUsers"
+            },
+            "UserSearch": {
+                "properties": {
+                    "type": {
+                        "$ref": "#/components/schemas/MatchType",
+                        "description": "Type of search.",
+                        "default": "partial"
+                    },
+                    "string": {
+                        "type": "string",
+                        "title": "String",
+                        "description": "Search string."
+                    },
+                    "fields": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/UserSearchFields"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "string",
+                                "const": "all"
+                            }
+                        ],
+                        "title": "Fields",
+                        "description": "Fields to search against. Either a list of fields or `all`. Defaults to `all`.",
+                        "default": "all",
+                        "examples": [
+                            "all"
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "string"
+                ],
+                "title": "UserSearch"
+            },
+            "UserSearchFields": {
+                "type": "string",
+                "enum": [
+                    "user_email",
+                    "user_name",
+                    "user_id",
+                    "company_name"
+                ],
+                "title": "UserSearchFields"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        },
+        "securitySchemes": {
+            "SatVuAuth": {
+                "type": "openIdConnect",
+                "openIdConnectUrl": "https://auth.qa.satellitevu.com/.well-known/openid-configuration"
+            }
+        }
+    }
+}

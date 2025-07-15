@@ -1,24 +1,24 @@
 from collections.abc import Callable
-from typing import Any, Union, Unpack
+from typing import Any, Union
 from uuid import UUID
 
-from src.satvu_api_sdk.core import SDKClient
-from src.shared.utils import deep_parse_from_annotation, normalize_keys
+from satvu_api_sdk.core import SDKClient
+from shared.utils import deep_parse_from_annotation, normalize_keys
 
-from src.id.models.client_credentials import ClientCredentials
-from src.id.models.client_id import ClientID
-from src.id.models.core_webhook import CoreWebhook
-from src.id.models.create_webhook_response import CreateWebhookResponse
-from src.id.models.credit_balance_response import CreditBalanceResponse
-from src.id.models.edit_webhook_payload import EditWebhookPayload
-from src.id.models.list_webhook_response import ListWebhookResponse
-from src.id.models.notification_description import NotificationDescription
-from src.id.models.post_webhook_response import PostWebhookResponse
-from src.id.models.test_webhook_response import TestWebhookResponse
-from src.id.models.user_info import UserInfo
-from src.id.models.user_info_deprecated import UserInfoDeprecated
-from src.id.models.user_settings import UserSettings
-from src.id.models.webhook_response import WebhookResponse
+from id.models.client_credentials import ClientCredentials
+from id.models.client_id import ClientID
+from id.models.core_webhook import CoreWebhook
+from id.models.create_webhook_response import CreateWebhookResponse
+from id.models.credit_balance_response import CreditBalanceResponse
+from id.models.edit_webhook_payload import EditWebhookPayload
+from id.models.list_webhook_response import ListWebhookResponse
+from id.models.notification_description import NotificationDescription
+from id.models.post_webhook_response import PostWebhookResponse
+from id.models.test_webhook_response import TestWebhookResponse
+from id.models.user_info import UserInfo
+from id.models.user_info_deprecated import UserInfoDeprecated
+from id.models.user_settings import UserSettings
+from id.models.webhook_response import WebhookResponse
 
 
 class IdService(SDKClient):
@@ -125,7 +125,7 @@ class IdService(SDKClient):
             return deep_parse_from_annotation(normalize_keys(response.json()), UserInfo)
         return response.json()
 
-    def edit_user_settings(self, **kwargs: Unpack[UserSettings]) -> UserInfo:
+    def edit_user_settings(self, body: UserSettings) -> UserInfo:
         """
         Edit User Settings
 
@@ -140,10 +140,12 @@ class IdService(SDKClient):
             UserInfo
         """
 
+        json_body = body.model_dump()
+
         response = self.make_request(
             method="put",
             url="/user/settings",
-            json=kwargs,
+            json=json_body,
         )
 
         if response.status_code == 200:
@@ -327,7 +329,7 @@ class IdService(SDKClient):
             )
         return response.json()
 
-    def create_webhook(self, **kwargs: Unpack[CoreWebhook]) -> CreateWebhookResponse:
+    def create_webhook(self, body: CoreWebhook) -> CreateWebhookResponse:
         """
         Create Webhook
 
@@ -344,10 +346,12 @@ class IdService(SDKClient):
             CreateWebhookResponse
         """
 
+        json_body = body.model_dump()
+
         response = self.make_request(
             method="post",
             url="/webhooks/",
-            json=kwargs,
+            json=json_body,
         )
 
         if response.status_code == 200:
@@ -408,9 +412,7 @@ class IdService(SDKClient):
             return response.json()
         return response.json()
 
-    def edit_webhook(
-        self, id: UUID, **kwargs: Unpack[EditWebhookPayload]
-    ) -> WebhookResponse:
+    def edit_webhook(self, id: UUID, body: EditWebhookPayload) -> WebhookResponse:
         """
         Edit Webhook
 
@@ -427,10 +429,12 @@ class IdService(SDKClient):
             WebhookResponse
         """
 
+        json_body = body.model_dump()
+
         response = self.make_request(
             method="patch",
             url="/webhooks/{id}".format(id=id),
-            json=kwargs,
+            json=json_body,
         )
 
         if response.status_code == 200:

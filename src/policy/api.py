@@ -1,16 +1,13 @@
 from collections.abc import Callable
-from typing import Unpack
 
-from src.satvu_api_sdk.core import SDKClient
-from src.shared.utils import deep_parse_from_annotation, normalize_keys
+from satvu_api_sdk.core import SDKClient
+from shared.utils import deep_parse_from_annotation, normalize_keys
 
-from src.policy.models.post_active_contracts_input import PostActiveContractsInput
-from src.policy.models.router_active_contracts_response import (
-    RouterActiveContractsResponse,
-)
-from src.policy.models.router_query_result import RouterQueryResult
-from src.policy.models.terms_user_terms_accepted import TermsUserTermsAccepted
-from src.policy.models.user_acceptance_terms_input import UserAcceptanceTermsInput
+from policy.models.post_active_contracts_input import PostActiveContractsInput
+from policy.models.router_active_contracts_response import RouterActiveContractsResponse
+from policy.models.router_query_result import RouterQueryResult
+from policy.models.terms_user_terms_accepted import TermsUserTermsAccepted
+from policy.models.user_acceptance_terms_input import UserAcceptanceTermsInput
 
 
 class PolicyService(SDKClient):
@@ -20,7 +17,7 @@ class PolicyService(SDKClient):
         super().__init__(env=env, get_token=get_token)
 
     def post_active_contracts(
-        self, **kwargs: Unpack[PostActiveContractsInput]
+        self, body: PostActiveContractsInput
     ) -> RouterActiveContractsResponse:
         """
         Active Contracts
@@ -34,10 +31,12 @@ class PolicyService(SDKClient):
             RouterActiveContractsResponse
         """
 
+        json_body = body.model_dump()
+
         response = self.make_request(
             method="post",
             url="/contracts",
-            json=kwargs,
+            json=json_body,
         )
 
         if response.status_code == 200:
@@ -72,7 +71,7 @@ class PolicyService(SDKClient):
         return response.json()
 
     def user_acceptance_terms(
-        self, **kwargs: Unpack[UserAcceptanceTermsInput]
+        self, body: UserAcceptanceTermsInput
     ) -> TermsUserTermsAccepted:
         """
         User Acceptance Terms
@@ -87,10 +86,12 @@ class PolicyService(SDKClient):
             TermsUserTermsAccepted
         """
 
+        json_body = body.model_dump()
+
         response = self.make_request(
             method="post",
             url="/terms",
-            json=kwargs,
+            json=json_body,
         )
 
         if response.status_code == 200:

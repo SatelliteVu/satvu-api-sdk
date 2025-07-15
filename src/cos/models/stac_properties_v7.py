@@ -3,14 +3,14 @@ from typing import Union
 
 from pydantic import BaseModel
 
-from ..models.polygon import Polygon
+from ..models.polygon_1 import Polygon1
 from ..models.satvu_filter import SatvuFilter
-from ..models.stac_properties_v5_processing_software_name_version import (
-    StacPropertiesV5ProcessingSoftwareNameVersion,
+from ..models.stac_properties_v7_processing_software_name_version import (
+    StacPropertiesV7ProcessingSoftwareNameVersion,
 )
 
 
-class StacPropertiesV5(BaseModel):
+class StacPropertiesV7(BaseModel):
     """
     Attributes:
         datetime (datetime.datetime): Acquisition datetime
@@ -19,7 +19,7 @@ class StacPropertiesV5(BaseModel):
         gsd (float): Ground Sampling Distance. Distance in metres between two consecutive pixel centers measured on the
             ground
         platform (str): Platform name. E.g. Hotsat-1
-        processing_software (StacPropertiesV5ProcessingSoftwareNameVersion):
+        processing_software (StacPropertiesV7ProcessingSoftwareNameVersion):
         proj_epsg (int): EPSG code. Defines the geographic coordinate system
         proj_shape (list[int]): Number of pixels in Y and X directions for the default grid
         view_azimuth (float): Viewing azimuth angle. The angle between the scene centre and true north. Measured
@@ -30,7 +30,7 @@ class StacPropertiesV5(BaseModel):
         view_sun_elevation (float): Sun elevation angle. The angle from the tangent of the scene center to the sun
         eo_cloud_cover (Union[None, float]): Estimate of cloud cover
         proj_bbox (Union[None, list[float]]):
-        proj_geometry (Union[None, Polygon]): Defines the projected footprint.
+        proj_geometry (Union[None, Polygon1]): Defines the projected footprint.
         proj_transform (Union[None, list[float]]): The affine transformation coefficients for the default grid
         satvu_filter (Union[None, SatvuFilter]): Filter used for earth view acquisition
         satvu_geometric_calibration (Union[None, bool]): Flag indiciating if refined geometric processing was applied
@@ -49,7 +49,7 @@ class StacPropertiesV5(BaseModel):
     created_at: datetime.datetime
     gsd: float
     platform: str
-    processing_software: "StacPropertiesV5ProcessingSoftwareNameVersion"
+    processing_software: "StacPropertiesV7ProcessingSoftwareNameVersion"
     proj_epsg: int
     proj_shape: list[int]
     view_azimuth: float
@@ -58,7 +58,7 @@ class StacPropertiesV5(BaseModel):
     view_sun_elevation: float
     eo_cloud_cover: Union[None, float] = None
     proj_bbox: Union[None, list[float]] = None
-    proj_geometry: Union[None, Polygon] = None
+    proj_geometry: Union[None, Polygon1] = None
     proj_transform: Union[None, list[float]] = None
     satvu_filter: Union[None, SatvuFilter] = None
     satvu_geometric_calibration: Union[None, bool] = None

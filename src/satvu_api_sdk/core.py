@@ -35,7 +35,7 @@ class SDKClient:
         self,
         method: str,
         url: str,
-        json: dict | None = None,
+        json: list | dict | None = None,
         params: dict | None = None,
         follow_redirects: bool = False,
         timeout: int = 5,

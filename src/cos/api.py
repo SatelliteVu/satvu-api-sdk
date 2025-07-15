@@ -1,26 +1,22 @@
 import io
 from collections.abc import Callable
-from typing import Any, Union, Unpack
+from typing import Any, Union
 from uuid import UUID
 
-from src.satvu_api_sdk.core import SDKClient
-from src.shared.utils import deep_parse_from_annotation, normalize_keys
+from satvu_api_sdk.core import SDKClient
+from shared.utils import deep_parse_from_annotation, normalize_keys
 
-from src.cos.models.download_order_collections_type_0_item import (
+from cos.models.download_order_collections_type_0_item import (
     DownloadOrderCollectionsType0Item,
 )
-from src.cos.models.feature_collection_order import FeatureCollectionOrder
-from src.cos.models.order_download_url import OrderDownloadUrl
-from src.cos.models.order_edit_payload import OrderEditPayload
-from src.cos.models.order_item_download_url import OrderItemDownloadUrl
-from src.cos.models.order_page import OrderPage
-from src.cos.models.order_submission_payload import OrderSubmissionPayload
-from src.cos.models.reseller_feature_collection_order import (
-    ResellerFeatureCollectionOrder,
-)
-from src.cos.models.reseller_submission_order_payload import (
-    ResellerSubmissionOrderPayload,
-)
+from cos.models.feature_collection_order import FeatureCollectionOrder
+from cos.models.order_download_url import OrderDownloadUrl
+from cos.models.order_edit_payload import OrderEditPayload
+from cos.models.order_item_download_url import OrderItemDownloadUrl
+from cos.models.order_page import OrderPage
+from cos.models.order_submission_payload import OrderSubmissionPayload
+from cos.models.reseller_feature_collection_order import ResellerFeatureCollectionOrder
+from cos.models.reseller_submission_order_payload import ResellerSubmissionOrderPayload
 
 
 class CosService(SDKClient):
@@ -62,7 +58,7 @@ class CosService(SDKClient):
         return response.json()
 
     def edit_order(
-        self, contract_id: UUID, order_id: UUID, **kwargs: Unpack[OrderEditPayload]
+        self, contract_id: UUID, order_id: UUID, body: OrderEditPayload
     ) -> Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]:
         """
         Edit Order
@@ -78,12 +74,14 @@ class CosService(SDKClient):
             Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]
         """
 
+        json_body = body.model_dump()
+
         response = self.make_request(
             method="patch",
             url="/{contract_id}/{order_id}".format(
                 contract_id=contract_id, order_id=order_id
             ),
-            json=kwargs,
+            json=json_body,
         )
 
         if response.status_code == 200:
@@ -138,7 +136,7 @@ class CosService(SDKClient):
     def submit_order(
         self,
         contract_id: UUID,
-        **kwargs: Unpack[Union[OrderSubmissionPayload, ResellerSubmissionOrderPayload]],
+        body: Union[OrderSubmissionPayload, ResellerSubmissionOrderPayload],
     ) -> Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]:
         """
         Submit order
@@ -159,10 +157,12 @@ class CosService(SDKClient):
             Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]
         """
 
+        json_body = body.model_dump()
+
         response = self.make_request(
             method="post",
             url="/{contract_id}/".format(contract_id=contract_id),
-            json=kwargs,
+            json=json_body,
         )
 
         if response.status_code == 201:
@@ -247,7 +247,10 @@ class CosService(SDKClient):
             contract_id (UUID): Contract ID.
             order_id (UUID): Order ID.
             collections (Union[None, list[DownloadOrderCollectionsType0Item]]): Specify a subset of
-                collections to download. Defaults to None, which will download only the visual product.
+                collections to download.
+                            Defaults to None, which will download only the ordered product.
+                            To specify multiple collections, repeat the query parameter.
+
             redirect (Union[None, bool]): If `true` download the image content locally, otherwise if
                 `false` return a presigned download URL with an expiry. Defaults to `true`. Default: True.
 

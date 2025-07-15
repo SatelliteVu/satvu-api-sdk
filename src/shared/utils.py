@@ -58,7 +58,11 @@ def deep_parse_from_annotation(data: Any, annotation: Any) -> Any:
     elif annotation is date:
         return date.fromisoformat(data)
 
+    elif annotation is str:
+        return data
+
     else:
+        print(annotation, data)
         # Assume primitive type
         return annotation(data)
 

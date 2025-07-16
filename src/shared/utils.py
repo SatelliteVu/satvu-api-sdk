@@ -19,9 +19,11 @@ def deep_parse_from_annotation(data: Any, annotation: Any) -> Any:
     Returns:
         The parsed object according to the annotation.
     """
+    print("DATA: ", data)
     origin = get_origin(annotation)
-    print(data)
+    print("ORIGIN: ", origin)
     args = get_args(annotation)
+    print("ARGS: ", args)
 
     # If data is None, return None directly if the annotation allows it
     # otherwise, raise an error
@@ -41,8 +43,13 @@ def deep_parse_from_annotation(data: Any, annotation: Any) -> Any:
                 continue
         raise ValueError(f"Could not match data to any Union type: {data}")
 
-    elif origin is list and len(args) == 1:
-        return [deep_parse_from_annotation(item, args[0]) for item in data]
+    elif origin is list:
+        # If the data is a list, recursively parse each item
+        if isinstance(data, list):
+            return [deep_parse_from_annotation(item, args[0]) for item in data]
+        # If the data is not a list, raise an error
+        else:
+            raise ValueError(f"Expected a list but got {type(data).__name__}: {data}")
 
     elif origin is Literal:
         if data in args:
@@ -62,7 +69,6 @@ def deep_parse_from_annotation(data: Any, annotation: Any) -> Any:
         return data
 
     else:
-        print(annotation, data)
         # Assume primitive type
         return annotation(data)
 

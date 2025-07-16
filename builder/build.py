@@ -28,7 +28,14 @@ TEMPLATE_DIR = Path(__file__).parent / "templates"
 SRC_DIR = BASE_DIR / "src"
 
 
-def _load_openapi(api_id: str, use_cached: bool):
+def _load_openapi(api_id: str, use_cached: bool) -> tuple[dict, Path]:
+    """
+    Load the OpenAPI specification for the given API ID, either from cache or by fetching it.
+
+    :param api_id: The identifier for the API to load.
+    :param use_cached: If True, use cached OpenAPI spec if available; otherwise, fetch it.
+    :return: A tuple containing the OpenAPI specification as a dictionary and the path to the cache file.
+    """
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     openapi_url = f"{BASE_URL.rstrip('/')}/{APIS[api_id]}/openapi.json"
     cache_file = (
@@ -48,60 +55,6 @@ def _load_openapi(api_id: str, use_cached: bool):
 @dataclass
 class SatVuEndpoint(Endpoint):
     body_docstrings: list[str] | None = None
-    response_disambiguation: dict | None = None
-
-
-def build_response_disambiguation(endpoint, models_by_name):
-    """
-    For each response, if a Union type, build a dict describing how to disambiguate.
-    Returns a dict for use in the template, or None if not needed.
-    """
-    # Find the first successful response (e.g. 200, 201, etc)
-    for resp in endpoint.responses:
-        # Only look at successful responses for now
-        if not resp.status_code.is_success:
-            continue
-        resp_type = resp.prop.get_type_string(quoted=False)
-        if resp_type.startswith("Union["):
-            # Parse the union types
-            inner = resp_type[len("Union[") : -1]
-            model_names = [name.strip().replace("'", "") for name in inner.split(",")]
-            fallback_models = model_names
-            # Try to find discriminator info
-            # This requires looking up the OpenAPI schema for this response
-            discriminator_property = None
-            model_map = {}
-            uses_discriminator = False
-
-            # Try to find which model, if any, has a discriminator
-            for name in model_names:
-                model_cls = models_by_name.get(name)
-                if not model_cls:
-                    continue
-                # If your model dataclass has _discriminator info, use it (pseudo-code)
-                # This is OpenAPI specific: you might need to load this from schemas/components
-                # For now, let's assume you have model_cls._discriminator_property and model_cls._discriminator_mapping
-                discriminator = getattr(model_cls, "_discriminator_property", None)
-                mapping = getattr(model_cls, "_discriminator_mapping", None)
-                if discriminator and mapping:
-                    discriminator_property = discriminator
-                    model_map = mapping
-                    uses_discriminator = True
-                    break  # Use the first found
-
-            if uses_discriminator:
-                return {
-                    "uses_discriminator": True,
-                    "discriminator_property": discriminator_property,
-                    "model_map": model_map,
-                    "fallback_models": fallback_models,
-                }
-            else:
-                return {
-                    "uses_discriminator": False,
-                    "fallback_models": fallback_models,
-                }
-    return None
 
 
 # Override
@@ -127,10 +80,8 @@ class SatVuProject(Project):
                 body_docstrings = []
                 if endpoint.bodies:
                     body_docstrings = self.body_docstrings(endpoint.bodies[0])
-                response_disambiguation = build_response_disambiguation(endpoint, {})
                 endpoint = SatVuEndpoint(
                     body_docstrings=body_docstrings,
-                    response_disambiguation=response_disambiguation,
                     **vars(endpoint),
                 )
                 endpoints.append(endpoint)
@@ -195,6 +146,12 @@ class SatVuProject(Project):
 
 
 def build(api_id: str, use_cached: False):
+    """
+    Build the SatVu API client for the given API ID.
+
+    :param api_id: The identifier for the API to build.
+    :param use_cached: If True, use cached OpenAPI spec if available; otherwise, fetch it.
+    """
     openapi_python_client.parser.openapi.models_relative_prefix = f"{api_id}."
     openapi_dict, openapi_src = _load_openapi(api_id, use_cached)
     config = Config.from_sources(

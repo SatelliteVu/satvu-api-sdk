@@ -60,6 +60,12 @@ class SatVuEndpoint(Endpoint):
 # Override
 class SatVuProject(Project):
     def _build_api(self, api_id: str, config: Config) -> None:
+        """
+        Build the API module for the given API ID.
+
+        :param api_id: The identifier for the API to build.
+        :param config: The configuration for openapi-python-client.
+        """
         # Generate endpoints
         api_dir = self.package_dir
         api_init_path = api_dir / "__init__.py"

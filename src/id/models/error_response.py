@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class ErrorResponse(BaseModel):
@@ -7,4 +7,4 @@ class ErrorResponse(BaseModel):
         detail (str):
     """
 
-    detail: str
+    detail: str = Field(..., description=None)

@@ -1,6 +1,6 @@
 from typing import Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..models.notification_category import NotificationCategory
 from ..models.notification_settings import NotificationSettings
@@ -14,5 +14,10 @@ class VerboseNotification(BaseModel):
             specific topic.
     """
 
-    category: Union[None, NotificationCategory] = None
-    settings: Union[None, list["NotificationSettings"]] = None
+    category: Union[None, NotificationCategory] = Field(
+        None, description="Category for notification topic"
+    )
+    settings: Union[None, list["NotificationSettings"]] = Field(
+        None,
+        description="Configuration of notification settings related to a specific topic.",
+    )

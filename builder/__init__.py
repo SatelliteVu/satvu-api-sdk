@@ -17,6 +17,7 @@ from openapi_python_client.parser.properties import (
     ReferencePath,
 )
 from openapi_python_client.parser.properties.model_property import _process_property_data
+from openapi_python_client.parser.properties.protocol import PropertyProtocol
 from openapi_python_client.schema import Schema
 
 """
@@ -163,6 +164,28 @@ def to_string(self) -> str:
         return f"{self.python_name}: {self.get_type_string(quoted=True)}"
 
 
+def to_pydantic_model_field(self: PropertyProtocol) -> str:
+    """
+    Returns a string representation of the property as a Pydantic model field.
+    This includes the field name, type, default value, and description.
+    For use in jinja templates to generate Pydantic models
+    """
+    field_start = f"{self.python_name}: {self.get_type_string(quoted=True)}"
+    description = f"\"{self.description}\"" if self.description else "None"
+
+    # For const (literal) properties, default to the value of the constant
+    if isinstance(self, openapi_python_client.parser.properties.const.ConstProperty):
+        return f"{field_start} = Field({self.value.python_code}, description={description})"
+
+    if self.default is not None:
+        return f"{field_start} = Field({self.default.python_code}, description={description})"
+
+    elif not self.required:
+        return f"{field_start} = Field(None, description={description})"
+
+    else:
+        return f"{field_start} = Field(..., description={description})"
+
 def get_type_string(
     self,
     no_optional: bool = False,
@@ -183,6 +206,9 @@ def get_type_string(
 openapi_python_client.parser.properties.protocol.PropertyProtocol.to_string = to_string
 openapi_python_client.parser.properties.protocol.PropertyProtocol.get_type_string = (
     get_type_string
+)
+openapi_python_client.parser.properties.protocol.PropertyProtocol.to_pydantic_model_field = (
+    to_pydantic_model_field
 )
 
 

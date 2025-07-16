@@ -1,6 +1,6 @@
 from typing import Literal, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..models.link import Link
 from ..models.reseller_stored_order_request import ResellerStoredOrderRequest
@@ -17,7 +17,9 @@ class StoredOrderRequestList(BaseModel):
         context (ResponseContext):
     """
 
-    type: Literal["FeatureCollection"] = "FeatureCollection"
-    features: list[Union[ResellerStoredOrderRequest, StoredOrderRequest]]
-    links: list["Link"]
-    context: "ResponseContext"
+    type: Literal["FeatureCollection"] = Field("FeatureCollection", description=None)
+    features: list[Union[ResellerStoredOrderRequest, StoredOrderRequest]] = Field(
+        ..., description="List of stored order requests."
+    )
+    links: list["Link"] = Field(..., description="Links to previous and/or next page.")
+    context: "ResponseContext" = Field(..., description=None)

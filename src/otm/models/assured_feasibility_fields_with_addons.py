@@ -1,6 +1,6 @@
 from typing import Literal, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class AssuredFeasibilityFieldsWithAddons(BaseModel):
@@ -13,6 +13,11 @@ class AssuredFeasibilityFieldsWithAddons(BaseModel):
             will be set to the default specified in the relevant contract.
     """
 
-    product: Literal["assured"] = "assured"
-    datetime: str
-    addon_withhold: Union[None, str] = None
+    product: Literal["assured"] = Field("assured", description="Assured Priority.")
+    datetime: str = Field(
+        ..., description="The closed date-time interval of the request."
+    )
+    addon_withhold: Union[None, str] = Field(
+        None,
+        description="Optional ISO8601 string describing the duration that an order will be withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set to the default specified in the relevant contract.",
+    )

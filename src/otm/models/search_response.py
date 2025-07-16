@@ -1,6 +1,6 @@
 from typing import Literal, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..models.link import Link
 from ..models.reseller_search_response_feature_assured_order_request import (
@@ -44,7 +44,7 @@ class SearchResponse(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["FeatureCollection"] = "FeatureCollection"
+    type: Literal["FeatureCollection"] = Field("FeatureCollection", description=None)
     features: list[
         Union[
             ResellerSearchResponseFeatureAssuredOrderRequest,
@@ -56,7 +56,9 @@ class SearchResponse(BaseModel):
             SearchResponseFeatureStandardFeasibilityResponse,
             SearchResponseFeatureStandardOrderRequest,
         ]
-    ]
-    context: "ResponseContext"
-    links: list["Link"]
-    bbox: Union[None, list[float]] = None
+    ] = Field(..., description="A list of features that match the search filters.")
+    context: "ResponseContext" = Field(..., description=None)
+    links: list["Link"] = Field(
+        ..., description="A list of links to next and/or previous pages of the search."
+    )
+    bbox: Union[None, list[float]] = Field(None, description=None)

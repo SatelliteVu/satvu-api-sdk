@@ -1,6 +1,6 @@
 from typing import Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class OrderName(BaseModel):
@@ -9,4 +9,4 @@ class OrderName(BaseModel):
         name (Union[None, str]): The name of the order.
     """
 
-    name: Union[None, str] = None
+    name: Union[None, str] = Field(None, description="The name of the order.")

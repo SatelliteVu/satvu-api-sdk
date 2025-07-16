@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Price(BaseModel):
@@ -8,5 +8,8 @@ class Price(BaseModel):
         currency (str): The currency of the order.
     """
 
-    value: int
-    currency: str
+    value: int = Field(
+        ...,
+        description="The price of the order in minor units of the currency e.g. pence, cents.",
+    )
+    currency: str = Field(..., description="The currency of the order.")

@@ -1,6 +1,6 @@
 from typing import Any, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class ContractsGeometry(BaseModel):
@@ -11,5 +11,7 @@ class ContractsGeometry(BaseModel):
         type (Union[None, str]):
     """
 
-    coordinates: Union[None, Any] = None
-    type: Union[None, str] = None
+    coordinates: Union[None, Any] = Field(
+        None, description="Value of any type, including null"
+    )
+    type: Union[None, str] = Field(None, description=None)

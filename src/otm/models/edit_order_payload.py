@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..models.order_name import OrderName
 
@@ -10,4 +10,4 @@ class EditOrderPayload(BaseModel):
         properties (OrderName):
     """
 
-    properties: "OrderName"
+    properties: "OrderName" = Field(..., description=None)

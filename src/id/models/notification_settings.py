@@ -1,6 +1,6 @@
 from typing import Literal, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class NotificationSettings(BaseModel):
@@ -12,7 +12,11 @@ class NotificationSettings(BaseModel):
         email (Union[None, bool]): Opted into email notifications. Default: False.
     """
 
-    topic: Literal["tasking:order_status"] = "tasking:order_status"
-    name: str
-    description: str
-    email: Union[None, bool] = False
+    topic: Literal["tasking:order_status"] = Field(
+        "tasking:order_status", description="Notification topic."
+    )
+    name: str = Field(..., description="Name of notification type.")
+    description: str = Field(..., description="Description of notification type.")
+    email: Union[None, bool] = Field(
+        False, description="Opted into email notifications."
+    )

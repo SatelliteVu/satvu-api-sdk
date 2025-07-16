@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class ContractsProduct(BaseModel):
@@ -9,6 +9,6 @@ class ContractsProduct(BaseModel):
         priority (int): Product priority Example: 40.
     """
 
-    code: str
-    currency: str
-    priority: int
+    code: str = Field(..., description="Product code")
+    currency: str = Field(..., description="Product currency")
+    priority: int = Field(..., description="Product priority")

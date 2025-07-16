@@ -1,6 +1,6 @@
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..models.point import Point
 from ..models.standard_order_request_properties_with_addons import (
@@ -17,6 +17,8 @@ class StandardOrderRequest(BaseModel):
         properties (StandardOrderRequestPropertiesWithAddons):
     """
 
-    type: Literal["Feature"] = "Feature"
-    geometry: "Point"
-    properties: "StandardOrderRequestPropertiesWithAddons"
+    type: Literal["Feature"] = Field("Feature", description=None)
+    geometry: "Point" = Field(..., description="Point Model")
+    properties: "StandardOrderRequestPropertiesWithAddons" = Field(
+        ..., description=None
+    )

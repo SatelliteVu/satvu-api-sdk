@@ -1,6 +1,6 @@
 from typing import Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..models.reseller_webhook_event import ResellerWebhookEvent
 from ..models.webhook_event import WebhookEvent
@@ -14,6 +14,11 @@ class CoreWebhook(BaseModel):
         url (str): The URL where you want to receive requests for events you are subscribed to. Must be HTTPS.
     """
 
-    event_types: list[Union[ResellerWebhookEvent, WebhookEvent]]
-    name: str
-    url: str
+    event_types: list[Union[ResellerWebhookEvent, WebhookEvent]] = Field(
+        ..., description="A list of events to subscribe to."
+    )
+    name: str = Field(..., description="The name of the webhook.")
+    url: str = Field(
+        ...,
+        description="The URL where you want to receive requests for events you are subscribed to. Must be HTTPS.",
+    )

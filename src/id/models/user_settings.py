@@ -1,6 +1,6 @@
 from typing import Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..models.notification_update import NotificationUpdate
 
@@ -13,4 +13,7 @@ class UserSettings(BaseModel):
             modify existing preferences.
     """
 
-    notifications: Union[None, list["NotificationUpdate"]] = None
+    notifications: Union[None, list["NotificationUpdate"]] = Field(
+        None,
+        description="Update user notifications settings.A full list of notification preferences can be found with the GET user details endpoint. Sending empty or null objects will not modify existing preferences.",
+    )

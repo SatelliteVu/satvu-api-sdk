@@ -1,6 +1,6 @@
 from typing import Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class OrderSubmissionPayload(BaseModel):
@@ -10,5 +10,5 @@ class OrderSubmissionPayload(BaseModel):
         name (Union[None, str]): Optional name of an order
     """
 
-    item_id: Union[list[str], str]
-    name: Union[None, str] = None
+    item_id: Union[list[str], str] = Field(..., description="Item ID.")
+    name: Union[None, str] = Field(None, description="Optional name of an order")

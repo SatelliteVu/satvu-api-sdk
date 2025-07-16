@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class ResponseContext(BaseModel):
@@ -9,6 +9,6 @@ class ResponseContext(BaseModel):
         returned (int): Number of returned items in page.
     """
 
-    limit: int
-    matched: int
-    returned: int
+    limit: int = Field(..., description="Applied per page item limit.")
+    matched: int = Field(..., description="Total number of results.")
+    returned: int = Field(..., description="Number of returned items in page.")

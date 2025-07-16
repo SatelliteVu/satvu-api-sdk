@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class PostActiveContractsInput(BaseModel):
@@ -7,4 +7,4 @@ class PostActiveContractsInput(BaseModel):
         token (str): User access token
     """
 
-    token: str
+    token: str = Field(..., description="User access token")

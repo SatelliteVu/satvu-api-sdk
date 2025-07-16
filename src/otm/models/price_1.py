@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Price1(BaseModel):
@@ -13,8 +13,20 @@ class Price1(BaseModel):
         value (int): Price of the order in minor units of the currency e.g. pence, cents.
     """
 
-    currency: str
-    base: int
-    addon_withhold: int
-    total: int
-    value: int
+    currency: str = Field(..., description="The currency of the order.")
+    base: int = Field(
+        ...,
+        description="The base price of the order in minor units of the currency e.g. pence, cents.",
+    )
+    addon_withhold: int = Field(
+        ...,
+        description="The price of the order from the chosen withhold option in minor units of the currency e.g. pence, cents.",
+    )
+    total: int = Field(
+        ...,
+        description="The total price of the order in minor units of the currency e.g. pence, cents. This is the sum of the base and addon prices.",
+    )
+    value: int = Field(
+        ...,
+        description="Price of the order in minor units of the currency e.g. pence, cents.",
+    )

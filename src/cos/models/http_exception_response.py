@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class HttpExceptionResponse(BaseModel):
@@ -7,4 +7,4 @@ class HttpExceptionResponse(BaseModel):
         detail (str):
     """
 
-    detail: str
+    detail: str = Field(..., description=None)

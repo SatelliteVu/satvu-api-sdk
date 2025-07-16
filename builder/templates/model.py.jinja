@@ -27,7 +27,7 @@
     {% endfor %}{% endif %}
 {% endmacro %}
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import TYPE_CHECKING, TypedDict, Any
 
 {% for relative in model.relative_imports | sort %}
@@ -42,5 +42,5 @@ class {{ class_name }}(BaseModel):
     {{ safe_docstring(class_docstring_content(model)) | indent(4) }}
 
     {% for property in model.required_properties + model.optional_properties %}
-    {{ property.to_string() }}
+    {{ property.to_pydantic_model_field() }}
     {% endfor %}

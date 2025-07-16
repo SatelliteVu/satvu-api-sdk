@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..models.civil_date import CivilDate
 from ..models.contracts_addon import ContractsAddon
@@ -21,13 +21,23 @@ class ContractsContractWithProducts(BaseModel):
         start_date (CivilDate): Contract end date
     """
 
-    active: bool
-    addons: list["ContractsAddon"]
-    allowed_geographical_area: "ContractsGeometry"
-    contract_id: str
-    end_date: "CivilDate"
-    geographical_summary: str
-    name: str
-    products: list["ContractsProduct"]
-    reseller: bool
-    start_date: "CivilDate"
+    active: bool = Field(..., description="Whether the contract is active")
+    addons: list["ContractsAddon"] = Field(
+        ..., description="Addons associated with this contract"
+    )
+    allowed_geographical_area: "ContractsGeometry" = Field(
+        ..., description="Allowed geographical area of the contract"
+    )
+    contract_id: str = Field(..., description="Contract ID")
+    end_date: "CivilDate" = Field(..., description="Contract end date")
+    geographical_summary: str = Field(
+        ..., description="Descriptive summary of a contract's geographical area"
+    )
+    name: str = Field(..., description="Contract name")
+    products: list["ContractsProduct"] = Field(
+        ..., description="List of products the contract has access to"
+    )
+    reseller: bool = Field(
+        ..., description="Whether the contract is marked for reselling"
+    )
+    start_date: "CivilDate" = Field(..., description="Contract end date")

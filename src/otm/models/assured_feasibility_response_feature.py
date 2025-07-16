@@ -1,7 +1,7 @@
 from typing import Literal, Union
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..models.assured_feasibility_response_properties import (
     AssuredFeasibilityResponseProperties,
@@ -21,9 +21,11 @@ class AssuredFeasibilityResponseFeature(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["Feature"] = "Feature"
-    geometry: "Point"
-    properties: "AssuredFeasibilityResponseProperties"
-    id: UUID
-    signature: str
-    bbox: Union[None, list[float]] = None
+    type: Literal["Feature"] = Field("Feature", description=None)
+    geometry: "Point" = Field(..., description="Point Model")
+    properties: "AssuredFeasibilityResponseProperties" = Field(
+        ..., description="Properties of the assured priority feasibility response."
+    )
+    id: UUID = Field(..., description="The ID of the feasibility request.")
+    signature: str = Field(..., description="Signature token")
+    bbox: Union[None, list[float]] = Field(None, description=None)

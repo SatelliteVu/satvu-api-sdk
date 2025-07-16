@@ -1,6 +1,6 @@
 from typing import Literal, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..models.company_search_fields import CompanySearchFields
 from ..models.match_type import MatchType
@@ -15,6 +15,9 @@ class CompanySearch(BaseModel):
             `all`. Defaults to `all`.
     """
 
-    string: str
-    type: Union[None, MatchType] = None
-    fields: Union[Literal["all"], list[CompanySearchFields]] = None
+    string: str = Field(..., description="Search string.")
+    type: Union[None, MatchType] = Field(None, description=None)
+    fields: Union[Literal["all"], list[CompanySearchFields]] = Field(
+        None,
+        description="Fields to search against. Either a list of fields or `all`. Defaults to `all`.",
+    )

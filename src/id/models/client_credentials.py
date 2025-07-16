@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class ClientCredentials(BaseModel):
@@ -8,5 +8,5 @@ class ClientCredentials(BaseModel):
         client_secret (str):
     """
 
-    client_id: str
-    client_secret: str
+    client_id: str = Field(..., description=None)
+    client_secret: str = Field(..., description=None)

@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class UserAcceptanceTermsInput(BaseModel):
@@ -8,5 +8,5 @@ class UserAcceptanceTermsInput(BaseModel):
         token (str): User access token
     """
 
-    accepted: bool
-    token: str
+    accepted: bool = Field(..., description="Terms and Conditions have been accepted")
+    token: str = Field(..., description="User access token")

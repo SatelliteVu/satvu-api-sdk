@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Link(BaseModel):
@@ -8,5 +8,8 @@ class Link(BaseModel):
         rel (str): The relationship between the current document and the linked document.
     """
 
-    href: str
-    rel: str
+    href: str = Field(..., description="The link in the format of a URL.")
+    rel: str = Field(
+        ...,
+        description="The relationship between the current document and the linked document.",
+    )

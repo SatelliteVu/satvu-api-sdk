@@ -1,6 +1,6 @@
 from typing import Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Price(BaseModel):
@@ -10,5 +10,8 @@ class Price(BaseModel):
         currency (Union[None, str]): The currency of the order.
     """
 
-    value: Union[None, int] = None
-    currency: Union[None, str] = None
+    value: Union[None, int] = Field(
+        None,
+        description="Price of the order in minor units of the currency e.g. pence, cents.",
+    )
+    currency: Union[None, str] = Field(None, description="The currency of the order.")

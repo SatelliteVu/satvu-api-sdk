@@ -1,6 +1,6 @@
 from typing import Literal, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..models.assured_feasibility_fields_with_addons import (
     AssuredFeasibilityFieldsWithAddons,
@@ -21,8 +21,11 @@ class PriceRequest(BaseModel):
             of additional metadata about the requested image.
     """
 
-    type: Literal["Feature"] = "Feature"
-    geometry: "Point"
+    type: Literal["Feature"] = Field("Feature", description=None)
+    geometry: "Point" = Field(..., description="Point Model")
     properties: Union[
         AssuredFeasibilityFieldsWithAddons, StandardOrderRequestPropertiesWithAddons
-    ]
+    ] = Field(
+        ...,
+        description="A dictionary of additional metadata about the requested image.",
+    )

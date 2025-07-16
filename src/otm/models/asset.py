@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Asset(BaseModel):
@@ -9,6 +9,6 @@ class Asset(BaseModel):
         roles (list[str]): The semantic roles of the asset.
     """
 
-    href: str
-    type: str
-    roles: list[str]
+    href: str = Field(..., description="The URI to the asset object.")
+    type: str = Field(..., description="The media type of the asset.")
+    roles: list[str] = Field(..., description="The semantic roles of the asset.")

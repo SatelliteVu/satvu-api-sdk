@@ -1,6 +1,6 @@
 from typing import Any, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class RouterQueryResult(BaseModel):
@@ -10,5 +10,7 @@ class RouterQueryResult(BaseModel):
         result (Union[None, Any]): Value of any type, including null
     """
 
-    message: Union[None, str] = None
-    result: Union[None, Any] = None
+    message: Union[None, str] = Field(None, description=None)
+    result: Union[None, Any] = Field(
+        None, description="Value of any type, including null"
+    )

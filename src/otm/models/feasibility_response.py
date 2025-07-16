@@ -1,7 +1,7 @@
 from typing import Literal, Union
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..models.assured_feasibility_response_feature import (
     AssuredFeasibilityResponseFeature,
@@ -27,12 +27,14 @@ class FeasibilityResponse(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["FeatureCollection"] = "FeatureCollection"
+    type: Literal["FeatureCollection"] = Field("FeatureCollection", description=None)
     features: list[
         Union[AssuredFeasibilityResponseFeature, StandardFeasibilityResponseFeature]
-    ]
-    id: UUID
-    links: list["Link"]
-    status: FeasibilityRequestStatus
-    contract_id: UUID
-    bbox: Union[None, list[float]] = None
+    ] = Field(..., description="Properties of the feasibility response.")
+    id: UUID = Field(..., description="Feasibility Request ID.")
+    links: list["Link"] = Field(
+        ..., description="List of link objects to resources and related URLS."
+    )
+    status: FeasibilityRequestStatus = Field(..., description=None)
+    contract_id: UUID = Field(..., description="Contract ID.")
+    bbox: Union[None, list[float]] = Field(None, description=None)

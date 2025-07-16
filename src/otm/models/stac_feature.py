@@ -1,6 +1,6 @@
 from typing import Literal, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..models.link import Link
 from ..models.point_geometry import PointGeometry
@@ -23,11 +23,27 @@ class StacFeature(BaseModel):
             the item.
     """
 
-    id: str
-    properties: "StacFeatureProperties"
-    collection: str
-    links: list["Link"]
-    assets: "StacFeatureAssets"
-    bbox: list[Union[float, int]]
-    type: Union[Literal["Feature"], None] = "Feature"
-    geometry: Union[None, PointGeometry, PolygonGeometry] = None
+    id: str = Field(
+        ..., description="The unique identifier for this item within the collection."
+    )
+    properties: "StacFeatureProperties" = Field(
+        ..., description="A dictionary of additional metadata for the item."
+    )
+    collection: str = Field(
+        ..., description="The ID of the STAC Collection this item references to."
+    )
+    links: list["Link"] = Field(
+        ..., description="A list of link objects to resources and related URLs."
+    )
+    assets: "StacFeatureAssets" = Field(
+        ...,
+        description="A dictionary of asset objects that can be downloaded, each with a unique key.",
+    )
+    bbox: list[Union[float, int]] = Field(
+        ..., description="The bounding box of the asset represented by this item."
+    )
+    type: Union[Literal["Feature"], None] = Field("Feature", description=None)
+    geometry: Union[None, PointGeometry, PolygonGeometry] = Field(
+        None,
+        description="Defines the full footprint of the asset represented by the item.",
+    )

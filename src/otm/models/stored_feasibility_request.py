@@ -1,7 +1,7 @@
 from typing import Literal, Union
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..models.assured_stored_feasibility_request_properties import (
     AssuredStoredFeasibilityRequestProperties,
@@ -27,13 +27,18 @@ class StoredFeasibilityRequest(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["Feature"] = "Feature"
-    geometry: "Point"
+    type: Literal["Feature"] = Field("Feature", description=None)
+    geometry: "Point" = Field(..., description="Point Model")
     properties: Union[
         AssuredStoredFeasibilityRequestProperties,
         StandardStoredFeasibilityRequestProperties,
-    ]
-    id: UUID
-    links: list["Link"]
-    contract_id: UUID
-    bbox: Union[None, list[float]] = None
+    ] = Field(
+        ...,
+        description="A dictionary of additional metadata about the requested image.",
+    )
+    id: UUID = Field(..., description="Feasibility Request ID.")
+    links: list["Link"] = Field(
+        ..., description="A list of related links for the feasibility request."
+    )
+    contract_id: UUID = Field(..., description="Contract ID.")
+    bbox: Union[None, list[float]] = Field(None, description=None)

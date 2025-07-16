@@ -1,6 +1,6 @@
 from typing import Literal, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..models.match_type import MatchType
 from ..models.user_search_fields import UserSearchFields
@@ -15,6 +15,9 @@ class UserSearch(BaseModel):
             `all`. Defaults to `all`.
     """
 
-    string: str
-    type: Union[None, MatchType] = None
-    fields: Union[Literal["all"], list[UserSearchFields]] = None
+    string: str = Field(..., description="Search string.")
+    type: Union[None, MatchType] = Field(None, description=None)
+    fields: Union[Literal["all"], list[UserSearchFields]] = Field(
+        None,
+        description="Fields to search against. Either a list of fields or `all`. Defaults to `all`.",
+    )

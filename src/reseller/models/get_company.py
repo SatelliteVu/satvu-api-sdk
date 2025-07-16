@@ -2,7 +2,7 @@ import datetime
 from typing import Union
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..models.kyc_status import KYCStatus
 
@@ -20,10 +20,17 @@ class GetCompany(BaseModel):
             In YYYY-MM-DD format.
     """
 
-    name: str
-    country: str
-    id: UUID
-    kyc_status: KYCStatus
-    created_date: datetime.date
-    updated_date: datetime.date
-    kyc_completed_on: Union[None, datetime.date] = None
+    name: str = Field(..., description="Name of the company.")
+    country: str = Field(..., description="Country of the company.")
+    id: UUID = Field(..., description="Unique identifier of the company.")
+    kyc_status: KYCStatus = Field(..., description=None)
+    created_date: datetime.date = Field(
+        ..., description="The date when the user was created."
+    )
+    updated_date: datetime.date = Field(
+        ..., description="The date when the user was last updated."
+    )
+    kyc_completed_on: Union[None, datetime.date] = Field(
+        None,
+        description="The date when KYC was completed for the company, if applicable. In YYYY-MM-DD format.",
+    )

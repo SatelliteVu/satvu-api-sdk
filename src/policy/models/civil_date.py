@@ -1,6 +1,6 @@
 from typing import Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class CivilDate(BaseModel):
@@ -12,6 +12,6 @@ class CivilDate(BaseModel):
         year (Union[None, int]):
     """
 
-    day: Union[None, int] = None
-    month: Union[None, int] = None
-    year: Union[None, int] = None
+    day: Union[None, int] = Field(None, description=None)
+    month: Union[None, int] = Field(None, description=None)
+    year: Union[None, int] = Field(None, description=None)

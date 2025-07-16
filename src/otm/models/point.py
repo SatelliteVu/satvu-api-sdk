@@ -1,6 +1,6 @@
 from typing import Literal, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Point(BaseModel):
@@ -12,6 +12,6 @@ class Point(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["Point"] = "Point"
-    coordinates: list[float]
-    bbox: Union[None, list[float]] = None
+    type: Literal["Point"] = Field("Point", description=None)
+    coordinates: list[float] = Field(..., description=None)
+    bbox: Union[None, list[float]] = Field(None, description=None)

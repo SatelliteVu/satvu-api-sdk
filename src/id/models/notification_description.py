@@ -1,6 +1,6 @@
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class NotificationDescription(BaseModel):
@@ -11,6 +11,8 @@ class NotificationDescription(BaseModel):
         description (str): Description of notification type.
     """
 
-    topic: Literal["tasking:order_status"] = "tasking:order_status"
-    name: str
-    description: str
+    topic: Literal["tasking:order_status"] = Field(
+        "tasking:order_status", description="Notification topic."
+    )
+    name: str = Field(..., description="Name of notification type.")
+    description: str = Field(..., description="Description of notification type.")

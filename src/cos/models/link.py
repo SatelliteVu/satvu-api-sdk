@@ -1,6 +1,6 @@
 from typing import Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..models.link_body_type_0 import LinkBodyType0
 from ..models.link_method import LinkMethod
@@ -21,10 +21,27 @@ class Link(BaseModel):
             original request and be sent combined in the next request. Default: False.
     """
 
-    href: str
-    rel: str
-    type: str
-    title: Union[None, str] = None
-    method: Union[None, LinkMethod] = LinkMethod.GET
-    body: Union[LinkBodyType0, None] = None
-    merge: Union[None, bool] = False
+    href: str = Field(
+        ...,
+        description="The actual link in the format of an URL. Relative and absolute links are both allowed.",
+    )
+    rel: str = Field(
+        ...,
+        description="Relationship between the current document and the linked document.",
+    )
+    type: str = Field(..., description="Media type of the referenced entity.")
+    title: Union[None, str] = Field(
+        None,
+        description="A human readable title to be used in rendered displays of the link.",
+    )
+    method: Union[None, LinkMethod] = Field(
+        LinkMethod.GET, description="The HTTP method of the request."
+    )
+    body: Union[LinkBodyType0, None] = Field(
+        None,
+        description="A JSON object containing fields/values that must be included in the body of the next request.",
+    )
+    merge: Union[None, bool] = Field(
+        False,
+        description="If `true`, the headers/body fields in the `next` link must be merged into the original request and be sent combined in the next request.",
+    )

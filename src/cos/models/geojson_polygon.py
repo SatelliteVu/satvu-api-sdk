@@ -1,6 +1,6 @@
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class GeojsonPolygon(BaseModel):
@@ -10,5 +10,5 @@ class GeojsonPolygon(BaseModel):
         coordinates (list[list[list[float]]]):
     """
 
-    type: Literal["Polygon"] = "Polygon"
-    coordinates: list[list[list[float]]]
+    type: Literal["Polygon"] = Field("Polygon", description=None)
+    coordinates: list[list[list[float]]] = Field(..., description=None)

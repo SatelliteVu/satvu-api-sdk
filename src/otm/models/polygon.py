@@ -1,6 +1,6 @@
 from typing import Literal, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Polygon(BaseModel):
@@ -12,6 +12,6 @@ class Polygon(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["Polygon"] = "Polygon"
-    coordinates: list[list[list[float]]]
-    bbox: Union[None, list[float]] = None
+    type: Literal["Polygon"] = Field("Polygon", description=None)
+    coordinates: list[list[list[float]]] = Field(..., description=None)
+    bbox: Union[None, list[float]] = Field(None, description=None)

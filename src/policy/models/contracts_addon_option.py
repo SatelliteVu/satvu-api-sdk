@@ -1,6 +1,6 @@
 from typing import Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class ContractsAddonOption(BaseModel):
@@ -12,7 +12,9 @@ class ContractsAddonOption(BaseModel):
         default (Union[None, bool]):
     """
 
-    label: str
-    uplift: int
-    value: str
-    default: Union[None, bool] = None
+    label: str = Field(..., description="Label assigned to addon option")
+    uplift: int = Field(
+        ..., description="Coefficient that base price is multiplied by in percent"
+    )
+    value: str = Field(..., description="Value of the addon option")
+    default: Union[None, bool] = Field(None, description=None)

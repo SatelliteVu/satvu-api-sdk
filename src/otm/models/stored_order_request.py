@@ -1,7 +1,7 @@
 from typing import Literal, Union
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..models.link import Link
 from ..models.point import Point
@@ -28,12 +28,17 @@ class StoredOrderRequest(BaseModel):
         price (Price1):
     """
 
-    type: Literal["Feature"] = "Feature"
-    geometry: "Point"
+    type: Literal["Feature"] = Field("Feature", description=None)
+    geometry: "Point" = Field(..., description="Point Model")
     properties: Union[
         StoredAssuredOrderRequestProperties, StoredStandardOrderRequestProperties
-    ]
-    id: UUID
-    links: list["Link"]
-    contract_id: UUID
-    price: "Price1"
+    ] = Field(
+        ...,
+        description="A dictionary of additional metadata about the requested image.",
+    )
+    id: UUID = Field(..., description="Order ID")
+    links: list["Link"] = Field(
+        ..., description="A list of related links for the order."
+    )
+    contract_id: UUID = Field(..., description="Contract ID.")
+    price: "Price1" = Field(..., description=None)

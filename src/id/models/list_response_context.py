@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class ListResponseContext(BaseModel):
@@ -9,6 +9,6 @@ class ListResponseContext(BaseModel):
         returned (int): Number of returned webhooks in page.
     """
 
-    per_page: int
-    matched: int
-    returned: int
+    per_page: int = Field(..., description="Applied per page webhook limit.")
+    matched: int = Field(..., description="Total number of results.")
+    returned: int = Field(..., description="Number of returned webhooks in page.")

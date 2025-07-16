@@ -1,6 +1,6 @@
 from typing import Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..models.user_metadata import UserMetadata
 
@@ -15,8 +15,10 @@ class UserInfo(BaseModel):
         last_login (Union[None, str]): The datetime at which the user last logged in.
     """
 
-    user_id: str
-    name: str
-    email: str
-    user_metadata: Union[None, "UserMetadata"] = None
-    last_login: Union[None, str] = None
+    user_id: str = Field(..., description="The ID of the user.")
+    name: str = Field(..., description="The name of the user.")
+    email: str = Field(..., description="The email of the user.")
+    user_metadata: Union[None, "UserMetadata"] = Field(None, description=None)
+    last_login: Union[None, str] = Field(
+        None, description="The datetime at which the user last logged in."
+    )

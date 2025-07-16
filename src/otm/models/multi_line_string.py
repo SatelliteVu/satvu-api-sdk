@@ -1,6 +1,6 @@
 from typing import Literal, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class MultiLineString(BaseModel):
@@ -12,6 +12,6 @@ class MultiLineString(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["MultiLineString"] = "MultiLineString"
-    coordinates: list[list[list[float]]]
-    bbox: Union[None, list[float]] = None
+    type: Literal["MultiLineString"] = Field("MultiLineString", description=None)
+    coordinates: list[list[list[float]]] = Field(..., description=None)
+    bbox: Union[None, list[float]] = Field(None, description=None)

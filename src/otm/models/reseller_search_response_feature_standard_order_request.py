@@ -1,7 +1,7 @@
 from typing import Literal, Union
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..models.point import Point
 from ..models.price import Price
@@ -22,12 +22,20 @@ class ResellerSearchResponseFeatureStandardOrderRequest(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["Feature"] = "Feature"
-    geometry: Union[None, Point]
-    properties: Union[None, SearchStandardOrderProperties]
-    id: UUID
-    contract_id: UUID
-    collection: str
-    price: "Price"
-    reseller_end_user_id: UUID
-    bbox: Union[None, list[float]] = None
+    type: Literal["Feature"] = Field("Feature", description=None)
+    geometry: Union[None, Point] = Field(..., description=None)
+    properties: Union[None, SearchStandardOrderProperties] = Field(
+        ..., description=None
+    )
+    id: UUID = Field(
+        ..., description="ID of an item associated with the search parameters."
+    )
+    contract_id: UUID = Field(
+        ..., description="Contract ID associated with the search."
+    )
+    collection: str = Field(
+        ..., description="Name of collection associated with the search result item."
+    )
+    price: "Price" = Field(..., description=None)
+    reseller_end_user_id: UUID = Field(..., description=None)
+    bbox: Union[None, list[float]] = Field(None, description=None)

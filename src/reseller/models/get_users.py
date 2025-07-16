@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..models.get_user import GetUser
 from ..models.link import Link
@@ -14,6 +14,10 @@ class GetUsers(BaseModel):
         context (ResponseContext): Contextual information for pagination responses
     """
 
-    users: list["GetUser"]
-    links: list["Link"]
-    context: "ResponseContext"
+    users: list["GetUser"] = Field(
+        ..., description="All end users associated with the reseller."
+    )
+    links: list["Link"] = Field(..., description="Links to previous and/or next page.")
+    context: "ResponseContext" = Field(
+        ..., description="Contextual information for pagination responses"
+    )

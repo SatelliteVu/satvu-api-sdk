@@ -17,6 +17,6 @@ class FeasibilityRequest(BaseModel):
             metadata about the requested image.
     """
 
-    type: Literal["Feature"]
+    type: Literal["Feature"] = "Feature"
     geometry: "Point"
     properties: Union[AssuredFeasibilityFields, StandardOrderRequestProperties]

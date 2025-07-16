@@ -21,7 +21,7 @@ class PriceRequest(BaseModel):
             of additional metadata about the requested image.
     """
 
-    type: Literal["Feature"]
+    type: Literal["Feature"] = "Feature"
     geometry: "Point"
     properties: Union[
         AssuredFeasibilityFieldsWithAddons, StandardOrderRequestPropertiesWithAddons

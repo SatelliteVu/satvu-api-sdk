@@ -10,5 +10,5 @@ class AssuredFeasibilityFields(BaseModel):
         datetime (str): The closed date-time interval of the request.
     """
 
-    product: Literal["assured"]
+    product: Literal["assured"] = "assured"
     datetime: str

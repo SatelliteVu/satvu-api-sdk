@@ -17,7 +17,7 @@ class AssuredStoredFeasibilityRequestProperties(BaseModel):
         updated_at (datetime.datetime): The datetime at which the feasibility request was last updated.
     """
 
-    product: Literal["assured"]
+    product: Literal["assured"] = "assured"
     datetime: str
     status: FeasibilityRequestStatus
     created_at: datetime.datetime

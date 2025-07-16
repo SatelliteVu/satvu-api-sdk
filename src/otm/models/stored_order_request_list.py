@@ -17,7 +17,7 @@ class StoredOrderRequestList(BaseModel):
         context (ResponseContext):
     """
 
-    type: Literal["FeatureCollection"]
+    type: Literal["FeatureCollection"] = "FeatureCollection"
     features: list[Union[ResellerStoredOrderRequest, StoredOrderRequest]]
     links: list["Link"]
     context: "ResponseContext"

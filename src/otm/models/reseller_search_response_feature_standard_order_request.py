@@ -22,7 +22,7 @@ class ResellerSearchResponseFeatureStandardOrderRequest(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["Feature"]
+    type: Literal["Feature"] = "Feature"
     geometry: Union[None, Point]
     properties: Union[None, SearchStandardOrderProperties]
     id: UUID

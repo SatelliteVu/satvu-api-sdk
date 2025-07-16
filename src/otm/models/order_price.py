@@ -22,7 +22,7 @@ class OrderPrice(BaseModel):
         price (Price1):
     """
 
-    type: Literal["Feature"]
+    type: Literal["Feature"] = "Feature"
     geometry: "Point"
     properties: Union[AssuredFeasibilityFieldsWithAddons, StandardOrderFieldsWithAddons]
     created_at: datetime.datetime

@@ -12,6 +12,6 @@ class Polygon(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["Polygon"]
+    type: Literal["Polygon"] = "Polygon"
     coordinates: list[list[list[float]]]
     bbox: Union[None, list[float]] = None

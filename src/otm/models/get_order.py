@@ -24,7 +24,7 @@ class GetOrder(BaseModel):
         price (Price1):
     """
 
-    type: Literal["Feature"]
+    type: Literal["Feature"] = "Feature"
     geometry: "Point"
     properties: Union[GetAssuredOrderProperties, GetStandardOrderProperties]
     id: UUID

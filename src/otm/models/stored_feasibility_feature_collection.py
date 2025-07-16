@@ -17,7 +17,7 @@ class StoredFeasibilityFeatureCollection(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["FeatureCollection"]
+    type: Literal["FeatureCollection"] = "FeatureCollection"
     features: list["StoredFeasibilityRequest"]
     links: list["Link"]
     context: "ResponseContext"

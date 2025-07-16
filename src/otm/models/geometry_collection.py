@@ -20,7 +20,7 @@ class GeometryCollection(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["GeometryCollection"]
+    type: Literal["GeometryCollection"] = "GeometryCollection"
     geometries: list[
         Union[
             "GeometryCollection",

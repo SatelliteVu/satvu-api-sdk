@@ -27,7 +27,7 @@ class FeasibilityResponse(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["FeatureCollection"]
+    type: Literal["FeatureCollection"] = "FeatureCollection"
     features: list[
         Union[AssuredFeasibilityResponseFeature, StandardFeasibilityResponseFeature]
     ]

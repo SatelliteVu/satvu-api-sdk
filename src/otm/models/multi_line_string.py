@@ -12,6 +12,6 @@ class MultiLineString(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["MultiLineString"]
+    type: Literal["MultiLineString"] = "MultiLineString"
     coordinates: list[list[list[float]]]
     bbox: Union[None, list[float]] = None

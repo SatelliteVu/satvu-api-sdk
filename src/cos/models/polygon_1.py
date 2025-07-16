@@ -10,5 +10,5 @@ class Polygon1(BaseModel):
         coordinates (list[list[list[float]]]):
     """
 
-    type: Literal["Polygon"]
+    type: Literal["Polygon"] = "Polygon"
     coordinates: list[list[list[float]]]

@@ -30,7 +30,7 @@ class StoredAssuredOrderRequestProperties(BaseModel):
             will be set to the default specified in the relevant contract.
     """
 
-    product: Literal["assured"]
+    product: Literal["assured"] = "assured"
     datetime: str
     signature: str
     status: OrderStatus

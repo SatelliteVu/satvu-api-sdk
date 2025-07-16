@@ -27,7 +27,7 @@ class StoredFeasibilityRequest(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["Feature"]
+    type: Literal["Feature"] = "Feature"
     geometry: "Point"
     properties: Union[
         AssuredStoredFeasibilityRequestProperties,

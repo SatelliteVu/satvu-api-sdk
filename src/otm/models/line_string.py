@@ -12,6 +12,6 @@ class LineString(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["LineString"]
+    type: Literal["LineString"] = "LineString"
     coordinates: list[list[float]]
     bbox: Union[None, list[float]] = None

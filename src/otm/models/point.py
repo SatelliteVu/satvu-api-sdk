@@ -12,6 +12,6 @@ class Point(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["Point"]
+    type: Literal["Point"] = "Point"
     coordinates: list[float]
     bbox: Union[None, list[float]] = None

@@ -10,5 +10,5 @@ class NotificationConfig(BaseModel):
         email (Union[None, bool]): Opted into email notifications. Default: False.
     """
 
-    topic: Literal["tasking:order_status"]
+    topic: Literal["tasking:order_status"] = "tasking:order_status"
     email: Union[None, bool] = False

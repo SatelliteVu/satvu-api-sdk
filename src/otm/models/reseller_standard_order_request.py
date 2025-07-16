@@ -18,7 +18,7 @@ class ResellerStandardOrderRequest(BaseModel):
         reseller_end_user_id (UUID):
     """
 
-    type: Literal["Feature"]
+    type: Literal["Feature"] = "Feature"
     geometry: "Point"
     properties: "StandardOrderRequestPropertiesWithAddons"
     reseller_end_user_id: UUID

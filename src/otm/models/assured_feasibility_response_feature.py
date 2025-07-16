@@ -21,7 +21,7 @@ class AssuredFeasibilityResponseFeature(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["Feature"]
+    type: Literal["Feature"] = "Feature"
     geometry: "Point"
     properties: "AssuredFeasibilityResponseProperties"
     id: UUID

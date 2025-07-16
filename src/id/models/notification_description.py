@@ -11,6 +11,6 @@ class NotificationDescription(BaseModel):
         description (str): Description of notification type.
     """
 
-    topic: Literal["tasking:order_status"]
+    topic: Literal["tasking:order_status"] = "tasking:order_status"
     name: str
     description: str

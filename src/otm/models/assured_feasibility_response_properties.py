@@ -29,7 +29,7 @@ class AssuredFeasibilityResponseProperties(BaseModel):
         price (Union[None, Price]): Pricing information.
     """
 
-    product: Literal["assured"]
+    product: Literal["assured"] = "assured"
     datetime: str
     created_at: datetime.datetime
     updated_at: datetime.datetime

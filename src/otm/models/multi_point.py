@@ -12,6 +12,6 @@ class MultiPoint(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["MultiPoint"]
+    type: Literal["MultiPoint"] = "MultiPoint"
     coordinates: list[list[float]]
     bbox: Union[None, list[float]] = None

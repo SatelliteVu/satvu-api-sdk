@@ -28,7 +28,7 @@ class StoredOrderRequest(BaseModel):
         price (Price1):
     """
 
-    type: Literal["Feature"]
+    type: Literal["Feature"] = "Feature"
     geometry: "Point"
     properties: Union[
         StoredAssuredOrderRequestProperties, StoredStandardOrderRequestProperties

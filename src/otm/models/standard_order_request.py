@@ -17,6 +17,6 @@ class StandardOrderRequest(BaseModel):
         properties (StandardOrderRequestPropertiesWithAddons):
     """
 
-    type: Literal["Feature"]
+    type: Literal["Feature"] = "Feature"
     geometry: "Point"
     properties: "StandardOrderRequestPropertiesWithAddons"

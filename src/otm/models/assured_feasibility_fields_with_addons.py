@@ -13,6 +13,6 @@ class AssuredFeasibilityFieldsWithAddons(BaseModel):
             will be set to the default specified in the relevant contract.
     """
 
-    product: Literal["assured"]
+    product: Literal["assured"] = "assured"
     datetime: str
     addon_withhold: Union[None, str] = None

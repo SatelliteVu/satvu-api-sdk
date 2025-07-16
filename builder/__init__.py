@@ -148,6 +148,11 @@ openapi_python_client.parser.properties.list_property.ListProperty.get_type_stri
 
 def to_string(self) -> str:
     default: str | None
+
+    # For const (literal) properties, default to the value of the constant
+    if isinstance(self, openapi_python_client.parser.properties.const.ConstProperty):
+        return f"{self.python_name}: {self.get_type_string(quoted=True)} = {self.value.python_code}"
+
     if self.default is not None:
         default = self.default.python_code
         return f"{self.python_name}: {self.get_type_string(quoted=True)} = {default}"

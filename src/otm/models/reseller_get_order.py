@@ -24,7 +24,7 @@ class ResellerGetOrder(BaseModel):
         reseller_end_user_id (UUID):
     """
 
-    type: Literal["Feature"]
+    type: Literal["Feature"] = "Feature"
     geometry: "Point"
     properties: Union[GetAssuredOrderProperties, GetStandardOrderProperties]
     id: UUID

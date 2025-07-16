@@ -512,5 +512,4 @@ class OtmService(SDKClient):
             return deep_parse_from_annotation(
                 normalize_keys(response.json()), SearchResponse
             )
-        print(response.status_code, response.text)
         return response.json()

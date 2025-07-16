@@ -12,6 +12,6 @@ class MultiPolygon(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["MultiPolygon"]
+    type: Literal["MultiPolygon"] = "MultiPolygon"
     coordinates: list[list[list[list[float]]]]
     bbox: Union[None, list[float]] = None

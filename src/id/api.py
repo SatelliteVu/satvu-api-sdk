@@ -132,9 +132,7 @@ class IdService(SDKClient):
         Updates user settings.
 
         Args:
-            notifications (Union[None, list['NotificationUpdate']]): Update user notifications
-                settings.A full list of notification preferences can be found with the GET user details
-                endpoint. Sending empty or null objects will not modify existing preferences.
+            body (UserSettings):
 
         Returns:
             UserInfo
@@ -336,11 +334,7 @@ class IdService(SDKClient):
         Create a webhook.
 
         Args:
-            event_types (list[Union[ResellerWebhookEvent, WebhookEvent]]): A list of events to
-                subscribe to.
-            name (str): The name of the webhook.
-            url (str): The URL where you want to receive requests for events you are subscribed to.
-                Must be HTTPS.
+            body (CoreWebhook):
 
         Returns:
             CreateWebhookResponse
@@ -420,10 +414,7 @@ class IdService(SDKClient):
 
         Args:
             id (UUID): The webhook ID.
-            active (Union[None, bool]): Whether the webhook should be active or not.
-            event_types (Union[None, list[Union[ResellerWebhookEvent, WebhookEvent]]]): A list of
-                events to subscribe to.
-            name (Union[None, str]): The name of the webhook.
+            body (EditWebhookPayload):
 
         Returns:
             WebhookResponse

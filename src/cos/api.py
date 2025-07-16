@@ -68,7 +68,7 @@ class CosService(SDKClient):
         Args:
             contract_id (UUID): Contract ID.
             order_id (UUID): Order ID.
-            name (Union[None, str]): Optional name of an order
+            body (OrderEditPayload):
 
         Returns:
             Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]
@@ -147,11 +147,10 @@ class CosService(SDKClient):
 
         Args:
             contract_id (UUID): Contract ID.
-            Either (OrderSubmissionPayload):
-                - item_id (Union[list[str], str]): Item ID.
-            Or: (ResellerSubmissionOrderPayload):
-                - item_id (Union[list[str], str]): Item ID.
-                - reseller_end_user_id (UUID):
+            body (Union[OrderSubmissionPayload, ResellerSubmissionOrderPayload]]):
+                One of:
+                - OrderSubmissionPayload:
+                - ResellerSubmissionOrderPayload:
 
         Returns:
             Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]

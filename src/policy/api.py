@@ -25,7 +25,7 @@ class PolicyService(SDKClient):
         Get active contracts for a user.
 
         Args:
-            token (str): User access token
+            body (PostActiveContractsInput):
 
         Returns:
             RouterActiveContractsResponse
@@ -79,8 +79,7 @@ class PolicyService(SDKClient):
         Defines if a user has accepted terms and conditions of service.
 
         Args:
-            accepted (bool): Terms and Conditions have been accepted
-            token (str): User access token
+            body (UserAcceptanceTermsInput):
 
         Returns:
             TermsUserTermsAccepted

@@ -28,10 +28,7 @@ class ResellerService(SDKClient):
         Create end users.
 
         Args:
-            user_email (str): The email address of the user.
-            user_name (str): The full name of the user.
-            company_name (str): The name of the company.
-            company_address (CompanyAddress):
+            body (CreateUser): Represents payload to create a user
 
         Returns:
             list['CreateUserResponse']
@@ -133,10 +130,7 @@ class ResellerService(SDKClient):
         Search end users.
 
         Args:
-            limit (Union[None, int]): The number of results to return per page.
-            token (Union[None, str]): The pagination token.
-            search (Union[None, UserSearch, list['UserSearch']]): Search criteria.
-            kyc_status (Union[KYCStatus, None, list[KYCStatus]]): The KYC status of the user.
+            body (SearchUsers):
 
         Returns:
             GetUsers
@@ -161,10 +155,7 @@ class ResellerService(SDKClient):
         Search end user companies.
 
         Args:
-            limit (Union[None, int]): The number of results to return per page.
-            token (Union[None, str]): The pagination token.
-            search (Union[CompanySearch, None, list['CompanySearch']]): Search criteria.
-            kyc_status (Union[KYCStatus, None, list[KYCStatus]]): The KYC status of the company.
+            body (SearchCompanies):
 
         Returns:
             GetCompanies

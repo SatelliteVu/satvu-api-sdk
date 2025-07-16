@@ -30,7 +30,7 @@ class SearchRequest(BaseModel):
             value similarly achieves an equality operation. A tuple of 2 values can also be provided to search inclusively
             between a range.
         intersects (Union[GeometryCollection, LineString, MultiLineString, MultiPoint, MultiPolygon, None, Point,
-            Polygon]): A GeoJSON geometry to filter for. Items are returned if the geometry of theitem intersects with the
+            Polygon]): A GeoJSON geometry to filter for. Items are returned if the geometry of the item intersects with the
             geometry provided.
         sort_by (Union[None, list['SortEntities']]): Sort the order in which results are returned.
     """
@@ -65,7 +65,7 @@ class SearchRequest(BaseModel):
         Polygon,
     ] = Field(
         None,
-        description="A GeoJSON geometry to filter for. Items are returned if the geometry of theitem intersects with the geometry provided.",
+        description="A GeoJSON geometry to filter for. Items are returned if the geometry of the item intersects with the geometry provided.",
     )
     sort_by: Union[None, list["SortEntities"]] = Field(
         None, description="Sort the order in which results are returned."

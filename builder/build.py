@@ -126,27 +126,29 @@ class SatVuProject(Project):
         return self._get_errors()
 
     def body_docstrings(self, body: Body) -> list[str]:
+        """
+        Generate docstrings for the request body.
+        """
         docstrings = []
         if isinstance(body.prop, UnionProperty):
             # TODO: Agree a way to document unions
             models = body.prop.inner_properties
-            docstring = "Either"
+            docstring = f"body ({body.prop.get_type_string()}]):\n"
+            docstring += "One of:\n"
+
             for model in models:
-                docstring += f" ({model.get_type_string()}):"
-                for prop in model.required_properties:
-                    docstring += f"\n- {prop.python_name} ({prop.get_type_string()}): {prop.description or ''}"
-                docstrings.append(docstring)
-                docstring = "Or:"
+                model_docstring = f"- {model.get_type_string()}: {model.description}\n"
+                docstring += model_docstring
+
+            docstrings.append(docstring)
         else:
             body_prop = (
                 body.prop.inner_property
                 if isinstance(body.prop, ListProperty)
                 else body.prop
             )
-            props = body_prop.required_properties + body_prop.optional_properties
-            for prop in props:
-                docstring = f"{prop.python_name} ({prop.get_type_string()}): {prop.description or ''}"
-                docstrings.append(docstring)
+            docstring = f"body ({body_prop.get_type_string()}): {body_prop.description}"
+            docstrings.append(docstring)
 
         return docstrings
 

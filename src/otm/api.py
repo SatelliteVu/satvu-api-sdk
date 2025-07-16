@@ -94,20 +94,13 @@ class OtmService(SDKClient):
 
         Args:
             contract_id (UUID): Contract ID
-            Either (StandardOrderRequest):
-                - type (Literal['Feature']):
-                - geometry (Point): Point Model
-                - properties (StandardOrderRequestPropertiesWithAddons):
-            Or: (AssuredOrderRequest):
-                - properties (AssuredOrderRequestProperties):
-            Or: (ResellerStandardOrderRequest):
-                - type (Literal['Feature']):
-                - geometry (Point): Point Model
-                - properties (StandardOrderRequestPropertiesWithAddons):
-                - reseller_end_user_id (UUID):
-            Or: (ResellerAssuredOrderRequest):
-                - properties (AssuredOrderRequestProperties):
-                - reseller_end_user_id (UUID):
+            body (Union[AssuredOrderRequest, ResellerAssuredOrderRequest,
+                ResellerStandardOrderRequest, StandardOrderRequest]]):
+                One of:
+                - StandardOrderRequest: Feature model for incoming order request.
+                - AssuredOrderRequest:
+                - ResellerStandardOrderRequest:
+                - ResellerAssuredOrderRequest:
 
         Returns:
             Union[ResellerStoredOrderRequest, StoredOrderRequest]
@@ -170,7 +163,7 @@ class OtmService(SDKClient):
         Args:
             contract_id (UUID): Contract ID
             order_id (UUID): Order ID
-            properties (OrderName):
+            body (EditOrderPayload): Payload for editing an order.
 
         Returns:
             Union[GetOrder, ResellerGetOrder]
@@ -354,10 +347,7 @@ class OtmService(SDKClient):
 
         Args:
             contract_id (UUID): Contract ID
-            type (Literal['Feature']):
-            geometry (Point): Point Model
-            properties (Union[AssuredFeasibilityFields, StandardOrderRequestProperties]): A dictionary
-                of additional metadata about the requested image.
+            body (FeasibilityRequest): Feature model for incoming feasibility request.
 
         Returns:
             StoredFeasibilityRequest
@@ -448,11 +438,7 @@ class OtmService(SDKClient):
 
         Args:
             contract_id (UUID): Contract ID
-            type (Literal['Feature']):
-            geometry (Point): Point Model
-            properties (Union[AssuredFeasibilityFieldsWithAddons,
-                StandardOrderRequestPropertiesWithAddons]): A dictionary of additional metadata about the
-                requested image.
+            body (PriceRequest): Feature model for incoming price request
 
         Returns:
             OrderPrice
@@ -480,21 +466,7 @@ class OtmService(SDKClient):
 
         Args:
             contract_id (UUID): Contract ID
-            token (Union[None, str]): Pagination token.
-            limit (Union[None, int]): Number of items to return per page.
-            collections (Union[None, list[Collections]]): A list of collection types.
-            ids (Union[None, list[UUID]]): A list of IDs.
-            datetime (Union[None, str]):
-            created_at (Union[None, str]): The datetime at which the entity was created.
-            updated_at (Union[None, str]): The datetime at which the entity was last updated.
-            properties (Union[FilterFields, None]): Allowed properties to filter a search. Filterable
-                string fields allow one value or a list of values resulting in an equality or 'IN'
-                comparison respectively. For numeric fields, one value similarly achieves an equality
-                operation. A tuple of 2 values can also be provided to search inclusively between a range.
-            intersects (Union[GeometryCollection, LineString, MultiLineString, MultiPoint,
-                MultiPolygon, None, Point, Polygon]): A GeoJSON geometry to filter for. Items are returned
-                if the geometry of theitem intersects with the geometry provided.
-            sort_by (Union[None, list['SortEntities']]): Sort the order in which results are returned.
+            body (SearchRequest):
 
         Returns:
             SearchResponse

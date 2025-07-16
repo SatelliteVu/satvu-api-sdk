@@ -19,11 +19,8 @@ def deep_parse_from_annotation(data: Any, annotation: Any) -> Any:
     Returns:
         The parsed object according to the annotation.
     """
-    print("DATA: ", data)
     origin = get_origin(annotation)
-    print("ORIGIN: ", origin)
     args = get_args(annotation)
-    print("ARGS: ", args)
 
     # If data is None, return None directly if the annotation allows it
     # otherwise, raise an error

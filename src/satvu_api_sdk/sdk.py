@@ -4,6 +4,7 @@ from src.otm.api import OtmService
 from src.policy.api import PolicyService
 from src.reseller.api import ResellerService
 from src.satvu_api_sdk.auth import AuthService, TokenCache
+from wallet.api import WalletService
 
 
 class SatVuSDK:
@@ -28,6 +29,7 @@ class SatVuSDK:
         self._otm = None
         self._policy = None
         self._reseller = None
+        self._wallet = None
 
     def get_token(self):
         return self.auth.token(self.client_id, self.client_secret)
@@ -67,3 +69,9 @@ class SatVuSDK:
         if not self._reseller:
             self._reseller = ResellerService(env=self.env, get_token=self.get_token)
         return self._reseller
+
+    @property
+    def wallet(self) -> WalletService:
+        if not self._wallet:
+            self._wallet = WalletService(env=self.env, get_token=self.get_token)
+        return self._wallet

@@ -7,4 +7,5 @@ APIS: dict[str, str] = {
     "policy": "/policy/v1",
     "otm": "/otm/v2",
     "reseller": "/resellers/v1",
+    "wallet": "/wallet/v1",
 }

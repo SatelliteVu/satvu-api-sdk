@@ -185,7 +185,7 @@ class {{ api_id | title }}Service(SDKClient):
             {% if response_type == 'Any' %}
             return response.json()
             {% else %}
-            return deep_parse_from_annotation(normalize_keys(response.json()), {{ response_type }})
+            return deep_parse_from_annotation(response.json(), {{ response_type }})
             {% endif %}
         {% endfor %}
         return response.json()

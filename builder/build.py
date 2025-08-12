@@ -153,7 +153,7 @@ class SatVuProject(Project):
         return docstrings
 
 
-def build(api_id: str, use_cached: False):
+def build(api_id: str, use_cached: bool = False):
     """
     Build the SatVu API client for the given API ID.
 

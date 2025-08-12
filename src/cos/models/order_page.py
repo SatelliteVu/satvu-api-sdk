@@ -1,6 +1,6 @@
 from typing import Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from ..models.feature_collection_order import FeatureCollectionOrder
 from ..models.link import Link
@@ -17,8 +17,12 @@ class OrderPage(BaseModel):
     """
 
     orders: list[Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]] = Field(
-        ..., description="A list of existing orders owned by the user."
+        ..., description="A list of existing orders owned by the user.", alias="orders"
     )
     links: list["Link"] = Field(
-        ..., description="A list of links to next and/or previous pages of the query."
+        ...,
+        description="A list of links to next and/or previous pages of the query.",
+        alias="links",
     )
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

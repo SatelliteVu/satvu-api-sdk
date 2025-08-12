@@ -1,16 +1,20 @@
 from typing import Literal, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class PointGeometry(BaseModel):
     """
     Attributes:
         coordinates (list[Union[float, int]]): The coordinates of the item.
-        type (Union[Literal['Point'], None]):  Default: 'Point'.
+        type_ (Union[Literal['Point'], None]):  Default: 'Point'.
     """
 
     coordinates: list[Union[float, int]] = Field(
-        ..., description="The coordinates of the item."
+        ..., description="The coordinates of the item.", alias="coordinates"
     )
-    type: Union[Literal["Point"], None] = Field("Point", description=None)
+    type_: Union[Literal["Point"], None] = Field(
+        "Point", description=None, alias="type"
+    )
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

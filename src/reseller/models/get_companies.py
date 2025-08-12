@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from ..models.get_company import GetCompany
 from ..models.link import Link
@@ -15,9 +15,17 @@ class GetCompanies(BaseModel):
     """
 
     companies: list["GetCompany"] = Field(
-        ..., description="All end user companies associated with the reseller."
+        ...,
+        description="All end user companies associated with the reseller.",
+        alias="companies",
     )
-    links: list["Link"] = Field(..., description="Links to previous and/or next page.")
+    links: list["Link"] = Field(
+        ..., description="Links to previous and/or next page.", alias="links"
+    )
     context: "ResponseContext" = Field(
-        ..., description="Contextual information for pagination responses"
+        ...,
+        description="Contextual information for pagination responses",
+        alias="context",
     )
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

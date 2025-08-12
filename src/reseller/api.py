@@ -2,7 +2,7 @@ from collections.abc import Callable
 from typing import Any, Union
 
 from satvu_api_sdk.core import SDKClient
-from shared.utils import deep_parse_from_annotation, normalize_keys
+from shared.utils import deep_parse_from_annotation
 
 from reseller.models.create_user import CreateUser
 from reseller.models.create_user_response import CreateUserResponse
@@ -44,7 +44,7 @@ class ResellerService(SDKClient):
 
         if response.status_code == 201:
             return deep_parse_from_annotation(
-                normalize_keys(response.json()), list["CreateUserResponse"]
+                response.json(), list["CreateUserResponse"]
             )
         return response.json()
 
@@ -81,7 +81,7 @@ class ResellerService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(normalize_keys(response.json()), GetUsers)
+            return deep_parse_from_annotation(response.json(), GetUsers)
         return response.json()
 
     def get_companies(
@@ -118,9 +118,7 @@ class ResellerService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                normalize_keys(response.json()), GetCompanies
-            )
+            return deep_parse_from_annotation(response.json(), GetCompanies)
         return response.json()
 
     def search_users(self, body: SearchUsers) -> GetUsers:
@@ -145,7 +143,7 @@ class ResellerService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(normalize_keys(response.json()), GetUsers)
+            return deep_parse_from_annotation(response.json(), GetUsers)
         return response.json()
 
     def search_companies(self, body: SearchCompanies) -> GetCompanies:
@@ -170,7 +168,5 @@ class ResellerService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                normalize_keys(response.json()), GetCompanies
-            )
+            return deep_parse_from_annotation(response.json(), GetCompanies)
         return response.json()

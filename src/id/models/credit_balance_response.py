@@ -1,6 +1,6 @@
 from typing import Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class CreditBalanceResponse(BaseModel):
@@ -12,12 +12,18 @@ class CreditBalanceResponse(BaseModel):
             the billing cycle is None, the billing period will be from the contract start date.
     """
 
-    currency: str = Field(..., description="The currency of the credit balance.")
+    currency: str = Field(
+        ..., description="The currency of the credit balance.", alias="currency"
+    )
     balance: int = Field(
         ...,
         description="The credit balance of the user, in minor units of the currency e.g. pence, cents.",
+        alias="balance",
     )
     billing_cycle: Union[None, str] = Field(
         ...,
         description="The current billing cycle, for example the current calendar month (UTC). If the billing cycle is None, the billing period will be from the contract start date.",
+        alias="billing_cycle",
     )
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

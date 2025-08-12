@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from ..models.link import Link
 from ..models.list_response_context import ListResponseContext
@@ -13,6 +13,12 @@ class ListWebhookResponse(BaseModel):
         links (list['Link']): Links to previous and/or next page.
     """
 
-    webhooks: list["WebhookResponse"] = Field(..., description="List of webhooks.")
-    context: "ListResponseContext" = Field(..., description=None)
-    links: list["Link"] = Field(..., description="Links to previous and/or next page.")
+    webhooks: list["WebhookResponse"] = Field(
+        ..., description="List of webhooks.", alias="webhooks"
+    )
+    context: "ListResponseContext" = Field(..., description=None, alias="context")
+    links: list["Link"] = Field(
+        ..., description="Links to previous and/or next page.", alias="links"
+    )
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

@@ -1,6 +1,6 @@
 from typing import Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from ..models.webhook_failure_title import WebhookFailureTitle
 
@@ -15,15 +15,22 @@ class WebhookResult(BaseModel):
     """
 
     success: bool = Field(
-        ..., description="Whether the request to the webhook URL was successful."
+        ...,
+        description="Whether the request to the webhook URL was successful.",
+        alias="success",
     )
     status_code: Union[None, int] = Field(
         None,
         description="The HTTP status code responded by the webhook URL, if applicable.",
+        alias="status_code",
     )
     title: Union[None, WebhookFailureTitle] = Field(
-        None, description="The cause of the test failure, if applicable."
+        None, description="The cause of the test failure, if applicable.", alias="title"
     )
     detail: Union[None, str] = Field(
-        None, description="Detail about why the test failed, if applicable."
+        None,
+        description="Detail about why the test failed, if applicable.",
+        alias="detail",
     )
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

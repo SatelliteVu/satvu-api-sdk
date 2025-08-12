@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ErrorResponse(BaseModel):
@@ -7,4 +7,6 @@ class ErrorResponse(BaseModel):
         detail (str):
     """
 
-    detail: str = Field(..., description=None)
+    detail: str = Field(..., description=None, alias="detail")
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

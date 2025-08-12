@@ -1,6 +1,6 @@
 from typing import Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class Price(BaseModel):
@@ -13,5 +13,10 @@ class Price(BaseModel):
     value: Union[None, int] = Field(
         None,
         description="Price of the order in minor units of the currency e.g. pence, cents.",
+        alias="value",
     )
-    currency: Union[None, str] = Field(None, description="The currency of the order.")
+    currency: Union[None, str] = Field(
+        None, description="The currency of the order.", alias="currency"
+    )
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

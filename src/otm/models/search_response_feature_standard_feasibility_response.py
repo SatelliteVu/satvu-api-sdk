@@ -1,7 +1,7 @@
 from typing import Literal, Union
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from ..models.point import Point
 from ..models.price import Price
@@ -13,7 +13,7 @@ from ..models.standard_feasibility_response_properties import (
 class SearchResponseFeatureStandardFeasibilityResponse(BaseModel):
     """
     Attributes:
-        type (Literal['Feature']):
+        type_ (Literal['Feature']):
         geometry (Union[None, Point]):
         properties (Union[None, StandardFeasibilityResponseProperties]):
         id (UUID): ID of an item associated with the search parameters.
@@ -23,19 +23,25 @@ class SearchResponseFeatureStandardFeasibilityResponse(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["Feature"] = Field("Feature", description=None)
-    geometry: Union[None, Point] = Field(..., description=None)
+    type_: Literal["Feature"] = Field("Feature", description=None, alias="type")
+    geometry: Union[None, Point] = Field(..., description=None, alias="geometry")
     properties: Union[None, StandardFeasibilityResponseProperties] = Field(
-        ..., description=None
+        ..., description=None, alias="properties"
     )
     id: UUID = Field(
-        ..., description="ID of an item associated with the search parameters."
+        ...,
+        description="ID of an item associated with the search parameters.",
+        alias="id",
     )
     contract_id: UUID = Field(
-        ..., description="Contract ID associated with the search."
+        ..., description="Contract ID associated with the search.", alias="contract_id"
     )
     collection: str = Field(
-        ..., description="Name of collection associated with the search result item."
+        ...,
+        description="Name of collection associated with the search result item.",
+        alias="collection",
     )
-    price: "Price" = Field(..., description=None)
-    bbox: Union[None, list[float]] = Field(None, description=None)
+    price: "Price" = Field(..., description=None, alias="price")
+    bbox: Union[None, list[float]] = Field(None, description=None, alias="bbox")
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

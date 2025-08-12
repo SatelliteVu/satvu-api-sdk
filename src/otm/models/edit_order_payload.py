@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from ..models.order_name import OrderName
 
@@ -10,4 +10,6 @@ class EditOrderPayload(BaseModel):
         properties (OrderName):
     """
 
-    properties: "OrderName" = Field(..., description=None)
+    properties: "OrderName" = Field(..., description=None, alias="properties")
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

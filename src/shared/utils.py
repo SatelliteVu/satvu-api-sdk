@@ -70,28 +70,28 @@ def deep_parse_from_annotation(data: Any, annotation: Any) -> Any:
         return annotation(data)
 
 
-def _recursive_parse_dict(data: dict, model_cls: Type[BaseModel]) -> BaseModel:
+def _recursive_parse_dict(data: dict, model_cls):
     """
     Parses a dict recursively into a Pydantic model, including support for nested Unions.
     """
     model_fields = model_cls.model_fields
     new_data = {}
 
-    for field_name, field in model_fields.items():
-        if field_name not in data:
+    for field in model_fields.values():
+        if field.alias not in list(data.keys()):
             continue
 
-        field_value = data[field_name]
+        field_value = data[field.alias]
         field_type = field.annotation
 
         try:
-            new_data[field_name] = deep_parse_from_annotation(field_value, field_type)
+            new_data[field.alias] = deep_parse_from_annotation(field_value, field_type)
         except Exception as e:
             raise ValueError(
-                f"Failed to parse field '{field_name}' in {model_cls.__name__}: {e}"
+                f"Failed to parse field '{field.alias}' in {model_cls.__name__}: {e}"
             )
 
-    return model_cls(**new_data)
+    return model_cls.model_validate(new_data, by_alias=True)
 
 
 def normalize_keys(obj: Any) -> Any:

@@ -1,0 +1,1394 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "SatVu Catalog",
+        "description": "SatVu Catalog",
+        "version": "v0.97.0",
+        "x-logo": {
+            "url": "https://cdn.satellitevu.com/dark-logo.svg"
+        }
+    },
+    "servers": [
+        {
+            "url": "https://api.qa.satellitevu.com/catalog/"
+        }
+    ],
+    "paths": {
+        "/v1/{contract_id}/": {
+            "get": {
+                "summary": "Landing Page",
+                "description": "Landing page of the API. Entrypoint to which user can access product specifications, product applications and API documentation.",
+                "operationId": "landing-page",
+                "parameters": [
+                    {
+                        "name": "contract_id",
+                        "in": "path",
+                        "description": "SatVu Contract ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TypesCatalog"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/{contract_id}/collections": {
+            "get": {
+                "tags": [
+                    "Collections"
+                ],
+                "summary": "Get Collections",
+                "description": "List STAC Collections available within the catalog.",
+                "operationId": "get-collections",
+                "parameters": [
+                    {
+                        "name": "contract_id",
+                        "in": "path",
+                        "description": "SatVu Contract ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TypesCollections"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/{contract_id}/collections/{collection_id}": {
+            "get": {
+                "tags": [
+                    "Collections"
+                ],
+                "summary": "Get Collection",
+                "description": "Retrieves the generic metadata and attributes associated with a given Collection ID within the catalog. To see all available Collections, please refer to GET /collections.",
+                "operationId": "get-collection",
+                "parameters": [
+                    {
+                        "name": "collection_id",
+                        "in": "path",
+                        "description": "Collection ID.",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "Collection ID.",
+                            "example": "collection"
+                        }
+                    },
+                    {
+                        "name": "contract_id",
+                        "in": "path",
+                        "description": "SatVu Contract ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Collection"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MiddlewaresApiError"
+                                },
+                                "example": {
+                                    "errors": [
+                                        {
+                                            "id": "NotFoundError",
+                                            "message": "collection not found"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/{contract_id}/collections/{collection_id}/items": {
+            "get": {
+                "tags": [
+                    "Collections"
+                ],
+                "summary": "Get Item Collection",
+                "description": "Retrieves the entire dataset, represented as a Feature Collection, corresponding to a specified Collection ID.",
+                "operationId": "get-item-collection",
+                "parameters": [
+                    {
+                        "name": "collection_id",
+                        "in": "path",
+                        "description": "Collection ID.",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "Collection ID.",
+                            "example": "collection"
+                        }
+                    },
+                    {
+                        "name": "contract_id",
+                        "in": "path",
+                        "description": "SatVu Contract ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TypesSearchResponseData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/{contract_id}/collections/{collection_id}/{item_id}": {
+            "get": {
+                "tags": [
+                    "Collections"
+                ],
+                "summary": "Get Item",
+                "description": "Retrieves a specified imagery item from a Collection within the Catalog. The item will be represented as a Feature dataset.",
+                "operationId": "get-item",
+                "parameters": [
+                    {
+                        "name": "collection_id",
+                        "in": "path",
+                        "description": "Collection ID.",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "Collection ID.",
+                            "example": "collection"
+                        }
+                    },
+                    {
+                        "name": "item_id",
+                        "in": "path",
+                        "description": "Item ID.",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "Item ID.",
+                            "example": "item"
+                        }
+                    },
+                    {
+                        "name": "contract_id",
+                        "in": "path",
+                        "description": "SatVu Contract ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Feature"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MiddlewaresApiError"
+                                },
+                                "example": {
+                                    "errors": [
+                                        {
+                                            "id": "NotFoundError",
+                                            "message": "item not found"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/{contract_id}/conformance": {
+            "get": {
+                "summary": "Conformance",
+                "description": "List of implemented conformance classes",
+                "operationId": "conformance",
+                "parameters": [
+                    {
+                        "name": "contract_id",
+                        "in": "path",
+                        "description": "SatVu Contract ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RouterConformance"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/{contract_id}/queryables": {
+            "get": {
+                "summary": "Queryables",
+                "description": "List of queryables available for CQL2 filtering",
+                "operationId": "queryables",
+                "parameters": [
+                    {
+                        "name": "contract_id",
+                        "in": "path",
+                        "description": "SatVu Contract ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Cql2QueryablesSchema"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/{contract_id}/search": {
+            "get": {
+                "summary": "Search",
+                "description": "Perform a search on the Catalog with your desired filters. Results will be returned as a Feature Collection. Both GET and POST methods are supported for this request.",
+                "operationId": "get-search",
+                "parameters": [
+                    {
+                        "name": "bbox",
+                        "in": "query",
+                        "description": "Comma separated list of floats representing a bounding box. Only features that have a geometry that intersects the bounding box are selected.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "number",
+                                "format": "double"
+                            },
+                            "description": "Comma separated list of floats representing a bounding box. Only features that have a geometry that intersects the bounding box are selected.",
+                            "example": "-90,-45,90,45"
+                        }
+                    },
+                    {
+                        "name": "collections",
+                        "in": "query",
+                        "description": "Comma separated list of Collection IDs to include in the search for items. Only Item objects in one of the provided collections will be searched.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Comma separated list of Collection IDs to include in the search for items. Only Item objects in one of the provided collections will be searched.",
+                            "example": "collection1,collection2"
+                        }
+                    },
+                    {
+                        "name": "datetime",
+                        "in": "query",
+                        "description": "Single date+time, or a range ('/') separator, formatted to RFC3339 section 5.6. Use double dots for open ranges.",
+                        "schema": {
+                            "type": "string",
+                            "description": "Single date+time, or a range ('/') separator, formatted to RFC3339 section 5.6. Use double dots for open ranges.",
+                            "example": "1985-04-12T23:20:50.52Z/..",
+                            "nullable": true
+                        }
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filters using Common Query Language (CQL2).",
+                        "schema": {
+                            "$ref": "#/components/schemas/Filter"
+                        }
+                    },
+                    {
+                        "name": "ids",
+                        "in": "query",
+                        "description": "Comma separated list of Item IDs to return.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Comma separated list of Item IDs to return.",
+                            "example": "item1,item2"
+                        }
+                    },
+                    {
+                        "name": "intersects",
+                        "in": "query",
+                        "schema": {
+                            "$ref": "https://api.qa.satellitevu.com/catalog/v1/geometry.json"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "The maximum number of results to return per page.",
+                        "schema": {
+                            "type": "integer",
+                            "description": "The maximum number of results to return per page.",
+                            "format": "int32",
+                            "example": 10,
+                            "nullable": true
+                        }
+                    },
+                    {
+                        "name": "sortby",
+                        "in": "query",
+                        "description": "An array of property names, prefixed by either '+' for ascending or '-' for descending. If no prefix is provided, '-' is assumed.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "An array of property names, prefixed by either '+' for ascending or '-' for descending. If no prefix is provided, '-' is assumed."
+                        }
+                    },
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "The pagination token.",
+                        "schema": {
+                            "type": "string",
+                            "description": "The pagination token."
+                        }
+                    },
+                    {
+                        "name": "contract_id",
+                        "in": "path",
+                        "description": "SatVu Contract ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TypesFeatureCollection"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MiddlewaresGenericApiError"
+                                },
+                                "example": {
+                                    "Errors": [
+                                        {
+                                            "id": "BadRequestError",
+                                            "message": "message",
+                                            "field": ""
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Search",
+                "description": "Perform a search on the Catalog with your desired filters. Results will be returned as a Feature Collection. Both GET and POST methods are supported for this request.",
+                "operationId": "post-search",
+                "parameters": [
+                    {
+                        "name": "contract_id",
+                        "in": "path",
+                        "description": "SatVu Contract ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Post-SearchInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TypesFeatureCollection"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MiddlewaresGenericApiError"
+                                },
+                                "example": {
+                                    "Errors": [
+                                        {
+                                            "id": "BadRequestError",
+                                            "message": "message",
+                                            "field": ""
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Asset": {
+                "type": "object",
+                "properties": {
+                    "description": {
+                        "type": "string",
+                        "description": "A description of the asset."
+                    },
+                    "href": {
+                        "type": "string",
+                        "description": "URI to the asset object. Can be relative or absolute."
+                    },
+                    "raster:bands": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "additionalProperties": {}
+                        },
+                        "description": "Raster band statistics for the asset."
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "The semantic roles of the asset."
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "The title of of the asset."
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "Media type of the asset."
+                    }
+                },
+                "required": [
+                    "href"
+                ]
+            },
+            "Collection": {
+                "type": "object",
+                "properties": {
+                    "description": {
+                        "type": "string",
+                        "description": "The description of the Collection.",
+                        "example": "This is a Collection"
+                    },
+                    "extent": {
+                        "$ref": "#/components/schemas/Extent"
+                    },
+                    "id": {
+                        "type": "string",
+                        "description": "The identifier of the Collection, unique across the Catalog.",
+                        "example": "collection"
+                    },
+                    "keywords": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "A list of keywords describing the Collection."
+                    },
+                    "license": {
+                        "type": "string",
+                        "description": "The Collection's license."
+                    },
+                    "links": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Link"
+                        },
+                        "description": "A list of references to other documents."
+                    },
+                    "stac_extensions": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "A list of extension identifiers the Collection implements."
+                    },
+                    "stac_version": {
+                        "type": "string",
+                        "description": "The STAC version the Collection implements.",
+                        "example": "1.0.0"
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "The title of the Collection.",
+                        "example": "Example Collection"
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "Collection.",
+                        "example": "Collection"
+                    }
+                },
+                "required": [
+                    "description",
+                    "extent",
+                    "id",
+                    "license",
+                    "links",
+                    "stac_version",
+                    "type"
+                ]
+            },
+            "Cql2QueryablesSchema": {
+                "type": "object",
+                "properties": {
+                    "$id": {
+                        "type": "string",
+                        "description": "The URL of the endpoint."
+                    },
+                    "$schema": {
+                        "type": "string",
+                        "description": "The schema of the response.",
+                        "example": "http://json-schema.org/draft-07/schema#"
+                    },
+                    "properties": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/QueryableProperty"
+                        },
+                        "description": "A list of queryable properties to use as search filters."
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "The type of the resource.",
+                        "example": "object"
+                    }
+                },
+                "required": [
+                    "$id",
+                    "$schema",
+                    "type"
+                ]
+            },
+            "Error": {
+                "type": "object",
+                "properties": {
+                    "field": {
+                        "type": "string",
+                        "description": "The field that failed validation, for 'ValidationError' errors only."
+                    },
+                    "id": {
+                        "type": "string",
+                        "description": "A unique identifier for the type of error."
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "An error message describing what went wrong."
+                    }
+                },
+                "required": [
+                    "id",
+                    "message"
+                ]
+            },
+            "Extent": {
+                "type": "object",
+                "properties": {
+                    "spatial": {
+                        "$ref": "#/components/schemas/SpatialExtent"
+                    },
+                    "temporal": {
+                        "$ref": "#/components/schemas/TypesTemporalExtent"
+                    }
+                },
+                "description": "Spatial and temporal extents.",
+                "required": [
+                    "spatial",
+                    "temporal"
+                ]
+            },
+            "Feature": {
+                "type": "object",
+                "properties": {
+                    "assets": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/Asset"
+                        },
+                        "description": "Dictionary of asset objects that can be downloaded, each with a unique key."
+                    },
+                    "bbox": {
+                        "type": "array",
+                        "items": {
+                            "type": "number",
+                            "format": "double"
+                        },
+                        "description": "Bounding Box of the asset represented by the Item."
+                    },
+                    "collection": {
+                        "type": "string",
+                        "description": "The ID of the Collection the Item references to.",
+                        "example": "collection"
+                    },
+                    "geometry": {
+                        "$ref": "#/components/schemas/GeojsonGeometry"
+                    },
+                    "id": {
+                        "type": "string",
+                        "description": "The identifier of the Item, unique within the Collection that contains the Item.",
+                        "example": "item"
+                    },
+                    "links": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Link"
+                        },
+                        "description": "A list of link objects to resources and related URLs."
+                    },
+                    "properties": {
+                        "type": "object",
+                        "properties": {
+                            "datetime": {
+                                "type": "string",
+                                "description": "Acquisition datetime.",
+                                "format": "date-time",
+                                "example": "2023-10-10T01:22:55Z"
+                            },
+                            "eo:cloud_cover": {
+                                "type": "number",
+                                "description": "Estimate of cloud cover.",
+                                "example": 25,
+                                "maximum": 100
+                            },
+                            "gsd": {
+                                "type": "number",
+                                "description": "Ground Sampling Distance. Distance in metres between two consecutive pixel centers measured on the ground.",
+                                "example": 3.21
+                            },
+                            "platform": {
+                                "type": "string",
+                                "description": "Platform name e.g. Hotsat-1.",
+                                "example": "Hotsat-1"
+                            },
+                            "price:currency": {
+                                "type": "string",
+                                "description": "Price currency e.g. GBP.",
+                                "example": "GBP"
+                            },
+                            "price:value": {
+                                "type": "integer",
+                                "description": "Price of the image in minor units of the currency e.g. pence, cents.",
+                                "example": 100000
+                            },
+                            "proj:epsg": {
+                                "type": "integer",
+                                "description": "EPSG code. Defines the geographic coordinate system.",
+                                "example": 32723,
+                                "minimum": 2000
+                            },
+                            "proj:geometry": {
+                                "$ref": "https://api.qa.satellitevu.com/catalog/v1/polygon.json#/components/schemas/Polygon"
+                            },
+                            "proj:shape": {
+                                "type": "array",
+                                "items": {
+                                    "type": "integer"
+                                },
+                                "description": "Number of pixels in Y and X directions for the default grid.",
+                                "example": [
+                                    1100,
+                                    1200
+                                ],
+                                "maxItems": 2,
+                                "minItems": 2
+                            },
+                            "proj:transform": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                },
+                                "description": "The affine transformation coefficients for the default grid.",
+                                "maxItems": 9,
+                                "minItems": 9
+                            },
+                            "satvu:image_withheld": {
+                                "type": "boolean",
+                                "description": "Whether the image has ever been withheld for the contract.",
+                                "example": true
+                            },
+                            "satvu:publicly_available": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Datetime at which the image was (or will be) made available for public consumption.",
+                                "example": "2024-05-03T10:21:07.92846Z"
+                            },
+                            "view:azimuth": {
+                                "type": "number",
+                                "description": "Viewing azimuth angle. The angle between the scene centre and true north. Measured clockwise from north in degrees.",
+                                "example": 175.9374,
+                                "maximum": 360,
+                                "exclusiveMinimum": true
+                            },
+                            "view:off_nadir": {
+                                "type": "number",
+                                "description": "The angle between satellite nadir and the scene center. Measured in degrees.",
+                                "example": 1.452,
+                                "maximum": 90
+                            },
+                            "view:sun_azimuth": {
+                                "type": "number",
+                                "description": "Sun azimuth angle. The angle between truth north and the sun at the scene centre. Measured clockwise in degrees.",
+                                "example": 150.846372,
+                                "maximum": 360,
+                                "exclusiveMinimum": true
+                            },
+                            "view:sun_elevation": {
+                                "type": "number",
+                                "description": "Sun elevation angle. The angle from the tangent of the scene center to the sun.",
+                                "example": -50.829374,
+                                "maximum": 90,
+                                "minimum": -90
+                            }
+                        },
+                        "required": [
+                            "datetime",
+                            "eo:cloud_cover",
+                            "gsd",
+                            "platform",
+                            "price:currency",
+                            "price:value",
+                            "proj:epsg",
+                            "proj:geometry",
+                            "proj:shape",
+                            "proj:transform",
+                            "satvu:image_withheld",
+                            "satvu:publicly_available",
+                            "view:azimuth",
+                            "view:off_nadir",
+                            "view:sun_azimuth",
+                            "view:sun_elevation"
+                        ]
+                    },
+                    "stac_extensions": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "A list of extensions the Item implements."
+                    },
+                    "stac_version": {
+                        "type": "string",
+                        "description": "The STAC version the Item implements.",
+                        "example": "1.0.0"
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "Feature.",
+                        "example": "Feature"
+                    }
+                },
+                "required": [
+                    "bbox",
+                    "collection",
+                    "geometry",
+                    "id",
+                    "links",
+                    "properties",
+                    "stac_version",
+                    "type"
+                ]
+            },
+            "Filter": {
+                "type": "object",
+                "description": "Filters using Common Query Language (CQL2)."
+            },
+            "GeojsonCRS": {
+                "type": "object",
+                "properties": {
+                    "properties": {
+                        "type": "object",
+                        "additionalProperties": {}
+                    },
+                    "type": {
+                        "type": "string"
+                    }
+                }
+            },
+            "GeojsonGeometry": {
+                "type": "object",
+                "properties": {
+                    "bbox": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    "coordinates": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    "crs": {
+                        "$ref": "#/components/schemas/GeojsonCRS"
+                    },
+                    "geometries": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    "type": {
+                        "type": "string"
+                    }
+                },
+                "description": "Defines the full footprint of the asset represented by the Item, formatted according to RFC 7946 section 3.1."
+            },
+            "HttpError": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "A unique identifier for the type of error."
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "An error message describing what went wrong."
+                    }
+                },
+                "required": [
+                    "id",
+                    "message"
+                ]
+            },
+            "Link": {
+                "type": "object",
+                "properties": {
+                    "body": {
+                        "type": "object",
+                        "additionalProperties": {},
+                        "description": "A JSON object containing fields/values that must by included in the body of the next request."
+                    },
+                    "href": {
+                        "type": "string",
+                        "description": "The actual link in the format of an URL.",
+                        "example": "http://example.com"
+                    },
+                    "merge": {
+                        "type": "boolean",
+                        "description": "If true, the body fields in the next link must be merged into the original request and be sent combined in the next request.",
+                        "nullable": true
+                    },
+                    "method": {
+                        "type": "string",
+                        "description": "The HTTP method of the request, either GET or POST.",
+                        "example": "GET"
+                    },
+                    "rel": {
+                        "type": "string",
+                        "description": "The relationship between the current document and the linked document.",
+                        "example": "parent"
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "The title of the link.",
+                        "example": "Example Link"
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "Media type of the referenced entity.",
+                        "example": "application/geo+json"
+                    }
+                },
+                "required": [
+                    "href",
+                    "merge",
+                    "method",
+                    "rel"
+                ]
+            },
+            "MiddlewaresApiError": {
+                "type": "object",
+                "properties": {
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/HttpError"
+                        }
+                    }
+                },
+                "required": [
+                    "errors"
+                ]
+            },
+            "MiddlewaresGenericApiError": {
+                "type": "object",
+                "properties": {
+                    "Errors": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                }
+            },
+            "Post-SearchInput": {
+                "type": "object",
+                "properties": {
+                    "bbox": {
+                        "type": "array",
+                        "items": {
+                            "type": "number",
+                            "format": "double"
+                        },
+                        "description": "Array of floats representing a bounding box. Only features that have a geometry that intersects the bounding box are selected.",
+                        "example": [
+                            -90,
+                            -45,
+                            90,
+                            45
+                        ]
+                    },
+                    "collections": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Array of Collection IDs to include in the search for items. Only Item objects in one of the provided collections will be searched.",
+                        "example": [
+                            "collection1",
+                            "collection2"
+                        ]
+                    },
+                    "datetime": {
+                        "type": "string",
+                        "description": "Single date+time, or a range ('/') separator, formatted to RFC3339 section 5.6. Use double dots for open ranges.",
+                        "example": "1985-04-12T23:20:50.52Z/..",
+                        "nullable": true
+                    },
+                    "filter": {
+                        "$ref": "https://api.qa.satellitevu.com/catalog/v1/cql2.json"
+                    },
+                    "ids": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Array of Item IDs to return.",
+                        "example": [
+                            "item1",
+                            "item2"
+                        ]
+                    },
+                    "intersects": {
+                        "$ref": "https://api.qa.satellitevu.com/catalog/v1/geometry.json"
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "The maximum number of results to return per page.",
+                        "format": "int32",
+                        "example": 10,
+                        "nullable": true
+                    },
+                    "sortby": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TypesSortByElement"
+                        },
+                        "description": "An array of objects containing a property name and sort direction."
+                    },
+                    "token": {
+                        "type": "string",
+                        "description": "The pagination token."
+                    }
+                }
+            },
+            "QueryableProperty": {
+                "type": "object",
+                "properties": {
+                    "format": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    }
+                }
+            },
+            "RouterConformance": {
+                "type": "object",
+                "properties": {
+                    "conformsTo": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "A list of all conformance classes implemented."
+                    }
+                },
+                "required": [
+                    "conformsTo"
+                ]
+            },
+            "SpatialExtent": {
+                "type": "object",
+                "properties": {
+                    "bbox": {
+                        "type": "array",
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "type": "number",
+                                "format": "double"
+                            }
+                        },
+                        "description": "Potential spatial extents covered by the Collection."
+                    }
+                },
+                "description": "Potential spatial extents covered by the Collection.",
+                "required": [
+                    "bbox"
+                ]
+            },
+            "TypesCatalog": {
+                "type": "object",
+                "properties": {
+                    "conformsTo": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "The description of the Catalog.",
+                        "example": "This is a catalog"
+                    },
+                    "id": {
+                        "type": "string",
+                        "description": "The identifier of the Catalog.",
+                        "example": "examples"
+                    },
+                    "links": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Link"
+                        },
+                        "description": "A list of references to other documents."
+                    },
+                    "stac_extensions": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "A list of extension identifiers the Catalog implements."
+                    },
+                    "stac_version": {
+                        "type": "string",
+                        "description": "The STAC version the Catalog implements.",
+                        "example": "1.0.0"
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "The title of the Catalog.",
+                        "example": "Example Catalog"
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "Catalog.",
+                        "example": "Catalog"
+                    }
+                },
+                "required": [
+                    "description",
+                    "id",
+                    "links",
+                    "stac_version",
+                    "type"
+                ]
+            },
+            "TypesCollections": {
+                "type": "object",
+                "properties": {
+                    "collections": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Collection"
+                        }
+                    },
+                    "links": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Link"
+                        }
+                    }
+                },
+                "required": [
+                    "collections",
+                    "links"
+                ]
+            },
+            "TypesFeatureCollection": {
+                "type": "object",
+                "properties": {
+                    "features": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Feature"
+                        }
+                    },
+                    "links": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Link"
+                        },
+                        "description": "A list of references to other documents."
+                    },
+                    "numberMatched": {
+                        "type": "integer",
+                        "description": "Number of features matching the request filter.",
+                        "format": "int32"
+                    },
+                    "numberReturned": {
+                        "type": "integer",
+                        "description": "Number of features in current page.",
+                        "format": "int32"
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "FeatureCollection.",
+                        "example": "FeatureCollection"
+                    }
+                },
+                "required": [
+                    "features",
+                    "links",
+                    "numberMatched",
+                    "numberReturned",
+                    "type"
+                ]
+            },
+            "TypesSearchResponseData": {
+                "type": "object",
+                "properties": {
+                    "NextToken": {
+                        "type": "string"
+                    },
+                    "PrevToken": {
+                        "type": "string"
+                    },
+                    "features": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Feature"
+                        }
+                    },
+                    "links": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Link"
+                        },
+                        "description": "A list of references to other documents."
+                    },
+                    "numberMatched": {
+                        "type": "integer",
+                        "description": "Number of features matching the request filter.",
+                        "format": "int32"
+                    },
+                    "numberReturned": {
+                        "type": "integer",
+                        "description": "Number of features in current page.",
+                        "format": "int32"
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "FeatureCollection.",
+                        "example": "FeatureCollection"
+                    }
+                },
+                "required": [
+                    "features",
+                    "links",
+                    "numberMatched",
+                    "numberReturned",
+                    "type"
+                ]
+            },
+            "TypesSortByElement": {
+                "type": "object",
+                "properties": {
+                    "direction": {
+                        "type": "string",
+                        "description": "The direction to sort by, either 'asc' or 'desc'.",
+                        "example": "desc"
+                    },
+                    "field": {
+                        "type": "string",
+                        "description": "The name of the field to sort by.",
+                        "example": "datetime"
+                    }
+                },
+                "required": [
+                    "direction",
+                    "field"
+                ]
+            },
+            "TypesStacGeometry": {
+                "type": "object",
+                "properties": {
+                    "bbox": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "format": "int32"
+                        },
+                        "description": "Bounding box."
+                    },
+                    "coordinates": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "format": "int32"
+                        },
+                        "description": "The coordinates of the Geometry object."
+                    },
+                    "geometries": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "The type of geometry represented.",
+                        "nullable": true
+                    }
+                },
+                "description": "Searches items by performing intersection between their geometry and provided GeoJSON geometry."
+            },
+            "TypesTemporalExtent": {
+                "type": "object",
+                "properties": {
+                    "interval": {
+                        "type": "array",
+                        "items": {},
+                        "description": "Potential temporal extents covered by the Collection."
+                    }
+                },
+                "description": "Potential temporal extents covered by the Collection.",
+                "required": [
+                    "interval"
+                ]
+            }
+        },
+        "securitySchemes": {
+            "SatVuAuth": {
+                "type": "openIdConnect"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Collections",
+            "description": "Collections"
+        }
+    ],
+    "security": [
+        {
+            "SatVuAuth": []
+        }
+    ]
+}

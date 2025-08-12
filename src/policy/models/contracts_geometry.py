@@ -1,6 +1,6 @@
 from typing import Any, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ContractsGeometry(BaseModel):
@@ -8,10 +8,12 @@ class ContractsGeometry(BaseModel):
 
     Attributes:
         coordinates (Union[None, Any]): Value of any type, including null
-        type (Union[None, str]):
+        type_ (Union[None, str]):
     """
 
     coordinates: Union[None, Any] = Field(
-        None, description="Value of any type, including null"
+        None, description="Value of any type, including null", alias="coordinates"
     )
-    type: Union[None, str] = Field(None, description=None)
+    type_: Union[None, str] = Field(None, description=None, alias="type")
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

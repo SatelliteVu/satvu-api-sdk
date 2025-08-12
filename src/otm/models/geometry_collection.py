@@ -1,6 +1,6 @@
 from typing import Literal, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from ..models.line_string import LineString
 from ..models.multi_line_string import MultiLineString
@@ -14,13 +14,15 @@ class GeometryCollection(BaseModel):
     """GeometryCollection Model
 
     Attributes:
-        type (Literal['GeometryCollection']):
+        type_ (Literal['GeometryCollection']):
         geometries (list[Union['GeometryCollection', 'LineString', 'MultiLineString', 'MultiPoint', 'MultiPolygon',
             'Point', 'Polygon']]):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["GeometryCollection"] = Field("GeometryCollection", description=None)
+    type_: Literal["GeometryCollection"] = Field(
+        "GeometryCollection", description=None, alias="type"
+    )
     geometries: list[
         Union[
             "GeometryCollection",
@@ -31,5 +33,7 @@ class GeometryCollection(BaseModel):
             "Point",
             "Polygon",
         ]
-    ] = Field(..., description=None)
-    bbox: Union[None, list[float]] = Field(None, description=None)
+    ] = Field(..., description=None, alias="geometries")
+    bbox: Union[None, list[float]] = Field(None, description=None, alias="bbox")
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

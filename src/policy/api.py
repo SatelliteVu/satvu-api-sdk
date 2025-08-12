@@ -1,7 +1,7 @@
 from collections.abc import Callable
 
 from satvu_api_sdk.core import SDKClient
-from shared.utils import deep_parse_from_annotation, normalize_keys
+from shared.utils import deep_parse_from_annotation
 
 from policy.models.post_active_contracts_input import PostActiveContractsInput
 from policy.models.router_active_contracts_response import RouterActiveContractsResponse
@@ -41,7 +41,7 @@ class PolicyService(SDKClient):
 
         if response.status_code == 200:
             return deep_parse_from_annotation(
-                normalize_keys(response.json()), RouterActiveContractsResponse
+                response.json(), RouterActiveContractsResponse
             )
         return response.json()
 
@@ -65,9 +65,7 @@ class PolicyService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                normalize_keys(response.json()), RouterQueryResult
-            )
+            return deep_parse_from_annotation(response.json(), RouterQueryResult)
         return response.json()
 
     def user_acceptance_terms(
@@ -94,7 +92,5 @@ class PolicyService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                normalize_keys(response.json()), TermsUserTermsAccepted
-            )
+            return deep_parse_from_annotation(response.json(), TermsUserTermsAccepted)
         return response.json()

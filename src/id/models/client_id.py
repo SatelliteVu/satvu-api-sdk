@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ClientID(BaseModel):
@@ -7,4 +7,6 @@ class ClientID(BaseModel):
         client_id (str):
     """
 
-    client_id: str = Field(..., description=None)
+    client_id: str = Field(..., description=None, alias="client_id")
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

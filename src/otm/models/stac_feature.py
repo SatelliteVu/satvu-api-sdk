@@ -1,6 +1,6 @@
 from typing import Literal, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from ..models.link import Link
 from ..models.point_geometry import PointGeometry
@@ -18,32 +18,48 @@ class StacFeature(BaseModel):
         links (list['Link']): A list of link objects to resources and related URLs.
         assets (StacFeatureAssets): A dictionary of asset objects that can be downloaded, each with a unique key.
         bbox (list[Union[float, int]]): The bounding box of the asset represented by this item.
-        type (Union[Literal['Feature'], None]):  Default: 'Feature'.
+        type_ (Union[Literal['Feature'], None]):  Default: 'Feature'.
         geometry (Union[None, PointGeometry, PolygonGeometry]): Defines the full footprint of the asset represented by
             the item.
     """
 
     id: str = Field(
-        ..., description="The unique identifier for this item within the collection."
+        ...,
+        description="The unique identifier for this item within the collection.",
+        alias="id",
     )
     properties: "StacFeatureProperties" = Field(
-        ..., description="A dictionary of additional metadata for the item."
+        ...,
+        description="A dictionary of additional metadata for the item.",
+        alias="properties",
     )
     collection: str = Field(
-        ..., description="The ID of the STAC Collection this item references to."
+        ...,
+        description="The ID of the STAC Collection this item references to.",
+        alias="collection",
     )
     links: list["Link"] = Field(
-        ..., description="A list of link objects to resources and related URLs."
+        ...,
+        description="A list of link objects to resources and related URLs.",
+        alias="links",
     )
     assets: "StacFeatureAssets" = Field(
         ...,
         description="A dictionary of asset objects that can be downloaded, each with a unique key.",
+        alias="assets",
     )
     bbox: list[Union[float, int]] = Field(
-        ..., description="The bounding box of the asset represented by this item."
+        ...,
+        description="The bounding box of the asset represented by this item.",
+        alias="bbox",
     )
-    type: Union[Literal["Feature"], None] = Field("Feature", description=None)
+    type_: Union[Literal["Feature"], None] = Field(
+        "Feature", description=None, alias="type"
+    )
     geometry: Union[None, PointGeometry, PolygonGeometry] = Field(
         None,
         description="Defines the full footprint of the asset represented by the item.",
+        alias="geometry",
     )
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

@@ -1,6 +1,6 @@
 from typing import Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from ..models.user_info_deprecated_user_metadata_type_0 import (
     UserInfoDeprecatedUserMetadataType0,
@@ -17,10 +17,12 @@ class UserInfoDeprecated(BaseModel):
         last_login (Union[None, str]):
     """
 
-    user_id: str = Field(..., description=None)
-    name: str = Field(..., description=None)
-    email: str = Field(..., description=None)
+    user_id: str = Field(..., description=None, alias="user_id")
+    name: str = Field(..., description=None, alias="name")
+    email: str = Field(..., description=None, alias="email")
     user_metadata: Union[None, UserInfoDeprecatedUserMetadataType0] = Field(
-        None, description=None
+        None, description=None, alias="user_metadata"
     )
-    last_login: Union[None, str] = Field(None, description=None)
+    last_login: Union[None, str] = Field(None, description=None, alias="last_login")
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

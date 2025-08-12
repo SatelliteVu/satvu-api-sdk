@@ -1,6 +1,6 @@
 from typing import Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ValidationError(BaseModel):
@@ -8,9 +8,11 @@ class ValidationError(BaseModel):
     Attributes:
         loc (list[Union[int, str]]):
         msg (str):
-        type (str):
+        type_ (str):
     """
 
-    loc: list[Union[int, str]] = Field(..., description=None)
-    msg: str = Field(..., description=None)
-    type: str = Field(..., description=None)
+    loc: list[Union[int, str]] = Field(..., description=None, alias="loc")
+    msg: str = Field(..., description=None, alias="msg")
+    type_: str = Field(..., description=None, alias="type")
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

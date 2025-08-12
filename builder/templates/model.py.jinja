@@ -27,7 +27,7 @@
     {% endfor %}{% endif %}
 {% endmacro %}
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from typing import TYPE_CHECKING, TypedDict, Any
 
 {% for relative in model.relative_imports | sort %}
@@ -44,3 +44,5 @@ class {{ class_name }}(BaseModel):
     {% for property in model.required_properties + model.optional_properties %}
     {{ property.to_pydantic_model_field() }}
     {% endfor %}
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

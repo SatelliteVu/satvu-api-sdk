@@ -1,5 +1,7 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class StacFeatureAssets(BaseModel):
     """A dictionary of asset objects that can be downloaded, each with a unique key."""
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

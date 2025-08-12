@@ -4,7 +4,7 @@ from typing import Any, Union
 from uuid import UUID
 
 from satvu_api_sdk.core import SDKClient
-from shared.utils import deep_parse_from_annotation, normalize_keys
+from shared.utils import deep_parse_from_annotation
 
 from cos.models.download_order_collections_type_0_item import (
     DownloadOrderCollectionsType0Item,
@@ -52,7 +52,7 @@ class CosService(SDKClient):
 
         if response.status_code == 200:
             return deep_parse_from_annotation(
-                normalize_keys(response.json()),
+                response.json(),
                 Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder],
             )
         return response.json()
@@ -86,7 +86,7 @@ class CosService(SDKClient):
 
         if response.status_code == 200:
             return deep_parse_from_annotation(
-                normalize_keys(response.json()),
+                response.json(),
                 Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder],
             )
         return response.json()
@@ -128,9 +128,7 @@ class CosService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                normalize_keys(response.json()), OrderPage
-            )
+            return deep_parse_from_annotation(response.json(), OrderPage)
         return response.json()
 
     def submit_order(
@@ -166,7 +164,7 @@ class CosService(SDKClient):
 
         if response.status_code == 201:
             return deep_parse_from_annotation(
-                normalize_keys(response.json()),
+                response.json(),
                 Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder],
             )
         return response.json()
@@ -218,9 +216,7 @@ class CosService(SDKClient):
             return zip_bytes
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                normalize_keys(response.json()), OrderItemDownloadUrl
-            )
+            return deep_parse_from_annotation(response.json(), OrderItemDownloadUrl)
         if response.status_code == 202:
             return response.json()
         return response.json()
@@ -286,9 +282,7 @@ class CosService(SDKClient):
             return zip_bytes
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                normalize_keys(response.json()), OrderDownloadUrl
-            )
+            return deep_parse_from_annotation(response.json(), OrderDownloadUrl)
         if response.status_code == 202:
             return response.json()
         return response.json()

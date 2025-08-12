@@ -1,6 +1,6 @@
 from typing import Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from ..models.kyc_status import KYCStatus
 from ..models.user_search import UserSearch
@@ -16,12 +16,16 @@ class SearchUsers(BaseModel):
     """
 
     limit: Union[None, int] = Field(
-        100, description="The number of results to return per page."
+        100, description="The number of results to return per page.", alias="limit"
     )
-    token: Union[None, str] = Field(None, description="The pagination token.")
+    token: Union[None, str] = Field(
+        None, description="The pagination token.", alias="token"
+    )
     search: Union[None, UserSearch, list["UserSearch"]] = Field(
-        None, description="Search criteria."
+        None, description="Search criteria.", alias="search"
     )
     kyc_status: Union[KYCStatus, None, list[KYCStatus]] = Field(
-        None, description="The KYC status of the user."
+        None, description="The KYC status of the user.", alias="kyc_status"
     )
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

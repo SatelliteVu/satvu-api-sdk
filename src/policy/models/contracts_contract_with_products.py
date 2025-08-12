@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from ..models.civil_date import CivilDate
 from ..models.contracts_addon import ContractsAddon
@@ -21,23 +21,37 @@ class ContractsContractWithProducts(BaseModel):
         start_date (CivilDate): Contract end date
     """
 
-    active: bool = Field(..., description="Whether the contract is active")
+    active: bool = Field(
+        ..., description="Whether the contract is active", alias="active"
+    )
     addons: list["ContractsAddon"] = Field(
-        ..., description="Addons associated with this contract"
+        ..., description="Addons associated with this contract", alias="addons"
     )
     allowed_geographical_area: "ContractsGeometry" = Field(
-        ..., description="Allowed geographical area of the contract"
+        ...,
+        description="Allowed geographical area of the contract",
+        alias="allowed_geographical_area",
     )
-    contract_id: str = Field(..., description="Contract ID")
-    end_date: "CivilDate" = Field(..., description="Contract end date")
+    contract_id: str = Field(..., description="Contract ID", alias="contract_id")
+    end_date: "CivilDate" = Field(
+        ..., description="Contract end date", alias="end_date"
+    )
     geographical_summary: str = Field(
-        ..., description="Descriptive summary of a contract's geographical area"
+        ...,
+        description="Descriptive summary of a contract's geographical area",
+        alias="geographical_summary",
     )
-    name: str = Field(..., description="Contract name")
+    name: str = Field(..., description="Contract name", alias="name")
     products: list["ContractsProduct"] = Field(
-        ..., description="List of products the contract has access to"
+        ..., description="List of products the contract has access to", alias="products"
     )
     reseller: bool = Field(
-        ..., description="Whether the contract is marked for reselling"
+        ...,
+        description="Whether the contract is marked for reselling",
+        alias="reseller",
     )
-    start_date: "CivilDate" = Field(..., description="Contract end date")
+    start_date: "CivilDate" = Field(
+        ..., description="Contract end date", alias="start_date"
+    )
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

@@ -1,7 +1,7 @@
 from typing import Literal, Union
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from ..models.assured_feasibility_response_feature import (
     AssuredFeasibilityResponseFeature,
@@ -17,7 +17,7 @@ class FeasibilityResponse(BaseModel):
     """FeatureCollection model for stored feasibility response
 
     Attributes:
-        type (Literal['FeatureCollection']):
+        type_ (Literal['FeatureCollection']):
         features (list[Union[AssuredFeasibilityResponseFeature, StandardFeasibilityResponseFeature]]): Properties of the
             feasibility response.
         id (UUID): Feasibility Request ID.
@@ -27,14 +27,22 @@ class FeasibilityResponse(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type: Literal["FeatureCollection"] = Field("FeatureCollection", description=None)
+    type_: Literal["FeatureCollection"] = Field(
+        "FeatureCollection", description=None, alias="type"
+    )
     features: list[
         Union[AssuredFeasibilityResponseFeature, StandardFeasibilityResponseFeature]
-    ] = Field(..., description="Properties of the feasibility response.")
-    id: UUID = Field(..., description="Feasibility Request ID.")
-    links: list["Link"] = Field(
-        ..., description="List of link objects to resources and related URLS."
+    ] = Field(
+        ..., description="Properties of the feasibility response.", alias="features"
     )
-    status: FeasibilityRequestStatus = Field(..., description=None)
-    contract_id: UUID = Field(..., description="Contract ID.")
-    bbox: Union[None, list[float]] = Field(None, description=None)
+    id: UUID = Field(..., description="Feasibility Request ID.", alias="id")
+    links: list["Link"] = Field(
+        ...,
+        description="List of link objects to resources and related URLS.",
+        alias="links",
+    )
+    status: FeasibilityRequestStatus = Field(..., description=None, alias="status")
+    contract_id: UUID = Field(..., description="Contract ID.", alias="contract_id")
+    bbox: Union[None, list[float]] = Field(None, description=None, alias="bbox")
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

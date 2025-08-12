@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class Price(BaseModel):
@@ -12,5 +12,10 @@ class Price(BaseModel):
     value: int = Field(
         ...,
         description="The price of the order in minor units of the currency e.g. pence, cents.",
+        alias="value",
     )
-    currency: str = Field(..., description="The currency of the order.")
+    currency: str = Field(
+        ..., description="The currency of the order.", alias="currency"
+    )
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

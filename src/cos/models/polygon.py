@@ -1,14 +1,18 @@
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class Polygon(BaseModel):
     """
     Attributes:
-        type (Literal['Polygon']):
+        type_ (Literal['Polygon']):
         coordinates (list[list[list[float]]]):
     """
 
-    type: Literal["Polygon"] = Field("Polygon", description=None)
-    coordinates: list[list[list[float]]] = Field(..., description=None)
+    type_: Literal["Polygon"] = Field("Polygon", description=None, alias="type")
+    coordinates: list[list[list[float]]] = Field(
+        ..., description=None, alias="coordinates"
+    )
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

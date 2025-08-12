@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class PostActiveContractsInput(BaseModel):
@@ -7,4 +7,6 @@ class PostActiveContractsInput(BaseModel):
         token (str): User access token
     """
 
-    token: str = Field(..., description="User access token")
+    token: str = Field(..., description="User access token", alias="token")
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

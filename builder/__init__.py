@@ -24,8 +24,8 @@ from openapi_python_client.schema import Schema
 Patching the openapi-python-client library
 """
 
-# Override reserved words - we want to still use "type"
-RESERVED_WORDS = (set(dir(builtins)) | {"self", "true", "false"}) - {"id", "type"}
+# Override reserved words
+RESERVED_WORDS = (set(dir(builtins)) | {"self", "true", "false", "datetime"}) - {"id"}
 
 openapi_python_client.utils.RESERVED_WORDS = RESERVED_WORDS
 
@@ -175,16 +175,16 @@ def to_pydantic_model_field(self: PropertyProtocol) -> str:
 
     # For const (literal) properties, default to the value of the constant
     if isinstance(self, openapi_python_client.parser.properties.const.ConstProperty):
-        return f"{field_start} = Field({self.value.python_code}, description={description})"
+        return f"{field_start} = Field({self.value.python_code}, description={description}, alias=\"{self.name}\")"
 
     if self.default is not None:
-        return f"{field_start} = Field({self.default.python_code}, description={description})"
+        return f"{field_start} = Field({self.default.python_code}, description={description}, alias=\"{self.name}\")"
 
     elif not self.required:
-        return f"{field_start} = Field(None, description={description})"
+        return f"{field_start} = Field(None, description={description}, alias=\"{self.name}\")"
 
     else:
-        return f"{field_start} = Field(..., description={description})"
+        return f"{field_start} = Field(..., description={description}, alias=\"{self.name}\")"
 
 def get_type_string(
     self,

@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from ..models.assured_order_request_properties import AssuredOrderRequestProperties
 
@@ -9,4 +9,8 @@ class AssuredOrderRequest(BaseModel):
         properties (AssuredOrderRequestProperties):
     """
 
-    properties: "AssuredOrderRequestProperties" = Field(..., description=None)
+    properties: "AssuredOrderRequestProperties" = Field(
+        ..., description=None, alias="properties"
+    )
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

@@ -1,4 +1,3 @@
-from catalog.api import CatalogService
 from src.cos.api import CosService
 from src.id.api import IdService
 from src.otm.api import OtmService
@@ -41,12 +40,6 @@ class SatVuSDK:
         if not self._auth:
             self._auth = AuthService(env=self.env, token_cache=self.token_cache)
         return self._auth
-
-    @property
-    def catalog(self) -> CatalogService:
-        if not self._catalog:
-            self._catalog = CatalogService(env=self.env, get_token=self.get_token)
-        return self._catalog
 
     @property
     def cos(self) -> CosService:

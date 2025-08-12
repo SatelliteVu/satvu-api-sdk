@@ -2,7 +2,7 @@ from collections.abc import Callable
 from uuid import UUID
 
 from satvu_api_sdk.core import SDKClient
-from shared.utils import deep_parse_from_annotation, normalize_keys
+from shared.utils import deep_parse_from_annotation
 
 from wallet.models.credit_balance_response import CreditBalanceResponse
 
@@ -36,7 +36,5 @@ class WalletService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                normalize_keys(response.json()), CreditBalanceResponse
-            )
+            return deep_parse_from_annotation(response.json(), CreditBalanceResponse)
         return response.json()

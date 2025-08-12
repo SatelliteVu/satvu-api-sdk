@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ClientCredentials(BaseModel):
@@ -8,5 +8,7 @@ class ClientCredentials(BaseModel):
         client_secret (str):
     """
 
-    client_id: str = Field(..., description=None)
-    client_secret: str = Field(..., description=None)
+    client_id: str = Field(..., description=None, alias="client_id")
+    client_secret: str = Field(..., description=None, alias="client_secret")
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

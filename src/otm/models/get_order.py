@@ -1,7 +1,7 @@
 from typing import Literal, Union
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from ..models.get_assured_order_properties import GetAssuredOrderProperties
 from ..models.get_standard_order_properties import GetStandardOrderProperties
@@ -14,7 +14,7 @@ class GetOrder(BaseModel):
     """Feature model for get order request.
 
     Attributes:
-        type (Literal['Feature']):
+        type_ (Literal['Feature']):
         geometry (Point): Point Model
         properties (Union[GetAssuredOrderProperties, GetStandardOrderProperties]): A dictionary of additional metadata
             about the requested image.
@@ -24,15 +24,18 @@ class GetOrder(BaseModel):
         price (Price1):
     """
 
-    type: Literal["Feature"] = Field("Feature", description=None)
-    geometry: "Point" = Field(..., description="Point Model")
+    type_: Literal["Feature"] = Field("Feature", description=None, alias="type")
+    geometry: "Point" = Field(..., description="Point Model", alias="geometry")
     properties: Union[GetAssuredOrderProperties, GetStandardOrderProperties] = Field(
         ...,
         description="A dictionary of additional metadata about the requested image.",
+        alias="properties",
     )
-    id: UUID = Field(..., description="Order ID")
+    id: UUID = Field(..., description="Order ID", alias="id")
     links: list["Link"] = Field(
-        ..., description="A list of related links for the order."
+        ..., description="A list of related links for the order.", alias="links"
     )
-    contract_id: UUID = Field(..., description="Contract ID.")
-    price: "Price1" = Field(..., description=None)
+    contract_id: UUID = Field(..., description="Contract ID.", alias="contract_id")
+    price: "Price1" = Field(..., description=None, alias="price")
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

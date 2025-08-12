@@ -1,6 +1,6 @@
 from typing import Literal, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class NotificationSettings(BaseModel):
@@ -13,10 +13,14 @@ class NotificationSettings(BaseModel):
     """
 
     topic: Literal["tasking:order_status"] = Field(
-        "tasking:order_status", description="Notification topic."
+        "tasking:order_status", description="Notification topic.", alias="topic"
     )
-    name: str = Field(..., description="Name of notification type.")
-    description: str = Field(..., description="Description of notification type.")
+    name: str = Field(..., description="Name of notification type.", alias="name")
+    description: str = Field(
+        ..., description="Description of notification type.", alias="description"
+    )
     email: Union[None, bool] = Field(
-        False, description="Opted into email notifications."
+        False, description="Opted into email notifications.", alias="email"
     )
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

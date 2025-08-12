@@ -1,6 +1,6 @@
 from typing import Literal, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class AssuredOrderRequestProperties(BaseModel):
@@ -14,10 +14,17 @@ class AssuredOrderRequestProperties(BaseModel):
             will be set to the default specified in the relevant contract.
     """
 
-    product: Literal["assured"] = Field("assured", description="Assured Priority.")
-    signature: str = Field(..., description="Signature token.")
-    name: Union[None, str] = Field(None, description="The name of the order.")
+    product: Literal["assured"] = Field(
+        "assured", description="Assured Priority.", alias="product"
+    )
+    signature: str = Field(..., description="Signature token.", alias="signature")
+    name: Union[None, str] = Field(
+        None, description="The name of the order.", alias="name"
+    )
     addon_withhold: Union[None, str] = Field(
         None,
         description="Optional ISO8601 string describing the duration that an order will be withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set to the default specified in the relevant contract.",
+        alias="addon:withhold",
     )
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

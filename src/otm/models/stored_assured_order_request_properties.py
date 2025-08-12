@@ -1,6 +1,7 @@
+import datetime
 from typing import Literal, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from ..models.day_night_mode import DayNightMode
 from ..models.order_status import OrderStatus
@@ -11,7 +12,7 @@ class StoredAssuredOrderRequestProperties(BaseModel):
 
     Attributes:
         product (Literal['assured']): Assured Priority.
-        datetime (str): The closed date-time interval of the tasking order request.
+        datetime_ (str): The closed date-time interval of the tasking order request.
         signature (str): Signature token.
         status (OrderStatus):
         created_at (datetime.datetime): The datetime at which the order was created.
@@ -29,33 +30,51 @@ class StoredAssuredOrderRequestProperties(BaseModel):
         name (Union[None, str]): The name of the order.
     """
 
-    product: Literal["assured"] = Field("assured", description="Assured Priority.")
-    datetime: str = Field(
-        ..., description="The closed date-time interval of the tasking order request."
+    product: Literal["assured"] = Field(
+        "assured", description="Assured Priority.", alias="product"
     )
-    signature: str = Field(..., description="Signature token.")
-    status: OrderStatus = Field(..., description=None)
+    datetime_: str = Field(
+        ...,
+        description="The closed date-time interval of the tasking order request.",
+        alias="datetime",
+    )
+    signature: str = Field(..., description="Signature token.", alias="signature")
+    status: OrderStatus = Field(..., description=None, alias="status")
     created_at: datetime.datetime = Field(
-        ..., description="The datetime at which the order was created."
+        ...,
+        description="The datetime at which the order was created.",
+        alias="created_at",
     )
     updated_at: datetime.datetime = Field(
-        ..., description="The datetime at which the order was last updated."
+        ...,
+        description="The datetime at which the order was last updated.",
+        alias="updated_at",
     )
-    satvu_day_night_mode: Union[None, DayNightMode] = Field(None, description=None)
+    satvu_day_night_mode: Union[None, DayNightMode] = Field(
+        None, description=None, alias="satvu:day_night_mode"
+    )
     max_cloud_cover: Union[None, int] = Field(
         15,
         description="The max threshold of acceptable cloud coverage. Measured in percent.",
+        alias="max_cloud_cover",
     )
     min_off_nadir: Union[None, int] = Field(
         0,
         description="The minimum angle from the sensor between nadir and the scene center. Measured in decimal degrees.",
+        alias="min_off_nadir",
     )
     max_off_nadir: Union[None, int] = Field(
         30,
         description="The maximum angle from the sensor between nadir and the scene center. Measured in decimal degrees. Must be larger than `min_off_nadir`.",
+        alias="max_off_nadir",
     )
     addon_withhold: Union[None, str] = Field(
         None,
         description="Optional ISO8601 string describing the duration that an order will be withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set to the default specified in the relevant contract.",
+        alias="addon:withhold",
     )
-    name: Union[None, str] = Field(None, description="The name of the order.")
+    name: Union[None, str] = Field(
+        None, description="The name of the order.", alias="name"
+    )
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

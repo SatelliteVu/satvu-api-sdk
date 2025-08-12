@@ -21,7 +21,6 @@ class StandardFeasibilityResponseProperties(BaseModel):
             square root of the area of the pixel size projected onto the earth.
         max_gsd (float): The maximum ground sample distance value of the pass. Measured in metres representing the
             square root of the area of the pixel size projected onto the earth.
-        name (Union[None, str]): The name of the order.
         product (Union[Literal['standard'], None]): Standard Priority. Default: 'standard'.
         satvu_day_night_mode (Union[None, DayNightMode]):
         max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage. Measured in percent.
@@ -59,7 +58,6 @@ class StandardFeasibilityResponseProperties(BaseModel):
         ...,
         description="The maximum ground sample distance value of the pass. Measured in metres representing the square root of the area of the pixel size projected onto the earth.",
     )
-    name: Union[None, str] = Field(None, description="The name of the order.")
     product: Union[Literal["standard"], None] = Field(
         "standard", description="Standard Priority."
     )

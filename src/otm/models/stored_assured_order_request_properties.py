@@ -16,7 +16,6 @@ class StoredAssuredOrderRequestProperties(BaseModel):
         status (OrderStatus):
         created_at (datetime.datetime): The datetime at which the order was created.
         updated_at (datetime.datetime): The datetime at which the order was last updated.
-        name (Union[None, str]): The name of the order.
         satvu_day_night_mode (Union[None, DayNightMode]):
         max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage. Measured in percent.
             Default: 15.
@@ -27,6 +26,7 @@ class StoredAssuredOrderRequestProperties(BaseModel):
         addon_withhold (Union[None, str]): Optional ISO8601 string describing the duration that an order will be
             withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option
             will be set to the default specified in the relevant contract.
+        name (Union[None, str]): The name of the order.
     """
 
     product: Literal["assured"] = Field("assured", description="Assured Priority.")
@@ -41,7 +41,6 @@ class StoredAssuredOrderRequestProperties(BaseModel):
     updated_at: datetime.datetime = Field(
         ..., description="The datetime at which the order was last updated."
     )
-    name: Union[None, str] = Field(None, description="The name of the order.")
     satvu_day_night_mode: Union[None, DayNightMode] = Field(None, description=None)
     max_cloud_cover: Union[None, int] = Field(
         15,
@@ -59,3 +58,4 @@ class StoredAssuredOrderRequestProperties(BaseModel):
         None,
         description="Optional ISO8601 string describing the duration that an order will be withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set to the default specified in the relevant contract.",
     )
+    name: Union[None, str] = Field(None, description="The name of the order.")

@@ -95,7 +95,7 @@ class OtmService(SDKClient):
         Args:
             contract_id (UUID): Contract ID
             body (Union[AssuredOrderRequest, ResellerAssuredOrderRequest,
-                ResellerStandardOrderRequest, StandardOrderRequest]]):
+                ResellerStandardOrderRequest, StandardOrderRequest]):
                 One of:
                 - StandardOrderRequest: Feature model for incoming order request.
                 - AssuredOrderRequest:

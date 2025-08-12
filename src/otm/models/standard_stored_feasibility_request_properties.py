@@ -15,7 +15,6 @@ class StandardStoredFeasibilityRequestProperties(BaseModel):
         status (FeasibilityRequestStatus):
         created_at (datetime.datetime): The datetime at which the feasibility request was created.
         updated_at (datetime.datetime): The datetime at which the feasibility request was last updated.
-        name (Union[None, str]): The name of the order.
         product (Union[Literal['standard'], None]): Standard Priority. Default: 'standard'.
         satvu_day_night_mode (Union[None, DayNightMode]):
         max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage. Measured in percent.
@@ -38,7 +37,6 @@ class StandardStoredFeasibilityRequestProperties(BaseModel):
         ...,
         description="The datetime at which the feasibility request was last updated.",
     )
-    name: Union[None, str] = Field(None, description="The name of the order.")
     product: Union[Literal["standard"], None] = Field(
         "standard", description="Standard Priority."
     )

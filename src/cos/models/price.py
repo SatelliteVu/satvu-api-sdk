@@ -2,7 +2,8 @@ from pydantic import BaseModel, Field
 
 
 class Price(BaseModel):
-    """
+    """Pricing information.
+
     Attributes:
         value (int): The price of the order in minor units of the currency e.g. pence, cents.
         currency (str): The currency of the order.

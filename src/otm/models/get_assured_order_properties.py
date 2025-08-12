@@ -20,7 +20,6 @@ class GetAssuredOrderProperties(BaseModel):
             fulfilled.
         stac_datetime (Union[None, datetime.datetime]): The acquisition datetime of the STAC item that fulfilled the
             order, if the order has been fulfilled.
-        name (Union[None, str]): The name of the order.
         satvu_day_night_mode (Union[None, DayNightMode]):
         max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage. Measured in percent.
             Default: 15.
@@ -31,6 +30,7 @@ class GetAssuredOrderProperties(BaseModel):
         addon_withhold (Union[None, str]): Optional ISO8601 string describing the duration that an order will be
             withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option
             will be set to the default specified in the relevant contract.
+        name (Union[None, str]): The name of the order.
     """
 
     product: Literal["assured"] = Field("assured", description="Assured Priority.")
@@ -53,7 +53,6 @@ class GetAssuredOrderProperties(BaseModel):
         None,
         description="The acquisition datetime of the STAC item that fulfilled the order, if the order has been fulfilled.",
     )
-    name: Union[None, str] = Field(None, description="The name of the order.")
     satvu_day_night_mode: Union[None, DayNightMode] = Field(None, description=None)
     max_cloud_cover: Union[None, int] = Field(
         15,
@@ -71,3 +70,4 @@ class GetAssuredOrderProperties(BaseModel):
         None,
         description="Optional ISO8601 string describing the duration that an order will be withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set to the default specified in the relevant contract.",
     )
+    name: Union[None, str] = Field(None, description="The name of the order.")

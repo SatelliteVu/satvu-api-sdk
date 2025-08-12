@@ -6,9 +6,7 @@ from ..models.assured_feasibility_fields_with_addons import (
     AssuredFeasibilityFieldsWithAddons,
 )
 from ..models.point import Point
-from ..models.standard_order_request_properties_with_addons import (
-    StandardOrderRequestPropertiesWithAddons,
-)
+from ..models.standard_price_request_properties import StandardPriceRequestProperties
 
 
 class PriceRequest(BaseModel):
@@ -17,14 +15,14 @@ class PriceRequest(BaseModel):
     Attributes:
         type (Literal['Feature']):
         geometry (Point): Point Model
-        properties (Union[AssuredFeasibilityFieldsWithAddons, StandardOrderRequestPropertiesWithAddons]): A dictionary
-            of additional metadata about the requested image.
+        properties (Union[AssuredFeasibilityFieldsWithAddons, StandardPriceRequestProperties]): A dictionary of
+            additional metadata about the requested image.
     """
 
     type: Literal["Feature"] = Field("Feature", description=None)
     geometry: "Point" = Field(..., description="Point Model")
     properties: Union[
-        AssuredFeasibilityFieldsWithAddons, StandardOrderRequestPropertiesWithAddons
+        AssuredFeasibilityFieldsWithAddons, StandardPriceRequestProperties
     ] = Field(
         ...,
         description="A dictionary of additional metadata about the requested image.",

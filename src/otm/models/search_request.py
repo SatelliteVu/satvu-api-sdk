@@ -18,13 +18,13 @@ from ..models.sort_entities import SortEntities
 class SearchRequest(BaseModel):
     """
     Attributes:
-        token (Union[None, str]): Pagination token.
-        limit (Union[None, int]): Number of items to return per page. Default: 25.
+        token (Union[None, str]): The pagination token.
+        limit (Union[None, int]): The number of items to return per page. Default: 25.
         collections (Union[None, list[Collections]]): A list of collection types.
         ids (Union[None, list[UUID]]): A list of IDs.
         datetime (Union[None, str]):
-        created_at (Union[None, str]): The datetime at which the entity was created.
-        updated_at (Union[None, str]): The datetime at which the entity was last updated.
+        created_at (Union[None, str]): The datetime interval during which the entity was created.
+        updated_at (Union[None, str]): The datetime interval during which the entity was last updated.
         properties (Union[FilterFields, None]): Allowed properties to filter a search. Filterable string fields allow
             one value or a list of values resulting in an equality or 'IN' comparison respectively. For numeric fields, one
             value similarly achieves an equality operation. A tuple of 2 values can also be provided to search inclusively
@@ -35,9 +35,9 @@ class SearchRequest(BaseModel):
         sort_by (Union[None, list['SortEntities']]): Sort the order in which results are returned.
     """
 
-    token: Union[None, str] = Field(None, description="Pagination token.")
+    token: Union[None, str] = Field(None, description="The pagination token.")
     limit: Union[None, int] = Field(
-        25, description="Number of items to return per page."
+        25, description="The number of items to return per page."
     )
     collections: Union[None, list[Collections]] = Field(
         None, description="A list of collection types."
@@ -45,10 +45,11 @@ class SearchRequest(BaseModel):
     ids: Union[None, list[UUID]] = Field(None, description="A list of IDs.")
     datetime: Union[None, str] = Field(None, description=None)
     created_at: Union[None, str] = Field(
-        None, description="The datetime at which the entity was created."
+        None, description="The datetime interval during which the entity was created."
     )
     updated_at: Union[None, str] = Field(
-        None, description="The datetime at which the entity was last updated."
+        None,
+        description="The datetime interval during which the entity was last updated.",
     )
     properties: Union[FilterFields, None] = Field(
         None,

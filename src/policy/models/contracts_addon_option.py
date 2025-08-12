@@ -6,15 +6,19 @@ from pydantic import BaseModel, Field
 class ContractsAddonOption(BaseModel):
     """
     Attributes:
-        label (str): Label assigned to addon option Example: Withhold - 3 days.
-        uplift (int): Coefficient that base price is multiplied by in percent Example: 10.
-        value (str): Value of the addon option Example: 3d.
+        label (str): Label assigned to addon option. Example: Withhold - 3 days.
+        uplift (int): Coefficient that base price is multiplied by in percent. Example: 10.
+        value (str): Value of the addon option. Example: 3d.
         default (Union[None, bool]):
+        eula_type (Union[None, str]): The EULA type. Only provided for 'Licence' addons. Example: Standard.
     """
 
-    label: str = Field(..., description="Label assigned to addon option")
+    label: str = Field(..., description="Label assigned to addon option.")
     uplift: int = Field(
-        ..., description="Coefficient that base price is multiplied by in percent"
+        ..., description="Coefficient that base price is multiplied by in percent."
     )
-    value: str = Field(..., description="Value of the addon option")
+    value: str = Field(..., description="Value of the addon option.")
     default: Union[None, bool] = Field(None, description=None)
+    eula_type: Union[None, str] = Field(
+        None, description="The EULA type. Only provided for 'Licence' addons."
+    )

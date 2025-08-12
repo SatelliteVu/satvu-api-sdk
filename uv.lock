@@ -280,7 +280,7 @@ wheels = [
 [[package]]
 name = "openapi-python-client"
 version = "0.25.2"
-source = { registry = "https://pypi.org/simple" }
+source = { directory = "../openapi-python-client" }
 dependencies = [
     { name = "attrs" },
     { name = "colorama", marker = "sys_platform == 'win32'" },
@@ -294,9 +294,20 @@ dependencies = [
     { name = "typer" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/2f/b0/8cda0476b5148016ee661a8079cf703d5be06127f1f2dba4e5bf26cb5de3/openapi_python_client-0.25.2.tar.gz", hash = "sha256:8a0a03c3391ff77793047b14f70bb8f6705b9150153d1bd5baf35fea6b1669c2", size = 124422, upload-time = "2025-07-03T02:42:18.065Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/84/03/f9c3680dc8a04d0d7dfa79e2f83b29e56c8ac18d8824066f08320f2a242e/openapi_python_client-0.25.2-py3-none-any.whl", hash = "sha256:b2a6898804805cd6669d74aa0c93b4dc8da8575070885128ab1b8eae729b3bc8", size = 180849, upload-time = "2025-07-03T02:42:16.408Z" },
+
+[package.metadata]
+requires-dist = [
+    { name = "attrs", specifier = ">=22.2.0" },
+    { name = "colorama", marker = "sys_platform == 'win32'", specifier = ">=0.4.3" },
+    { name = "httpx", specifier = ">=0.23.0,<0.29.0" },
+    { name = "jinja2", specifier = ">=3.0.0,<4.0.0" },
+    { name = "pydantic", specifier = ">=2.10,<3.0.0" },
+    { name = "python-dateutil", specifier = ">=2.8.1,<3.0.0" },
+    { name = "ruamel-yaml", specifier = ">=0.18.6,<0.19.0" },
+    { name = "ruff", specifier = ">=0.2,<0.13" },
+    { name = "shellingham", specifier = ">=1.3.2,<2.0.0" },
+    { name = "typer", specifier = ">0.6,<0.17" },
+    { name = "typing-extensions", specifier = ">=4.8.0,<5.0.0" },
 ]
 
 [[package]]
@@ -525,7 +536,7 @@ requires-dist = [
     { name = "appdirs", marker = "extra == 'standard'", specifier = ">=1.4.4" },
     { name = "attrs", specifier = ">=25.3.0" },
     { name = "httpx", specifier = ">=0.28.1" },
-    { name = "openapi-python-client", specifier = ">=0.25.2" },
+    { name = "openapi-python-client", directory = "../openapi-python-client" },
     { name = "pydantic", specifier = ">=2.11.7" },
 ]
 provides-extras = ["standard"]

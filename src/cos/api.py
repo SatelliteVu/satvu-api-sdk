@@ -36,8 +36,8 @@ class CosService(SDKClient):
         Retrieve order details for a specified Order ID owned by the authenticated user.
 
         Args:
-            contract_id (UUID): Contract ID.
-            order_id (UUID): Order ID.
+            contract_id (UUID): The contract ID.
+            order_id (UUID): The order ID.
 
         Returns:
             Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]
@@ -63,12 +63,12 @@ class CosService(SDKClient):
         """
         Edit Order
 
-        Edit the name of an order.
+        Edit the name of an order owned by the authenticated user.
 
         Args:
-            contract_id (UUID): Contract ID.
-            order_id (UUID): Order ID.
-            body (OrderEditPayload):
+            contract_id (UUID): The contract ID.
+            order_id (UUID): The order ID.
+            body (OrderEditPayload): Request payload for editing an order.
 
         Returns:
             Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]
@@ -103,7 +103,7 @@ class CosService(SDKClient):
         Retrieve all existing orders owned by the authenticated user.
 
         Args:
-            contract_id (UUID): Contract ID.
+            contract_id (UUID): The contract ID.
             limit (Union[None, int]): The number of orders to return per page. Default: 25.
             token (Union[None, str]): The pagination token.
 
@@ -146,11 +146,11 @@ class CosService(SDKClient):
         authenticated user.
 
         Args:
-            contract_id (UUID): Contract ID.
-            body (Union[OrderSubmissionPayload, ResellerSubmissionOrderPayload]]):
+            contract_id (UUID): The contract ID.
+            body (Union[OrderSubmissionPayload, ResellerSubmissionOrderPayload]):
                 One of:
-                - OrderSubmissionPayload:
-                - ResellerSubmissionOrderPayload:
+                - OrderSubmissionPayload: Request payload for submitting an order.
+                - ResellerSubmissionOrderPayload: Order payload for resellers
 
         Returns:
             Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]
@@ -189,9 +189,9 @@ class CosService(SDKClient):
         presigned download URL with an expiry will be returned.
 
         Args:
-            contract_id (UUID): Contract ID.
-            order_id (UUID): Order ID.
-            item_id (str): Item ID.
+            contract_id (UUID): The contract ID.
+            order_id (UUID): The order ID.
+            item_id (str): The item ID.
             redirect (Union[None, bool]): If `true` download the image content locally, otherwise if
                 `false` return a presigned download URL with an expiry. Defaults to `true`. Default: True.
 
@@ -243,8 +243,8 @@ class CosService(SDKClient):
         presigned download URL with an expiry will be returned.
 
         Args:
-            contract_id (UUID): Contract ID.
-            order_id (UUID): Order ID.
+            contract_id (UUID): The contract ID.
+            order_id (UUID): The order ID.
             collections (Union[None, list[DownloadOrderCollectionsType0Item]]): Specify a subset of
                 collections to download.
                             Defaults to None, which will download only the ordered product.

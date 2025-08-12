@@ -31,3 +31,6 @@ dev-dependencies = [
     "pre-commit>=4.2.0",
     "ruff>=0.12.2",
 ]
+
+[tool.uv.sources]
+openapi-python-client = { path = "../openapi-python-client" }

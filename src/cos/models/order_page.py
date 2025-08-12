@@ -8,7 +8,8 @@ from ..models.reseller_feature_collection_order import ResellerFeatureCollection
 
 
 class OrderPage(BaseModel):
-    """
+    """Response payload for querying orders
+
     Attributes:
         orders (list[Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]]): A list of existing orders owned by
             the user.

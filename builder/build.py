@@ -133,7 +133,7 @@ class SatVuProject(Project):
         if isinstance(body.prop, UnionProperty):
             # TODO: Agree a way to document unions
             models = body.prop.inner_properties
-            docstring = f"body ({body.prop.get_type_string()}]):\n"
+            docstring = f"body ({body.prop.get_type_string()}):\n"
             docstring += "One of:\n"
 
             for model in models:

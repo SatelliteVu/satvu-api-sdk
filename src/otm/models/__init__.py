@@ -95,9 +95,8 @@ from .standard_feasibility_response_properties import (
 from .standard_order_fields_with_addons import StandardOrderFieldsWithAddons
 from .standard_order_request import StandardOrderRequest
 from .standard_order_request_properties import StandardOrderRequestProperties
-from .standard_order_request_properties_with_addons import (
-    StandardOrderRequestPropertiesWithAddons,
-)
+from .standard_price_request_properties import StandardPriceRequestProperties
+from .standard_request_properties import StandardRequestProperties
 from .standard_stored_feasibility_request_properties import (
     StandardStoredFeasibilityRequestProperties,
 )
@@ -183,7 +182,8 @@ __all__ = (
     "StandardOrderFieldsWithAddons",
     "StandardOrderRequest",
     "StandardOrderRequestProperties",
-    "StandardOrderRequestPropertiesWithAddons",
+    "StandardPriceRequestProperties",
+    "StandardRequestProperties",
     "StandardStoredFeasibilityRequestProperties",
     "StoredAssuredOrderRequestProperties",
     "StoredFeasibilityFeatureCollection",

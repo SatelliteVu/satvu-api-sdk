@@ -13,7 +13,7 @@ class WalletService(SDKClient):
     def __init__(self, get_token: Callable[[], str], env: str | None):
         super().__init__(env=env, get_token=get_token)
 
-    def credit__contract_id__credit_get(
+    def get_credit(
         self,
         contract_id: UUID,
     ) -> CreditBalanceResponse:

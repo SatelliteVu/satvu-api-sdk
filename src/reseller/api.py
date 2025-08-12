@@ -134,7 +134,7 @@ class ResellerService(SDKClient):
             GetUsers
         """
 
-        json_body = body.model_dump()
+        json_body = body.model_dump(by_alias=True)
 
         response = self.make_request(
             method="post",
@@ -159,7 +159,7 @@ class ResellerService(SDKClient):
             GetCompanies
         """
 
-        json_body = body.model_dump()
+        json_body = body.model_dump(by_alias=True)
 
         response = self.make_request(
             method="post",

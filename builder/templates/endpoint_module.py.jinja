@@ -62,7 +62,7 @@ params = {k: v for k, v in params.items() if v is not None}
 {%- if endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[") %}
 json_body = [item.model_dump() for item in items]
 {%- elif endpoint.bodies | length %}
-json_body = body.model_dump()
+json_body = body.model_dump(by_alias=True)
 {% endif %}
 {%- endmacro %}
 

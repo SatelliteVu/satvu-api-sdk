@@ -74,7 +74,7 @@ class CosService(SDKClient):
             Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]
         """
 
-        json_body = body.model_dump()
+        json_body = body.model_dump(by_alias=True)
 
         response = self.make_request(
             method="patch",
@@ -154,7 +154,7 @@ class CosService(SDKClient):
             Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]
         """
 
-        json_body = body.model_dump()
+        json_body = body.model_dump(by_alias=True)
 
         response = self.make_request(
             method="post",

@@ -104,7 +104,7 @@ class OtmService(SDKClient):
             Union[ResellerStoredOrderRequest, StoredOrderRequest]
         """
 
-        json_body = body.model_dump()
+        json_body = body.model_dump(by_alias=True)
 
         response = self.make_request(
             method="post",
@@ -166,7 +166,7 @@ class OtmService(SDKClient):
             Union[GetOrder, ResellerGetOrder]
         """
 
-        json_body = body.model_dump()
+        json_body = body.model_dump(by_alias=True)
 
         response = self.make_request(
             method="patch",
@@ -346,7 +346,7 @@ class OtmService(SDKClient):
             StoredFeasibilityRequest
         """
 
-        json_body = body.model_dump()
+        json_body = body.model_dump(by_alias=True)
 
         response = self.make_request(
             method="post",
@@ -431,7 +431,7 @@ class OtmService(SDKClient):
             OrderPrice
         """
 
-        json_body = body.model_dump()
+        json_body = body.model_dump(by_alias=True)
 
         response = self.make_request(
             method="post",
@@ -457,7 +457,7 @@ class OtmService(SDKClient):
             SearchResponse
         """
 
-        json_body = body.model_dump()
+        json_body = body.model_dump(by_alias=True)
 
         response = self.make_request(
             method="post",

@@ -31,7 +31,7 @@ class PolicyService(SDKClient):
             RouterActiveContractsResponse
         """
 
-        json_body = body.model_dump()
+        json_body = body.model_dump(by_alias=True)
 
         response = self.make_request(
             method="post",
@@ -83,7 +83,7 @@ class PolicyService(SDKClient):
             TermsUserTermsAccepted
         """
 
-        json_body = body.model_dump()
+        json_body = body.model_dump(by_alias=True)
 
         response = self.make_request(
             method="post",

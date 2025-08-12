@@ -134,7 +134,7 @@ class IdService(SDKClient):
             UserInfo
         """
 
-        json_body = body.model_dump()
+        json_body = body.model_dump(by_alias=True)
 
         response = self.make_request(
             method="put",
@@ -326,7 +326,7 @@ class IdService(SDKClient):
             CreateWebhookResponse
         """
 
-        json_body = body.model_dump()
+        json_body = body.model_dump(by_alias=True)
 
         response = self.make_request(
             method="post",
@@ -402,7 +402,7 @@ class IdService(SDKClient):
             WebhookResponse
         """
 
-        json_body = body.model_dump()
+        json_body = body.model_dump(by_alias=True)
 
         response = self.make_request(
             method="patch",

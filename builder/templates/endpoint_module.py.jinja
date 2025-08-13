@@ -48,11 +48,8 @@ params: dict[str, Any] = {}
         {% set destination = "json_" + property.python_name %}
 {{ prop_template.transform(property, property.python_name, destination) }}
     {% endif %}
-    {%- if not property.json_is_dict %}
+
 params["{{ property.name }}"] = {{ destination }}
-    {% else %}
-{{ guarded_statement(property, destination, "params.update(" + destination + ")") }}
-    {% endif %}
 
 {% endfor %}
 params = {k: v for k, v in params.items() if v is not None}

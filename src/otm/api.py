@@ -216,7 +216,7 @@ class OtmService(SDKClient):
         contract_id: UUID,
         order_id: UUID,
         redirect: Union[None, bool] = True,
-    ) -> OrderItemDownloadUrl:
+    ) -> Union[OrderItemDownloadUrl, Any, io.BytesIO]:
         """
         Download a tasking order.
 
@@ -234,7 +234,7 @@ class OtmService(SDKClient):
                 `false` return a presigned download URL with an expiry. Defaults to `true`. Default: True.
 
         Returns:
-            OrderItemDownloadUrl
+            Union[OrderItemDownloadUrl, Any, io.BytesIO]
         """
 
         params: dict[str, Any] = {}

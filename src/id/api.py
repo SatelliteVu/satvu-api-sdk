@@ -29,7 +29,7 @@ class IdService(SDKClient):
 
     def get_user_client(
         self,
-    ) -> ClientID:
+    ) -> Union[ClientID, Any]:
         """
         Get User Client
 
@@ -38,7 +38,7 @@ class IdService(SDKClient):
         Args:
 
         Returns:
-            ClientID
+            Union[ClientID, Any]
         """
 
         response = self.make_request(
@@ -149,7 +149,7 @@ class IdService(SDKClient):
     def get_user_client__contract_id__client_get(
         self,
         contract_id: UUID,
-    ) -> ClientID:
+    ) -> Union[ClientID, Any]:
         """
         Get User Client
 
@@ -159,7 +159,7 @@ class IdService(SDKClient):
             contract_id (UUID): Contract ID
 
         Returns:
-            ClientID
+            Union[ClientID, Any]
         """
 
         response = self.make_request(

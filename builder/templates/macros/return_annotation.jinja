@@ -1,0 +1,33 @@
+{% macro return_annotation(success_responses, redirect_response) %}
+	{# This macro generates the return annotation for a function based on the provided success responses and redirect response. #}
+
+	{%- set ns = namespace(return_string="") -%}
+
+	{# if more than one success response, create a union #}
+	{% if success_responses | length > 1 %}
+		{% set ns.return_string = "Union[" %}
+		{% for response in success_responses %}
+			{% set ns.return_string = ns.return_string + response.prop.get_type_string(quoted=False) %}
+			{% if not loop.last %}
+			{% set ns.return_string = ns.return_string + ", " %}
+			{% endif %}
+		{% endfor -%}
+
+		{# if there is a redirect response, add it to the union #}
+		{% if redirect_response | length > 0 %}
+		{% set ns.return_string = ns.return_string + ", io.BytesIO" %}
+		{% endif %}
+		{% set ns.return_string = ns.return_string + "]" -%}
+
+	{# if only one success response and a redirect response, return a union with BytesIO #}
+	{% elif success_response | length == 1 and redirect_response %}
+		{% set ns.return_string = "Union[" + success_responses[0].prop.get_type_string(quoted=False) + "io.BytesIO]" -%}
+
+	{# if only one success response and no redirect response, return the type of that response #}
+	{% else %}
+	{% set ns.return_string = success_responses[0].prop.get_type_string(quoted=False) %}
+	{% endif %}
+
+	{{- ns.return_string -}}
+{% endmacro %}
+

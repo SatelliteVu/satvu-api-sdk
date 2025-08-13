@@ -17,10 +17,14 @@ from .notification_description import NotificationDescription
 from .notification_settings import NotificationSettings
 from .notification_update import NotificationUpdate
 from .post_webhook_response import PostWebhookResponse
+from .reseller_notification_category import ResellerNotificationCategory
+from .reseller_notification_config import ResellerNotificationConfig
+from .reseller_notification_config_topic import ResellerNotificationConfigTopic
 from .reseller_notification_description import ResellerNotificationDescription
 from .reseller_notification_description_topic import (
     ResellerNotificationDescriptionTopic,
 )
+from .reseller_notification_update import ResellerNotificationUpdate
 from .reseller_webhook_event import ResellerWebhookEvent
 from .test_webhook_response import TestWebhookResponse
 from .user_info import UserInfo
@@ -55,8 +59,12 @@ __all__ = (
     "NotificationSettings",
     "NotificationUpdate",
     "PostWebhookResponse",
+    "ResellerNotificationCategory",
+    "ResellerNotificationConfig",
+    "ResellerNotificationConfigTopic",
     "ResellerNotificationDescription",
     "ResellerNotificationDescriptionTopic",
+    "ResellerNotificationUpdate",
     "ResellerWebhookEvent",
     "TestWebhookResponse",
     "UserInfo",

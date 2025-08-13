@@ -1,19 +1,15 @@
-from typing import Literal
-
 from pydantic import BaseModel, ConfigDict, Field
 
 
 class NotificationDescription(BaseModel):
     """
     Attributes:
-        topic (Literal['tasking:order_status']): Notification topic.
+        topic (str): Notification topic.
         name (str): Name of notification type.
         description (str): Description of notification type.
     """
 
-    topic: Literal["tasking:order_status"] = Field(
-        "tasking:order_status", description="Notification topic.", alias="topic"
-    )
+    topic: str = Field(..., description="Notification topic.", alias="topic")
     name: str = Field(..., description="Name of notification type.", alias="name")
     description: str = Field(
         ..., description="Description of notification type.", alias="description"

@@ -175,7 +175,7 @@ class CosService(SDKClient):
         order_id: UUID,
         item_id: str,
         redirect: Union[None, bool] = True,
-    ) -> OrderItemDownloadUrl:
+    ) -> Union[OrderItemDownloadUrl, Any, io.BytesIO]:
         """
         Item download
 
@@ -194,7 +194,7 @@ class CosService(SDKClient):
                 `false` return a presigned download URL with an expiry. Defaults to `true`. Default: True.
 
         Returns:
-            OrderItemDownloadUrl
+            Union[OrderItemDownloadUrl, Any, io.BytesIO]
         """
 
         params: dict[str, Any] = {}
@@ -227,7 +227,7 @@ class CosService(SDKClient):
         order_id: UUID,
         collections: Union[None, list[DownloadOrderCollectionsType0Item]] = None,
         redirect: Union[None, bool] = True,
-    ) -> OrderDownloadUrl:
+    ) -> Union[OrderDownloadUrl, Any, io.BytesIO]:
         """
         Order download
 
@@ -250,7 +250,7 @@ class CosService(SDKClient):
                 `false` return a presigned download URL with an expiry. Defaults to `true`. Default: True.
 
         Returns:
-            OrderDownloadUrl
+            Union[OrderDownloadUrl, Any, io.BytesIO]
         """
 
         params: dict[str, Any] = {}

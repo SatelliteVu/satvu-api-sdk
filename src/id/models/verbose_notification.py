@@ -4,17 +4,18 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from ..models.notification_category import NotificationCategory
 from ..models.notification_settings import NotificationSettings
+from ..models.reseller_notification_category import ResellerNotificationCategory
 
 
 class VerboseNotification(BaseModel):
     """
     Attributes:
-        category (Union[None, NotificationCategory]): Category for notification topic
+        category (Union[None, NotificationCategory, ResellerNotificationCategory]): Category for notification topic
         settings (Union[None, list[NotificationSettings]]): Configuration of notification settings related to a specific
             topic.
     """
 
-    category: Union[None, NotificationCategory] = Field(
+    category: Union[None, NotificationCategory, ResellerNotificationCategory] = Field(
         None, description="Category for notification topic", alias="category"
     )
     settings: Union[None, list[NotificationSettings]] = Field(

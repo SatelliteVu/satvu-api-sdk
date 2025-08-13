@@ -1,4 +1,5 @@
 {% from "helpers.jinja" import safe_docstring %}
+{% from "macros/return_annotation.jinja" import return_annotation %}
 
 {# Generate arguments for function #}
 {%- macro arguments(endpoint) %}
@@ -158,10 +159,9 @@ class {{ api_id | title }}Service(SDKClient):
     {% for endpoint in endpoints %}
     {% set success_responses = endpoint.responses | selectattr("status_code.is_success") | list %}
     {% set redirect_response = endpoint.responses | selectattr("status_code.is_redirection") | list %}
-    {% set return_string = endpoint.responses[0].prop.get_type_string(quoted=False).rstrip('"').lstrip('"') %}
-    {# TODO: Update return_string to handle multiple success responses #}
-    def {{ endpoint.name }}(self, {{ arguments(endpoint) }}) -> {{ return_string }}:
-        {{ docstring(endpoint, return_string, is_detailed=true) }}
+
+    def {{ endpoint.name }}(self, {{ arguments(endpoint) }}) -> {{ return_annotation(success_responses, redirect_response) }}:
+        {{ docstring(endpoint, return_annotation(success_responses, redirect_response), is_detailed=true) }}
 
         {% if endpoint.bodies | length %}
         {{ build_json(endpoint) }}

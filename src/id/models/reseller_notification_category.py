@@ -1,7 +1,8 @@
 from enum import Enum
 
 
-class NotificationCategory(str, Enum):
+class ResellerNotificationCategory(str, Enum):
+    RESELLER = "reseller"
     TASKING = "tasking"
 
     def __str__(self) -> str:

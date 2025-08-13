@@ -10,13 +10,13 @@ class ContractsContractWithProducts(BaseModel):
     """
     Attributes:
         active (bool): Whether the contract is active Example: True.
-        addons (list['ContractsAddon']): Addons associated with this contract
+        addons (list[ContractsAddon]): Addons associated with this contract
         allowed_geographical_area (ContractsGeometry): Allowed geographical area of the contract
         contract_id (str): Contract ID Example: bc5bb4dc-a007-4419-8093-184408cdb2d7.
         end_date (CivilDate): Contract end date
         geographical_summary (str): Descriptive summary of a contract's geographical area Example: Northern Europe.
         name (str): Contract name Example: my-contract.
-        products (list['ContractsProduct']): List of products the contract has access to
+        products (list[ContractsProduct]): List of products the contract has access to
         reseller (bool): Whether the contract is marked for reselling Example: True.
         start_date (CivilDate): Contract end date
     """
@@ -24,7 +24,7 @@ class ContractsContractWithProducts(BaseModel):
     active: bool = Field(
         ..., description="Whether the contract is active", alias="active"
     )
-    addons: list["ContractsAddon"] = Field(
+    addons: list[ContractsAddon] = Field(
         ..., description="Addons associated with this contract", alias="addons"
     )
     allowed_geographical_area: "ContractsGeometry" = Field(
@@ -42,7 +42,7 @@ class ContractsContractWithProducts(BaseModel):
         alias="geographical_summary",
     )
     name: str = Field(..., description="Contract name", alias="name")
-    products: list["ContractsProduct"] = Field(
+    products: list[ContractsProduct] = Field(
         ..., description="List of products the contract has access to", alias="products"
     )
     reseller: bool = Field(

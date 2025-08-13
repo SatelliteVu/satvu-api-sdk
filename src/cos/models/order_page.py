@@ -13,13 +13,13 @@ class OrderPage(BaseModel):
     Attributes:
         orders (list[Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]]): A list of existing orders owned by
             the user.
-        links (list['Link']): A list of links to next and/or previous pages of the query.
+        links (list[Link]): A list of links to next and/or previous pages of the query.
     """
 
     orders: list[Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]] = Field(
         ..., description="A list of existing orders owned by the user.", alias="orders"
     )
-    links: list["Link"] = Field(
+    links: list[Link] = Field(
         ...,
         description="A list of links to next and/or previous pages of the query.",
         alias="links",

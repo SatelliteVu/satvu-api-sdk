@@ -20,8 +20,8 @@ class ResellerService(SDKClient):
 
     def post_create_users(
         self,
-        items: list["CreateUser"],
-    ) -> list["CreateUserResponse"]:
+        items: list[CreateUser],
+    ) -> list[CreateUserResponse]:
         """
         Create end users
 
@@ -31,7 +31,7 @@ class ResellerService(SDKClient):
             body (CreateUser): Represents payload to create a user
 
         Returns:
-            list['CreateUserResponse']
+            list[CreateUserResponse]
         """
 
         json_body = [item.model_dump() for item in items]
@@ -43,9 +43,7 @@ class ResellerService(SDKClient):
         )
 
         if response.status_code == 201:
-            return deep_parse_from_annotation(
-                response.json(), list["CreateUserResponse"]
-            )
+            return deep_parse_from_annotation(response.json(), list[CreateUserResponse])
         return response.json()
 
     def get_users(

@@ -12,7 +12,7 @@ class FeatureCollectionOrder(BaseModel):
     """
     Attributes:
         id (UUID): The order ID.
-        features (list['FeatureOrder']): An array of Item objects.
+        features (list[FeatureOrder]): An array of Item objects.
         owned_by (str): The owner of the order.
         created_at (datetime.datetime): The datetime at which the order was created.
         contract_id (UUID): The contract ID.
@@ -23,7 +23,7 @@ class FeatureCollectionOrder(BaseModel):
     """
 
     id: UUID = Field(..., description="The order ID.", alias="id")
-    features: list["FeatureOrder"] = Field(
+    features: list[FeatureOrder] = Field(
         ..., description="An array of Item objects.", alias="features"
     )
     owned_by: str = Field(..., description="The owner of the order.", alias="owned_by")

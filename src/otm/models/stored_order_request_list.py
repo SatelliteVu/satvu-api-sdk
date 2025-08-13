@@ -13,7 +13,7 @@ class StoredOrderRequestList(BaseModel):
     Attributes:
         type_ (Literal['FeatureCollection']):
         features (list[Union[ResellerStoredOrderRequest, StoredOrderRequest]]): List of stored order requests.
-        links (list['Link']): Links to previous and/or next page.
+        links (list[Link]): Links to previous and/or next page.
         context (ResponseContext):
     """
 
@@ -23,7 +23,7 @@ class StoredOrderRequestList(BaseModel):
     features: list[Union[ResellerStoredOrderRequest, StoredOrderRequest]] = Field(
         ..., description="List of stored order requests.", alias="features"
     )
-    links: list["Link"] = Field(
+    links: list[Link] = Field(
         ..., description="Links to previous and/or next page.", alias="links"
     )
     context: "ResponseContext" = Field(..., description=None, alias="context")

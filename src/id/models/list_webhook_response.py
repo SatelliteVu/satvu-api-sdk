@@ -8,16 +8,16 @@ from ..models.webhook_response import WebhookResponse
 class ListWebhookResponse(BaseModel):
     """
     Attributes:
-        webhooks (list['WebhookResponse']): List of webhooks.
+        webhooks (list[WebhookResponse]): List of webhooks.
         context (ListResponseContext):
-        links (list['Link']): Links to previous and/or next page.
+        links (list[Link]): Links to previous and/or next page.
     """
 
-    webhooks: list["WebhookResponse"] = Field(
+    webhooks: list[WebhookResponse] = Field(
         ..., description="List of webhooks.", alias="webhooks"
     )
     context: "ListResponseContext" = Field(..., description=None, alias="context")
-    links: list["Link"] = Field(
+    links: list[Link] = Field(
         ..., description="Links to previous and/or next page.", alias="links"
     )
 

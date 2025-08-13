@@ -40,7 +40,7 @@ class SearchResponse(BaseModel):
             SearchResponseFeatureStandardFeasibilityRequest, SearchResponseFeatureStandardFeasibilityResponse,
             SearchResponseFeatureStandardOrderRequest]]): A list of features that match the search filters.
         context (ResponseContext):
-        links (list['Link']): A list of links to next and/or previous pages of the search.
+        links (list[Link]): A list of links to next and/or previous pages of the search.
         bbox (Union[None, list[float]]):
     """
 
@@ -64,7 +64,7 @@ class SearchResponse(BaseModel):
         alias="features",
     )
     context: "ResponseContext" = Field(..., description=None, alias="context")
-    links: list["Link"] = Field(
+    links: list[Link] = Field(
         ...,
         description="A list of links to next and/or previous pages of the search.",
         alias="links",

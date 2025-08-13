@@ -19,7 +19,7 @@ class GetOrder(BaseModel):
         properties (Union[GetAssuredOrderProperties, GetStandardOrderProperties]): A dictionary of additional metadata
             about the requested image.
         id (UUID): Order ID
-        links (list['Link']): A list of related links for the order.
+        links (list[Link]): A list of related links for the order.
         contract_id (UUID): Contract ID.
         price (Price1):
     """
@@ -32,7 +32,7 @@ class GetOrder(BaseModel):
         alias="properties",
     )
     id: UUID = Field(..., description="Order ID", alias="id")
-    links: list["Link"] = Field(
+    links: list[Link] = Field(
         ..., description="A list of related links for the order.", alias="links"
     )
     contract_id: UUID = Field(..., description="Contract ID.", alias="contract_id")

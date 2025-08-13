@@ -142,8 +142,22 @@ def get_type_string(
     return f"Union[None, {type_string}]"
 
 
+# Avoid quoted list type annotations
+def get_base_type_string(self, *, quoted: bool = False) -> str:
+    return f"list[{self.inner_property.get_type_string()}]"
+
+def get_base_json_type_string(self, *, quoted: bool = False) -> str:
+    return f"list[{self.inner_property.get_type_string(json=True)}]"
+
+
 openapi_python_client.parser.properties.list_property.ListProperty.get_type_string = (
     get_type_string
+)
+openapi_python_client.parser.properties.list_property.ListProperty.get_base_type_string = (
+    get_base_type_string
+)
+openapi_python_client.parser.properties.list_property.ListProperty.get_base_json_type_string = (
+    get_base_json_type_string
 )
 
 

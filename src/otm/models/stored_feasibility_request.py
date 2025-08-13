@@ -22,7 +22,7 @@ class StoredFeasibilityRequest(BaseModel):
         properties (Union[AssuredStoredFeasibilityRequestProperties, StandardStoredFeasibilityRequestProperties]): A
             dictionary of additional metadata about the requested image.
         id (UUID): Feasibility Request ID.
-        links (list['Link']): A list of related links for the feasibility request.
+        links (list[Link]): A list of related links for the feasibility request.
         contract_id (UUID): Contract ID.
         bbox (Union[None, list[float]]):
     """
@@ -38,7 +38,7 @@ class StoredFeasibilityRequest(BaseModel):
         alias="properties",
     )
     id: UUID = Field(..., description="Feasibility Request ID.", alias="id")
-    links: list["Link"] = Field(
+    links: list[Link] = Field(
         ...,
         description="A list of related links for the feasibility request.",
         alias="links",

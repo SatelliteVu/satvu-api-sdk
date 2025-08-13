@@ -11,7 +11,7 @@ class SearchUsers(BaseModel):
     Attributes:
         limit (Union[None, int]): The number of results to return per page. Default: 100.
         token (Union[None, str]): The pagination token.
-        search (Union[None, UserSearch, list['UserSearch']]): Search criteria.
+        search (Union[None, UserSearch, list[UserSearch]]): Search criteria.
         kyc_status (Union[KYCStatus, None, list[KYCStatus]]): The KYC status of the user.
     """
 
@@ -21,7 +21,7 @@ class SearchUsers(BaseModel):
     token: Union[None, str] = Field(
         None, description="The pagination token.", alias="token"
     )
-    search: Union[None, UserSearch, list["UserSearch"]] = Field(
+    search: Union[None, UserSearch, list[UserSearch]] = Field(
         None, description="Search criteria.", alias="search"
     )
     kyc_status: Union[KYCStatus, None, list[KYCStatus]] = Field(

@@ -32,7 +32,7 @@ class SearchRequest(BaseModel):
         intersects (Union[GeometryCollection, LineString, MultiLineString, MultiPoint, MultiPolygon, None, Point,
             Polygon]): A GeoJSON geometry to filter for. Items are returned if the geometry of the item intersects with the
             geometry provided.
-        sort_by (Union[None, list['SortEntities']]): Sort the order in which results are returned.
+        sort_by (Union[None, list[SortEntities]]): Sort the order in which results are returned.
     """
 
     token: Union[None, str] = Field(
@@ -77,7 +77,7 @@ class SearchRequest(BaseModel):
         description="A GeoJSON geometry to filter for. Items are returned if the geometry of the item intersects with the geometry provided.",
         alias="intersects",
     )
-    sort_by: Union[None, list["SortEntities"]] = Field(
+    sort_by: Union[None, list[SortEntities]] = Field(
         None,
         description="Sort the order in which results are returned.",
         alias="sort_by",

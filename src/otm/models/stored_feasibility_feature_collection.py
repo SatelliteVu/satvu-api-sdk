@@ -11,8 +11,8 @@ class StoredFeasibilityFeatureCollection(BaseModel):
     """
     Attributes:
         type_ (Literal['FeatureCollection']):
-        features (list['StoredFeasibilityRequest']): List of stored feasibility requests.
-        links (list['Link']): Links to previous and/or next page.
+        features (list[StoredFeasibilityRequest]): List of stored feasibility requests.
+        links (list[Link]): Links to previous and/or next page.
         context (ResponseContext):
         bbox (Union[None, list[float]]):
     """
@@ -20,10 +20,10 @@ class StoredFeasibilityFeatureCollection(BaseModel):
     type_: Literal["FeatureCollection"] = Field(
         "FeatureCollection", description=None, alias="type"
     )
-    features: list["StoredFeasibilityRequest"] = Field(
+    features: list[StoredFeasibilityRequest] = Field(
         ..., description="List of stored feasibility requests.", alias="features"
     )
-    links: list["Link"] = Field(
+    links: list[Link] = Field(
         ..., description="Links to previous and/or next page.", alias="links"
     )
     context: "ResponseContext" = Field(..., description=None, alias="context")

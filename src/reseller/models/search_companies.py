@@ -11,7 +11,7 @@ class SearchCompanies(BaseModel):
     Attributes:
         limit (Union[None, int]): The number of results to return per page. Default: 100.
         token (Union[None, str]): The pagination token.
-        search (Union[CompanySearch, None, list['CompanySearch']]): Search criteria.
+        search (Union[CompanySearch, None, list[CompanySearch]]): Search criteria.
         kyc_status (Union[KYCStatus, None, list[KYCStatus]]): The KYC status of the company.
     """
 
@@ -21,7 +21,7 @@ class SearchCompanies(BaseModel):
     token: Union[None, str] = Field(
         None, description="The pagination token.", alias="token"
     )
-    search: Union[CompanySearch, None, list["CompanySearch"]] = Field(
+    search: Union[CompanySearch, None, list[CompanySearch]] = Field(
         None, description="Search criteria.", alias="search"
     )
     kyc_status: Union[KYCStatus, None, list[KYCStatus]] = Field(

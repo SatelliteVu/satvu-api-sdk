@@ -416,7 +416,7 @@ class IdService(SDKClient):
 
     def get_webhook_events(
         self,
-    ) -> list["NotificationDescription"]:
+    ) -> list[NotificationDescription]:
         """
         Get Webhook Events
 
@@ -425,7 +425,7 @@ class IdService(SDKClient):
         Args:
 
         Returns:
-            list['NotificationDescription']
+            list[NotificationDescription]
         """
 
         response = self.make_request(
@@ -435,7 +435,7 @@ class IdService(SDKClient):
 
         if response.status_code == 200:
             return deep_parse_from_annotation(
-                response.json(), list["NotificationDescription"]
+                response.json(), list[NotificationDescription]
             )
         return response.json()
 

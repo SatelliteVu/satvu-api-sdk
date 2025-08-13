@@ -15,7 +15,7 @@ class StacFeature(BaseModel):
         id (str): The unique identifier for this item within the collection.
         properties (StacFeatureProperties): A dictionary of additional metadata for the item.
         collection (str): The ID of the STAC Collection this item references to.
-        links (list['Link']): A list of link objects to resources and related URLs.
+        links (list[Link]): A list of link objects to resources and related URLs.
         assets (StacFeatureAssets): A dictionary of asset objects that can be downloaded, each with a unique key.
         bbox (list[Union[float, int]]): The bounding box of the asset represented by this item.
         type_ (Union[Literal['Feature'], None]):  Default: 'Feature'.
@@ -38,7 +38,7 @@ class StacFeature(BaseModel):
         description="The ID of the STAC Collection this item references to.",
         alias="collection",
     )
-    links: list["Link"] = Field(
+    links: list[Link] = Field(
         ...,
         description="A list of link objects to resources and related URLs.",
         alias="links",

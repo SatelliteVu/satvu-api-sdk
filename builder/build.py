@@ -117,11 +117,6 @@ class SatVuProject(Project):
 
         self._build_models()
         self._build_api(api_id, config)
-        types_template = self.env.get_template("types.py.jinja")
-        types_path = self.package_dir / "types.py"
-        types_path.write_text(
-            types_template.render(), encoding=self.config.file_encoding
-        )
         self._run_post_hooks()
         return self._get_errors()
 

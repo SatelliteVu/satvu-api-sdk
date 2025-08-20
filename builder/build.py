@@ -1,11 +1,8 @@
 from dataclasses import dataclass
-from hashlib import sha1
-from json import dumps, loads
 from pathlib import Path
 from typing import Sequence
 
 import openapi_python_client.parser.openapi
-from httpx import get
 
 import openapi_python_client.utils
 from openapi_python_client import Project
@@ -20,36 +17,13 @@ from openapi_python_client.parser.properties import (
     ListProperty,
 )
 
-from builder.config import APIS, BASE_URL
+from builder.config import APIS
+from builder.load import load_openapi
 
 BASE_DIR = (Path(__file__).parent / "..").resolve()
 CACHE_DIR = BASE_DIR / ".cache"
 TEMPLATE_DIR = Path(__file__).parent / "templates"
 SRC_DIR = BASE_DIR / "src"
-
-
-def _load_openapi(api_id: str, use_cached: bool) -> tuple[dict, Path]:
-    """
-    Load the OpenAPI specification for the given API ID, either from cache or by fetching it.
-
-    :param api_id: The identifier for the API to load.
-    :param use_cached: If True, use cached OpenAPI spec if available; otherwise, fetch it.
-    :return: A tuple containing the OpenAPI specification as a dictionary and the path to the cache file.
-    """
-    CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    openapi_url = f"{BASE_URL.rstrip('/')}/{APIS[api_id]}/openapi.json"
-    cache_file = (
-        CACHE_DIR
-        / f"{api_id}-{sha1(openapi_url.encode(), usedforsecurity=False).hexdigest()}.json"
-    )
-
-    if not use_cached:
-        response = get(openapi_url)
-        response.raise_for_status()
-        openapi = response.json()
-        cache_file.write_text(dumps(openapi))
-
-    return loads(cache_file.read_text()), cache_file
 
 
 @dataclass
@@ -156,7 +130,7 @@ def build(api_id: str, use_cached: bool = False):
     :param use_cached: If True, use cached OpenAPI spec if available; otherwise, fetch it.
     """
     openapi_python_client.parser.openapi.models_relative_prefix = f"{api_id}."
-    openapi_dict, openapi_src = _load_openapi(api_id, use_cached)
+    openapi_dict, openapi_src = load_openapi(api_id, use_cached)
     config = Config.from_sources(
         config_file=ConfigFile(),
         meta_type=MetaType.NONE,

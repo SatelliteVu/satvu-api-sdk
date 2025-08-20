@@ -274,7 +274,7 @@ def _get_inner_type_strings(self, json: bool) -> set[str]:
     return {
         p.get_type_string(no_optional=True, json=json, quoted=True)
         if "geometries_item_type" in p.name
-        else p.get_type_string(no_optional=True, json=json, quoted=False)
+        else p.get_type_string(no_optional=True, json=json, quoted=True)
         for p in self.inner_properties
     }
 

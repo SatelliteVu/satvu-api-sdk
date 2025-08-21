@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -10,14 +12,14 @@ class CompanySearch(BaseModel):
     """
     Attributes:
         string (str): Search string.
-        type_ (Union[None, MatchType]):
-        fields (Union[Literal['all'], list[CompanySearchFields]]): Fields to search against. Either a list of fields or
-            `all`. Defaults to `all`.
+        type_ (Union[None, 'MatchType']):
+        fields (Union[Literal['all'], list['CompanySearchFields']]): Fields to search against. Either a list of fields
+            or `all`. Defaults to `all`.
     """
 
     string: str = Field(..., description="Search string.", alias="string")
-    type_: Union[None, MatchType] = Field(None, description=None, alias="type")
-    fields: Union[Literal["all"], list[CompanySearchFields]] = Field(
+    type_: Union[None, "MatchType"] = Field(None, description=None, alias="type")
+    fields: Union[Literal["all"], list["CompanySearchFields"]] = Field(
         None,
         description="Fields to search against. Either a list of fields or `all`. Defaults to `all`.",
         alias="fields",

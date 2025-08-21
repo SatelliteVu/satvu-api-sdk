@@ -1,9 +1,12 @@
+from __future__ import annotations
+
 import datetime
-from typing import Literal, Union
+from typing import TYPE_CHECKING, Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.price import Price
+if TYPE_CHECKING:
+    from ..models.price import Price
 
 
 class AssuredFeasibilityResponseProperties(BaseModel):
@@ -26,7 +29,7 @@ class AssuredFeasibilityResponseProperties(BaseModel):
             degrees.
         max_off_nadir (float): The maximum angle from the sensor between nadir and the scene center. Measured in decimal
             degrees.
-        price (Union[None, Price]): Pricing information.
+        price (Union['Price', None]): Pricing information.
     """
 
     product: Literal["assured"] = Field(
@@ -77,7 +80,7 @@ class AssuredFeasibilityResponseProperties(BaseModel):
         description="The maximum angle from the sensor between nadir and the scene center. Measured in decimal degrees.",
         alias="max_off_nadir",
     )
-    price: Union[None, Price] = Field(
+    price: Union["Price", None] = Field(
         None, description="Pricing information.", alias="price"
     )
 

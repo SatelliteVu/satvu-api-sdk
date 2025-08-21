@@ -1,11 +1,14 @@
-from typing import Literal, Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Literal, Union
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.order import Order
-from ..models.point_geometry import PointGeometry
-from ..models.polygon_geometry import PolygonGeometry
+if TYPE_CHECKING:
+    from ..models.order import Order
+    from ..models.point_geometry import PointGeometry
+    from ..models.polygon_geometry import PolygonGeometry
 
 
 class FeatureOrder(BaseModel):
@@ -13,9 +16,9 @@ class FeatureOrder(BaseModel):
     Attributes:
         id (Union[UUID, str]): The unique identifier of the item within the order.
         type_ (Union[Literal['Feature'], None]):  Default: 'Feature'.
-        geometry (Union[None, PointGeometry, PolygonGeometry]): Defines the full footprint of the asset represented by
-            the item.
-        properties (Union[None, Order]): A dictionary of additional metadata for the item.
+        geometry (Union['PointGeometry', 'PolygonGeometry', None]): Defines the full footprint of the asset represented
+            by the item.
+        properties (Union['Order', None]): A dictionary of additional metadata for the item.
     """
 
     id: Union[UUID, str] = Field(
@@ -26,12 +29,12 @@ class FeatureOrder(BaseModel):
     type_: Union[Literal["Feature"], None] = Field(
         "Feature", description=None, alias="type"
     )
-    geometry: Union[None, PointGeometry, PolygonGeometry] = Field(
+    geometry: Union["PointGeometry", "PolygonGeometry", None] = Field(
         None,
         description="Defines the full footprint of the asset represented by the item.",
         alias="geometry",
     )
-    properties: Union[None, Order] = Field(
+    properties: Union["Order", None] = Field(
         None,
         description="A dictionary of additional metadata for the item.",
         alias="properties",

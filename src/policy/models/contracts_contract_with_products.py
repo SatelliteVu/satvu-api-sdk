@@ -1,9 +1,14 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.civil_date import CivilDate
-from ..models.contracts_addon import ContractsAddon
-from ..models.contracts_geometry import ContractsGeometry
-from ..models.contracts_product import ContractsProduct
+if TYPE_CHECKING:
+    from ..models.civil_date import CivilDate
+    from ..models.contracts_addon import ContractsAddon
+    from ..models.contracts_geometry import ContractsGeometry
+    from ..models.contracts_product import ContractsProduct
 
 
 class ContractsContractWithProducts(BaseModel):

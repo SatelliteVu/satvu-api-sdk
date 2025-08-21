@@ -1,11 +1,14 @@
+from __future__ import annotations
+
 import datetime
-from typing import Union
+from typing import TYPE_CHECKING, Union
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.price import Price
-from ..models.stac_metadata import StacMetadata
+if TYPE_CHECKING:
+    from ..models.price import Price
+    from ..models.stac_metadata import StacMetadata
 
 
 class Order(BaseModel):
@@ -15,7 +18,7 @@ class Order(BaseModel):
         order_id (UUID): The order ID.
         created_at (datetime.datetime): The datetime at which the order was created.
         price (Price): Pricing information.
-        stac_metadata (Union[None, StacMetadata]): Metadata about the item.
+        stac_metadata (Union['StacMetadata', None]): Metadata about the item.
     """
 
     item_id: Union[list[str], str] = Field(
@@ -28,7 +31,7 @@ class Order(BaseModel):
         alias="created_at",
     )
     price: "Price" = Field(..., description="Pricing information.", alias="price")
-    stac_metadata: Union[None, StacMetadata] = Field(
+    stac_metadata: Union["StacMetadata", None] = Field(
         None, description="Metadata about the item.", alias="stac_metadata"
     )
 

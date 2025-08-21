@@ -1,8 +1,13 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.get_user import GetUser
-from ..models.link import Link
-from ..models.response_context import ResponseContext
+if TYPE_CHECKING:
+    from ..models.get_user import GetUser
+    from ..models.link import Link
+    from ..models.response_context import ResponseContext
 
 
 class GetUsers(BaseModel):

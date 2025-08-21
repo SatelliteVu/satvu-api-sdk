@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import datetime
 from typing import Literal, Union
 
@@ -12,19 +14,22 @@ class GetStandardOrderProperties(BaseModel):
 
     Attributes:
         datetime_ (str): The closed date-time interval of the tasking order request.
-        status (OrderStatus):
+        status ('OrderStatus'):
         created_at (datetime.datetime): The datetime at which the order was created.
         updated_at (datetime.datetime): The datetime at which the order was last updated.
         stac_item_id (Union[None, str]): The item id of the STAC item that fulfilled the order, if the order has been
             fulfilled.
         stac_datetime (Union[None, datetime.datetime]): The acquisition datetime of the STAC item that fulfilled the
             order, if the order has been fulfilled.
-        addon_withhold (Union[None, str]): Optional ISO8601 string describing the duration that an order will be
+        licence_level (Union[None, str]): The optional licence level for the order Licence levels are specific to the
+            contract. If not specified, the option will be set to the licence with the smallest uplift in the relevant
+            contract.
+        addon_withhold (Union[None, str]): The optional ISO8601 string describing the duration that an order will be
             withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option
             will be set to the default specified in the relevant contract.
         name (Union[None, str]): The name of the order.
         product (Union[Literal['standard'], None]): Standard Priority. Default: 'standard'.
-        satvu_day_night_mode (Union[None, DayNightMode]):
+        satvu_day_night_mode (Union[None, 'DayNightMode']):
         max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage. Measured in percent.
             Default: 15.
         min_off_nadir (Union[None, int]): The minimum angle from the sensor between nadir and the scene center. Measured
@@ -38,7 +43,7 @@ class GetStandardOrderProperties(BaseModel):
         description="The closed date-time interval of the tasking order request.",
         alias="datetime",
     )
-    status: OrderStatus = Field(..., description=None, alias="status")
+    status: "OrderStatus" = Field(..., description=None, alias="status")
     created_at: datetime.datetime = Field(
         ...,
         description="The datetime at which the order was created.",
@@ -59,9 +64,14 @@ class GetStandardOrderProperties(BaseModel):
         description="The acquisition datetime of the STAC item that fulfilled the order, if the order has been fulfilled.",
         alias="stac:datetime",
     )
+    licence_level: Union[None, str] = Field(
+        None,
+        description="The optional licence level for the order Licence levels are specific to the contract. If not specified, the option will be set to the licence with the smallest uplift in the relevant contract.",
+        alias="licence_level",
+    )
     addon_withhold: Union[None, str] = Field(
         None,
-        description="Optional ISO8601 string describing the duration that an order will be withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set to the default specified in the relevant contract.",
+        description="The optional ISO8601 string describing the duration that an order will be withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set to the default specified in the relevant contract.",
         alias="addon:withhold",
     )
     name: Union[None, str] = Field(
@@ -70,7 +80,7 @@ class GetStandardOrderProperties(BaseModel):
     product: Union[Literal["standard"], None] = Field(
         "standard", description="Standard Priority.", alias="product"
     )
-    satvu_day_night_mode: Union[None, DayNightMode] = Field(
+    satvu_day_night_mode: Union[None, "DayNightMode"] = Field(
         None, description=None, alias="satvu:day_night_mode"
     )
     max_cloud_cover: Union[None, int] = Field(

@@ -1,12 +1,15 @@
-from typing import Literal, Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.link import Link
-from ..models.point_geometry import PointGeometry
-from ..models.polygon_geometry import PolygonGeometry
-from ..models.stac_feature_assets import StacFeatureAssets
-from ..models.stac_feature_properties import StacFeatureProperties
+if TYPE_CHECKING:
+    from ..models.link import Link
+    from ..models.point_geometry import PointGeometry
+    from ..models.polygon_geometry import PolygonGeometry
+    from ..models.stac_feature_assets import StacFeatureAssets
+    from ..models.stac_feature_properties import StacFeatureProperties
 
 
 class StacFeature(BaseModel):
@@ -19,8 +22,8 @@ class StacFeature(BaseModel):
         assets (StacFeatureAssets): A dictionary of asset objects that can be downloaded, each with a unique key.
         bbox (list[Union[float, int]]): The bounding box of the asset represented by this item.
         type_ (Union[Literal['Feature'], None]):  Default: 'Feature'.
-        geometry (Union[None, PointGeometry, PolygonGeometry]): Defines the full footprint of the asset represented by
-            the item.
+        geometry (Union['PointGeometry', 'PolygonGeometry', None]): Defines the full footprint of the asset represented
+            by the item.
     """
 
     id: str = Field(
@@ -56,7 +59,7 @@ class StacFeature(BaseModel):
     type_: Union[Literal["Feature"], None] = Field(
         "Feature", description=None, alias="type"
     )
-    geometry: Union[None, PointGeometry, PolygonGeometry] = Field(
+    geometry: Union["PointGeometry", "PolygonGeometry", None] = Field(
         None,
         description="Defines the full footprint of the asset represented by the item.",
         alias="geometry",

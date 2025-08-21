@@ -3,8 +3,8 @@ from collections.abc import Callable
 from typing import Any, Union
 from uuid import UUID
 
-from satvu_api_sdk.core import SDKClient
-from shared.utils import deep_parse_from_annotation
+from src.satvu_api_sdk.core import SDKClient
+from src.shared.utils import deep_parse_from_annotation
 
 from cos.models.download_order_collections_type_0_item import (
     DownloadOrderCollectionsType0Item,
@@ -29,7 +29,7 @@ class CosService(SDKClient):
         self,
         contract_id: UUID,
         order_id: UUID,
-    ) -> Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]:
+    ) -> Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"]:
         """
         Order details
 
@@ -40,7 +40,7 @@ class CosService(SDKClient):
             order_id (UUID): The order ID.
 
         Returns:
-            Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]
+            Union['FeatureCollectionOrder', 'ResellerFeatureCollectionOrder']
         """
 
         response = self.make_request(
@@ -53,13 +53,13 @@ class CosService(SDKClient):
         if response.status_code == 200:
             return deep_parse_from_annotation(
                 response.json(),
-                Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder],
+                Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"],
             )
         return response.json()
 
     def edit_order(
         self, contract_id: UUID, order_id: UUID, body: OrderEditPayload
-    ) -> Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]:
+    ) -> Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"]:
         """
         Edit Order
 
@@ -71,7 +71,7 @@ class CosService(SDKClient):
             body (OrderEditPayload): Request payload for editing an order.
 
         Returns:
-            Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]
+            Union['FeatureCollectionOrder', 'ResellerFeatureCollectionOrder']
         """
 
         json_body = body.model_dump(by_alias=True)
@@ -87,7 +87,7 @@ class CosService(SDKClient):
         if response.status_code == 200:
             return deep_parse_from_annotation(
                 response.json(),
-                Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder],
+                Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"],
             )
         return response.json()
 
@@ -134,8 +134,8 @@ class CosService(SDKClient):
     def submit_order(
         self,
         contract_id: UUID,
-        body: Union[OrderSubmissionPayload, ResellerSubmissionOrderPayload],
-    ) -> Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]:
+        body: Union["OrderSubmissionPayload", "ResellerSubmissionOrderPayload"],
+    ) -> Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"]:
         """
         Submit order
 
@@ -145,13 +145,13 @@ class CosService(SDKClient):
 
         Args:
             contract_id (UUID): The contract ID.
-            body (Union[OrderSubmissionPayload, ResellerSubmissionOrderPayload]):
+            body (Union['OrderSubmissionPayload', 'ResellerSubmissionOrderPayload']):
                 One of:
                 - OrderSubmissionPayload: Request payload for submitting an order.
                 - ResellerSubmissionOrderPayload: Order payload for resellers
 
         Returns:
-            Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]
+            Union['FeatureCollectionOrder', 'ResellerFeatureCollectionOrder']
         """
 
         json_body = body.model_dump(by_alias=True)
@@ -165,7 +165,7 @@ class CosService(SDKClient):
         if response.status_code == 201:
             return deep_parse_from_annotation(
                 response.json(),
-                Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder],
+                Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"],
             )
         return response.json()
 
@@ -198,6 +198,7 @@ class CosService(SDKClient):
         """
 
         params: dict[str, Any] = {}
+
         params["redirect"] = redirect
 
         params = {k: v for k, v in params.items() if v is not None}
@@ -225,7 +226,7 @@ class CosService(SDKClient):
         self,
         contract_id: UUID,
         order_id: UUID,
-        collections: Union[None, list[DownloadOrderCollectionsType0Item]] = None,
+        collections: Union[None, list["DownloadOrderCollectionsType0Item"]] = None,
         redirect: Union[None, bool] = True,
     ) -> Union[OrderDownloadUrl, Any, io.BytesIO]:
         """
@@ -241,7 +242,7 @@ class CosService(SDKClient):
         Args:
             contract_id (UUID): The contract ID.
             order_id (UUID): The order ID.
-            collections (Union[None, list[DownloadOrderCollectionsType0Item]]): Specify a subset of
+            collections (Union[None, list['DownloadOrderCollectionsType0Item']]): Specify a subset of
                 collections to download.
                             Defaults to None, which will download only the ordered product.
                             To specify multiple collections, repeat the query parameter.

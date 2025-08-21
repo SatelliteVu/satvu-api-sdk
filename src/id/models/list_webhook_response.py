@@ -1,8 +1,13 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.link import Link
-from ..models.list_response_context import ListResponseContext
-from ..models.webhook_response import WebhookResponse
+if TYPE_CHECKING:
+    from ..models.link import Link
+    from ..models.list_response_context import ListResponseContext
+    from ..models.webhook_response import WebhookResponse
 
 
 class ListWebhookResponse(BaseModel):

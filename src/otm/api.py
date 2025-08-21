@@ -3,8 +3,8 @@ from collections.abc import Callable
 from typing import Any, Union
 from uuid import UUID
 
-from satvu_api_sdk.core import SDKClient
-from shared.utils import deep_parse_from_annotation
+from src.satvu_api_sdk.core import SDKClient
+from src.shared.utils import deep_parse_from_annotation
 
 from otm.models.assured_order_request import AssuredOrderRequest
 from otm.models.edit_order_payload import EditOrderPayload
@@ -58,6 +58,7 @@ class OtmService(SDKClient):
         """
 
         params: dict[str, Any] = {}
+
         params["per_page"] = per_page
 
         json_token: Union[None, str] = token
@@ -79,12 +80,12 @@ class OtmService(SDKClient):
         self,
         contract_id: UUID,
         body: Union[
-            AssuredOrderRequest,
-            ResellerAssuredOrderRequest,
-            ResellerStandardOrderRequest,
-            StandardOrderRequest,
+            "AssuredOrderRequest",
+            "ResellerAssuredOrderRequest",
+            "ResellerStandardOrderRequest",
+            "StandardOrderRequest",
         ],
-    ) -> Union[ResellerStoredOrderRequest, StoredOrderRequest]:
+    ) -> Union["ResellerStoredOrderRequest", "StoredOrderRequest"]:
         """
         Create a tasking order request.
 
@@ -92,8 +93,8 @@ class OtmService(SDKClient):
 
         Args:
             contract_id (UUID): Contract ID
-            body (Union[AssuredOrderRequest, ResellerAssuredOrderRequest,
-                ResellerStandardOrderRequest, StandardOrderRequest]):
+            body (Union['AssuredOrderRequest', 'ResellerAssuredOrderRequest',
+                'ResellerStandardOrderRequest', 'StandardOrderRequest']):
                 One of:
                 - StandardOrderRequest: Feature model for incoming order request.
                 - AssuredOrderRequest:
@@ -101,7 +102,7 @@ class OtmService(SDKClient):
                 - ResellerAssuredOrderRequest:
 
         Returns:
-            Union[ResellerStoredOrderRequest, StoredOrderRequest]
+            Union['ResellerStoredOrderRequest', 'StoredOrderRequest']
         """
 
         json_body = body.model_dump(by_alias=True)
@@ -114,7 +115,8 @@ class OtmService(SDKClient):
 
         if response.status_code == 201:
             return deep_parse_from_annotation(
-                response.json(), Union[ResellerStoredOrderRequest, StoredOrderRequest]
+                response.json(),
+                Union["ResellerStoredOrderRequest", "StoredOrderRequest"],
             )
         return response.json()
 
@@ -122,7 +124,7 @@ class OtmService(SDKClient):
         self,
         contract_id: UUID,
         order_id: UUID,
-    ) -> Union[GetOrder, ResellerGetOrder]:
+    ) -> Union["GetOrder", "ResellerGetOrder"]:
         """
         Retrieve a tasking order.
 
@@ -133,7 +135,7 @@ class OtmService(SDKClient):
             order_id (UUID): Order ID
 
         Returns:
-            Union[GetOrder, ResellerGetOrder]
+            Union['GetOrder', 'ResellerGetOrder']
         """
 
         response = self.make_request(
@@ -145,13 +147,13 @@ class OtmService(SDKClient):
 
         if response.status_code == 200:
             return deep_parse_from_annotation(
-                response.json(), Union[GetOrder, ResellerGetOrder]
+                response.json(), Union["GetOrder", "ResellerGetOrder"]
             )
         return response.json()
 
     def edit_tasking_order(
         self, contract_id: UUID, order_id: UUID, body: EditOrderPayload
-    ) -> Union[GetOrder, ResellerGetOrder]:
+    ) -> Union["GetOrder", "ResellerGetOrder"]:
         """
         Edit a tasking order request.
 
@@ -163,7 +165,7 @@ class OtmService(SDKClient):
             body (EditOrderPayload): Payload for editing an order.
 
         Returns:
-            Union[GetOrder, ResellerGetOrder]
+            Union['GetOrder', 'ResellerGetOrder']
         """
 
         json_body = body.model_dump(by_alias=True)
@@ -178,7 +180,7 @@ class OtmService(SDKClient):
 
         if response.status_code == 200:
             return deep_parse_from_annotation(
-                response.json(), Union[GetOrder, ResellerGetOrder]
+                response.json(), Union["GetOrder", "ResellerGetOrder"]
             )
         return response.json()
 
@@ -238,6 +240,7 @@ class OtmService(SDKClient):
         """
 
         params: dict[str, Any] = {}
+
         params["redirect"] = redirect
 
         params = {k: v for k, v in params.items() if v is not None}
@@ -311,6 +314,7 @@ class OtmService(SDKClient):
         """
 
         params: dict[str, Any] = {}
+
         params["per_page"] = per_page
 
         json_token: Union[None, str] = token

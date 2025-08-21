@@ -1,10 +1,13 @@
-from typing import Literal, Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.assured_feasibility_fields import AssuredFeasibilityFields
-from ..models.point import Point
-from ..models.standard_request_properties import StandardRequestProperties
+if TYPE_CHECKING:
+    from ..models.assured_feasibility_fields import AssuredFeasibilityFields
+    from ..models.geo_json_point import GeoJSONPoint
+    from ..models.standard_request_properties import StandardRequestProperties
 
 
 class FeasibilityRequest(BaseModel):
@@ -12,14 +15,14 @@ class FeasibilityRequest(BaseModel):
 
     Attributes:
         type_ (Literal['Feature']):
-        geometry (Point): Point Model
-        properties (Union[AssuredFeasibilityFields, StandardRequestProperties]): A dictionary of additional metadata
+        geometry (GeoJSONPoint):
+        properties (Union['AssuredFeasibilityFields', 'StandardRequestProperties']): A dictionary of additional metadata
             about the requested image.
     """
 
     type_: Literal["Feature"] = Field("Feature", description=None, alias="type")
-    geometry: "Point" = Field(..., description="Point Model", alias="geometry")
-    properties: Union[AssuredFeasibilityFields, StandardRequestProperties] = Field(
+    geometry: "GeoJSONPoint" = Field(..., description=None, alias="geometry")
+    properties: Union["AssuredFeasibilityFields", "StandardRequestProperties"] = Field(
         ...,
         description="A dictionary of additional metadata about the requested image.",
         alias="properties",

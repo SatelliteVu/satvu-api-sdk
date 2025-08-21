@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 import datetime
+from typing import TYPE_CHECKING
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.geojson_polygon import GeojsonPolygon
+if TYPE_CHECKING:
+    from ..models.geojson_polygon import GeojsonPolygon
 
 
 class StacPropertiesV4(BaseModel):

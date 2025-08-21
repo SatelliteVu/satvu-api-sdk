@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Union
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -8,11 +10,11 @@ from ..models.reseller_notification_config_topic import ResellerNotificationConf
 class ResellerNotificationConfig(BaseModel):
     """
     Attributes:
-        topic (ResellerNotificationConfigTopic): Notification topic.
+        topic ('ResellerNotificationConfigTopic'): Notification topic.
         email (Union[None, bool]): Opted into email notifications. Default: False.
     """
 
-    topic: ResellerNotificationConfigTopic = Field(
+    topic: "ResellerNotificationConfigTopic" = Field(
         ..., description="Notification topic.", alias="topic"
     )
     email: Union[None, bool] = Field(

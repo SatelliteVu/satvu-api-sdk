@@ -1,9 +1,12 @@
-from typing import Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.notification_update import NotificationUpdate
-from ..models.reseller_notification_update import ResellerNotificationUpdate
+if TYPE_CHECKING:
+    from ..models.notification_update import NotificationUpdate
+    from ..models.reseller_notification_update import ResellerNotificationUpdate
 
 
 class UserSettings(BaseModel):

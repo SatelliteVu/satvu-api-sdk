@@ -1,18 +1,21 @@
-from typing import Literal, Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.link import Link
-from ..models.reseller_stored_order_request import ResellerStoredOrderRequest
-from ..models.response_context import ResponseContext
-from ..models.stored_order_request import StoredOrderRequest
+if TYPE_CHECKING:
+    from ..models.link import Link
+    from ..models.reseller_stored_order_request import ResellerStoredOrderRequest
+    from ..models.response_context import ResponseContext
+    from ..models.stored_order_request import StoredOrderRequest
 
 
 class StoredOrderRequestList(BaseModel):
     """
     Attributes:
         type_ (Literal['FeatureCollection']):
-        features (list[Union[ResellerStoredOrderRequest, StoredOrderRequest]]): List of stored order requests.
+        features (list[Union['ResellerStoredOrderRequest', 'StoredOrderRequest']]): List of stored order requests.
         links (list[Link]): Links to previous and/or next page.
         context (ResponseContext):
     """
@@ -20,7 +23,7 @@ class StoredOrderRequestList(BaseModel):
     type_: Literal["FeatureCollection"] = Field(
         "FeatureCollection", description=None, alias="type"
     )
-    features: list[Union[ResellerStoredOrderRequest, StoredOrderRequest]] = Field(
+    features: list[Union["ResellerStoredOrderRequest", "StoredOrderRequest"]] = Field(
         ..., description="List of stored order requests.", alias="features"
     )
     links: list[Link] = Field(

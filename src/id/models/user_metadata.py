@@ -1,8 +1,11 @@
-from typing import Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.verbose_notification import VerboseNotification
+if TYPE_CHECKING:
+    from ..models.verbose_notification import VerboseNotification
 
 
 class UserMetadata(BaseModel):

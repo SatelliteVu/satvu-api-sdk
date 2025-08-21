@@ -1,12 +1,15 @@
-from typing import Literal, Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Literal, Union
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.point import Point
-from ..models.standard_feasibility_response_properties import (
-    StandardFeasibilityResponseProperties,
-)
+if TYPE_CHECKING:
+    from ..models.geo_json_point import GeoJSONPoint
+    from ..models.standard_feasibility_response_properties import (
+        StandardFeasibilityResponseProperties,
+    )
 
 
 class StandardFeasibilityResponseFeature(BaseModel):
@@ -14,14 +17,14 @@ class StandardFeasibilityResponseFeature(BaseModel):
 
     Attributes:
         type_ (Literal['Feature']):
-        geometry (Point): Point Model
+        geometry (GeoJSONPoint):
         properties (StandardFeasibilityResponseProperties): Properties of the standard priority feasibility response.
         id (UUID): The ID of the feasibility request.
         bbox (Union[None, list[float]]):
     """
 
     type_: Literal["Feature"] = Field("Feature", description=None, alias="type")
-    geometry: "Point" = Field(..., description="Point Model", alias="geometry")
+    geometry: "GeoJSONPoint" = Field(..., description=None, alias="geometry")
     properties: "StandardFeasibilityResponseProperties" = Field(
         ...,
         description="Properties of the standard priority feasibility response.",

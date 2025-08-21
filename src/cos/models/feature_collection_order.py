@@ -1,11 +1,14 @@
+from __future__ import annotations
+
 import datetime
-from typing import Literal, Union
+from typing import TYPE_CHECKING, Literal, Union
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.feature_order import FeatureOrder
-from ..models.price import Price
+if TYPE_CHECKING:
+    from ..models.feature_order import FeatureOrder
+    from ..models.price import Price
 
 
 class FeatureCollectionOrder(BaseModel):
@@ -20,6 +23,7 @@ class FeatureCollectionOrder(BaseModel):
         type_ (Union[Literal['FeatureCollection'], None]):  Default: 'FeatureCollection'.
         name (Union[None, str]): The name of the order.
         updated_at (Union[None, datetime.datetime]): The datetime at which the order was updated.
+        licence_level (Union[None, str]): Licence level applied to the order. Licences are contract-specific
     """
 
     id: UUID = Field(..., description="The order ID.", alias="id")
@@ -44,6 +48,11 @@ class FeatureCollectionOrder(BaseModel):
         None,
         description="The datetime at which the order was updated.",
         alias="updated_at",
+    )
+    licence_level: Union[None, str] = Field(
+        None,
+        description="Licence level applied to the order. Licences are contract-specific",
+        alias="licence_level",
     )
 
     model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

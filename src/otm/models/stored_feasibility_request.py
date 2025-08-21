@@ -1,16 +1,19 @@
-from typing import Literal, Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Literal, Union
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.assured_stored_feasibility_request_properties import (
-    AssuredStoredFeasibilityRequestProperties,
-)
-from ..models.link import Link
-from ..models.point import Point
-from ..models.standard_stored_feasibility_request_properties import (
-    StandardStoredFeasibilityRequestProperties,
-)
+if TYPE_CHECKING:
+    from ..models.assured_stored_feasibility_request_properties import (
+        AssuredStoredFeasibilityRequestProperties,
+    )
+    from ..models.geo_json_point import GeoJSONPoint
+    from ..models.link import Link
+    from ..models.standard_stored_feasibility_request_properties import (
+        StandardStoredFeasibilityRequestProperties,
+    )
 
 
 class StoredFeasibilityRequest(BaseModel):
@@ -18,8 +21,8 @@ class StoredFeasibilityRequest(BaseModel):
 
     Attributes:
         type_ (Literal['Feature']):
-        geometry (Point): Point Model
-        properties (Union[AssuredStoredFeasibilityRequestProperties, StandardStoredFeasibilityRequestProperties]): A
+        geometry (GeoJSONPoint):
+        properties (Union['AssuredStoredFeasibilityRequestProperties', 'StandardStoredFeasibilityRequestProperties']): A
             dictionary of additional metadata about the requested image.
         id (UUID): Feasibility Request ID.
         links (list[Link]): A list of related links for the feasibility request.
@@ -28,10 +31,10 @@ class StoredFeasibilityRequest(BaseModel):
     """
 
     type_: Literal["Feature"] = Field("Feature", description=None, alias="type")
-    geometry: "Point" = Field(..., description="Point Model", alias="geometry")
+    geometry: "GeoJSONPoint" = Field(..., description=None, alias="geometry")
     properties: Union[
-        AssuredStoredFeasibilityRequestProperties,
-        StandardStoredFeasibilityRequestProperties,
+        "AssuredStoredFeasibilityRequestProperties",
+        "StandardStoredFeasibilityRequestProperties",
     ] = Field(
         ...,
         description="A dictionary of additional metadata about the requested image.",

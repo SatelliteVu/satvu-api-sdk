@@ -1,8 +1,8 @@
 from collections.abc import Callable
 from typing import Any, Union
 
-from satvu_api_sdk.core import SDKClient
-from shared.utils import deep_parse_from_annotation
+from src.satvu_api_sdk.core import SDKClient
+from src.shared.utils import deep_parse_from_annotation
 
 from catalog.models.collection import Collection
 from catalog.models.cql_2_queryables_schema import Cql2QueryablesSchema

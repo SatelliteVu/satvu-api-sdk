@@ -1,8 +1,11 @@
-from typing import Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.validation_error import ValidationError
+if TYPE_CHECKING:
+    from ..models.validation_error import ValidationError
 
 
 class HTTPValidationError(BaseModel):

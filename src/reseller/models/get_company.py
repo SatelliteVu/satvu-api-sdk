@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import datetime
 from typing import Union
 from uuid import UUID
@@ -13,7 +15,7 @@ class GetCompany(BaseModel):
         name (str): Name of the company.
         country (str): Country of the company.
         id (UUID): Unique identifier of the company.
-        kyc_status (KYCStatus):
+        kyc_status ('KYCStatus'):
         created_date (datetime.date): The date when the user was created.
         updated_date (datetime.date): The date when the user was last updated.
         kyc_completed_on (Union[None, datetime.date]): The date when KYC was completed for the company, if applicable.
@@ -23,7 +25,7 @@ class GetCompany(BaseModel):
     name: str = Field(..., description="Name of the company.", alias="name")
     country: str = Field(..., description="Country of the company.", alias="country")
     id: UUID = Field(..., description="Unique identifier of the company.", alias="id")
-    kyc_status: KYCStatus = Field(..., description=None, alias="kyc_status")
+    kyc_status: "KYCStatus" = Field(..., description=None, alias="kyc_status")
     created_date: datetime.date = Field(
         ..., description="The date when the user was created.", alias="created_date"
     )

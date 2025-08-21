@@ -1,6 +1,11 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.assured_order_request_properties import AssuredOrderRequestProperties
+if TYPE_CHECKING:
+    from ..models.assured_order_request_properties import AssuredOrderRequestProperties
 
 
 class AssuredOrderRequest(BaseModel):

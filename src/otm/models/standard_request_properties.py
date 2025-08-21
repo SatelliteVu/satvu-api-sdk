@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -10,7 +12,7 @@ class StandardRequestProperties(BaseModel):
     Attributes:
         datetime_ (str): The closed date-time interval of the tasking order request.
         product (Union[Literal['standard'], None]): Standard Priority. Default: 'standard'.
-        satvu_day_night_mode (Union[None, DayNightMode]):
+        satvu_day_night_mode (Union[None, 'DayNightMode']):
         max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage. Measured in percent.
             Default: 15.
         min_off_nadir (Union[None, int]): The minimum angle from the sensor between nadir and the scene center. Measured
@@ -27,7 +29,7 @@ class StandardRequestProperties(BaseModel):
     product: Union[Literal["standard"], None] = Field(
         "standard", description="Standard Priority.", alias="product"
     )
-    satvu_day_night_mode: Union[None, DayNightMode] = Field(
+    satvu_day_night_mode: Union[None, "DayNightMode"] = Field(
         None, description=None, alias="satvu:day_night_mode"
     )
     max_cloud_cover: Union[None, int] = Field(

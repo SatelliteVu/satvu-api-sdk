@@ -1,6 +1,11 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.company_address import CompanyAddress
+if TYPE_CHECKING:
+    from ..models.company_address import CompanyAddress
 
 
 class CreateUser(BaseModel):

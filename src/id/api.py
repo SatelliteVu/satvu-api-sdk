@@ -2,8 +2,8 @@ from collections.abc import Callable
 from typing import Any, Union
 from uuid import UUID
 
-from satvu_api_sdk.core import SDKClient
-from shared.utils import deep_parse_from_annotation
+from src.satvu_api_sdk.core import SDKClient
+from src.shared.utils import deep_parse_from_annotation
 
 from id.models.client_credentials import ClientCredentials
 from id.models.client_id import ClientID
@@ -27,256 +27,6 @@ class IdService(SDKClient):
     def __init__(self, get_token: Callable[[], str], env: str | None):
         super().__init__(env=env, get_token=get_token)
 
-    def get_user_client(
-        self,
-    ) -> Union[ClientID, Any]:
-        """
-        Get User Client
-
-        Retrieves the Client ID of an API user.
-
-        Args:
-
-        Returns:
-            Union[ClientID, Any]
-        """
-
-        response = self.make_request(
-            method="get",
-            url="/client",
-        )
-
-        if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), ClientID)
-        if response.status_code == 204:
-            return response.json()
-        return response.json()
-
-    def create_user_client(
-        self,
-    ) -> ClientCredentials:
-        """
-        Create User Client
-
-        Creates an M2M client to grant API access to a user.
-
-        Args:
-
-        Returns:
-            ClientCredentials
-        """
-
-        response = self.make_request(
-            method="post",
-            url="/client",
-        )
-
-        if response.status_code == 201:
-            return deep_parse_from_annotation(response.json(), ClientCredentials)
-        return response.json()
-
-    def rotate_client_secret(
-        self,
-    ) -> ClientCredentials:
-        """
-        Rotate Client Secret
-
-        Generates a new client secret for the M2M client associated with an API user.
-
-        Args:
-
-        Returns:
-            ClientCredentials
-        """
-
-        response = self.make_request(
-            method="post",
-            url="/client/reset",
-        )
-
-        if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), ClientCredentials)
-        return response.json()
-
-    def get_user_details(
-        self,
-    ) -> UserInfo:
-        """
-        Get User Details
-
-        Retrieves the details of a user.
-
-        Args:
-
-        Returns:
-            UserInfo
-        """
-
-        response = self.make_request(
-            method="get",
-            url="/user/details",
-        )
-
-        if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), UserInfo)
-        return response.json()
-
-    def edit_user_settings(self, body: UserSettings) -> UserInfo:
-        """
-        Edit User Settings
-
-        Updates user settings.
-
-        Args:
-            body (UserSettings):
-
-        Returns:
-            UserInfo
-        """
-
-        json_body = body.model_dump(by_alias=True)
-
-        response = self.make_request(
-            method="put",
-            url="/user/settings",
-            json=json_body,
-        )
-
-        if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), UserInfo)
-        return response.json()
-
-    def get_user_client__contract_id__client_get(
-        self,
-        contract_id: UUID,
-    ) -> Union[ClientID, Any]:
-        """
-        Get User Client
-
-        Retrieves the Client ID of an API user.
-
-        Args:
-            contract_id (UUID): Contract ID
-
-        Returns:
-            Union[ClientID, Any]
-        """
-
-        response = self.make_request(
-            method="get",
-            url="/{contract_id}/client".format(contract_id=contract_id),
-        )
-
-        if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), ClientID)
-        if response.status_code == 204:
-            return response.json()
-        return response.json()
-
-    def create_user_client__contract_id__client_post(
-        self,
-        contract_id: UUID,
-    ) -> ClientCredentials:
-        """
-        Create User Client
-
-        Creates an M2M client to grant API access to a user.
-
-        Args:
-            contract_id (UUID): Contract ID
-
-        Returns:
-            ClientCredentials
-        """
-
-        response = self.make_request(
-            method="post",
-            url="/{contract_id}/client".format(contract_id=contract_id),
-        )
-
-        if response.status_code == 201:
-            return deep_parse_from_annotation(response.json(), ClientCredentials)
-        return response.json()
-
-    def rotate_client_secret__contract_id__client_reset_post(
-        self,
-        contract_id: UUID,
-    ) -> ClientCredentials:
-        """
-        Rotate Client Secret
-
-        Generates a new client secret for the M2M client associated with an API user.
-
-        Args:
-            contract_id (UUID): Contract ID
-
-        Returns:
-            ClientCredentials
-        """
-
-        response = self.make_request(
-            method="post",
-            url="/{contract_id}/client/reset".format(contract_id=contract_id),
-        )
-
-        if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), ClientCredentials)
-        return response.json()
-
-    def get_user_details__contract_id__user_details_get(
-        self,
-        contract_id: UUID,
-    ) -> UserInfoDeprecated:
-        """
-        Get User Details
-
-        Retrieves the details of a user.
-
-        Args:
-            contract_id (UUID): Contract ID
-
-        Returns:
-            UserInfoDeprecated
-        """
-
-        response = self.make_request(
-            method="get",
-            url="/{contract_id}/user/details".format(contract_id=contract_id),
-        )
-
-        if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), UserInfoDeprecated)
-        return response.json()
-
-    def credit__contract_id__wallet_credit_get(
-        self,
-        contract_id: UUID,
-    ) -> CreditBalanceResponse:
-        """
-        Credit
-
-        Returns the credit balance for the current billing cycle (UTC calendar month). This is calculated
-        as the monthly credit limit for the contract minus the total credits used this month.
-
-        Note: This endpoint is deprecated and will be removed in a future release. Please use the
-        equivalent endpoint in the Wallet API - https://api.satellitevu.com/wallet/v1/docs.
-
-        Args:
-            contract_id (UUID): Contract ID.
-
-        Returns:
-            CreditBalanceResponse
-        """
-
-        response = self.make_request(
-            method="get",
-            url="/{contract_id}/wallet/credit".format(contract_id=contract_id),
-        )
-
-        if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), CreditBalanceResponse)
-        return response.json()
-
     def list_webhooks(
         self,
         per_page: Union[None, int] = 25,
@@ -296,6 +46,7 @@ class IdService(SDKClient):
         """
 
         params: dict[str, Any] = {}
+
         params["per_page"] = per_page
 
         json_token: Union[None, str] = token
@@ -487,4 +238,254 @@ class IdService(SDKClient):
 
         if response.status_code == 200:
             return deep_parse_from_annotation(response.json(), TestWebhookResponse)
+        return response.json()
+
+    def get_user_client__contract_id__client_get(
+        self,
+        contract_id: UUID,
+    ) -> Union[ClientID, Any]:
+        """
+        Get User Client
+
+        Retrieves the Client ID of an API user.
+
+        Args:
+            contract_id (UUID): Contract ID
+
+        Returns:
+            Union[ClientID, Any]
+        """
+
+        response = self.make_request(
+            method="get",
+            url="/{contract_id}/client".format(contract_id=contract_id),
+        )
+
+        if response.status_code == 200:
+            return deep_parse_from_annotation(response.json(), ClientID)
+        if response.status_code == 204:
+            return response.json()
+        return response.json()
+
+    def create_user_client__contract_id__client_post(
+        self,
+        contract_id: UUID,
+    ) -> ClientCredentials:
+        """
+        Create User Client
+
+        Creates an M2M client to grant API access to a user.
+
+        Args:
+            contract_id (UUID): Contract ID
+
+        Returns:
+            ClientCredentials
+        """
+
+        response = self.make_request(
+            method="post",
+            url="/{contract_id}/client".format(contract_id=contract_id),
+        )
+
+        if response.status_code == 201:
+            return deep_parse_from_annotation(response.json(), ClientCredentials)
+        return response.json()
+
+    def rotate_client_secret__contract_id__client_reset_post(
+        self,
+        contract_id: UUID,
+    ) -> ClientCredentials:
+        """
+        Rotate Client Secret
+
+        Generates a new client secret for the M2M client associated with an API user.
+
+        Args:
+            contract_id (UUID): Contract ID
+
+        Returns:
+            ClientCredentials
+        """
+
+        response = self.make_request(
+            method="post",
+            url="/{contract_id}/client/reset".format(contract_id=contract_id),
+        )
+
+        if response.status_code == 200:
+            return deep_parse_from_annotation(response.json(), ClientCredentials)
+        return response.json()
+
+    def get_user_details__contract_id__user_details_get(
+        self,
+        contract_id: UUID,
+    ) -> UserInfoDeprecated:
+        """
+        Get User Details
+
+        Retrieves the details of a user.
+
+        Args:
+            contract_id (UUID): Contract ID
+
+        Returns:
+            UserInfoDeprecated
+        """
+
+        response = self.make_request(
+            method="get",
+            url="/{contract_id}/user/details".format(contract_id=contract_id),
+        )
+
+        if response.status_code == 200:
+            return deep_parse_from_annotation(response.json(), UserInfoDeprecated)
+        return response.json()
+
+    def credit__contract_id__wallet_credit_get(
+        self,
+        contract_id: UUID,
+    ) -> CreditBalanceResponse:
+        """
+        Credit
+
+        Returns the credit balance for the current billing cycle (UTC calendar month). This is calculated
+        as the monthly credit limit for the contract minus the total credits used this month.
+
+        Note: This endpoint is deprecated and will be removed in a future release. Please use the
+        equivalent endpoint in the Wallet API - https://api.satellitevu.com/wallet/v1/docs.
+
+        Args:
+            contract_id (UUID): Contract ID.
+
+        Returns:
+            CreditBalanceResponse
+        """
+
+        response = self.make_request(
+            method="get",
+            url="/{contract_id}/wallet/credit".format(contract_id=contract_id),
+        )
+
+        if response.status_code == 200:
+            return deep_parse_from_annotation(response.json(), CreditBalanceResponse)
+        return response.json()
+
+    def get_user_client(
+        self,
+    ) -> Union[ClientID, Any]:
+        """
+        Get User Client
+
+        Retrieves the Client ID of an API user.
+
+        Args:
+
+        Returns:
+            Union[ClientID, Any]
+        """
+
+        response = self.make_request(
+            method="get",
+            url="/client",
+        )
+
+        if response.status_code == 200:
+            return deep_parse_from_annotation(response.json(), ClientID)
+        if response.status_code == 204:
+            return response.json()
+        return response.json()
+
+    def create_user_client(
+        self,
+    ) -> ClientCredentials:
+        """
+        Create User Client
+
+        Creates an M2M client to grant API access to a user.
+
+        Args:
+
+        Returns:
+            ClientCredentials
+        """
+
+        response = self.make_request(
+            method="post",
+            url="/client",
+        )
+
+        if response.status_code == 201:
+            return deep_parse_from_annotation(response.json(), ClientCredentials)
+        return response.json()
+
+    def rotate_client_secret(
+        self,
+    ) -> ClientCredentials:
+        """
+        Rotate Client Secret
+
+        Generates a new client secret for the M2M client associated with an API user.
+
+        Args:
+
+        Returns:
+            ClientCredentials
+        """
+
+        response = self.make_request(
+            method="post",
+            url="/client/reset",
+        )
+
+        if response.status_code == 200:
+            return deep_parse_from_annotation(response.json(), ClientCredentials)
+        return response.json()
+
+    def get_user_details(
+        self,
+    ) -> UserInfo:
+        """
+        Get User Details
+
+        Retrieves the details of a user.
+
+        Args:
+
+        Returns:
+            UserInfo
+        """
+
+        response = self.make_request(
+            method="get",
+            url="/user/details",
+        )
+
+        if response.status_code == 200:
+            return deep_parse_from_annotation(response.json(), UserInfo)
+        return response.json()
+
+    def edit_user_settings(self, body: UserSettings) -> UserInfo:
+        """
+        Edit User Settings
+
+        Updates user settings.
+
+        Args:
+            body (UserSettings):
+
+        Returns:
+            UserInfo
+        """
+
+        json_body = body.model_dump(by_alias=True)
+
+        response = self.make_request(
+            method="put",
+            url="/user/settings",
+            json=json_body,
+        )
+
+        if response.status_code == 200:
+            return deep_parse_from_annotation(response.json(), UserInfo)
         return response.json()

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Union
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -10,7 +12,7 @@ class WebhookResult(BaseModel):
     Attributes:
         success (bool): Whether the request to the webhook URL was successful.
         status_code (Union[None, int]): The HTTP status code responded by the webhook URL, if applicable.
-        title (Union[None, WebhookFailureTitle]): The cause of the test failure, if applicable.
+        title (Union['WebhookFailureTitle', None]): The cause of the test failure, if applicable.
         detail (Union[None, str]): Detail about why the test failed, if applicable.
     """
 
@@ -24,7 +26,7 @@ class WebhookResult(BaseModel):
         description="The HTTP status code responded by the webhook URL, if applicable.",
         alias="status_code",
     )
-    title: Union[None, WebhookFailureTitle] = Field(
+    title: Union["WebhookFailureTitle", None] = Field(
         None, description="The cause of the test failure, if applicable.", alias="title"
     )
     detail: Union[None, str] = Field(

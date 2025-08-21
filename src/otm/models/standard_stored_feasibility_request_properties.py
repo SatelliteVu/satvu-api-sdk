@@ -1,11 +1,15 @@
+from __future__ import annotations
+
 import datetime
-from typing import Literal, Union
+from typing import TYPE_CHECKING, Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from ..models.day_night_mode import DayNightMode
 from ..models.feasibility_request_status import FeasibilityRequestStatus
-from ..models.price import Price
+
+if TYPE_CHECKING:
+    from ..models.price import Price
 
 
 class StandardStoredFeasibilityRequestProperties(BaseModel):
@@ -13,18 +17,18 @@ class StandardStoredFeasibilityRequestProperties(BaseModel):
 
     Attributes:
         datetime_ (str): The closed date-time interval of the tasking order request.
-        status (FeasibilityRequestStatus):
+        status ('FeasibilityRequestStatus'):
         created_at (datetime.datetime): The datetime at which the feasibility request was created.
         updated_at (datetime.datetime): The datetime at which the feasibility request was last updated.
         product (Union[Literal['standard'], None]): Standard Priority. Default: 'standard'.
-        satvu_day_night_mode (Union[None, DayNightMode]):
+        satvu_day_night_mode (Union[None, 'DayNightMode']):
         max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage. Measured in percent.
             Default: 15.
         min_off_nadir (Union[None, int]): The minimum angle from the sensor between nadir and the scene center. Measured
             in decimal degrees. Default: 0.
         max_off_nadir (Union[None, int]): The maximum angle from the sensor between nadir and the scene center. Measured
             in decimal degrees. Must be larger than `min_off_nadir`. Default: 30.
-        price (Union[None, Price]): Pricing information.
+        price (Union['Price', None]): Pricing information.
     """
 
     datetime_: str = Field(
@@ -32,7 +36,7 @@ class StandardStoredFeasibilityRequestProperties(BaseModel):
         description="The closed date-time interval of the tasking order request.",
         alias="datetime",
     )
-    status: FeasibilityRequestStatus = Field(..., description=None, alias="status")
+    status: "FeasibilityRequestStatus" = Field(..., description=None, alias="status")
     created_at: datetime.datetime = Field(
         ...,
         description="The datetime at which the feasibility request was created.",
@@ -46,7 +50,7 @@ class StandardStoredFeasibilityRequestProperties(BaseModel):
     product: Union[Literal["standard"], None] = Field(
         "standard", description="Standard Priority.", alias="product"
     )
-    satvu_day_night_mode: Union[None, DayNightMode] = Field(
+    satvu_day_night_mode: Union[None, "DayNightMode"] = Field(
         None, description=None, alias="satvu:day_night_mode"
     )
     max_cloud_cover: Union[None, int] = Field(
@@ -64,7 +68,7 @@ class StandardStoredFeasibilityRequestProperties(BaseModel):
         description="The maximum angle from the sensor between nadir and the scene center. Measured in decimal degrees. Must be larger than `min_off_nadir`.",
         alias="max_off_nadir",
     )
-    price: Union[None, Price] = Field(
+    price: Union["Price", None] = Field(
         None, description="Pricing information.", alias="price"
     )
 

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import datetime
 from typing import Literal, Union
 
@@ -14,17 +16,20 @@ class StoredAssuredOrderRequestProperties(BaseModel):
         product (Literal['assured']): Assured Priority.
         datetime_ (str): The closed date-time interval of the tasking order request.
         signature (str): Signature token.
-        status (OrderStatus):
+        status ('OrderStatus'):
         created_at (datetime.datetime): The datetime at which the order was created.
         updated_at (datetime.datetime): The datetime at which the order was last updated.
-        satvu_day_night_mode (Union[None, DayNightMode]):
+        satvu_day_night_mode (Union[None, 'DayNightMode']):
         max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage. Measured in percent.
             Default: 15.
         min_off_nadir (Union[None, int]): The minimum angle from the sensor between nadir and the scene center. Measured
             in decimal degrees. Default: 0.
         max_off_nadir (Union[None, int]): The maximum angle from the sensor between nadir and the scene center. Measured
             in decimal degrees. Must be larger than `min_off_nadir`. Default: 30.
-        addon_withhold (Union[None, str]): Optional ISO8601 string describing the duration that an order will be
+        licence_level (Union[None, str]): The optional licence level for the order Licence levels are specific to the
+            contract. If not specified, the option will be set to the licence with the smallest uplift in the relevant
+            contract.
+        addon_withhold (Union[None, str]): The optional ISO8601 string describing the duration that an order will be
             withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option
             will be set to the default specified in the relevant contract.
         name (Union[None, str]): The name of the order.
@@ -39,7 +44,7 @@ class StoredAssuredOrderRequestProperties(BaseModel):
         alias="datetime",
     )
     signature: str = Field(..., description="Signature token.", alias="signature")
-    status: OrderStatus = Field(..., description=None, alias="status")
+    status: "OrderStatus" = Field(..., description=None, alias="status")
     created_at: datetime.datetime = Field(
         ...,
         description="The datetime at which the order was created.",
@@ -50,7 +55,7 @@ class StoredAssuredOrderRequestProperties(BaseModel):
         description="The datetime at which the order was last updated.",
         alias="updated_at",
     )
-    satvu_day_night_mode: Union[None, DayNightMode] = Field(
+    satvu_day_night_mode: Union[None, "DayNightMode"] = Field(
         None, description=None, alias="satvu:day_night_mode"
     )
     max_cloud_cover: Union[None, int] = Field(
@@ -68,9 +73,14 @@ class StoredAssuredOrderRequestProperties(BaseModel):
         description="The maximum angle from the sensor between nadir and the scene center. Measured in decimal degrees. Must be larger than `min_off_nadir`.",
         alias="max_off_nadir",
     )
+    licence_level: Union[None, str] = Field(
+        None,
+        description="The optional licence level for the order Licence levels are specific to the contract. If not specified, the option will be set to the licence with the smallest uplift in the relevant contract.",
+        alias="licence_level",
+    )
     addon_withhold: Union[None, str] = Field(
         None,
-        description="Optional ISO8601 string describing the duration that an order will be withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set to the default specified in the relevant contract.",
+        description="The optional ISO8601 string describing the duration that an order will be withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set to the default specified in the relevant contract.",
         alias="addon:withhold",
     )
     name: Union[None, str] = Field(

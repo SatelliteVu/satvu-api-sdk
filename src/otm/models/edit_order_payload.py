@@ -1,6 +1,11 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.order_name import OrderName
+if TYPE_CHECKING:
+    from ..models.order_name import OrderName
 
 
 class EditOrderPayload(BaseModel):

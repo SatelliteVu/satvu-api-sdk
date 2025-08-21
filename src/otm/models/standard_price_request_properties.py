@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -9,11 +11,14 @@ class StandardPriceRequestProperties(BaseModel):
     """
     Attributes:
         datetime_ (str): The closed date-time interval of the tasking order request.
-        addon_withhold (Union[None, str]): Optional ISO8601 string describing the duration that an order will be
+        licence_level (Union[None, str]): The optional licence level for the order Licence levels are specific to the
+            contract. If not specified, the option will be set to the licence with the smallest uplift in the relevant
+            contract.
+        addon_withhold (Union[None, str]): The optional ISO8601 string describing the duration that an order will be
             withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option
             will be set to the default specified in the relevant contract.
         product (Union[Literal['standard'], None]): Standard Priority. Default: 'standard'.
-        satvu_day_night_mode (Union[None, DayNightMode]):
+        satvu_day_night_mode (Union[None, 'DayNightMode']):
         max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage. Measured in percent.
             Default: 15.
         min_off_nadir (Union[None, int]): The minimum angle from the sensor between nadir and the scene center. Measured
@@ -27,15 +32,20 @@ class StandardPriceRequestProperties(BaseModel):
         description="The closed date-time interval of the tasking order request.",
         alias="datetime",
     )
+    licence_level: Union[None, str] = Field(
+        None,
+        description="The optional licence level for the order Licence levels are specific to the contract. If not specified, the option will be set to the licence with the smallest uplift in the relevant contract.",
+        alias="licence_level",
+    )
     addon_withhold: Union[None, str] = Field(
         None,
-        description="Optional ISO8601 string describing the duration that an order will be withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set to the default specified in the relevant contract.",
+        description="The optional ISO8601 string describing the duration that an order will be withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set to the default specified in the relevant contract.",
         alias="addon:withhold",
     )
     product: Union[Literal["standard"], None] = Field(
         "standard", description="Standard Priority.", alias="product"
     )
-    satvu_day_night_mode: Union[None, DayNightMode] = Field(
+    satvu_day_night_mode: Union[None, "DayNightMode"] = Field(
         None, description=None, alias="satvu:day_night_mode"
     )
     max_cloud_cover: Union[None, int] = Field(

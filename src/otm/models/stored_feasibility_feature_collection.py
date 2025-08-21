@@ -1,10 +1,13 @@
-from typing import Literal, Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.link import Link
-from ..models.response_context import ResponseContext
-from ..models.stored_feasibility_request import StoredFeasibilityRequest
+if TYPE_CHECKING:
+    from ..models.link import Link
+    from ..models.response_context import ResponseContext
+    from ..models.stored_feasibility_request import StoredFeasibilityRequest
 
 
 class StoredFeasibilityFeatureCollection(BaseModel):

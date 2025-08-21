@@ -1,13 +1,17 @@
+from __future__ import annotations
+
 import datetime
-from typing import Union
+from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.polygon_1 import Polygon1
 from ..models.satvu_filter import SatvuFilter
-from ..models.stac_properties_v7_processing_software_name_version import (
-    StacPropertiesV7ProcessingSoftwareNameVersion,
-)
+
+if TYPE_CHECKING:
+    from ..models.polygon_1 import Polygon1
+    from ..models.stac_properties_v7_processing_software_name_version import (
+        StacPropertiesV7ProcessingSoftwareNameVersion,
+    )
 
 
 class StacPropertiesV7(BaseModel):
@@ -30,9 +34,9 @@ class StacPropertiesV7(BaseModel):
         view_sun_elevation (float): Sun elevation angle. The angle from the tangent of the scene center to the sun
         eo_cloud_cover (Union[None, float]): Estimate of cloud cover
         proj_bbox (Union[None, list[float]]):
-        proj_geometry (Union[None, Polygon1]): Defines the projected footprint.
+        proj_geometry (Union['Polygon1', None]): Defines the projected footprint.
         proj_transform (Union[None, list[float]]): The affine transformation coefficients for the default grid
-        satvu_filter (Union[None, SatvuFilter]): Filter used for earth view acquisition
+        satvu_filter (Union['SatvuFilter', None]): Filter used for earth view acquisition
         satvu_geometric_calibration (Union[None, bool]): Flag indiciating if refined geometric processing was applied
         satvu_radiometric_calibration (Union[None, bool]): Flag indicating if radiometric calibration parameters are
             available
@@ -102,7 +106,7 @@ class StacPropertiesV7(BaseModel):
     proj_bbox: Union[None, list[float]] = Field(
         None, description=None, alias="proj:bbox"
     )
-    proj_geometry: Union[None, Polygon1] = Field(
+    proj_geometry: Union["Polygon1", None] = Field(
         None, description="Defines the projected footprint.", alias="proj:geometry"
     )
     proj_transform: Union[None, list[float]] = Field(
@@ -110,7 +114,7 @@ class StacPropertiesV7(BaseModel):
         description="The affine transformation coefficients for the default grid",
         alias="proj:transform",
     )
-    satvu_filter: Union[None, SatvuFilter] = Field(
+    satvu_filter: Union["SatvuFilter", None] = Field(
         None, description="Filter used for earth view acquisition", alias="satvu:filter"
     )
     satvu_geometric_calibration: Union[None, bool] = Field(

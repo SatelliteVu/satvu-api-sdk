@@ -1,8 +1,8 @@
 from collections.abc import Callable
 from typing import Any, Union
 
-from satvu_api_sdk.core import SDKClient
-from shared.utils import deep_parse_from_annotation
+from src.satvu_api_sdk.core import SDKClient
+from src.shared.utils import deep_parse_from_annotation
 
 from reseller.models.create_user import CreateUser
 from reseller.models.create_user_response import CreateUserResponse
@@ -65,6 +65,7 @@ class ResellerService(SDKClient):
         """
 
         params: dict[str, Any] = {}
+
         params["limit"] = limit
 
         json_token: Union[None, str] = token
@@ -102,6 +103,7 @@ class ResellerService(SDKClient):
         """
 
         params: dict[str, Any] = {}
+
         params["limit"] = limit
 
         json_token: Union[None, str] = token

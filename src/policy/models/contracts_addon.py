@@ -1,6 +1,11 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.contracts_addon_option import ContractsAddonOption
+if TYPE_CHECKING:
+    from ..models.contracts_addon_option import ContractsAddonOption
 
 
 class ContractsAddon(BaseModel):

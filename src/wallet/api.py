@@ -1,8 +1,8 @@
 from collections.abc import Callable
 from uuid import UUID
 
-from satvu_api_sdk.core import SDKClient
-from shared.utils import deep_parse_from_annotation
+from src.satvu_api_sdk.core import SDKClient
+from src.shared.utils import deep_parse_from_annotation
 
 from wallet.models.credit_balance_response import CreditBalanceResponse
 

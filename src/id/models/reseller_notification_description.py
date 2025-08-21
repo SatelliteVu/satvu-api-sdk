@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, ConfigDict, Field
 
 from ..models.reseller_notification_description_topic import (
@@ -8,12 +10,12 @@ from ..models.reseller_notification_description_topic import (
 class ResellerNotificationDescription(BaseModel):
     """
     Attributes:
-        topic (ResellerNotificationDescriptionTopic): Notification topic.
+        topic ('ResellerNotificationDescriptionTopic'): Notification topic.
         name (str): Name of notification type.
         description (str): Description of notification type.
     """
 
-    topic: ResellerNotificationDescriptionTopic = Field(
+    topic: "ResellerNotificationDescriptionTopic" = Field(
         ..., description="Notification topic.", alias="topic"
     )
     name: str = Field(..., description="Name of notification type.", alias="name")

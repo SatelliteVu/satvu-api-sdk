@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import datetime
 from typing import Union
 from uuid import UUID
@@ -11,10 +13,10 @@ class GetUser(BaseModel):
     """Represents response to user
 
     Attributes:
-        company_kyc_status (KYCStatus):
+        company_kyc_status ('KYCStatus'):
         company_id (UUID): The unique identifier for the company.
         company_name (str): The name of the company.
-        user_kyc_status (KYCStatus):
+        user_kyc_status ('KYCStatus'):
         user_email (str): The email address of the user.
         user_name (str): The full name of the user.
         user_id (str): The unique identifier for the user.
@@ -26,7 +28,7 @@ class GetUser(BaseModel):
             In YYYY-MM-DD format.
     """
 
-    company_kyc_status: KYCStatus = Field(
+    company_kyc_status: "KYCStatus" = Field(
         ..., description=None, alias="company_kyc_status"
     )
     company_id: UUID = Field(
@@ -35,7 +37,7 @@ class GetUser(BaseModel):
     company_name: str = Field(
         ..., description="The name of the company.", alias="company_name"
     )
-    user_kyc_status: KYCStatus = Field(..., description=None, alias="user_kyc_status")
+    user_kyc_status: "KYCStatus" = Field(..., description=None, alias="user_kyc_status")
     user_email: str = Field(
         ..., description="The email address of the user.", alias="user_email"
     )

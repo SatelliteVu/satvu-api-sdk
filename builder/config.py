@@ -9,3 +9,8 @@ APIS: dict[str, str] = {
     "reseller": "/resellers/v1",
     "wallet": "/wallet/v1",
 }
+
+CMD_ARGS: dict[str, str] = {
+    "all": "all",
+    **APIS,
+}

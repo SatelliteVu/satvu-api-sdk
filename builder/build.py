@@ -134,6 +134,11 @@ def build(api_id: str, use_cached: bool = False):
     :param api_id: The identifier for the API to build.
     :param use_cached: If True, use cached OpenAPI spec if available; otherwise, fetch it.
     """
+    if api_id == "all":
+        for api in APIS.keys():
+            build(api, use_cached)
+        return
+
     openapi_python_client.parser.openapi.models_relative_prefix = f"{api_id}."
     openapi_dict, openapi_src = load_openapi(api_id, use_cached)
     config = Config.from_sources(

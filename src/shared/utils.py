@@ -1,5 +1,5 @@
 from datetime import datetime, date
-from typing import Type, Union, get_args, get_origin, Any, Literal
+from typing import Union, get_args, get_origin, Any, Literal
 from pydantic import BaseModel
 
 
@@ -12,12 +12,9 @@ def deep_parse_from_annotation(data: Any, annotation: Any) -> Any:
     - Nested BaseModel fields
     - Lists of BaseModel or unions
 
-    Args:
-        data: The raw JSON-like object (dict, list, etc.)
-        annotation: The type annotation (e.g., List[Union[ModelA, ModelB]])
-
-    Returns:
-        The parsed object according to the annotation.
+    :param data: The raw JSON-like object (dict, list, etc.)
+    :param annotation: The type annotation (e.g., List[Union[ModelA, ModelB]], ModelC, etc.)
+    :return: The parsed object according to the annotation.
     """
     origin = get_origin(annotation)
     args = get_args(annotation)
@@ -63,6 +60,11 @@ def deep_parse_from_annotation(data: Any, annotation: Any) -> Any:
         return date.fromisoformat(data)
 
     elif annotation is str:
+        # If the annotation is str, return the data as is
+        return data
+
+    elif annotation == Any:
+        # If Any is used, return the data as is
         return data
 
     else:

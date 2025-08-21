@@ -1,8 +1,15 @@
-from typing import Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.cql_2_queryables_schema_properties import Cql2QueryablesSchemaProperties
+if TYPE_CHECKING:
+    from typing import Union
+
+    from ..models.cql_2_queryables_schema_properties import (
+        Cql2QueryablesSchemaProperties,
+    )
 
 
 class Cql2QueryablesSchema(BaseModel):

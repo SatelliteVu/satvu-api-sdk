@@ -1,12 +1,17 @@
-from typing import Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.arithmetic_expression import ArithmeticExpression
-from ..models.binary_comparison_predicate_op import BinaryComparisonPredicateOp
-from ..models.date_instant import DateInstant
-from ..models.property_ref import PropertyRef
-from ..models.timestamp_instant import TimestampInstant
+if TYPE_CHECKING:
+    from typing import Union
+
+    from ..models.arithmetic_expression import ArithmeticExpression
+    from ..models.binary_comparison_predicate_op import BinaryComparisonPredicateOp
+    from ..models.date_instant import DateInstant
+    from ..models.property_ref import PropertyRef
+    from ..models.timestamp_instant import TimestampInstant
 
 
 class BinaryComparisonPredicate(BaseModel):

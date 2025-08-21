@@ -48,7 +48,7 @@ class CatalogService(SDKClient):
 
         response = self.make_request(
             method="get",
-            url="/v1/{contract_id}/".format(contract_id=contract_id),
+            url="{contract_id}/".format(contract_id=contract_id),
         )
 
         if response.status_code == 200:
@@ -73,7 +73,7 @@ class CatalogService(SDKClient):
 
         response = self.make_request(
             method="get",
-            url="/v1/{contract_id}/conformance".format(contract_id=contract_id),
+            url="{contract_id}/conformance".format(contract_id=contract_id),
         )
 
         if response.status_code == 200:
@@ -98,7 +98,7 @@ class CatalogService(SDKClient):
 
         response = self.make_request(
             method="get",
-            url="/v1/{contract_id}/queryables".format(contract_id=contract_id),
+            url="{contract_id}/queryables".format(contract_id=contract_id),
         )
 
         if response.status_code == 200:
@@ -228,7 +228,7 @@ class CatalogService(SDKClient):
         params = {k: v for k, v in params.items() if v is not None}
         response = self.make_request(
             method="get",
-            url="/v1/{contract_id}/search".format(contract_id=contract_id),
+            url="{contract_id}/search".format(contract_id=contract_id),
             params=params,
         )
 
@@ -257,7 +257,7 @@ class CatalogService(SDKClient):
 
         response = self.make_request(
             method="post",
-            url="/v1/{contract_id}/search".format(contract_id=contract_id),
+            url="{contract_id}/search".format(contract_id=contract_id),
             json=json_body,
         )
 
@@ -283,7 +283,7 @@ class CatalogService(SDKClient):
 
         response = self.make_request(
             method="get",
-            url="/v1/{contract_id}/collections".format(contract_id=contract_id),
+            url="{contract_id}/collections".format(contract_id=contract_id),
         )
 
         if response.status_code == 200:
@@ -311,7 +311,7 @@ class CatalogService(SDKClient):
 
         response = self.make_request(
             method="get",
-            url="/v1/{contract_id}/collections/{collection_id}".format(
+            url="{contract_id}/collections/{collection_id}".format(
                 contract_id=contract_id, collection_id=collection_id
             ),
         )
@@ -341,7 +341,7 @@ class CatalogService(SDKClient):
 
         response = self.make_request(
             method="get",
-            url="/v1/{contract_id}/collections/{collection_id}/items".format(
+            url="{contract_id}/collections/{collection_id}/items".format(
                 contract_id=contract_id, collection_id=collection_id
             ),
         )
@@ -373,7 +373,7 @@ class CatalogService(SDKClient):
 
         response = self.make_request(
             method="get",
-            url="/v1/{contract_id}/collections/{collection_id}/{item_id}".format(
+            url="{contract_id}/collections/{collection_id}/{item_id}".format(
                 contract_id=contract_id, collection_id=collection_id, item_id=item_id
             ),
         )

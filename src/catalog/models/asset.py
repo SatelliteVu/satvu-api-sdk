@@ -1,8 +1,13 @@
-from typing import Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.asset_raster_bands import AssetRasterBands
+if TYPE_CHECKING:
+    from typing import Union
+
+    from ..models.asset_raster_bands import AssetRasterBands
 
 
 class Asset(BaseModel):

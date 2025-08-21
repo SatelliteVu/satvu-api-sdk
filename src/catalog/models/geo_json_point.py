@@ -1,8 +1,13 @@
-from typing import Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.geo_json_point_type import GeoJSONPointType
+if TYPE_CHECKING:
+    from typing import Union
+
+    from ..models.geo_json_point_type import GeoJSONPointType
 
 
 class GeoJSONPoint(BaseModel):

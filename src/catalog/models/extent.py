@@ -1,7 +1,12 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.spatial_extent import SpatialExtent
-from ..models.types_temporal_extent import TypesTemporalExtent
+if TYPE_CHECKING:
+    from ..models.spatial_extent import SpatialExtent
+    from ..models.types_temporal_extent import TypesTemporalExtent
 
 
 class Extent(BaseModel):

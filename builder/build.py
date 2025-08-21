@@ -64,6 +64,11 @@ class SatVuProject(Project):
                     body_docstrings=body_docstrings,
                     **vars(endpoint),
                 )
+
+                if endpoint.path.startswith("/v"):
+                    # Remove the version prefix from the path, if present
+                    endpoint.path = endpoint.path.split("/", 2)[2]
+
                 endpoints.append(endpoint)
 
         api_class_path = api_dir / "api.py"

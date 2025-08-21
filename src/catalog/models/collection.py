@@ -1,9 +1,14 @@
-from typing import Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.extent import Extent
-from ..models.link import Link
+if TYPE_CHECKING:
+    from typing import Union
+
+    from ..models.extent import Extent
+    from ..models.link import Link
 
 
 class Collection(BaseModel):

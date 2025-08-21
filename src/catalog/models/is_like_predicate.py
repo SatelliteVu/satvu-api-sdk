@@ -1,9 +1,14 @@
-from typing import Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.is_like_predicate_op import IsLikePredicateOp
-from ..models.property_ref import PropertyRef
+if TYPE_CHECKING:
+    from typing import Union
+
+    from ..models.is_like_predicate_op import IsLikePredicateOp
+    from ..models.property_ref import PropertyRef
 
 
 class IsLikePredicate(BaseModel):

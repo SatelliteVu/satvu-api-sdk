@@ -26,16 +26,23 @@
     {% endfor %}{% endif %}
 {% endmacro %}
 
+from __future__ import annotations
+
+import datetime
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TYPE_CHECKING, TypedDict, Any
+from typing import TYPE_CHECKING, TypedDict, Any, Union, Literal
+from uuid import UUID
 
-{% for relative in model.relative_imports | sort %}
-{{ relative }}
-{% endfor %}
+{% if model.relative_imports or model.lazy_imports %}
+if TYPE_CHECKING:
+	{% for relative in model.relative_imports | sort %}
+	{{ relative }}
+	{% endfor %}
 
-{% for lazy_import in model.lazy_imports %}
-{{ lazy_import }}
-{% endfor %}
+	{% for lazy_import in model.lazy_imports %}
+	{{ lazy_import }}
+	{% endfor %}
+{% endif %}
 
 class {{ class_name }}(BaseModel):
     {{ safe_docstring(class_docstring_content(model)) | indent(4) }}

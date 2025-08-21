@@ -1,22 +1,27 @@
-from typing import Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.and_or_expression import AndOrExpression
-from ..models.binary_comparison_predicate import BinaryComparisonPredicate
-from ..models.geo_json_geometry_collection_1 import GeoJSONGeometryCollection1
-from ..models.geo_json_line_string import GeoJSONLineString
-from ..models.geo_json_multi_line_string import GeoJSONMultiLineString
-from ..models.geo_json_multi_point import GeoJSONMultiPoint
-from ..models.geo_json_multi_polygon import GeoJSONMultiPolygon
-from ..models.geo_json_point import GeoJSONPoint
-from ..models.geo_json_polygon import GeoJSONPolygon
-from ..models.is_between_predicate import IsBetweenPredicate
-from ..models.is_in_list_predicate import IsInListPredicate
-from ..models.is_like_predicate import IsLikePredicate
-from ..models.is_null_predicate import IsNullPredicate
-from ..models.not_expression import NotExpression
-from ..models.types_sort_by_element import TypesSortByElement
+if TYPE_CHECKING:
+    from typing import Union
+
+    from ..models.and_or_expression import AndOrExpression
+    from ..models.binary_comparison_predicate import BinaryComparisonPredicate
+    from ..models.geo_json_geometry_collection_1 import GeoJSONGeometryCollection1
+    from ..models.geo_json_line_string import GeoJSONLineString
+    from ..models.geo_json_multi_line_string import GeoJSONMultiLineString
+    from ..models.geo_json_multi_point import GeoJSONMultiPoint
+    from ..models.geo_json_multi_polygon import GeoJSONMultiPolygon
+    from ..models.geo_json_point import GeoJSONPoint
+    from ..models.geo_json_polygon import GeoJSONPolygon
+    from ..models.is_between_predicate import IsBetweenPredicate
+    from ..models.is_in_list_predicate import IsInListPredicate
+    from ..models.is_like_predicate import IsLikePredicate
+    from ..models.is_null_predicate import IsNullPredicate
+    from ..models.not_expression import NotExpression
+    from ..models.types_sort_by_element import TypesSortByElement
 
 
 class PostSearchInput(BaseModel):

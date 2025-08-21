@@ -1,15 +1,20 @@
-from typing import Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.asset_raster_bands_data_type_of_the_band import (
-    AssetRasterBandsDataTypeOfTheBand,
-)
-from ..models.asset_raster_bands_nodata_type_1 import AssetRasterBandsNodataType1
-from ..models.asset_raster_bands_pixel_sampling_in_the_band import (
-    AssetRasterBandsPixelSamplingInTheBand,
-)
-from ..models.asset_raster_bands_statistics import AssetRasterBandsStatistics
+if TYPE_CHECKING:
+    from typing import Union
+
+    from ..models.asset_raster_bands_data_type_of_the_band import (
+        AssetRasterBandsDataTypeOfTheBand,
+    )
+    from ..models.asset_raster_bands_nodata_type_1 import AssetRasterBandsNodataType1
+    from ..models.asset_raster_bands_pixel_sampling_in_the_band import (
+        AssetRasterBandsPixelSamplingInTheBand,
+    )
+    from ..models.asset_raster_bands_statistics import AssetRasterBandsStatistics
 
 
 class AssetRasterBands(BaseModel):

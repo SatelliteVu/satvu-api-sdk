@@ -1,7 +1,12 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.collection import Collection
-from ..models.link import Link
+if TYPE_CHECKING:
+    from ..models.collection import Collection
+    from ..models.link import Link
 
 
 class TypesCollections(BaseModel):

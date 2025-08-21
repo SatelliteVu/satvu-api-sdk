@@ -1,11 +1,22 @@
-from typing import Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.feature_assets import FeatureAssets
-from ..models.feature_properties import FeatureProperties
-from ..models.geojson_geometry import GeojsonGeometry
-from ..models.link import Link
+if TYPE_CHECKING:
+    from typing import Union
+
+    from ..models.feature_assets import FeatureAssets
+    from ..models.feature_properties import FeatureProperties
+    from ..models.geo_json_geometry_collection_1 import GeoJSONGeometryCollection1
+    from ..models.geo_json_line_string import GeoJSONLineString
+    from ..models.geo_json_multi_line_string import GeoJSONMultiLineString
+    from ..models.geo_json_multi_point import GeoJSONMultiPoint
+    from ..models.geo_json_multi_polygon import GeoJSONMultiPolygon
+    from ..models.geo_json_point import GeoJSONPoint
+    from ..models.geo_json_polygon import GeoJSONPolygon
+    from ..models.link import Link
 
 
 class Feature(BaseModel):
@@ -13,8 +24,9 @@ class Feature(BaseModel):
     Attributes:
         bbox (list[float]): Bounding Box of the asset represented by the Item.
         collection (str): The ID of the Collection the Item references to. Example: collection.
-        geometry (GeojsonGeometry): Defines the full footprint of the asset represented by the Item, formatted according
-            to RFC 7946 section 3.1.
+        geometry (Union['GeoJSONGeometryCollection1', 'GeoJSONLineString', 'GeoJSONMultiLineString',
+            'GeoJSONMultiPoint', 'GeoJSONMultiPolygon', 'GeoJSONPoint', 'GeoJSONPolygon']): Search for items by performing
+            intersection between their geometry and a provided GeoJSON geometry.
         id (str): The identifier of the Item, unique within the Collection that contains the Item. Example: item.
         links (list[Link]): A list of link objects to resources and related URLs.
         properties (FeatureProperties):
@@ -34,9 +46,17 @@ class Feature(BaseModel):
         description="The ID of the Collection the Item references to.",
         alias="collection",
     )
-    geometry: "GeojsonGeometry" = Field(
+    geometry: Union[
+        "GeoJSONGeometryCollection1",
+        "GeoJSONLineString",
+        "GeoJSONMultiLineString",
+        "GeoJSONMultiPoint",
+        "GeoJSONMultiPolygon",
+        "GeoJSONPoint",
+        "GeoJSONPolygon",
+    ] = Field(
         ...,
-        description="Defines the full footprint of the asset represented by the Item, formatted according to RFC 7946 section 3.1.",
+        description="Search for items by performing intersection between their geometry and a provided GeoJSON geometry.",
         alias="geometry",
     )
     id: str = Field(

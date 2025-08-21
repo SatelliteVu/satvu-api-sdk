@@ -1,7 +1,12 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.feature import Feature
-from ..models.link import Link
+if TYPE_CHECKING:
+    from ..models.feature import Feature
+    from ..models.link import Link
 
 
 class TypesFeatureCollection(BaseModel):

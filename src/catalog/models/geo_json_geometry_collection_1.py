@@ -1,14 +1,21 @@
-from typing import Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.geo_json_geometry_collection_1_type import GeoJSONGeometryCollection1Type
-from ..models.geo_json_line_string import GeoJSONLineString
-from ..models.geo_json_multi_line_string import GeoJSONMultiLineString
-from ..models.geo_json_multi_point import GeoJSONMultiPoint
-from ..models.geo_json_multi_polygon import GeoJSONMultiPolygon
-from ..models.geo_json_point import GeoJSONPoint
-from ..models.geo_json_polygon import GeoJSONPolygon
+if TYPE_CHECKING:
+    from typing import Union
+
+    from ..models.geo_json_geometry_collection_1_type import (
+        GeoJSONGeometryCollection1Type,
+    )
+    from ..models.geo_json_line_string import GeoJSONLineString
+    from ..models.geo_json_multi_line_string import GeoJSONMultiLineString
+    from ..models.geo_json_multi_point import GeoJSONMultiPoint
+    from ..models.geo_json_multi_polygon import GeoJSONMultiPolygon
+    from ..models.geo_json_point import GeoJSONPoint
+    from ..models.geo_json_polygon import GeoJSONPolygon
 
 
 class GeoJSONGeometryCollection1(BaseModel):

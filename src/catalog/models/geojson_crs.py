@@ -1,8 +1,13 @@
-from typing import Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.geojson_crs_properties import GeojsonCRSProperties
+if TYPE_CHECKING:
+    from typing import Union
+
+    from ..models.geojson_crs_properties import GeojsonCRSProperties
 
 
 class GeojsonCRS(BaseModel):

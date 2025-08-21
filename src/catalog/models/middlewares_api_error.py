@@ -1,6 +1,11 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.http_error import HttpError
+if TYPE_CHECKING:
+    from ..models.http_error import HttpError
 
 
 class MiddlewaresApiError(BaseModel):

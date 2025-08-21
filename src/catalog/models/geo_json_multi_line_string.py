@@ -1,8 +1,13 @@
-from typing import Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.geo_json_multi_line_string_type import GeoJSONMultiLineStringType
+if TYPE_CHECKING:
+    from typing import Union
+
+    from ..models.geo_json_multi_line_string_type import GeoJSONMultiLineStringType
 
 
 class GeoJSONMultiLineString(BaseModel):

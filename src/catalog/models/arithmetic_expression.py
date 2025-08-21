@@ -4,21 +4,20 @@ from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-if TYPE_CHECKING:
-    from typing import Union
+from ..models.arithmetic_expression_op import ArithmeticExpressionOp
 
-    from ..models.arithmetic_expression_op import ArithmeticExpressionOp
+if TYPE_CHECKING:
     from ..models.property_ref import PropertyRef
 
 
 class ArithmeticExpression(BaseModel):
     """
     Attributes:
-        op (ArithmeticExpressionOp):
+        op ('ArithmeticExpressionOp'):
         args (list[Union['ArithmeticExpression', 'PropertyRef', float]]):
     """
 
-    op: ArithmeticExpressionOp = Field(..., description=None, alias="op")
+    op: "ArithmeticExpressionOp" = Field(..., description=None, alias="op")
     args: list[Union["ArithmeticExpression", "PropertyRef", float]] = Field(
         ..., description=None, alias="args"
     )

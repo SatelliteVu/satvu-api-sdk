@@ -1,24 +1,21 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Union
+from typing import Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-if TYPE_CHECKING:
-    from typing import Union
-
-    from ..models.geo_json_multi_line_string_1_type import GeoJSONMultiLineString1Type
+from ..models.geo_json_multi_line_string_1_type import GeoJSONMultiLineString1Type
 
 
 class GeoJSONMultiLineString1(BaseModel):
     """
     Attributes:
-        type_ (GeoJSONMultiLineString1Type):
+        type_ ('GeoJSONMultiLineString1Type'):
         coordinates (list[list[list[float]]]):
         bbox (Union[None, list[float]]):
     """
 
-    type_: GeoJSONMultiLineString1Type = Field(..., description=None, alias="type")
+    type_: "GeoJSONMultiLineString1Type" = Field(..., description=None, alias="type")
     coordinates: list[list[list[float]]] = Field(
         ..., description=None, alias="coordinates"
     )

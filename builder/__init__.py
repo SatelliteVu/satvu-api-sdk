@@ -16,7 +16,9 @@ from openapi_python_client.parser.properties import (
     Class,
     ReferencePath,
 )
-from openapi_python_client.parser.properties.model_property import _process_property_data
+from openapi_python_client.parser.properties.model_property import (
+    _process_property_data,
+)
 from openapi_python_client.parser.properties.protocol import PropertyProtocol
 from openapi_python_client.schema import Schema
 
@@ -146,6 +148,7 @@ def get_type_string(
 def get_base_type_string(self, *, quoted: bool = False) -> str:
     return f"list[{self.inner_property.get_type_string()}]"
 
+
 def get_base_json_type_string(self, *, quoted: bool = False) -> str:
     return f"list[{self.inner_property.get_type_string(json=True)}]"
 
@@ -153,12 +156,8 @@ def get_base_json_type_string(self, *, quoted: bool = False) -> str:
 openapi_python_client.parser.properties.list_property.ListProperty.get_type_string = (
     get_type_string
 )
-openapi_python_client.parser.properties.list_property.ListProperty.get_base_type_string = (
-    get_base_type_string
-)
-openapi_python_client.parser.properties.list_property.ListProperty.get_base_json_type_string = (
-    get_base_json_type_string
-)
+openapi_python_client.parser.properties.list_property.ListProperty.get_base_type_string = get_base_type_string
+openapi_python_client.parser.properties.list_property.ListProperty.get_base_json_type_string = get_base_json_type_string
 
 
 def to_string(self) -> str:
@@ -185,20 +184,21 @@ def to_pydantic_model_field(self: PropertyProtocol) -> str:
     For use in jinja templates to generate Pydantic models
     """
     field_start = f"{self.python_name}: {self.get_type_string(quoted=True)}"
-    description = f"\"{self.description}\"" if self.description else "None"
+    description = f'"{self.description}"' if self.description else "None"
 
     # For const (literal) properties, default to the value of the constant
     if isinstance(self, openapi_python_client.parser.properties.const.ConstProperty):
-        return f"{field_start} = Field({self.value.python_code}, description={description}, alias=\"{self.name}\")"
+        return f'{field_start} = Field({self.value.python_code}, description={description}, alias="{self.name}")'
 
     if self.default is not None:
-        return f"{field_start} = Field({self.default.python_code}, description={description}, alias=\"{self.name}\")"
+        return f'{field_start} = Field({self.default.python_code}, description={description}, alias="{self.name}")'
 
     elif not self.required:
-        return f"{field_start} = Field(None, description={description}, alias=\"{self.name}\")"
+        return f'{field_start} = Field(None, description={description}, alias="{self.name}")'
 
     else:
-        return f"{field_start} = Field(..., description={description}, alias=\"{self.name}\")"
+        return f'{field_start} = Field(..., description={description}, alias="{self.name}")'
+
 
 def get_type_string(
     self,
@@ -221,9 +221,7 @@ openapi_python_client.parser.properties.protocol.PropertyProtocol.to_string = to
 openapi_python_client.parser.properties.protocol.PropertyProtocol.get_type_string = (
     get_type_string
 )
-openapi_python_client.parser.properties.protocol.PropertyProtocol.to_pydantic_model_field = (
-    to_pydantic_model_field
-)
+openapi_python_client.parser.properties.protocol.PropertyProtocol.to_pydantic_model_field = to_pydantic_model_field
 
 
 def get_type_string(
@@ -269,12 +267,9 @@ def get_type_strings_in_union(
     return type_strings
 
 
-# Override the inner type strings to handle geometries_item_type
 def _get_inner_type_strings(self, json: bool) -> set[str]:
     return {
         p.get_type_string(no_optional=True, json=json, quoted=True)
-        if "geometries_item_type" in p.name
-        else p.get_type_string(no_optional=True, json=json, quoted=True)
         for p in self.inner_properties
     }
 
@@ -415,3 +410,10 @@ def sanitize(value: str) -> str:
 
 
 openapi_python_client.utils.sanitize = sanitize
+
+
+def get_base_type_string(self, *, quoted: bool = False) -> str:
+    return f"'{self.class_info.name}'"
+
+
+openapi_python_client.parser.properties.enum_property.EnumProperty.get_base_type_string = get_base_type_string

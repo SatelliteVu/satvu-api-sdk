@@ -5,8 +5,6 @@ from typing import TYPE_CHECKING, Union
 from pydantic import BaseModel, ConfigDict, Field
 
 if TYPE_CHECKING:
-    from typing import Union
-
     from ..models.and_or_expression import AndOrExpression
     from ..models.binary_comparison_predicate import BinaryComparisonPredicate
     from ..models.geo_json_geometry_collection_1 import GeoJSONGeometryCollection1

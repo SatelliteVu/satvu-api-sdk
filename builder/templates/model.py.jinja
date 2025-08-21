@@ -33,16 +33,16 @@ from pydantic import BaseModel, ConfigDict, Field
 from typing import TYPE_CHECKING, TypedDict, Any, Union, Literal
 from uuid import UUID
 
-{% if model.relative_imports or model.lazy_imports %}
-if TYPE_CHECKING:
-	{% for relative in model.relative_imports | sort %}
-	{{ relative }}
-	{% endfor %}
+{% for relative in model.relative_imports | sort %}
+{{ relative }}
+{% endfor %}
 
-	{% for lazy_import in model.lazy_imports %}
-	{{ lazy_import }}
-	{% endfor %}
+{% for lazy_import in model.lazy_imports %}
+{% if loop.first %}
+if TYPE_CHECKING:
 {% endif %}
+  {{ lazy_import }}
+{% endfor %}
 
 class {{ class_name }}(BaseModel):
     {{ safe_docstring(class_docstring_content(model)) | indent(4) }}

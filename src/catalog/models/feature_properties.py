@@ -6,8 +6,6 @@ from typing import TYPE_CHECKING
 from pydantic import BaseModel, ConfigDict, Field
 
 if TYPE_CHECKING:
-    import datetime
-
     from ..models.geo_json_polygon import GeoJSONPolygon
 
 

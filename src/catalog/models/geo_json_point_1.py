@@ -1,24 +1,21 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Union
+from typing import Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-if TYPE_CHECKING:
-    from typing import Union
-
-    from ..models.geo_json_point_1_type import GeoJSONPoint1Type
+from ..models.geo_json_point_1_type import GeoJSONPoint1Type
 
 
 class GeoJSONPoint1(BaseModel):
     """
     Attributes:
-        type_ (GeoJSONPoint1Type):
+        type_ ('GeoJSONPoint1Type'):
         coordinates (list[float]):
         bbox (Union[None, list[float]]):
     """
 
-    type_: GeoJSONPoint1Type = Field(..., description=None, alias="type")
+    type_: "GeoJSONPoint1Type" = Field(..., description=None, alias="type")
     coordinates: list[float] = Field(..., description=None, alias="coordinates")
     bbox: Union[None, list[float]] = Field(None, description=None, alias="bbox")
 

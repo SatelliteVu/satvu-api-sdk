@@ -4,27 +4,26 @@ from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-if TYPE_CHECKING:
-    from typing import Union
+from ..models.not_expression_op import NotExpressionOp
 
+if TYPE_CHECKING:
     from ..models.and_or_expression import AndOrExpression
     from ..models.binary_comparison_predicate import BinaryComparisonPredicate
     from ..models.is_between_predicate import IsBetweenPredicate
     from ..models.is_in_list_predicate import IsInListPredicate
     from ..models.is_like_predicate import IsLikePredicate
     from ..models.is_null_predicate import IsNullPredicate
-    from ..models.not_expression_op import NotExpressionOp
 
 
 class NotExpression(BaseModel):
     """
     Attributes:
-        op (NotExpressionOp):
+        op ('NotExpressionOp'):
         args (list[Union['AndOrExpression', 'BinaryComparisonPredicate', 'IsBetweenPredicate', 'IsInListPredicate',
             'IsLikePredicate', 'IsNullPredicate', 'NotExpression', bool]]):
     """
 
-    op: NotExpressionOp = Field(..., description=None, alias="op")
+    op: "NotExpressionOp" = Field(..., description=None, alias="op")
     args: list[
         Union[
             "AndOrExpression",

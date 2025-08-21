@@ -4,12 +4,9 @@ from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-if TYPE_CHECKING:
-    from typing import Union
+from ..models.geo_json_geometry_collection_1_type import GeoJSONGeometryCollection1Type
 
-    from ..models.geo_json_geometry_collection_1_type import (
-        GeoJSONGeometryCollection1Type,
-    )
+if TYPE_CHECKING:
     from ..models.geo_json_line_string import GeoJSONLineString
     from ..models.geo_json_multi_line_string import GeoJSONMultiLineString
     from ..models.geo_json_multi_point import GeoJSONMultiPoint
@@ -21,12 +18,12 @@ if TYPE_CHECKING:
 class GeoJSONGeometryCollection1(BaseModel):
     """
     Attributes:
-        type_ (GeoJSONGeometryCollection1Type):
+        type_ ('GeoJSONGeometryCollection1Type'):
         geometries (list[Union['GeoJSONLineString', 'GeoJSONMultiLineString', 'GeoJSONMultiPoint',
             'GeoJSONMultiPolygon', 'GeoJSONPoint', 'GeoJSONPolygon']]):
     """
 
-    type_: GeoJSONGeometryCollection1Type = Field(..., description=None, alias="type")
+    type_: "GeoJSONGeometryCollection1Type" = Field(..., description=None, alias="type")
     geometries: list[
         Union[
             "GeoJSONLineString",

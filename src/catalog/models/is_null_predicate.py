@@ -4,9 +4,9 @@ from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-if TYPE_CHECKING:
-    from typing import Union
+from ..models.is_null_predicate_op import IsNullPredicateOp
 
+if TYPE_CHECKING:
     from ..models.and_or_expression import AndOrExpression
     from ..models.arithmetic_expression import ArithmeticExpression
     from ..models.bbox_literal import BboxLiteral
@@ -22,7 +22,6 @@ if TYPE_CHECKING:
     from ..models.is_between_predicate import IsBetweenPredicate
     from ..models.is_in_list_predicate import IsInListPredicate
     from ..models.is_like_predicate import IsLikePredicate
-    from ..models.is_null_predicate_op import IsNullPredicateOp
     from ..models.not_expression import NotExpression
     from ..models.property_ref import PropertyRef
     from ..models.timestamp_instant import TimestampInstant
@@ -31,7 +30,7 @@ if TYPE_CHECKING:
 class IsNullPredicate(BaseModel):
     """
     Attributes:
-        op (IsNullPredicateOp):
+        op ('IsNullPredicateOp'):
         args (list[Union['AndOrExpression', 'ArithmeticExpression', 'BboxLiteral', 'BinaryComparisonPredicate',
             'DateInstant', 'GeoJSONGeometryCollection', 'GeoJSONLineString1', 'GeoJSONMultiLineString1',
             'GeoJSONMultiPoint1', 'GeoJSONMultiPolygon1', 'GeoJSONPoint1', 'GeoJSONPolygon1', 'IsBetweenPredicate',
@@ -39,7 +38,7 @@ class IsNullPredicate(BaseModel):
             bool, float, str]]):
     """
 
-    op: IsNullPredicateOp = Field(..., description=None, alias="op")
+    op: "IsNullPredicateOp" = Field(..., description=None, alias="op")
     args: list[
         Union[
             "AndOrExpression",

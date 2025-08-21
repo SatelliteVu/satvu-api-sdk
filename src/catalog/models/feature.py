@@ -5,8 +5,6 @@ from typing import TYPE_CHECKING, Union
 from pydantic import BaseModel, ConfigDict, Field
 
 if TYPE_CHECKING:
-    from typing import Union
-
     from ..models.feature_assets import FeatureAssets
     from ..models.feature_properties import FeatureProperties
     from ..models.geo_json_geometry_collection_1 import GeoJSONGeometryCollection1

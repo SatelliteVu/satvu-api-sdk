@@ -4,22 +4,21 @@ from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-if TYPE_CHECKING:
-    from typing import Union
+from ..models.is_between_predicate_op import IsBetweenPredicateOp
 
+if TYPE_CHECKING:
     from ..models.arithmetic_expression import ArithmeticExpression
-    from ..models.is_between_predicate_op import IsBetweenPredicateOp
     from ..models.property_ref import PropertyRef
 
 
 class IsBetweenPredicate(BaseModel):
     """
     Attributes:
-        op (IsBetweenPredicateOp):
+        op ('IsBetweenPredicateOp'):
         args (list[Union['ArithmeticExpression', 'PropertyRef', float]]):
     """
 
-    op: IsBetweenPredicateOp = Field(..., description=None, alias="op")
+    op: "IsBetweenPredicateOp" = Field(..., description=None, alias="op")
     args: list[Union["ArithmeticExpression", "PropertyRef", float]] = Field(
         ..., description=None, alias="args"
     )

@@ -137,8 +137,8 @@ from collections.abc import Callable
 from typing import Any, Unpack, Union, List, Dict
 from uuid import UUID
 
-from satvu_api_sdk.core import SDKClient
-from shared.utils import normalize_keys, deep_parse_from_annotation
+from src.satvu_api_sdk.core import SDKClient
+from src.shared.utils import normalize_keys, deep_parse_from_annotation
 
 {% for endpoint in endpoints %}
 {% for relative in endpoint.relative_imports | sort %}

@@ -49,7 +49,7 @@ def resolve_external_refs(schema: Any) -> Any:
                     FETCHED[url] = True
 
                 # Rewrite $ref to local component
-                return {"$ref": f"#/components/schemas/{name.split("/")[-1]}"}
+                return {"$ref": f"#/components/schemas/{name.split('/')[-1]}"}
             else:
                 return schema
         else:
@@ -73,6 +73,7 @@ def bundle_openapi_schema(schema: dict) -> dict:
     :param schema: The OpenAPI schema to process.
     :return: The processed OpenAPI schema with resolved references and merged components.
     """
+    NEW_COMPONENTS.clear()
     bundled = copy.deepcopy(schema)
     bundled = resolve_external_refs(bundled)
     if NEW_COMPONENTS:
@@ -105,4 +106,3 @@ def load_openapi(api_id: str, use_cached: bool = False) -> tuple[dict, Path]:
         cache_file.write_text(dumps(bundled_openapi))
 
     return loads(cache_file.read_text()), cache_file
-

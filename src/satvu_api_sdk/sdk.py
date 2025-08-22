@@ -1,11 +1,11 @@
-from catalog.api import CatalogService
+from src.catalog.api import CatalogService
 from src.cos.api import CosService
 from src.id.api import IdService
 from src.otm.api import OtmService
 from src.policy.api import PolicyService
 from src.reseller.api import ResellerService
 from src.satvu_api_sdk.auth import AuthService, TokenCache
-from wallet.api import WalletService
+from src.wallet.api import WalletService
 
 
 class SatVuSDK:

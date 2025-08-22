@@ -1,6 +1,8 @@
 from collections.abc import Callable
+from typing import Any
 
 import httpx
+from pydantic import BaseModel
 
 
 class SDKClient:
@@ -35,11 +37,20 @@ class SDKClient:
         self,
         method: str,
         url: str,
-        json: list | dict | None = None,
-        params: dict | None = None,
+        json: list | dict[str, Any] | None = None,
+        params: dict[str, Any] | None = None,
         follow_redirects: bool = False,
         timeout: int = 5,
     ):
+        if params:
+            # Convert any pydantic model objects in params to json-serializable dicts
+            for key, val in params.items():
+                if isinstance(val, BaseModel):
+                    params[key] = val.model_dump()
+
+            # Drop any params that are None
+            params = {k: v for k, v in params.items() if v}
+
         return self.client.request(
             method=method,
             url=url,

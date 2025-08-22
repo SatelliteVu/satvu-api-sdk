@@ -11,12 +11,13 @@ if TYPE_CHECKING:
 
 
 class StoredFeasibilityFeatureCollection(BaseModel):
-    """
+    """Payload for list stored feasibility requests response.
+
     Attributes:
         type_ (Literal['FeatureCollection']):
         features (list[StoredFeasibilityRequest]): List of stored feasibility requests.
         links (list[Link]): Links to previous and/or next page.
-        context (ResponseContext):
+        context (ResponseContext): Context about the response.
         bbox (Union[None, list[float]]):
     """
 
@@ -29,7 +30,9 @@ class StoredFeasibilityFeatureCollection(BaseModel):
     links: list[Link] = Field(
         ..., description="Links to previous and/or next page.", alias="links"
     )
-    context: "ResponseContext" = Field(..., description=None, alias="context")
+    context: "ResponseContext" = Field(
+        ..., description="Context about the response.", alias="context"
+    )
     bbox: Union[None, list[float]] = Field(None, description=None, alias="bbox")
 
     model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

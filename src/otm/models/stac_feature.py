@@ -16,10 +16,10 @@ class StacFeature(BaseModel):
     """
     Attributes:
         id (str): The unique identifier for this item within the collection.
-        properties (StacFeatureProperties): A dictionary of additional metadata for the item.
+        properties (StacFeatureProperties): A map of additional metadata for the item.
         collection (str): The ID of the STAC Collection this item references to.
         links (list[Link]): A list of link objects to resources and related URLs.
-        assets (StacFeatureAssets): A dictionary of asset objects that can be downloaded, each with a unique key.
+        assets (StacFeatureAssets): A map of asset objects that can be downloaded, each with a unique key.
         bbox (list[Union[float, int]]): The bounding box of the asset represented by this item.
         type_ (Union[Literal['Feature'], None]):  Default: 'Feature'.
         geometry (Union['PointGeometry', 'PolygonGeometry', None]): Defines the full footprint of the asset represented
@@ -33,7 +33,7 @@ class StacFeature(BaseModel):
     )
     properties: "StacFeatureProperties" = Field(
         ...,
-        description="A dictionary of additional metadata for the item.",
+        description="A map of additional metadata for the item.",
         alias="properties",
     )
     collection: str = Field(
@@ -48,7 +48,7 @@ class StacFeature(BaseModel):
     )
     assets: "StacFeatureAssets" = Field(
         ...,
-        description="A dictionary of asset objects that can be downloaded, each with a unique key.",
+        description="A map of asset objects that can be downloaded, each with a unique key.",
         alias="assets",
     )
     bbox: list[Union[float, int]] = Field(

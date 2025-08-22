@@ -9,8 +9,8 @@ if TYPE_CHECKING:
     from ..models.assured_stored_feasibility_request_properties import (
         AssuredStoredFeasibilityRequestProperties,
     )
-    from ..models.geo_json_point import GeoJSONPoint
     from ..models.link import Link
+    from ..models.point import Point
     from ..models.standard_stored_feasibility_request_properties import (
         StandardStoredFeasibilityRequestProperties,
     )
@@ -21,9 +21,9 @@ class StoredFeasibilityRequest(BaseModel):
 
     Attributes:
         type_ (Literal['Feature']):
-        geometry (GeoJSONPoint):
+        geometry (Point): Point Model
         properties (Union['AssuredStoredFeasibilityRequestProperties', 'StandardStoredFeasibilityRequestProperties']): A
-            dictionary of additional metadata about the requested image.
+            map of additional metadata about the requested image.
         id (UUID): Feasibility Request ID.
         links (list[Link]): A list of related links for the feasibility request.
         contract_id (UUID): Contract ID.
@@ -31,13 +31,13 @@ class StoredFeasibilityRequest(BaseModel):
     """
 
     type_: Literal["Feature"] = Field("Feature", description=None, alias="type")
-    geometry: "GeoJSONPoint" = Field(..., description=None, alias="geometry")
+    geometry: "Point" = Field(..., description="Point Model", alias="geometry")
     properties: Union[
         "AssuredStoredFeasibilityRequestProperties",
         "StandardStoredFeasibilityRequestProperties",
     ] = Field(
         ...,
-        description="A dictionary of additional metadata about the requested image.",
+        description="A map of additional metadata about the requested image.",
         alias="properties",
     )
     id: UUID = Field(..., description="Feasibility Request ID.", alias="id")

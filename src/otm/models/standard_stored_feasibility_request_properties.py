@@ -17,7 +17,7 @@ class StandardStoredFeasibilityRequestProperties(BaseModel):
 
     Attributes:
         datetime_ (str): The closed date-time interval of the tasking order request.
-        status ('FeasibilityRequestStatus'):
+        status ('FeasibilityRequestStatus'): The status of the feasibility request.
         created_at (datetime.datetime): The datetime at which the feasibility request was created.
         updated_at (datetime.datetime): The datetime at which the feasibility request was last updated.
         product (Union[Literal['standard'], None]): Standard Priority. Default: 'standard'.
@@ -36,7 +36,9 @@ class StandardStoredFeasibilityRequestProperties(BaseModel):
         description="The closed date-time interval of the tasking order request.",
         alias="datetime",
     )
-    status: "FeasibilityRequestStatus" = Field(..., description=None, alias="status")
+    status: "FeasibilityRequestStatus" = Field(
+        ..., description="The status of the feasibility request.", alias="status"
+    )
     created_at: datetime.datetime = Field(
         ...,
         description="The datetime at which the feasibility request was created.",

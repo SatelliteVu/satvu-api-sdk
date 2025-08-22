@@ -1,5 +1,5 @@
 from collections.abc import Callable
-from typing import Any, Union
+from typing import Union
 
 from src.satvu_api_sdk.core import SDKClient
 from src.shared.utils import deep_parse_from_annotation
@@ -158,74 +158,18 @@ class CatalogService(SDKClient):
             TypesFeatureCollection
         """
 
-        params: dict[str, Any] = {}
-        json_bbox: Union[None, list[float]] = None
-        if not bbox:
-            json_bbox = bbox
+        params = {
+            "bbox": bbox,
+            "collections": collections,
+            "datetime": datetime_,
+            "filter": filter_,
+            "ids": ids,
+            "intersects": intersects,
+            "limit": limit,
+            "sortby": sortby,
+            "token": token,
+        }
 
-        params["bbox"] = json_bbox
-
-        json_collections: Union[None, list[str]] = None
-        if not collections:
-            json_collections = collections
-
-        params["collections"] = json_collections
-
-        json_datetime_: Union[None, str] = datetime_
-
-        params["datetime"] = json_datetime_
-
-        json_filter_: Union[None, dict[str, Any]] = None
-        if not filter_:
-            json_filter_ = filter_.to_dict()
-
-        params["filter"] = json_filter_
-
-        json_ids: Union[None, list[str]] = None
-        if not ids:
-            json_ids = ids
-
-        params["ids"] = json_ids
-
-        json_intersects: dict[str, Any] = intersects
-
-        if isinstance(intersects, GeoJSONPoint):
-            json_intersects = intersects.to_dict()
-
-        elif isinstance(intersects, GeoJSONLineString):
-            json_intersects = intersects.to_dict()
-
-        elif isinstance(intersects, GeoJSONPolygon):
-            json_intersects = intersects.to_dict()
-
-        elif isinstance(intersects, GeoJSONMultiPoint):
-            json_intersects = intersects.to_dict()
-
-        elif isinstance(intersects, GeoJSONMultiLineString):
-            json_intersects = intersects.to_dict()
-
-        elif isinstance(intersects, GeoJSONMultiPolygon):
-            json_intersects = intersects.to_dict()
-
-        else:
-            json_intersects = intersects
-            json_intersects = intersects.to_dict()
-
-        params["intersects"] = json_intersects
-
-        json_limit: Union[None, int] = limit
-
-        params["limit"] = json_limit
-
-        json_sortby: Union[None, list[str]] = None
-        if not sortby:
-            json_sortby = sortby
-
-        params["sortby"] = json_sortby
-
-        params["token"] = token
-
-        params = {k: v for k, v in params.items() if v is not None}
         response = self.make_request(
             method="get",
             url="{contract_id}/search".format(contract_id=contract_id),

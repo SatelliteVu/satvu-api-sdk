@@ -6,29 +6,31 @@ from pydantic import BaseModel, ConfigDict, Field
 
 if TYPE_CHECKING:
     from ..models.link import Link
-    from ..models.reseller_stored_order_request import ResellerStoredOrderRequest
+    from ..models.reseller_stored_order_response import ResellerStoredOrderResponse
     from ..models.response_context import ResponseContext
-    from ..models.stored_order_request import StoredOrderRequest
+    from ..models.stored_order_response import StoredOrderResponse
 
 
-class StoredOrderRequestList(BaseModel):
+class ListStoredOrdersResponse(BaseModel):
     """
     Attributes:
         type_ (Literal['FeatureCollection']):
-        features (list[Union['ResellerStoredOrderRequest', 'StoredOrderRequest']]): List of stored order requests.
+        features (list[Union['ResellerStoredOrderResponse', 'StoredOrderResponse']]): List of stored order requests.
         links (list[Link]): Links to previous and/or next page.
-        context (ResponseContext):
+        context (ResponseContext): Context about the response.
     """
 
     type_: Literal["FeatureCollection"] = Field(
         "FeatureCollection", description=None, alias="type"
     )
-    features: list[Union["ResellerStoredOrderRequest", "StoredOrderRequest"]] = Field(
+    features: list[Union["ResellerStoredOrderResponse", "StoredOrderResponse"]] = Field(
         ..., description="List of stored order requests.", alias="features"
     )
     links: list[Link] = Field(
         ..., description="Links to previous and/or next page.", alias="links"
     )
-    context: "ResponseContext" = Field(..., description=None, alias="context")
+    context: "ResponseContext" = Field(
+        ..., description="Context about the response.", alias="context"
+    )
 
     model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

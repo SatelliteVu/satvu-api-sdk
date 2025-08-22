@@ -5,23 +5,23 @@ from typing import TYPE_CHECKING, Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 if TYPE_CHECKING:
-    from ..models.geo_json_point import GeoJSONPoint
+    from ..models.point import Point
     from ..models.standard_order_request_properties import (
         StandardOrderRequestProperties,
     )
 
 
 class StandardOrderRequest(BaseModel):
-    """Feature model for incoming order request.
+    """Payload for standard order request.
 
     Attributes:
         type_ (Literal['Feature']):
-        geometry (GeoJSONPoint):
+        geometry (Point): Point Model
         properties (StandardOrderRequestProperties):
     """
 
     type_: Literal["Feature"] = Field("Feature", description=None, alias="type")
-    geometry: "GeoJSONPoint" = Field(..., description=None, alias="geometry")
+    geometry: "Point" = Field(..., description="Point Model", alias="geometry")
     properties: "StandardOrderRequestProperties" = Field(
         ..., description=None, alias="properties"
     )

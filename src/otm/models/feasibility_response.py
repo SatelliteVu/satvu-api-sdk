@@ -26,7 +26,7 @@ class FeasibilityResponse(BaseModel):
             the feasibility response.
         id (UUID): Feasibility Request ID.
         links (list[Link]): List of link objects to resources and related URLS.
-        status ('FeasibilityRequestStatus'):
+        status ('FeasibilityRequestStatus'): The status of the feasibility request.
         contract_id (UUID): Contract ID.
         bbox (Union[None, list[float]]):
     """
@@ -45,7 +45,9 @@ class FeasibilityResponse(BaseModel):
         description="List of link objects to resources and related URLS.",
         alias="links",
     )
-    status: "FeasibilityRequestStatus" = Field(..., description=None, alias="status")
+    status: "FeasibilityRequestStatus" = Field(
+        ..., description="The status of the feasibility request.", alias="status"
+    )
     contract_id: UUID = Field(..., description="Contract ID.", alias="contract_id")
     bbox: Union[None, list[float]] = Field(None, description=None, alias="bbox")
 

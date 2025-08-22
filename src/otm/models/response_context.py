@@ -4,7 +4,8 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class ResponseContext(BaseModel):
-    """
+    """Context about the response.
+
     Attributes:
         limit (int): Applied per page item limit.
         matched (int): Total number of results.

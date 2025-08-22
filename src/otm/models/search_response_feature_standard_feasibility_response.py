@@ -6,8 +6,8 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict, Field
 
 if TYPE_CHECKING:
-    from ..models.geo_json_point import GeoJSONPoint
     from ..models.link import Link
+    from ..models.point import Point
     from ..models.price import Price
     from ..models.standard_feasibility_response_properties import (
         StandardFeasibilityResponseProperties,
@@ -18,7 +18,7 @@ class SearchResponseFeatureStandardFeasibilityResponse(BaseModel):
     """
     Attributes:
         type_ (Literal['Feature']):
-        geometry (Union['GeoJSONPoint', None]):
+        geometry (Union['Point', None]):
         properties (Union['StandardFeasibilityResponseProperties', None]):
         id (UUID): ID of an item associated with the search parameters.
         contract_id (UUID): Contract ID associated with the search.
@@ -29,9 +29,7 @@ class SearchResponseFeatureStandardFeasibilityResponse(BaseModel):
     """
 
     type_: Literal["Feature"] = Field("Feature", description=None, alias="type")
-    geometry: Union["GeoJSONPoint", None] = Field(
-        ..., description=None, alias="geometry"
-    )
+    geometry: Union["Point", None] = Field(..., description=None, alias="geometry")
     properties: Union["StandardFeasibilityResponseProperties", None] = Field(
         ..., description=None, alias="properties"
     )

@@ -10,7 +10,8 @@ if TYPE_CHECKING:
 
 
 class ResellerAssuredOrderRequest(BaseModel):
-    """
+    """Payload for reseller assured order request.
+
     Attributes:
         properties (AssuredOrderRequestProperties):
         reseller_end_user_id (UUID):

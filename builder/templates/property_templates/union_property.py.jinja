@@ -54,14 +54,15 @@ def _parse_{{ property.python_name }}(data: object) -> {{ property.get_type_stri
     {% endif %}
     {% if not ns.has_if %}
 if isinstance({{ source }}, {{ inner_property.get_instance_type_string() }}):
+    {{ inner_template.transform(inner_property, source, destination, declare_type=False)}}
         {% set ns.has_if = true %}
     {% elif not loop.last or ns.contains_properties_without_transform %}
 elif isinstance({{ source }}, {{ inner_property.get_instance_type_string() }}):
+    {{ inner_template.transform(inner_property, source, destination, declare_type=False)}}
     {% else %}
 else:
     {{ destination }} = {{ source }}
     {% endif %}
-    {{ inner_template.transform(inner_property, source, destination, declare_type=False) | indent(4) }}
 {% endfor %}
 {% if ns.contains_properties_without_transform and ns.contains_modified_properties %}
 {%- elif ns.contains_properties_without_transform %}

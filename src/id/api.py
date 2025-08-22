@@ -45,15 +45,11 @@ class IdService(SDKClient):
             ListWebhookResponse
         """
 
-        params: dict[str, Any] = {}
+        params = {
+            "per_page": per_page,
+            "token": token,
+        }
 
-        params["per_page"] = per_page
-
-        json_token: Union[None, str] = token
-
-        params["token"] = json_token
-
-        params = {k: v for k, v in params.items() if v is not None}
         response = self.make_request(
             method="get",
             url="/webhooks/",

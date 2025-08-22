@@ -5,12 +5,12 @@ from typing import TYPE_CHECKING, Literal, Union
 from pydantic import BaseModel, ConfigDict, Field
 
 if TYPE_CHECKING:
-    from ..models.geo_json_line_string import GeoJSONLineString
-    from ..models.geo_json_multi_line_string import GeoJSONMultiLineString
-    from ..models.geo_json_multi_point import GeoJSONMultiPoint
-    from ..models.geo_json_multi_polygon import GeoJSONMultiPolygon
-    from ..models.geo_json_point import GeoJSONPoint
-    from ..models.geo_json_polygon import GeoJSONPolygon
+    from ..models.line_string import LineString
+    from ..models.multi_line_string import MultiLineString
+    from ..models.multi_point import MultiPoint
+    from ..models.multi_polygon import MultiPolygon
+    from ..models.point import Point
+    from ..models.polygon import Polygon
 
 
 class GeometryCollection(BaseModel):
@@ -18,8 +18,8 @@ class GeometryCollection(BaseModel):
 
     Attributes:
         type_ (Literal['GeometryCollection']):
-        geometries (list[Union['GeoJSONLineString', 'GeoJSONMultiLineString', 'GeoJSONMultiPoint',
-            'GeoJSONMultiPolygon', 'GeoJSONPoint', 'GeoJSONPolygon', 'GeometryCollection']]):
+        geometries (list[Union['GeometryCollection', 'LineString', 'MultiLineString', 'MultiPoint', 'MultiPolygon',
+            'Point', 'Polygon']]):
         bbox (Union[None, list[float]]):
     """
 
@@ -28,13 +28,13 @@ class GeometryCollection(BaseModel):
     )
     geometries: list[
         Union[
-            "GeoJSONLineString",
-            "GeoJSONMultiLineString",
-            "GeoJSONMultiPoint",
-            "GeoJSONMultiPolygon",
-            "GeoJSONPoint",
-            "GeoJSONPolygon",
             "GeometryCollection",
+            "LineString",
+            "MultiLineString",
+            "MultiPoint",
+            "MultiPolygon",
+            "Point",
+            "Polygon",
         ]
     ] = Field(..., description=None, alias="geometries")
     bbox: Union[None, list[float]] = Field(None, description=None, alias="bbox")

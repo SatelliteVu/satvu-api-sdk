@@ -14,7 +14,7 @@ class AssuredStoredFeasibilityRequestProperties(BaseModel):
     Attributes:
         product (Literal['assured']): Assured Priority.
         datetime_ (str): The closed date-time interval of the request.
-        status ('FeasibilityRequestStatus'):
+        status ('FeasibilityRequestStatus'): The status of the feasibility request.
         created_at (datetime.datetime): The datetime at which the feasibility request was created.
         updated_at (datetime.datetime): The datetime at which the feasibility request was last updated.
     """
@@ -27,7 +27,9 @@ class AssuredStoredFeasibilityRequestProperties(BaseModel):
         description="The closed date-time interval of the request.",
         alias="datetime",
     )
-    status: "FeasibilityRequestStatus" = Field(..., description=None, alias="status")
+    status: "FeasibilityRequestStatus" = Field(
+        ..., description="The status of the feasibility request.", alias="status"
+    )
     created_at: datetime.datetime = Field(
         ...,
         description="The datetime at which the feasibility request was created.",

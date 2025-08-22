@@ -9,13 +9,13 @@ from ..models.collections import Collections
 
 if TYPE_CHECKING:
     from ..models.filter_fields import FilterFields
-    from ..models.geo_json_line_string import GeoJSONLineString
-    from ..models.geo_json_multi_line_string import GeoJSONMultiLineString
-    from ..models.geo_json_multi_point import GeoJSONMultiPoint
-    from ..models.geo_json_multi_polygon import GeoJSONMultiPolygon
-    from ..models.geo_json_point import GeoJSONPoint
-    from ..models.geo_json_polygon import GeoJSONPolygon
     from ..models.geometry_collection import GeometryCollection
+    from ..models.line_string import LineString
+    from ..models.multi_line_string import MultiLineString
+    from ..models.multi_point import MultiPoint
+    from ..models.multi_polygon import MultiPolygon
+    from ..models.point import Point
+    from ..models.polygon import Polygon
     from ..models.sort_entities import SortEntities
 
 
@@ -33,9 +33,9 @@ class SearchRequest(BaseModel):
             one value or a list of values resulting in an equality or 'IN' comparison respectively. For numeric fields, one
             value similarly achieves an equality operation. A tuple of 2 values can also be provided to search inclusively
             between a range.
-        intersects (Union['GeoJSONLineString', 'GeoJSONMultiLineString', 'GeoJSONMultiPoint', 'GeoJSONMultiPolygon',
-            'GeoJSONPoint', 'GeoJSONPolygon', 'GeometryCollection', None]): A GeoJSON geometry to filter for. Items are
-            returned if the geometry of the item intersects with the geometry provided.
+        intersects (Union['GeometryCollection', 'LineString', 'MultiLineString', 'MultiPoint', 'MultiPolygon', 'Point',
+            'Polygon', None]): A GeoJSON geometry to filter for. Items are returned if the geometry of the item intersects
+            with the geometry provided.
         sort_by (Union[None, list[SortEntities]]): Sort the order in which results are returned.
     """
 
@@ -68,13 +68,13 @@ class SearchRequest(BaseModel):
         alias="properties",
     )
     intersects: Union[
-        "GeoJSONLineString",
-        "GeoJSONMultiLineString",
-        "GeoJSONMultiPoint",
-        "GeoJSONMultiPolygon",
-        "GeoJSONPoint",
-        "GeoJSONPolygon",
         "GeometryCollection",
+        "LineString",
+        "MultiLineString",
+        "MultiPoint",
+        "MultiPolygon",
+        "Point",
+        "Polygon",
         None,
     ] = Field(
         None,

@@ -40,19 +40,12 @@ body: {% for body in endpoint.bodies %}{{ body.prop.get_type_string() }}{% if no
 {# Prepare query params #}
 {%- macro query_params(endpoint) %}
 {% if endpoint.query_parameters %}
-params: dict[str, Any] = {}
+params = {
 {% for property in endpoint.query_parameters %}
-    {% set destination = property.python_name %}
-    {% import "property_templates/" + property.template as prop_template %}
-    {% if prop_template.transform %}
-        {% set destination = "json_" + property.python_name %}
-{{ prop_template.transform(property, property.python_name, destination) }}
-    {% endif %}
-
-params["{{ property.name }}"] = {{ destination }}
-
+	"{{ property.name }}": {{ property.python_name }},
 {% endfor %}
-params = {k: v for k, v in params.items() if v is not None}
+}
+
 {% endif %}
 {% endmacro %}
 

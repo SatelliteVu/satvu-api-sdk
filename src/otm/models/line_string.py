@@ -1,21 +1,20 @@
 from __future__ import annotations
 
-from typing import Union
+from typing import Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.geo_json_multi_point_type import GeoJSONMultiPointType
 
+class LineString(BaseModel):
+    """LineString Model
 
-class GeoJSONMultiPoint(BaseModel):
-    """
     Attributes:
-        type_ ('GeoJSONMultiPointType'):
+        type_ (Literal['LineString']):
         coordinates (list[list[float]]):
         bbox (Union[None, list[float]]):
     """
 
-    type_: "GeoJSONMultiPointType" = Field(..., description=None, alias="type")
+    type_: Literal["LineString"] = Field("LineString", description=None, alias="type")
     coordinates: list[list[float]] = Field(..., description=None, alias="coordinates")
     bbox: Union[None, list[float]] = Field(None, description=None, alias="bbox")
 

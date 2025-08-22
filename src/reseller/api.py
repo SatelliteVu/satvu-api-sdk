@@ -1,5 +1,5 @@
 from collections.abc import Callable
-from typing import Any, Union
+from typing import Union
 
 from src.satvu_api_sdk.core import SDKClient
 from src.shared.utils import deep_parse_from_annotation
@@ -64,15 +64,11 @@ class ResellerService(SDKClient):
             GetUsers
         """
 
-        params: dict[str, Any] = {}
+        params = {
+            "limit": limit,
+            "token": token,
+        }
 
-        params["limit"] = limit
-
-        json_token: Union[None, str] = token
-
-        params["token"] = json_token
-
-        params = {k: v for k, v in params.items() if v is not None}
         response = self.make_request(
             method="get",
             url="/users",
@@ -102,15 +98,11 @@ class ResellerService(SDKClient):
             GetCompanies
         """
 
-        params: dict[str, Any] = {}
+        params = {
+            "limit": limit,
+            "token": token,
+        }
 
-        params["limit"] = limit
-
-        json_token: Union[None, str] = token
-
-        params["token"] = json_token
-
-        params = {k: v for k, v in params.items() if v is not None}
         response = self.make_request(
             method="get",
             url="/companies",

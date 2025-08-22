@@ -10,14 +10,15 @@ from otm.models.assured_order_request import AssuredOrderRequest
 from otm.models.edit_order_payload import EditOrderPayload
 from otm.models.feasibility_request import FeasibilityRequest
 from otm.models.feasibility_response import FeasibilityResponse
-from otm.models.get_order import GetOrder
+from otm.models.get_order_response import GetOrderResponse
+from otm.models.list_stored_orders_response import ListStoredOrdersResponse
 from otm.models.order_item_download_url import OrderItemDownloadUrl
 from otm.models.order_price import OrderPrice
 from otm.models.price_request import PriceRequest
 from otm.models.reseller_assured_order_request import ResellerAssuredOrderRequest
-from otm.models.reseller_get_order import ResellerGetOrder
+from otm.models.reseller_get_order_response import ResellerGetOrderResponse
 from otm.models.reseller_standard_order_request import ResellerStandardOrderRequest
-from otm.models.reseller_stored_order_request import ResellerStoredOrderRequest
+from otm.models.reseller_stored_order_response import ResellerStoredOrderResponse
 from otm.models.search_request import SearchRequest
 from otm.models.search_response import SearchResponse
 from otm.models.stac_feature import StacFeature
@@ -26,8 +27,7 @@ from otm.models.stored_feasibility_feature_collection import (
     StoredFeasibilityFeatureCollection,
 )
 from otm.models.stored_feasibility_request import StoredFeasibilityRequest
-from otm.models.stored_order_request import StoredOrderRequest
-from otm.models.stored_order_request_list import StoredOrderRequestList
+from otm.models.stored_order_response import StoredOrderResponse
 
 
 class OtmService(SDKClient):
@@ -41,7 +41,7 @@ class OtmService(SDKClient):
         contract_id: UUID,
         per_page: Union[None, int] = 25,
         token: Union[None, str] = None,
-    ) -> StoredOrderRequestList:
+    ) -> ListStoredOrdersResponse:
         """
         List all tasking orders.
 
@@ -54,18 +54,14 @@ class OtmService(SDKClient):
             token (Union[None, str]): The pagination token
 
         Returns:
-            StoredOrderRequestList
+            ListStoredOrdersResponse
         """
 
-        params: dict[str, Any] = {}
+        params = {
+            "per_page": per_page,
+            "token": token,
+        }
 
-        params["per_page"] = per_page
-
-        json_token: Union[None, str] = token
-
-        params["token"] = json_token
-
-        params = {k: v for k, v in params.items() if v is not None}
         response = self.make_request(
             method="get",
             url="/{contract_id}/tasking/orders/".format(contract_id=contract_id),
@@ -73,7 +69,7 @@ class OtmService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), StoredOrderRequestList)
+            return deep_parse_from_annotation(response.json(), ListStoredOrdersResponse)
         return response.json()
 
     def post_tasking_orders(
@@ -85,7 +81,7 @@ class OtmService(SDKClient):
             "ResellerStandardOrderRequest",
             "StandardOrderRequest",
         ],
-    ) -> Union["ResellerStoredOrderRequest", "StoredOrderRequest"]:
+    ) -> Union["ResellerStoredOrderResponse", "StoredOrderResponse"]:
         """
         Create a tasking order request.
 
@@ -96,13 +92,13 @@ class OtmService(SDKClient):
             body (Union['AssuredOrderRequest', 'ResellerAssuredOrderRequest',
                 'ResellerStandardOrderRequest', 'StandardOrderRequest']):
                 One of:
-                - StandardOrderRequest: Feature model for incoming order request.
+                - StandardOrderRequest: Payload for standard order request.
                 - AssuredOrderRequest:
-                - ResellerStandardOrderRequest:
-                - ResellerAssuredOrderRequest:
+                - ResellerStandardOrderRequest: Payload for reseller standard order request.
+                - ResellerAssuredOrderRequest: Payload for reseller assured order request.
 
         Returns:
-            Union['ResellerStoredOrderRequest', 'StoredOrderRequest']
+            Union['ResellerStoredOrderResponse', 'StoredOrderResponse']
         """
 
         json_body = body.model_dump(by_alias=True)
@@ -116,7 +112,7 @@ class OtmService(SDKClient):
         if response.status_code == 201:
             return deep_parse_from_annotation(
                 response.json(),
-                Union["ResellerStoredOrderRequest", "StoredOrderRequest"],
+                Union["ResellerStoredOrderResponse", "StoredOrderResponse"],
             )
         return response.json()
 
@@ -124,7 +120,7 @@ class OtmService(SDKClient):
         self,
         contract_id: UUID,
         order_id: UUID,
-    ) -> Union["GetOrder", "ResellerGetOrder"]:
+    ) -> Union["GetOrderResponse", "ResellerGetOrderResponse"]:
         """
         Retrieve a tasking order.
 
@@ -135,7 +131,7 @@ class OtmService(SDKClient):
             order_id (UUID): Order ID
 
         Returns:
-            Union['GetOrder', 'ResellerGetOrder']
+            Union['GetOrderResponse', 'ResellerGetOrderResponse']
         """
 
         response = self.make_request(
@@ -147,13 +143,13 @@ class OtmService(SDKClient):
 
         if response.status_code == 200:
             return deep_parse_from_annotation(
-                response.json(), Union["GetOrder", "ResellerGetOrder"]
+                response.json(), Union["GetOrderResponse", "ResellerGetOrderResponse"]
             )
         return response.json()
 
     def edit_tasking_order(
         self, contract_id: UUID, order_id: UUID, body: EditOrderPayload
-    ) -> Union["GetOrder", "ResellerGetOrder"]:
+    ) -> Union["GetOrderResponse", "ResellerGetOrderResponse"]:
         """
         Edit a tasking order request.
 
@@ -165,7 +161,7 @@ class OtmService(SDKClient):
             body (EditOrderPayload): Payload for editing an order.
 
         Returns:
-            Union['GetOrder', 'ResellerGetOrder']
+            Union['GetOrderResponse', 'ResellerGetOrderResponse']
         """
 
         json_body = body.model_dump(by_alias=True)
@@ -180,7 +176,7 @@ class OtmService(SDKClient):
 
         if response.status_code == 200:
             return deep_parse_from_annotation(
-                response.json(), Union["GetOrder", "ResellerGetOrder"]
+                response.json(), Union["GetOrderResponse", "ResellerGetOrderResponse"]
             )
         return response.json()
 
@@ -239,11 +235,10 @@ class OtmService(SDKClient):
             Union[OrderItemDownloadUrl, Any, io.BytesIO]
         """
 
-        params: dict[str, Any] = {}
+        params = {
+            "redirect": redirect,
+        }
 
-        params["redirect"] = redirect
-
-        params = {k: v for k, v in params.items() if v is not None}
         response = self.make_request(
             method="get",
             url="/{contract_id}/tasking/orders/{order_id}/download".format(
@@ -313,15 +308,11 @@ class OtmService(SDKClient):
             StoredFeasibilityFeatureCollection
         """
 
-        params: dict[str, Any] = {}
+        params = {
+            "per_page": per_page,
+            "token": token,
+        }
 
-        params["per_page"] = per_page
-
-        json_token: Union[None, str] = token
-
-        params["token"] = json_token
-
-        params = {k: v for k, v in params.items() if v is not None}
         response = self.make_request(
             method="get",
             url="/{contract_id}/tasking/feasibilities/".format(contract_id=contract_id),
@@ -344,7 +335,7 @@ class OtmService(SDKClient):
 
         Args:
             contract_id (UUID): Contract ID
-            body (FeasibilityRequest): Feature model for incoming feasibility request.
+            body (FeasibilityRequest): Payload for feasibility request.
 
         Returns:
             StoredFeasibilityRequest
@@ -429,7 +420,7 @@ class OtmService(SDKClient):
 
         Args:
             contract_id (UUID): Contract ID
-            body (PriceRequest): Feature model for incoming price request
+            body (PriceRequest): Payload for price request.
 
         Returns:
             OrderPrice

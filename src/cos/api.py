@@ -111,16 +111,11 @@ class CosService(SDKClient):
             OrderPage
         """
 
-        params: dict[str, Any] = {}
-        json_limit: Union[None, int] = limit
+        params = {
+            "limit": limit,
+            "token": token,
+        }
 
-        params["limit"] = json_limit
-
-        json_token: Union[None, str] = token
-
-        params["token"] = json_token
-
-        params = {k: v for k, v in params.items() if v is not None}
         response = self.make_request(
             method="get",
             url="/{contract_id}/".format(contract_id=contract_id),
@@ -197,11 +192,10 @@ class CosService(SDKClient):
             Union[OrderItemDownloadUrl, Any, io.BytesIO]
         """
 
-        params: dict[str, Any] = {}
+        params = {
+            "redirect": redirect,
+        }
 
-        params["redirect"] = redirect
-
-        params = {k: v for k, v in params.items() if v is not None}
         response = self.make_request(
             method="get",
             url="/{contract_id}/{order_id}/{item_id}/download".format(
@@ -254,20 +248,11 @@ class CosService(SDKClient):
             Union[OrderDownloadUrl, Any, io.BytesIO]
         """
 
-        params: dict[str, Any] = {}
-        json_collections: Union[None, list[str]] = collections
+        params = {
+            "collections": collections,
+            "redirect": redirect,
+        }
 
-        if isinstance(collections, list):
-            json_collections = []
-            for collections_type_0_item_data in collections:
-                collections_type_0_item = collections_type_0_item_data.value
-                json_collections.append(collections_type_0_item)
-
-        params["collections"] = json_collections
-
-        params["redirect"] = redirect
-
-        params = {k: v for k, v in params.items() if v is not None}
         response = self.make_request(
             method="get",
             url="/{contract_id}/{order_id}/download".format(

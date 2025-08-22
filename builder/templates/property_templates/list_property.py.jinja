@@ -41,7 +41,7 @@ for {{ inner_source }} in {{ source }}:
 {{ _transform(property, source, destination, "to_dict") }}
 {% else %}
 {{ destination }}{% if declare_type %}: {{ type_string }}{% endif %} = None
-if not {{ source }}:
+if {{ source }}:
     {{ _transform(property, source, destination, "to_dict") | indent(4)}}
 {% endif %}
 {% endmacro %}

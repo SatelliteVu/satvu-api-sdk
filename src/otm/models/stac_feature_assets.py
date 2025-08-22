@@ -9,6 +9,6 @@ if TYPE_CHECKING:
 
 
 class StacFeatureAssets(BaseModel):
-    """A dictionary of asset objects that can be downloaded, each with a unique key."""
+    """A map of asset objects that can be downloaded, each with a unique key."""
 
     model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

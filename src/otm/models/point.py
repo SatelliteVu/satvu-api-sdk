@@ -1,21 +1,20 @@
 from __future__ import annotations
 
-from typing import Union
+from typing import Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.geo_json_point_type import GeoJSONPointType
 
+class Point(BaseModel):
+    """Point Model
 
-class GeoJSONPoint(BaseModel):
-    """
     Attributes:
-        type_ ('GeoJSONPointType'):
+        type_ (Literal['Point']):
         coordinates (list[float]):
         bbox (Union[None, list[float]]):
     """
 
-    type_: "GeoJSONPointType" = Field(..., description=None, alias="type")
+    type_: Literal["Point"] = Field("Point", description=None, alias="type")
     coordinates: list[float] = Field(..., description=None, alias="coordinates")
     bbox: Union[None, list[float]] = Field(None, description=None, alias="bbox")
 

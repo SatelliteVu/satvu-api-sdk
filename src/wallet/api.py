@@ -36,5 +36,7 @@ class WalletService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), CreditBalanceResponse)
+            return deep_parse_from_annotation(
+                response.json(), CreditBalanceResponse, self.__class__
+            )
         return response.json()

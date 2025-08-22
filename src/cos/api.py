@@ -54,6 +54,7 @@ class CosService(SDKClient):
             return deep_parse_from_annotation(
                 response.json(),
                 Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"],
+                self.__class__,
             )
         return response.json()
 
@@ -88,6 +89,7 @@ class CosService(SDKClient):
             return deep_parse_from_annotation(
                 response.json(),
                 Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"],
+                self.__class__,
             )
         return response.json()
 
@@ -123,7 +125,9 @@ class CosService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), OrderPage)
+            return deep_parse_from_annotation(
+                response.json(), OrderPage, self.__class__
+            )
         return response.json()
 
     def submit_order(
@@ -161,6 +165,7 @@ class CosService(SDKClient):
             return deep_parse_from_annotation(
                 response.json(),
                 Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"],
+                self.__class__,
             )
         return response.json()
 
@@ -211,7 +216,9 @@ class CosService(SDKClient):
             return zip_bytes
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), OrderItemDownloadUrl)
+            return deep_parse_from_annotation(
+                response.json(), OrderItemDownloadUrl, self.__class__
+            )
         if response.status_code == 202:
             return response.json()
         return response.json()
@@ -268,7 +275,9 @@ class CosService(SDKClient):
             return zip_bytes
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), OrderDownloadUrl)
+            return deep_parse_from_annotation(
+                response.json(), OrderDownloadUrl, self.__class__
+            )
         if response.status_code == 202:
             return response.json()
         return response.json()

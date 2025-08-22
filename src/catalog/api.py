@@ -52,7 +52,9 @@ class CatalogService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), TypesCatalog)
+            return deep_parse_from_annotation(
+                response.json(), TypesCatalog, self.__class__
+            )
         return response.json()
 
     def conformance(
@@ -77,7 +79,9 @@ class CatalogService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), RouterConformance)
+            return deep_parse_from_annotation(
+                response.json(), RouterConformance, self.__class__
+            )
         return response.json()
 
     def queryables(
@@ -102,7 +106,9 @@ class CatalogService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), Cql2QueryablesSchema)
+            return deep_parse_from_annotation(
+                response.json(), Cql2QueryablesSchema, self.__class__
+            )
         return response.json()
 
     def get_search(
@@ -177,7 +183,9 @@ class CatalogService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), TypesFeatureCollection)
+            return deep_parse_from_annotation(
+                response.json(), TypesFeatureCollection, self.__class__
+            )
         return response.json()
 
     def post_search(
@@ -206,7 +214,9 @@ class CatalogService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), TypesFeatureCollection)
+            return deep_parse_from_annotation(
+                response.json(), TypesFeatureCollection, self.__class__
+            )
         return response.json()
 
     def get_collections(
@@ -231,7 +241,9 @@ class CatalogService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), TypesCollections)
+            return deep_parse_from_annotation(
+                response.json(), TypesCollections, self.__class__
+            )
         return response.json()
 
     def get_collection(
@@ -261,7 +273,9 @@ class CatalogService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), Collection)
+            return deep_parse_from_annotation(
+                response.json(), Collection, self.__class__
+            )
         return response.json()
 
     def get_item_collection(
@@ -291,7 +305,9 @@ class CatalogService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), TypesSearchResponseData)
+            return deep_parse_from_annotation(
+                response.json(), TypesSearchResponseData, self.__class__
+            )
         return response.json()
 
     def get_item(
@@ -323,5 +339,5 @@ class CatalogService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), Feature)
+            return deep_parse_from_annotation(response.json(), Feature, self.__class__)
         return response.json()

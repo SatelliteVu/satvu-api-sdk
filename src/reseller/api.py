@@ -43,7 +43,9 @@ class ResellerService(SDKClient):
         )
 
         if response.status_code == 201:
-            return deep_parse_from_annotation(response.json(), list[CreateUserResponse])
+            return deep_parse_from_annotation(
+                response.json(), list[CreateUserResponse], self.__class__
+            )
         return response.json()
 
     def get_users(
@@ -76,7 +78,7 @@ class ResellerService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), GetUsers)
+            return deep_parse_from_annotation(response.json(), GetUsers, self.__class__)
         return response.json()
 
     def get_companies(
@@ -110,7 +112,9 @@ class ResellerService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), GetCompanies)
+            return deep_parse_from_annotation(
+                response.json(), GetCompanies, self.__class__
+            )
         return response.json()
 
     def search_users(self, body: SearchUsers) -> GetUsers:
@@ -135,7 +139,7 @@ class ResellerService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), GetUsers)
+            return deep_parse_from_annotation(response.json(), GetUsers, self.__class__)
         return response.json()
 
     def search_companies(self, body: SearchCompanies) -> GetCompanies:
@@ -160,5 +164,7 @@ class ResellerService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), GetCompanies)
+            return deep_parse_from_annotation(
+                response.json(), GetCompanies, self.__class__
+            )
         return response.json()

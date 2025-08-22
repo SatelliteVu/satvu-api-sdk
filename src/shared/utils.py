@@ -1,9 +1,12 @@
+import sys
 from datetime import datetime, date
-from typing import Union, get_args, get_origin, Any, Literal
+from typing import Union, get_args, get_origin, Any, Literal, ForwardRef, Callable
 from pydantic import BaseModel
 
 
-def deep_parse_from_annotation(data: Any, annotation: Any) -> Any:
+def deep_parse_from_annotation(
+    data: Any, annotation: Any, caller: type | Callable | object
+) -> Any:
     """
     Recursively parses the input data using the provided type annotation.
 
@@ -14,8 +17,14 @@ def deep_parse_from_annotation(data: Any, annotation: Any) -> Any:
 
     :param data: The raw JSON-like object (dict, list, etc.)
     :param annotation: The type annotation (e.g., List[Union[ModelA, ModelB]], ModelC, etc.)
+    :param caller: The calling class or function, used to resolve forward references.
     :return: The parsed object according to the annotation.
     """
+    # Get the module namespace of the caller to resolve ForwardRefs
+    mod = sys.modules[caller.__module__]
+    namespace = dict(mod.__dict__)
+
+    # Get the origin and args of the annotation
     origin = get_origin(annotation)
     args = get_args(annotation)
 
@@ -31,8 +40,11 @@ def deep_parse_from_annotation(data: Any, annotation: Any) -> Any:
     # If annotation is a Union, try each type in the Union
     if origin is Union:
         for arg in args:
+            # Resolve ForwardRef if necessary
+            if isinstance(arg, ForwardRef):
+                arg = eval(arg.__forward_arg__, namespace)
             try:
-                return deep_parse_from_annotation(data, arg)
+                return deep_parse_from_annotation(data, arg, caller)
             except Exception:
                 continue
         raise ValueError(f"Could not match data to any Union type: {data}")
@@ -40,7 +52,7 @@ def deep_parse_from_annotation(data: Any, annotation: Any) -> Any:
     elif origin is list:
         # If the data is a list, recursively parse each item
         if isinstance(data, list):
-            return [deep_parse_from_annotation(item, args[0]) for item in data]
+            return [deep_parse_from_annotation(item, args[0], caller) for item in data]
         # If the data is not a list, raise an error
         else:
             raise ValueError(f"Expected a list but got {type(data).__name__}: {data}")
@@ -51,7 +63,7 @@ def deep_parse_from_annotation(data: Any, annotation: Any) -> Any:
         raise ValueError(f"Value '{data}' does not match any Literal options: {args}")
 
     elif isinstance(annotation, type) and issubclass(annotation, BaseModel):
-        return _recursive_parse_dict(data, annotation)
+        return _recursive_parse_dict(data, annotation, caller)
 
     elif annotation is datetime:
         return datetime.fromisoformat(data)
@@ -72,9 +84,15 @@ def deep_parse_from_annotation(data: Any, annotation: Any) -> Any:
         return annotation(data)
 
 
-def _recursive_parse_dict(data: dict, model_cls):
+def _recursive_parse_dict(
+    data: dict, model_cls: type[BaseModel], caller: type | Callable | object
+):
     """
     Parses a dict recursively into a Pydantic model, including support for nested Unions.
+
+    :param data: The raw dict data
+    :param model_cls: The Pydantic model class to parse into
+    :param caller: The calling class or function, used to resolve forward references.
     """
     model_fields = model_cls.model_fields
     new_data = {}
@@ -87,7 +105,9 @@ def _recursive_parse_dict(data: dict, model_cls):
         field_type = field.annotation
 
         try:
-            new_data[field.alias] = deep_parse_from_annotation(field_value, field_type)
+            new_data[field.alias] = deep_parse_from_annotation(
+                field_value, field_type, caller
+            )
         except Exception as e:
             raise ValueError(
                 f"Failed to parse field '{field.alias}' in {model_cls.__name__}: {e}"

@@ -41,7 +41,7 @@ class PolicyService(SDKClient):
 
         if response.status_code == 200:
             return deep_parse_from_annotation(
-                response.json(), RouterActiveContractsResponse
+                response.json(), RouterActiveContractsResponse, self.__class__
             )
         return response.json()
 
@@ -65,7 +65,9 @@ class PolicyService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), RouterQueryResult)
+            return deep_parse_from_annotation(
+                response.json(), RouterQueryResult, self.__class__
+            )
         return response.json()
 
     def user_acceptance_terms(
@@ -92,5 +94,7 @@ class PolicyService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), TermsUserTermsAccepted)
+            return deep_parse_from_annotation(
+                response.json(), TermsUserTermsAccepted, self.__class__
+            )
         return response.json()

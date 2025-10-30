@@ -5,9 +5,10 @@ description = "SatVu API SDK"
 readme = "README.md"
 authors = [
     { name = "Christian Wygoda", email = "christian.wygoda@satellitevu.com" },
+    { name = "James Harrison", email = "james.harrison@satellitevu.com" },
 ]
 requires-python = ">=3.13"
-dependencies = ["httpx>=0.28.1", "pydantic>=2.11.7", "ruff>=0.12.9"]
+dependencies = ["httpx>=0.28.1", "pydantic>=2.11.7"]
 
 [project.optional-dependencies]
 standard = ["appdirs>=1.4.4"]
@@ -16,18 +17,18 @@ standard = ["appdirs>=1.4.4"]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-# [tool.hatch.build.targets.wheel]
-# packages = ["src/satvu_api_sdk"]
-
-[tool.uv]
-dev-dependencies = [
-    "bandit>=1.8.6",
-    "fawltydeps>=0.20.0",
+[dependency-groups]
+dev = [
+    "attr>=0.3.2",
     "httpx>=0.28.1",
-    "notebook>=7.4.5",
-    "openapi-python-client>=0.25.3",
+    "notebook>=7.4.7",
+    "openapi-python-client>=0.27.0",
     "pook>=2.1.0",
-    "pre-commit>=4.2.0",
     "pytest>=8.3.4",
-    "ruff>=0.12.10",
 ]
+
+[tool.fawltydeps]
+ignore_unused = ["notebook"]
+
+[tool.fawltydeps.custom_mapping]
+satvu-api-sdk = ["satvu_api_sdk"]

@@ -3,31 +3,31 @@ from collections.abc import Callable
 from typing import Any, Union
 from uuid import UUID
 
-from src.satvu_api_sdk.core import SDKClient
-from src.shared.utils import deep_parse_from_annotation
+from satvu_api_sdk.core import SDKClient
+from satvu_api_sdk.shared.utils import deep_parse_from_annotation
 
-from otm.models.assured_order_request import AssuredOrderRequest
-from otm.models.edit_order_payload import EditOrderPayload
-from otm.models.feasibility_request import FeasibilityRequest
-from otm.models.feasibility_response import FeasibilityResponse
-from otm.models.get_order_response import GetOrderResponse
-from otm.models.list_stored_orders_response import ListStoredOrdersResponse
-from otm.models.order_item_download_url import OrderItemDownloadUrl
-from otm.models.order_price import OrderPrice
-from otm.models.price_request import PriceRequest
-from otm.models.reseller_assured_order_request import ResellerAssuredOrderRequest
-from otm.models.reseller_get_order_response import ResellerGetOrderResponse
-from otm.models.reseller_standard_order_request import ResellerStandardOrderRequest
-from otm.models.reseller_stored_order_response import ResellerStoredOrderResponse
-from otm.models.search_request import SearchRequest
-from otm.models.search_response import SearchResponse
-from otm.models.stac_feature import StacFeature
-from otm.models.standard_order_request import StandardOrderRequest
-from otm.models.stored_feasibility_feature_collection import (
+from satvu_api_sdk.services.otm.models.assured_order_request import AssuredOrderRequest
+from satvu_api_sdk.services.otm.models.edit_order_payload import EditOrderPayload
+from satvu_api_sdk.services.otm.models.feasibility_request import FeasibilityRequest
+from satvu_api_sdk.services.otm.models.feasibility_response import FeasibilityResponse
+from satvu_api_sdk.services.otm.models.get_order_response import GetOrderResponse
+from satvu_api_sdk.services.otm.models.list_stored_orders_response import ListStoredOrdersResponse
+from satvu_api_sdk.services.otm.models.order_item_download_url import OrderItemDownloadUrl
+from satvu_api_sdk.services.otm.models.order_price import OrderPrice
+from satvu_api_sdk.services.otm.models.price_request import PriceRequest
+from satvu_api_sdk.services.otm.models.reseller_assured_order_request import ResellerAssuredOrderRequest
+from satvu_api_sdk.services.otm.models.reseller_get_order_response import ResellerGetOrderResponse
+from satvu_api_sdk.services.otm.models.reseller_standard_order_request import ResellerStandardOrderRequest
+from satvu_api_sdk.services.otm.models.reseller_stored_order_response import ResellerStoredOrderResponse
+from satvu_api_sdk.services.otm.models.search_request import SearchRequest
+from satvu_api_sdk.services.otm.models.search_response import SearchResponse
+from satvu_api_sdk.services.otm.models.stac_feature import StacFeature
+from satvu_api_sdk.services.otm.models.standard_order_request import StandardOrderRequest
+from satvu_api_sdk.services.otm.models.stored_feasibility_feature_collection import (
     StoredFeasibilityFeatureCollection,
 )
-from otm.models.stored_feasibility_request import StoredFeasibilityRequest
-from otm.models.stored_order_response import StoredOrderResponse
+from satvu_api_sdk.services.otm.models.stored_feasibility_request import StoredFeasibilityRequest
+from satvu_api_sdk.services.otm.models.stored_order_response import StoredOrderResponse
 
 
 class OtmService(SDKClient):

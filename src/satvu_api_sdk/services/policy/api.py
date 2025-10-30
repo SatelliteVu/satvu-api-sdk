@@ -1,13 +1,13 @@
 from collections.abc import Callable
 
-from src.satvu_api_sdk.core import SDKClient
-from src.shared.utils import deep_parse_from_annotation
+from satvu_api_sdk.core import SDKClient
+from satvu_api_sdk.shared.utils import deep_parse_from_annotation
 
-from policy.models.post_active_contracts_input import PostActiveContractsInput
-from policy.models.router_active_contracts_response import RouterActiveContractsResponse
-from policy.models.router_query_result import RouterQueryResult
-from policy.models.terms_user_terms_accepted import TermsUserTermsAccepted
-from policy.models.user_acceptance_terms_input import UserAcceptanceTermsInput
+from satvu_api_sdk.services.policy.models.post_active_contracts_input import PostActiveContractsInput
+from satvu_api_sdk.services.policy.models.router_active_contracts_response import RouterActiveContractsResponse
+from satvu_api_sdk.services.policy.models.router_query_result import RouterQueryResult
+from satvu_api_sdk.services.policy.models.terms_user_terms_accepted import TermsUserTermsAccepted
+from satvu_api_sdk.services.policy.models.user_acceptance_terms_input import UserAcceptanceTermsInput
 
 
 class PolicyService(SDKClient):

@@ -1,26 +1,26 @@
 from collections.abc import Callable
 from typing import Union
 
-from src.satvu_api_sdk.core import SDKClient
-from src.shared.utils import deep_parse_from_annotation
+from satvu_api_sdk.core import SDKClient
+from satvu_api_sdk.shared.utils import deep_parse_from_annotation
 
-from catalog.models.collection import Collection
-from catalog.models.cql_2_queryables_schema import Cql2QueryablesSchema
-from catalog.models.feature import Feature
-from catalog.models.filter_ import Filter
-from catalog.models.geo_json_geometry_collection_1 import GeoJSONGeometryCollection1
-from catalog.models.geo_json_line_string import GeoJSONLineString
-from catalog.models.geo_json_multi_line_string import GeoJSONMultiLineString
-from catalog.models.geo_json_multi_point import GeoJSONMultiPoint
-from catalog.models.geo_json_multi_polygon import GeoJSONMultiPolygon
-from catalog.models.geo_json_point import GeoJSONPoint
-from catalog.models.geo_json_polygon import GeoJSONPolygon
-from catalog.models.post_search_input import PostSearchInput
-from catalog.models.router_conformance import RouterConformance
-from catalog.models.types_catalog import TypesCatalog
-from catalog.models.types_collections import TypesCollections
-from catalog.models.types_feature_collection import TypesFeatureCollection
-from catalog.models.types_search_response_data import TypesSearchResponseData
+from satvu_api_sdk.services.catalog.models.collection import Collection
+from satvu_api_sdk.services.catalog.models.cql_2_queryables_schema import Cql2QueryablesSchema
+from satvu_api_sdk.services.catalog.models.feature import Feature
+from satvu_api_sdk.services.catalog.models.filter_ import Filter
+from satvu_api_sdk.services.catalog.models.geo_json_geometry_collection_1 import GeoJSONGeometryCollection1
+from satvu_api_sdk.services.catalog.models.geo_json_line_string import GeoJSONLineString
+from satvu_api_sdk.services.catalog.models.geo_json_multi_line_string import GeoJSONMultiLineString
+from satvu_api_sdk.services.catalog.models.geo_json_multi_point import GeoJSONMultiPoint
+from satvu_api_sdk.services.catalog.models.geo_json_multi_polygon import GeoJSONMultiPolygon
+from satvu_api_sdk.services.catalog.models.geo_json_point import GeoJSONPoint
+from satvu_api_sdk.services.catalog.models.geo_json_polygon import GeoJSONPolygon
+from satvu_api_sdk.services.catalog.models.post_search_input import PostSearchInput
+from satvu_api_sdk.services.catalog.models.router_conformance import RouterConformance
+from satvu_api_sdk.services.catalog.models.types_catalog import TypesCatalog
+from satvu_api_sdk.services.catalog.models.types_collections import TypesCollections
+from satvu_api_sdk.services.catalog.models.types_feature_collection import TypesFeatureCollection
+from satvu_api_sdk.services.catalog.models.types_search_response_data import TypesSearchResponseData
 
 
 class CatalogService(SDKClient):

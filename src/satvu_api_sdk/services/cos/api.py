@@ -3,20 +3,20 @@ from collections.abc import Callable
 from typing import Any, Union
 from uuid import UUID
 
-from src.satvu_api_sdk.core import SDKClient
-from src.shared.utils import deep_parse_from_annotation
+from satvu_api_sdk.core import SDKClient
+from satvu_api_sdk.shared.utils import deep_parse_from_annotation
 
-from cos.models.download_order_collections_type_0_item import (
+from satvu_api_sdk.services.cos.models.download_order_collections_type_0_item import (
     DownloadOrderCollectionsType0Item,
 )
-from cos.models.feature_collection_order import FeatureCollectionOrder
-from cos.models.order_download_url import OrderDownloadUrl
-from cos.models.order_edit_payload import OrderEditPayload
-from cos.models.order_item_download_url import OrderItemDownloadUrl
-from cos.models.order_page import OrderPage
-from cos.models.order_submission_payload import OrderSubmissionPayload
-from cos.models.reseller_feature_collection_order import ResellerFeatureCollectionOrder
-from cos.models.reseller_submission_order_payload import ResellerSubmissionOrderPayload
+from satvu_api_sdk.services.cos.models.feature_collection_order import FeatureCollectionOrder
+from satvu_api_sdk.services.cos.models.order_download_url import OrderDownloadUrl
+from satvu_api_sdk.services.cos.models.order_edit_payload import OrderEditPayload
+from satvu_api_sdk.services.cos.models.order_item_download_url import OrderItemDownloadUrl
+from satvu_api_sdk.services.cos.models.order_page import OrderPage
+from satvu_api_sdk.services.cos.models.order_submission_payload import OrderSubmissionPayload
+from satvu_api_sdk.services.cos.models.reseller_feature_collection_order import ResellerFeatureCollectionOrder
+from satvu_api_sdk.services.cos.models.reseller_submission_order_payload import ResellerSubmissionOrderPayload
 
 
 class CosService(SDKClient):

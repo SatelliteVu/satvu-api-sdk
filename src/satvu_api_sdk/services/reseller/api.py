@@ -5,7 +5,9 @@ from satvu_api_sdk.core import SDKClient
 from satvu_api_sdk.shared.utils import deep_parse_from_annotation
 
 from satvu_api_sdk.services.reseller.models.create_user import CreateUser
-from satvu_api_sdk.services.reseller.models.create_user_response import CreateUserResponse
+from satvu_api_sdk.services.reseller.models.create_user_response import (
+    CreateUserResponse,
+)
 from satvu_api_sdk.services.reseller.models.get_companies import GetCompanies
 from satvu_api_sdk.services.reseller.models.get_users import GetUsers
 from satvu_api_sdk.services.reseller.models.search_companies import SearchCompanies

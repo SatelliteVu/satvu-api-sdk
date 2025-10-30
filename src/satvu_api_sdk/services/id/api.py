@@ -8,11 +8,17 @@ from satvu_api_sdk.shared.utils import deep_parse_from_annotation
 from satvu_api_sdk.services.id.models.client_credentials import ClientCredentials
 from satvu_api_sdk.services.id.models.client_id import ClientID
 from satvu_api_sdk.services.id.models.core_webhook import CoreWebhook
-from satvu_api_sdk.services.id.models.create_webhook_response import CreateWebhookResponse
-from satvu_api_sdk.services.id.models.credit_balance_response import CreditBalanceResponse
+from satvu_api_sdk.services.id.models.create_webhook_response import (
+    CreateWebhookResponse,
+)
+from satvu_api_sdk.services.id.models.credit_balance_response import (
+    CreditBalanceResponse,
+)
 from satvu_api_sdk.services.id.models.edit_webhook_payload import EditWebhookPayload
 from satvu_api_sdk.services.id.models.list_webhook_response import ListWebhookResponse
-from satvu_api_sdk.services.id.models.notification_description import NotificationDescription
+from satvu_api_sdk.services.id.models.notification_description import (
+    NotificationDescription,
+)
 from satvu_api_sdk.services.id.models.post_webhook_response import PostWebhookResponse
 from satvu_api_sdk.services.id.models.test_webhook_response import TestWebhookResponse
 from satvu_api_sdk.services.id.models.user_info import UserInfo

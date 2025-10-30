@@ -2,23 +2,23 @@ from collections.abc import Callable
 from typing import Any, Union
 from uuid import UUID
 
-from src.satvu_api_sdk.core import SDKClient
-from src.shared.utils import deep_parse_from_annotation
+from satvu_api_sdk.core import SDKClient
+from satvu_api_sdk.shared.utils import deep_parse_from_annotation
 
-from id.models.client_credentials import ClientCredentials
-from id.models.client_id import ClientID
-from id.models.core_webhook import CoreWebhook
-from id.models.create_webhook_response import CreateWebhookResponse
-from id.models.credit_balance_response import CreditBalanceResponse
-from id.models.edit_webhook_payload import EditWebhookPayload
-from id.models.list_webhook_response import ListWebhookResponse
-from id.models.notification_description import NotificationDescription
-from id.models.post_webhook_response import PostWebhookResponse
-from id.models.test_webhook_response import TestWebhookResponse
-from id.models.user_info import UserInfo
-from id.models.user_info_deprecated import UserInfoDeprecated
-from id.models.user_settings import UserSettings
-from id.models.webhook_response import WebhookResponse
+from satvu_api_sdk.services.id.models.client_credentials import ClientCredentials
+from satvu_api_sdk.services.id.models.client_id import ClientID
+from satvu_api_sdk.services.id.models.core_webhook import CoreWebhook
+from satvu_api_sdk.services.id.models.create_webhook_response import CreateWebhookResponse
+from satvu_api_sdk.services.id.models.credit_balance_response import CreditBalanceResponse
+from satvu_api_sdk.services.id.models.edit_webhook_payload import EditWebhookPayload
+from satvu_api_sdk.services.id.models.list_webhook_response import ListWebhookResponse
+from satvu_api_sdk.services.id.models.notification_description import NotificationDescription
+from satvu_api_sdk.services.id.models.post_webhook_response import PostWebhookResponse
+from satvu_api_sdk.services.id.models.test_webhook_response import TestWebhookResponse
+from satvu_api_sdk.services.id.models.user_info import UserInfo
+from satvu_api_sdk.services.id.models.user_info_deprecated import UserInfoDeprecated
+from satvu_api_sdk.services.id.models.user_settings import UserSettings
+from satvu_api_sdk.services.id.models.webhook_response import WebhookResponse
 
 
 class IdService(SDKClient):

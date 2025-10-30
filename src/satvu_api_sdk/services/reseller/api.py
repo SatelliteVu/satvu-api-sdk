@@ -1,15 +1,15 @@
 from collections.abc import Callable
 from typing import Union
 
-from src.satvu_api_sdk.core import SDKClient
-from src.shared.utils import deep_parse_from_annotation
+from satvu_api_sdk.core import SDKClient
+from satvu_api_sdk.shared.utils import deep_parse_from_annotation
 
-from reseller.models.create_user import CreateUser
-from reseller.models.create_user_response import CreateUserResponse
-from reseller.models.get_companies import GetCompanies
-from reseller.models.get_users import GetUsers
-from reseller.models.search_companies import SearchCompanies
-from reseller.models.search_users import SearchUsers
+from satvu_api_sdk.services.reseller.models.create_user import CreateUser
+from satvu_api_sdk.services.reseller.models.create_user_response import CreateUserResponse
+from satvu_api_sdk.services.reseller.models.get_companies import GetCompanies
+from satvu_api_sdk.services.reseller.models.get_users import GetUsers
+from satvu_api_sdk.services.reseller.models.search_companies import SearchCompanies
+from satvu_api_sdk.services.reseller.models.search_users import SearchUsers
 
 
 class ResellerService(SDKClient):

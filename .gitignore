@@ -1,15 +1,12 @@
-# Python-generated files
 __pycache__/
+.cache
+.idea/
+.mcp.json
+.pytest_cache
+.venv
+*.egg-info
 *.py[oc]
 build/
 dist/
+tasks-*.md
 wheels/
-*.egg-info
-
-# Virtual environments
-.venv
-
-# Cache
-.cache
-
-.idea/

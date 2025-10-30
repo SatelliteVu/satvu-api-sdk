@@ -14,7 +14,9 @@ library.
 
 ### Getting Started
 
-- Run `uv sync` to install dependencies
+- `./scripts/bootstrap.sh` to install dependencies
+- `./scripts/test.sh` to run the tests, pytest options and arguments can be passed to the script
+- `./scripts/lint.sh` to run the linters
 
 ## Generating the SDK
 

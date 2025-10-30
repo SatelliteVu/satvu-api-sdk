@@ -4,7 +4,9 @@ from uuid import UUID
 from satvu_api_sdk.core import SDKClient
 from satvu_api_sdk.shared.utils import deep_parse_from_annotation
 
-from satvu_api_sdk.services.wallet.models.credit_balance_response import CreditBalanceResponse
+from satvu_api_sdk.services.wallet.models.credit_balance_response import (
+    CreditBalanceResponse,
+)
 
 
 class WalletService(SDKClient):

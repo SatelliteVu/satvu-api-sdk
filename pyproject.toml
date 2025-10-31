@@ -23,6 +23,7 @@ build-backend = "hatchling.build"
 [dependency-groups]
 dev = [
     "attr>=0.3.2",
+    "freezegun>=1.5.5",
     "httpx>=0.28.1",
     "notebook>=7.4.7",
     "openapi-python-client>=0.27.0",

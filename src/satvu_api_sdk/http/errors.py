@@ -9,7 +9,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Optional
 
 
-class HttpError(ABC):
+class HttpError(Exception, ABC):
     """Base class for all HTTP-related errors."""
 
     def __init__(self, message: str, context: Optional[dict[str, Any]] = None) -> None:
@@ -20,6 +20,7 @@ class HttpError(ABC):
             message: Human-readable error message
             context: Additional context information
         """
+        super().__init__(message)
         self.message = message
         self.context = context or {}
 

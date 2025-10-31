@@ -35,6 +35,7 @@ dev = [
 
 [tool.fawltydeps]
 ignore_unused = ["notebook"]
+ignore_undeclared = ["satvu_api_sdk"]  # Allow self-referencing imports in tests
 
 [tool.fawltydeps.custom_mapping]
 satvu-api-sdk = ["satvu_api_sdk"]

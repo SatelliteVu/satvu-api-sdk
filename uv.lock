@@ -1453,6 +1453,9 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
+http-requests = [
+    { name = "requests" },
+]
 http-urllib3 = [
     { name = "urllib3" },
 ]
@@ -1468,6 +1471,7 @@ dev = [
     { name = "openapi-python-client" },
     { name = "pook" },
     { name = "pytest" },
+    { name = "requests" },
     { name = "urllib3" },
 ]
 
@@ -1476,9 +1480,10 @@ requires-dist = [
     { name = "appdirs", marker = "extra == 'standard'", specifier = ">=1.4.4" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "pydantic", specifier = ">=2.11.7" },
+    { name = "requests", marker = "extra == 'http-requests'", specifier = ">=2.32.0" },
     { name = "urllib3", marker = "extra == 'http-urllib3'", specifier = ">=2.0.0" },
 ]
-provides-extras = ["standard", "http-urllib3"]
+provides-extras = ["standard", "http-urllib3", "http-requests"]
 
 [package.metadata.requires-dev]
 dev = [
@@ -1488,6 +1493,7 @@ dev = [
     { name = "openapi-python-client", specifier = ">=0.27.0" },
     { name = "pook", specifier = ">=2.1.0" },
     { name = "pytest", specifier = ">=8.3.4" },
+    { name = "requests", specifier = ">=2.32.0" },
     { name = "urllib3", specifier = ">=2.0.0" },
 ]
 

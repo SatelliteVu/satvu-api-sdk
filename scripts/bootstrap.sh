@@ -2,5 +2,5 @@
 
 set -eo pipefail
 
-uv sync
+uv sync --all-extras
 uv run pre-commit install

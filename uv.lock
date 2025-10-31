@@ -1448,11 +1448,13 @@ name = "satvu-api-sdk"
 version = "0.0.0"
 source = { editable = "." }
 dependencies = [
-    { name = "httpx" },
     { name = "pydantic" },
 ]
 
 [package.optional-dependencies]
+http-httpx = [
+    { name = "httpx" },
+]
 http-requests = [
     { name = "requests" },
 ]
@@ -1478,12 +1480,12 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "appdirs", marker = "extra == 'standard'", specifier = ">=1.4.4" },
-    { name = "httpx", specifier = ">=0.28.1" },
+    { name = "httpx", marker = "extra == 'http-httpx'", specifier = ">=0.28.1" },
     { name = "pydantic", specifier = ">=2.11.7" },
     { name = "requests", marker = "extra == 'http-requests'", specifier = ">=2.32.0" },
     { name = "urllib3", marker = "extra == 'http-urllib3'", specifier = ">=2.0.0" },
 ]
-provides-extras = ["standard", "http-urllib3", "http-requests"]
+provides-extras = ["standard", "http-urllib3", "http-requests", "http-httpx"]
 
 [package.metadata.requires-dev]
 dev = [

@@ -4,6 +4,7 @@ import httpx
 import pook
 import pytest
 
+from satvu_api_sdk.http import is_ok
 from satvu_api_sdk.http.httpx_adapter import HttpxAdapter
 
 
@@ -20,10 +21,14 @@ def test_get_request(adapter):
         {"users": ["alice", "bob"]}
     )
 
-    response = adapter.request("GET", "/users")
+    result = adapter.request("GET", "/users")
+    assert is_ok(result), f"Expected Ok but got: {result}"
+    response = result.unwrap()
 
     assert response.status_code == 200
-    assert response.json() == {"users": ["alice", "bob"]}
+    json_result = response.json()
+    assert is_ok(json_result), f"Expected Ok but got: {json_result}"
+    assert json_result.unwrap() == {"users": ["alice", "bob"]}
 
 
 @pook.on
@@ -33,10 +38,14 @@ def test_post_request_with_json(adapter):
         {"id": 123, "name": "charlie"}
     )
 
-    response = adapter.request("POST", "/users", json={"name": "charlie"})
+    result = adapter.request("POST", "/users", json={"name": "charlie"})
+    assert is_ok(result), f"Expected Ok but got: {result}"
+    response = result.unwrap()
 
     assert response.status_code == 201
-    assert response.json() == {"id": 123, "name": "charlie"}
+    json_result = response.json()
+    assert is_ok(json_result), f"Expected Ok but got: {json_result}"
+    assert json_result.unwrap() == {"id": 123, "name": "charlie"}
 
 
 @pook.on
@@ -46,10 +55,14 @@ def test_request_with_query_params(adapter):
         {"count": 2}
     )
 
-    response = adapter.request("GET", "/users", params={"limit": 10, "offset": 20})
+    result = adapter.request("GET", "/users", params={"limit": 10, "offset": 20})
+    assert is_ok(result), f"Expected Ok but got: {result}"
+    response = result.unwrap()
 
     assert response.status_code == 200
-    assert response.json() == {"count": 2}
+    json_result = response.json()
+    assert is_ok(json_result), f"Expected Ok but got: {json_result}"
+    assert json_result.unwrap() == {"count": 2}
 
 
 @pook.on
@@ -57,7 +70,9 @@ def test_request_with_none_params(adapter):
     """Test that None params are filtered out."""
     pook.get("https://api.example.com/users?limit=10").reply(200).json({})
 
-    response = adapter.request("GET", "/users", params={"limit": 10, "offset": None})
+    result = adapter.request("GET", "/users", params={"limit": 10, "offset": None})
+    assert is_ok(result), f"Expected Ok but got: {result}"
+    response = result.unwrap()
 
     assert response.status_code == 200
 
@@ -69,9 +84,11 @@ def test_request_with_headers(adapter):
         "Authorization", "Bearer token123"
     ).reply(200).json({})
 
-    response = adapter.request(
+    result = adapter.request(
         "GET", "/users", headers={"Authorization": "Bearer token123"}
     )
+    assert is_ok(result), f"Expected Ok but got: {result}"
+    response = result.unwrap()
 
     assert response.status_code == 200
     assert pook.isdone()
@@ -82,14 +99,18 @@ def test_request_with_form_data(adapter):
     """Test request with form-encoded data."""
     pook.post("https://api.example.com/login").reply(200).json({"token": "abc123"})
 
-    response = adapter.request(
+    result = adapter.request(
         "POST",
         "/login",
         data={"username": "user", "password": "pass"},  # pragma: allowlist secret
     )
+    assert is_ok(result), f"Expected Ok but got: {result}"
+    response = result.unwrap()
 
     assert response.status_code == 200
-    assert response.json() == {"token": "abc123"}
+    json_result = response.json()
+    assert is_ok(json_result), f"Expected Ok but got: {json_result}"
+    assert json_result.unwrap() == {"token": "abc123"}
 
 
 @pook.on
@@ -97,9 +118,13 @@ def test_response_text_property(adapter):
     """Test response text property."""
     pook.get("https://api.example.com/hello").reply(200).body("Hello, World!")
 
-    response = adapter.request("GET", "/hello")
+    result = adapter.request("GET", "/hello")
+    assert is_ok(result), f"Expected Ok but got: {result}"
+    response = result.unwrap()
 
-    assert response.text == "Hello, World!"
+    text_result = response.text
+    assert is_ok(text_result), f"Expected Ok but got: {text_result}"
+    assert text_result.unwrap() == "Hello, World!"
 
 
 @pook.on
@@ -107,7 +132,9 @@ def test_response_body_property(adapter):
     """Test response body property."""
     pook.get("https://api.example.com/data").reply(200).body(b"binary data")
 
-    response = adapter.request("GET", "/data")
+    result = adapter.request("GET", "/data")
+    assert is_ok(result), f"Expected Ok but got: {result}"
+    response = result.unwrap()
 
     assert response.body == b"binary data"
 
@@ -115,11 +142,13 @@ def test_response_body_property(adapter):
 @pook.on
 def test_response_headers(adapter):
     """Test response headers."""
-    pook.get("https://api.example.com/test").reply(200).header("X-Custom", "value").body(
-        "test"
-    )
+    pook.get("https://api.example.com/test").reply(200).header(
+        "X-Custom", "value"
+    ).body("test")
 
-    response = adapter.request("GET", "/test")
+    result = adapter.request("GET", "/test")
+    assert is_ok(result), f"Expected Ok but got: {result}"
+    response = result.unwrap()
 
     assert "X-Custom" in response.headers or "x-custom" in response.headers
 
@@ -129,10 +158,13 @@ def test_http_error_response(adapter):
     """Test handling of HTTP error responses."""
     pook.get("https://api.example.com/notfound").reply(404).json({"error": "Not found"})
 
-    response = adapter.request("GET", "/notfound")
-
-    assert response.status_code == 404
-    assert response.json() == {"error": "Not found"}
+    result = adapter.request("GET", "/notfound")
+    # 404 should now return Err(ClientError)
+    assert result.is_err(), f"Expected Err but got: {result}"
+    error = result.error()
+    assert error.status_code == 404
+    # Can still access response body from error
+    assert error.response_body is not None
 
 
 @pook.on
@@ -142,7 +174,9 @@ def test_follow_redirects_false(adapter):
         "Location", "https://api.example.com/target"
     )
 
-    response = adapter.request("GET", "/redirect", follow_redirects=False)
+    result = adapter.request("GET", "/redirect", follow_redirects=False)
+    assert is_ok(result), f"Expected Ok but got: {result}"
+    response = result.unwrap()
 
     assert response.status_code == 302
 
@@ -154,7 +188,9 @@ def test_absolute_url_ignores_base_url():
 
     pook.get("https://other-api.example.com/data").reply(200).json({"ok": True})
 
-    response = adapter.request("GET", "https://other-api.example.com/data")
+    result = adapter.request("GET", "https://other-api.example.com/data")
+    assert is_ok(result), f"Expected Ok but got: {result}"
+    response = result.unwrap()
 
     assert response.status_code == 200
 
@@ -172,10 +208,18 @@ def test_custom_client():
         200
     ).json({"ok": True})
 
-    response = adapter.request("GET", "/test")
+    result = adapter.request("GET", "/test")
+
+    assert is_ok(result), f"Expected Ok but got: {result}"
+
+    response = result.unwrap()
 
     assert response.status_code == 200
-    assert response.json() == {"ok": True}
+    json_result = response.json()
+
+    assert is_ok(json_result), f"Expected Ok but got: {json_result}"
+
+    assert json_result.unwrap() == {"ok": True}
     pook.off()
 
 

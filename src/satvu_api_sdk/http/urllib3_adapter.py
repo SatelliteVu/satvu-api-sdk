@@ -1,7 +1,7 @@
 """Urllib3 HTTP adapter."""
 
-from json import dumps, loads
-from typing import Any
+import json as json_lib
+from typing import Any, cast
 from urllib.parse import urlencode, urljoin
 
 try:
@@ -12,7 +12,19 @@ except ImportError:
         'Install it with: pip install "satvu-api-sdk[http-urllib3]"'
     )
 
+from satvu_api_sdk.http.errors import (
+    ClientError,
+    ConnectionTimeoutError,
+    JsonDecodeError,
+    NetworkError,
+    ProxyError,
+    ReadTimeoutError,
+    SSLError,
+    ServerError,
+    TextDecodeError,
+)
 from satvu_api_sdk.http.protocol import HttpMethod, HttpResponse
+from satvu_api_sdk.result import Err, Ok, Result, is_err
 
 
 class Urllib3Response:
@@ -34,14 +46,48 @@ class Urllib3Response:
     def body(self) -> bytes:
         if self._body is None:
             self._body = self._response.data
+        # Type checker doesn't know _body is not None after assignment
+        assert self._body is not None  # nosec B101
         return self._body
 
     @property
-    def text(self) -> str:
-        return self.body.decode("utf-8")
+    def text(self) -> Result[str, TextDecodeError]:
+        """Decode response body as text with error handling."""
+        try:
+            return Ok(self.body.decode("utf-8"))
+        except UnicodeDecodeError as e:
+            return Err(
+                TextDecodeError(
+                    message=f"Failed to decode response body as UTF-8: {e}",
+                    encoding="utf-8",
+                    original_error=e,
+                )
+            )
 
-    def json(self) -> Any:
-        return loads(self.text)
+    def json(self) -> Result[Any, JsonDecodeError | TextDecodeError]:
+        """Parse response body as JSON with error handling."""
+        text_result = self.text
+        if is_err(text_result):
+            text_err = text_result.error()
+            return Err(
+                JsonDecodeError(
+                    message=f"Cannot parse JSON: {text_err.message}",
+                    body=None,
+                    original_error=text_err.original_error,
+                )
+            )
+
+        text_value = text_result.unwrap()
+        try:
+            return Ok(json_lib.loads(text_value))
+        except json_lib.JSONDecodeError as e:
+            return Err(
+                JsonDecodeError(
+                    message=f"Failed to parse JSON: {e}",
+                    body=text_value,
+                    original_error=e,
+                )
+            )
 
 
 class Urllib3Adapter:
@@ -88,7 +134,16 @@ class Urllib3Adapter:
         data: dict[str, str] | None = None,
         timeout: float = 5.0,
         follow_redirects: bool = False,
-    ) -> HttpResponse:
+    ) -> Result[
+        HttpResponse,
+        ClientError
+        | ServerError
+        | NetworkError
+        | ConnectionTimeoutError
+        | ReadTimeoutError
+        | SSLError
+        | ProxyError,
+    ]:
         """Make an HTTP request using urllib3."""
         # Build full URL
         if self.base_url and not url.startswith(("http://", "https://")):
@@ -111,20 +166,135 @@ class Urllib3Adapter:
         # Prepare body
         body_data: bytes | str | None = None
         if json is not None:
-            body_data = dumps(json)
+            body_data = json_lib.dumps(json)
             req_headers["Content-Type"] = "application/json"
         elif data is not None:
             body_data = urlencode(data)
             req_headers["Content-Type"] = "application/x-www-form-urlencoded"
 
         # Make request
-        response = self.pool_manager.request(
-            method=method,
-            url=full_url,
-            headers=req_headers,
-            body=body_data,
-            timeout=timeout,
-            redirect=follow_redirects,
-        )
+        try:
+            response = self.pool_manager.request(
+                method=method,
+                url=full_url,
+                headers=req_headers,
+                body=body_data,
+                timeout=timeout,
+                redirect=follow_redirects,
+            )
 
-        return Urllib3Response(response)
+            response_wrapper = Urllib3Response(response)
+
+            # Check for error status codes
+            if 400 <= response.status < 500:
+                return Err(
+                    ClientError(
+                        message=f"Client error: {response.status}",
+                        status_code=response.status,
+                        url=full_url,
+                        response_body=response.data,
+                        response_headers=dict(response.headers.items()),
+                    )
+                )
+            elif 500 <= response.status < 600:
+                return Err(
+                    ServerError(
+                        message=f"Server error: {response.status}",
+                        status_code=response.status,
+                        url=full_url,
+                        response_body=response.data,
+                        response_headers=dict(response.headers.items()),
+                    )
+                )
+
+            return Ok(cast(HttpResponse, response_wrapper))
+
+        except urllib3.exceptions.NewConnectionError as e:
+            return Err(
+                NetworkError(
+                    message=f"Failed to establish connection: {e}",
+                    url=full_url,
+                    original_error=e,
+                )
+            )
+
+        except urllib3.exceptions.ConnectTimeoutError as e:
+            return Err(
+                ConnectionTimeoutError(
+                    message=f"Connection timeout after {timeout} seconds",
+                    url=full_url,
+                    timeout=timeout,
+                    original_error=e,
+                )
+            )
+
+        except urllib3.exceptions.ReadTimeoutError as e:
+            return Err(
+                ReadTimeoutError(
+                    message=f"Read timeout after {timeout} seconds",
+                    url=full_url,
+                    timeout=timeout,
+                    original_error=e,
+                )
+            )
+
+        except urllib3.exceptions.TimeoutError as e:
+            # Generic timeout
+            return Err(
+                ReadTimeoutError(
+                    message=f"Request timeout after {timeout} seconds",
+                    url=full_url,
+                    timeout=timeout,
+                    original_error=e,
+                )
+            )
+
+        except urllib3.exceptions.ProxyError as e:
+            return Err(
+                ProxyError(
+                    message=f"Proxy error: {e}",
+                    url=full_url,
+                    original_error=e,
+                )
+            )
+
+        except urllib3.exceptions.SSLError as e:
+            return Err(
+                SSLError(
+                    message=f"SSL/TLS error: {e}",
+                    url=full_url,
+                    original_error=e,
+                )
+            )
+
+        except urllib3.exceptions.MaxRetryError as e:
+            # MaxRetryError can wrap various errors
+            reason = str(e.reason) if e.reason else str(e)
+
+            if "timed out" in reason.lower():
+                return Err(
+                    ReadTimeoutError(
+                        message=f"Request timed out: {reason}",
+                        url=full_url,
+                        timeout=timeout,
+                        original_error=e,
+                    )
+                )
+
+            return Err(
+                NetworkError(
+                    message=f"Max retries exceeded: {reason}",
+                    url=full_url,
+                    original_error=e,
+                )
+            )
+
+        except urllib3.exceptions.HTTPError as e:
+            # Generic urllib3 HTTP error (base class)
+            return Err(
+                NetworkError(
+                    message=f"HTTP error: {e}",
+                    url=full_url,
+                    original_error=e,
+                )
+            )

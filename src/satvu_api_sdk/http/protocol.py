@@ -1,6 +1,10 @@
 """HTTP client protocol definitions for SDK adapters."""
 
-from typing import Any, Literal, Protocol
+from typing import TYPE_CHECKING, Any, Literal, Protocol
+
+if TYPE_CHECKING:
+    from satvu_api_sdk.http.errors import HttpError, JsonDecodeError, TextDecodeError
+    from satvu_api_sdk.result import Result
 
 HttpMethod = Literal["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"]
 
@@ -24,12 +28,22 @@ class HttpResponse(Protocol):
         ...
 
     @property
-    def text(self) -> str:
-        """Response body decoded as text."""
+    def text(self) -> "Result[str, TextDecodeError]":
+        """
+        Response body decoded as text.
+
+        Returns:
+            Ok(str) with decoded text, or Err(TextDecodeError) if decoding fails
+        """
         ...
 
-    def json(self) -> Any:
-        """Parse response body as JSON."""
+    def json(self) -> "Result[Any, JsonDecodeError | TextDecodeError]":
+        """
+        Parse response body as JSON.
+
+        Returns:
+            Ok(parsed_json) on success, or Err(JsonDecodeError | TextDecodeError) if parsing fails
+        """
         ...
 
 
@@ -47,7 +61,7 @@ class HttpClient(Protocol):
         data: dict[str, str] | None = None,
         timeout: float = 5.0,
         follow_redirects: bool = False,
-    ) -> HttpResponse:
+    ) -> "Result[HttpResponse, HttpError]":
         """
         Make an HTTP request.
 
@@ -62,6 +76,24 @@ class HttpClient(Protocol):
             follow_redirects: Whether to follow redirects
 
         Returns:
-            HttpResponse object
+            Result containing either:
+            - Ok(HttpResponse) on success (including 2xx and 3xx responses)
+            - Err(HttpError) on failure, which can be:
+                - NetworkError: Connection failures, DNS errors
+                - ConnectionTimeoutError: Timeout establishing connection
+                - ReadTimeoutError: Timeout reading response
+                - SSLError: Certificate/TLS errors
+                - ProxyError: Proxy connection/auth failures
+                - ClientError: HTTP 4xx responses
+                - ServerError: HTTP 5xx responses
+                - RequestValidationError: Invalid parameters
+
+        Example:
+            >>> result = client.request("GET", "https://api.example.com/data")
+            >>> match result:
+            ...     case Ok(response):
+            ...         print(f"Success: {response.status_code}")
+            ...     case Err(error):
+            ...         print(f"Failed: {error}")
         """
         ...

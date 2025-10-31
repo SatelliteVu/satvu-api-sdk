@@ -1,14 +1,27 @@
 """Standard library HTTP adapter using urllib."""
 
 import json as json_lib
+import socket
 import warnings
 from http.client import HTTPResponse as StdlibHTTPResponse
-from typing import Any
-from urllib.error import HTTPError
+from typing import Any, cast
+from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode, urljoin
 from urllib.request import Request, urlopen
 
+from satvu_api_sdk.http.errors import (
+    ClientError,
+    ConnectionTimeoutError,
+    JsonDecodeError,
+    NetworkError,
+    ProxyError,
+    ReadTimeoutError,
+    SSLError,
+    ServerError,
+    TextDecodeError,
+)
 from satvu_api_sdk.http.protocol import HttpMethod, HttpResponse
+from satvu_api_sdk.result import Err, Ok, Result, is_err
 
 
 class StdlibResponse:
@@ -35,11 +48,44 @@ class StdlibResponse:
         return self._body
 
     @property
-    def text(self) -> str:
-        return self.body.decode("utf-8")
+    def text(self) -> Result[str, TextDecodeError]:
+        """Decode response body as text with error handling."""
+        try:
+            return Ok(self.body.decode("utf-8"))
+        except UnicodeDecodeError as e:
+            return Err(
+                TextDecodeError(
+                    message=f"Failed to decode response body as UTF-8: {e}",
+                    encoding="utf-8",
+                    original_error=e,
+                )
+            )
 
-    def json(self) -> Any:
-        return json_lib.loads(self.text)
+    def json(self) -> Result[Any, JsonDecodeError | TextDecodeError]:
+        """Parse response body as JSON with error handling."""
+        text_result = self.text
+        if is_err(text_result):
+            # If we can't decode text, wrap it in JsonDecodeError
+            text_err = text_result.error()
+            return Err(
+                JsonDecodeError(
+                    message=f"Cannot parse JSON: {text_err.message}",
+                    body=None,
+                    original_error=text_err.original_error,
+                )
+            )
+
+        text_value = text_result.unwrap()
+        try:
+            return Ok(json_lib.loads(text_value))
+        except json_lib.JSONDecodeError as e:
+            return Err(
+                JsonDecodeError(
+                    message=f"Failed to parse JSON: {e}",
+                    body=text_value,
+                    original_error=e,
+                )
+            )
 
 
 class StdlibAdapter:
@@ -69,7 +115,16 @@ class StdlibAdapter:
         data: dict[str, str] | None = None,
         timeout: float = 5.0,
         follow_redirects: bool = False,
-    ) -> HttpResponse:
+    ) -> Result[
+        HttpResponse,
+        ClientError
+        | ServerError
+        | NetworkError
+        | ConnectionTimeoutError
+        | ReadTimeoutError
+        | SSLError
+        | ProxyError,
+    ]:
         """Make an HTTP request using urllib."""
         # Warn if follow_redirects is False (urllib always follows redirects)
         if not follow_redirects:
@@ -118,7 +173,129 @@ class StdlibAdapter:
         # Make request
         try:
             response = urlopen(request, timeout=timeout)
-            return StdlibResponse(response, full_url)
+            response_wrapper = StdlibResponse(response, full_url)
+
+            # Check for error status codes
+            if 400 <= response_wrapper.status_code < 500:
+                return Err(
+                    ClientError(
+                        message=f"Client error: {response_wrapper.status_code}",
+                        status_code=response_wrapper.status_code,
+                        url=full_url,
+                        response_body=response_wrapper.body,
+                        response_headers=response_wrapper.headers,
+                    )
+                )
+            elif 500 <= response_wrapper.status_code < 600:
+                return Err(
+                    ServerError(
+                        message=f"Server error: {response_wrapper.status_code}",
+                        status_code=response_wrapper.status_code,
+                        url=full_url,
+                        response_body=response_wrapper.body,
+                        response_headers=response_wrapper.headers,
+                    )
+                )
+
+            return Ok(cast(HttpResponse, response_wrapper))
+
         except HTTPError as e:
-            # HTTPError is also a valid response, just with error status
-            return StdlibResponse(e, full_url)
+            # HTTPError has response data and status code
+            response_wrapper = StdlibResponse(e, full_url)
+            status_code = response_wrapper.status_code
+
+            if 400 <= status_code < 500:
+                return Err(
+                    ClientError(
+                        message=f"Client error: {status_code}",
+                        status_code=status_code,
+                        url=full_url,
+                        response_body=response_wrapper.body,
+                        response_headers=response_wrapper.headers,
+                    )
+                )
+            elif 500 <= status_code < 600:
+                return Err(
+                    ServerError(
+                        message=f"Server error: {status_code}",
+                        status_code=status_code,
+                        url=full_url,
+                        response_body=response_wrapper.body,
+                        response_headers=response_wrapper.headers,
+                    )
+                )
+            else:
+                # Shouldn't happen, but treat as network error
+                return Err(
+                    NetworkError(
+                        message=f"Unexpected HTTP error: {e}",
+                        url=full_url,
+                        original_error=e,
+                    )
+                )
+
+        except socket.timeout as e:
+            # Socket timeout - could be connection or read timeout
+            # urllib doesn't distinguish, so we'll call it read timeout
+            return Err(
+                ReadTimeoutError(
+                    message=f"Request timed out after {timeout} seconds",
+                    url=full_url,
+                    timeout=timeout,
+                    original_error=e,
+                )
+            )
+
+        except URLError as e:
+            # URLError wraps various errors
+            reason = str(e.reason)
+
+            # Check for SSL errors
+            if "SSL" in reason or "CERTIFICATE" in reason.upper():
+                return Err(
+                    SSLError(
+                        message=f"SSL/TLS error: {reason}",
+                        url=full_url,
+                        original_error=e,
+                    )
+                )
+
+            # Check for proxy errors
+            if "proxy" in reason.lower():
+                return Err(
+                    ProxyError(
+                        message=f"Proxy error: {reason}",
+                        url=full_url,
+                        original_error=e,
+                    )
+                )
+
+            # Check for timeout in the reason (sometimes wrapped in URLError)
+            if isinstance(e.reason, socket.timeout):
+                return Err(
+                    ReadTimeoutError(
+                        message=f"Request timed out after {timeout} seconds",
+                        url=full_url,
+                        timeout=timeout,
+                        original_error=e,
+                    )
+                )
+
+            # Generic network error
+            return Err(
+                NetworkError(
+                    message=f"Network error: {reason}",
+                    url=full_url,
+                    original_error=e,
+                )
+            )
+
+        except OSError as e:
+            # Catch-all for other OS-level errors (connection refused, etc.)
+            return Err(
+                NetworkError(
+                    message=f"OS error during request: {e}",
+                    url=full_url,
+                    original_error=e,
+                )
+            )

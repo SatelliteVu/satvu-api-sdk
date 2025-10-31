@@ -23,7 +23,7 @@ from builder.load import load_openapi
 BASE_DIR = (Path(__file__).parent / "..").resolve()
 CACHE_DIR = BASE_DIR / ".cache"
 TEMPLATE_DIR = Path(__file__).parent / "templates"
-SRC_DIR = BASE_DIR / "src"
+SRC_DIR = BASE_DIR / "src" / "satvu_api_sdk" / "services"
 
 
 @dataclass
@@ -139,6 +139,7 @@ def build(api_id: str, use_cached: bool = False):
             build(api, use_cached)
         return
 
+    # Use simple prefix for parsing, we'll fix imports in the template
     openapi_python_client.parser.openapi.models_relative_prefix = f"{api_id}."
     openapi_dict, openapi_src = load_openapi(api_id, use_cached)
     config = Config.from_sources(

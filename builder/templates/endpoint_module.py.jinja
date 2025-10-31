@@ -130,12 +130,20 @@ from collections.abc import Callable
 from typing import Any, Unpack, Union, List, Dict
 from uuid import UUID
 
-from src.satvu_api_sdk.core import SDKClient
-from src.shared.utils import normalize_keys, deep_parse_from_annotation
+from satvu_api_sdk.core import SDKClient
+from satvu_api_sdk.shared.parsing import normalize_keys, parse_response
 
 {% for endpoint in endpoints %}
 {% for relative in endpoint.relative_imports | sort %}
-{{ relative }}
+{{ relative.replace('from ' + api_id + '.models', 'from satvu_api_sdk.services.' + api_id + '.models') }}
+{% endfor %}
+{# Also include imports for response models #}
+{% for response in endpoint.responses %}
+{% if response.prop %}
+{% for relative in response.prop.get_imports(prefix=api_id + '.') | sort %}
+{{ relative.replace('from ' + api_id + '.models', 'from satvu_api_sdk.services.' + api_id + '.models') }}
+{% endfor %}
+{% endif %}
 {% endfor %}
 {% endfor %}
 
@@ -147,8 +155,20 @@ class {{ api_id | title }}Service(SDKClient):
         super().__init__(env=env, get_token=get_token)
 
     {% for endpoint in endpoints %}
-    {% set success_responses = endpoint.responses | selectattr("status_code.is_success") | list %}
-    {% set redirect_response = endpoint.responses | selectattr("status_code.is_redirection") | list %}
+    {# Filter for 2xx success responses by checking the pattern string #}
+    {% set success_responses = [] %}
+    {% for resp in endpoint.responses %}
+        {% if resp.status_code.pattern|string|first == '2' %}
+            {% set _ = success_responses.append(resp) %}
+        {% endif %}
+    {% endfor %}
+    {# Filter for 3xx redirect responses #}
+    {% set redirect_response = [] %}
+    {% for resp in endpoint.responses %}
+        {% if resp.status_code.pattern|string|first == '3' %}
+            {% set _ = redirect_response.append(resp) %}
+        {% endif %}
+    {% endfor %}
 
     def {{ endpoint.name }}(self, {{ arguments(endpoint) }}) -> {{ return_annotation(success_responses, redirect_response) }}:
         {{ docstring(endpoint, return_annotation(success_responses, redirect_response), is_detailed=true) }}
@@ -170,12 +190,12 @@ class {{ api_id | title }}Service(SDKClient):
         {% endif %}
 
         {% for response in success_responses %}
-        if response.status_code == {{ response.status_code }}:
+        if response.status_code == {{ response.status_code.pattern }}:
             {% set response_type = response.prop.get_type_string(quoted=False) %}
             {% if response_type == 'Any' %}
             return response.json()
             {% else %}
-            return deep_parse_from_annotation(response.json(), {{ response_type }}, self.__class__)
+            return parse_response(response.json(), {{ response_type }})
             {% endif %}
         {% endfor %}
         return response.json()

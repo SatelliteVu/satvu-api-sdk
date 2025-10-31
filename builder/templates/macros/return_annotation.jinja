@@ -7,7 +7,7 @@
 	{% if success_responses | length > 1 %}
 		{% set ns.return_string = "Union[" %}
 		{% for response in success_responses %}
-			{% set ns.return_string = ns.return_string + response.prop.get_type_string(quoted=False) %}
+			{% set ns.return_string = ns.return_string + response.prop.get_type_string() %}
 			{% if not loop.last %}
 			{% set ns.return_string = ns.return_string + ", " %}
 			{% endif %}
@@ -21,11 +21,13 @@
 
 	{# if only one success response and a redirect response, return a union with BytesIO #}
 	{% elif success_response | length == 1 and redirect_response %}
-		{% set ns.return_string = "Union[" + success_responses[0].prop.get_type_string(quoted=False) + "io.BytesIO]" -%}
+		{% set ns.return_string = "Union[" + success_responses[0].prop.get_type_string() + "io.BytesIO]" -%}
 
 	{# if only one success response and no redirect response, return the type of that response #}
+	{% elif success_responses | length == 1 %}
+	{% set ns.return_string = success_responses[0].prop.get_type_string() %}
 	{% else %}
-	{% set ns.return_string = success_responses[0].prop.get_type_string(quoted=False) %}
+	{% set ns.return_string = "Any" %}
 	{% endif %}
 
 	{{- ns.return_string -}}

@@ -127,6 +127,7 @@ openapi_python_client.parser.openapi.Endpoint.from_data = from_data
 
 
 # Override lots of methods to avoid the use of 'Unset'
+# This patches ListProperty.get_type_string
 def get_type_string(
     self,
     no_optional: bool = False,
@@ -165,16 +166,18 @@ def to_string(self) -> str:
 
     # For const (literal) properties, default to the value of the constant
     if isinstance(self, openapi_python_client.parser.properties.const.ConstProperty):
-        return f"{self.python_name}: {self.get_type_string(quoted=True)} = {self.value.python_code}"
+        return (
+            f"{self.python_name}: {self.get_type_string()} = {self.value.python_code}"
+        )
 
     if self.default is not None:
         default = self.default.python_code
-        return f"{self.python_name}: {self.get_type_string(quoted=True)} = {default}"
+        return f"{self.python_name}: {self.get_type_string()} = {default}"
     elif not self.required:
         default = None
-        return f"{self.python_name}: {self.get_type_string(quoted=True)} = {default}"
+        return f"{self.python_name}: {self.get_type_string()} = {default}"
     else:
-        return f"{self.python_name}: {self.get_type_string(quoted=True)}"
+        return f"{self.python_name}: {self.get_type_string()}"
 
 
 def to_pydantic_model_field(self: PropertyProtocol) -> str:
@@ -183,7 +186,14 @@ def to_pydantic_model_field(self: PropertyProtocol) -> str:
     This includes the field name, type, default value, and description.
     For use in jinja templates to generate Pydantic models
     """
-    field_start = f"{self.python_name}: {self.get_type_string(quoted=True)}"
+    # ModelProperty needs quoted=True to quote forward references
+    if isinstance(
+        self, openapi_python_client.parser.properties.model_property.ModelProperty
+    ):
+        field_start = f"{self.python_name}: {self.get_type_string(quoted=True)}"
+    else:
+        field_start = f"{self.python_name}: {self.get_type_string()}"
+
     description = f'"{self.description}"' if self.description else "None"
 
     # For const (literal) properties, default to the value of the constant
@@ -207,10 +217,16 @@ def get_type_string(
     *,
     quoted: bool = False,
 ) -> str:
+    # This is PropertyProtocol.get_type_string patch - accept quoted but ignore it
+    # Only ModelProperty actually uses the quoted parameter
     if json:
-        type_string = self.get_base_json_type_string(quoted=quoted)
+        # Check if this property has get_base_json_type_string that accepts quoted
+        try:
+            type_string = self.get_base_json_type_string(quoted=quoted)
+        except TypeError:
+            type_string = self.get_base_json_type_string()
     else:
-        type_string = self.get_base_type_string(quoted=quoted)
+        type_string = self.get_base_type_string()
 
     if no_optional or self.required:
         return type_string
@@ -259,24 +275,106 @@ openapi_python_client.parser.properties.const.ConstProperty.get_type_string = (
 
 
 def get_type_strings_in_union(
-    self, *, no_optional: bool = False, json: bool
+    self, *, no_optional: bool = False, json: bool, quoted: bool = True
 ) -> set[str]:
-    type_strings = self._get_inner_type_strings(json=json)
+    type_strings = self._get_inner_type_strings(json=json, quoted=quoted)
     if no_optional:
         return type_strings
     return type_strings
 
 
-def _get_inner_type_strings(self, json: bool) -> set[str]:
-    return {
-        p.get_type_string(no_optional=True, json=json, quoted=True)
-        for p in self.inner_properties
-    }
+def _get_inner_type_strings(self, json: bool, quoted: bool = True) -> set[str]:
+    # Only pass quoted=True to ModelProperty (which supports it)
+    # The quoted parameter controls whether ModelProperty types should be quoted
+    result = set()
+    for p in self.inner_properties:
+        if isinstance(
+            p, openapi_python_client.parser.properties.model_property.ModelProperty
+        ):
+            result.add(p.get_type_string(no_optional=True, json=json, quoted=quoted))
+        else:
+            result.add(p.get_type_string(no_optional=True, json=json))
+    return result
+
+
+def _get_type_string_from_inner_type_strings(self, inner_types: set[str]) -> str:
+    """
+    Override to use Union[...] syntax when types are quoted (forward references).
+
+    The default implementation uses | syntax which breaks with quoted types:
+    'Type1' | 'Type2'  # Invalid!
+
+    We need:
+    Union['Type1', 'Type2']  # Valid!
+    """
+    if len(inner_types) == 1:
+        return inner_types.pop()
+
+    # Check if any type is quoted (forward reference)
+    has_quoted = any(t.startswith("'") and t.endswith("'") for t in inner_types)
+
+    if has_quoted:
+        # Use Union[...] syntax for quoted types
+        return f"Union[{', '.join(sorted(inner_types, key=lambda x: x.lower()))}]"
+    else:
+        # Use | syntax for non-quoted types
+        return " | ".join(sorted(inner_types, key=lambda x: x.lower()))
+
+
+def get_base_type_string(self, *, quoted: bool = True) -> str:
+    """Get base type string with control over whether ModelProperty types are quoted"""
+    return self._get_type_string_from_inner_type_strings(
+        self._get_inner_type_strings(json=False, quoted=quoted)
+    )
+
+
+def get_base_json_type_string(self, *, quoted: bool = True) -> str:
+    """Get base JSON type string with control over whether ModelProperty types are quoted"""
+    return self._get_type_string_from_inner_type_strings(
+        self._get_inner_type_strings(json=True, quoted=quoted)
+    )
+
+
+def get_type_string_union(
+    self,
+    no_optional: bool = False,
+    json: bool = False,
+    *,
+    quoted: bool = True,
+) -> str:
+    """Get type string for UnionProperty with control over quoted parameter"""
+    if json:
+        type_string = self.get_base_json_type_string(quoted=quoted)
+    else:
+        type_string = self.get_base_type_string(quoted=quoted)
+
+    if no_optional or self.required:
+        return type_string
+
+    # Check if None is already in the union (e.g., from anyOf: [string, null])
+    # This prevents duplicate None in types like "None | None | str"
+    if "None" in type_string or "null" in type_string.lower():
+        return type_string
+
+    # If type_string contains quoted types (forward references), use Union[None, ...] syntax
+    # Otherwise, use | syntax for consistency
+    if "'" in type_string or '"' in type_string:
+        return f"Union[None, {type_string}]"
+    else:
+        return f"None | {type_string}"
 
 
 openapi_python_client.parser.properties.union.UnionProperty.get_type_strings_in_union = get_type_strings_in_union
 openapi_python_client.parser.properties.union.UnionProperty._get_inner_type_strings = (
     _get_inner_type_strings
+)
+openapi_python_client.parser.properties.union.UnionProperty._get_type_string_from_inner_type_strings = _get_type_string_from_inner_type_strings
+openapi_python_client.parser.properties.union.UnionProperty.get_base_type_string = (
+    get_base_type_string
+)
+openapi_python_client.parser.properties.union.UnionProperty.get_base_json_type_string = get_base_json_type_string
+openapi_python_client.parser.properties.union.UnionProperty.get_type_string = (
+    get_type_string_union
 )
 
 

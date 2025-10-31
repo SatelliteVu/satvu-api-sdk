@@ -21,7 +21,7 @@ class AssetRasterBands(BaseModel):
     Attributes:
         bits_per_sample (Union[None, int]): The actual number of bits used for this band
         data_type (Union[None, 'AssetRasterBandsDataTypeOfTheBand']): Data type of the band
-        nodata (Union['AssetRasterBandsNodataType1', float]): No data pixel value
+        nodata (Union[None, Union['AssetRasterBandsNodataType1', float]]): No data pixel value
         offset (Union[None, float]): Number to be added to the pixel value to transform into the value
         sampling (Union[None, 'AssetRasterBandsPixelSamplingInTheBand']): Pixel sampling in the band
         scale (Union[None, float]): Multiplicator factor of the pixel value to transform into the value
@@ -37,7 +37,7 @@ class AssetRasterBands(BaseModel):
     data_type: Union[None, "AssetRasterBandsDataTypeOfTheBand"] = Field(
         None, description="Data type of the band", alias="data_type"
     )
-    nodata: Union["AssetRasterBandsNodataType1", float] = Field(
+    nodata: Union[None, Union["AssetRasterBandsNodataType1", float]] = Field(
         None, description="No data pixel value", alias="nodata"
     )
     offset: Union[None, float] = Field(

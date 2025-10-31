@@ -3,8 +3,6 @@ from typing import Any, Union
 from uuid import UUID
 
 from satvu_api_sdk.core import SDKClient
-from satvu_api_sdk.shared.utils import deep_parse_from_annotation
-
 from satvu_api_sdk.services.id.models.client_credentials import ClientCredentials
 from satvu_api_sdk.services.id.models.client_id import ClientID
 from satvu_api_sdk.services.id.models.core_webhook import CoreWebhook
@@ -25,6 +23,7 @@ from satvu_api_sdk.services.id.models.user_info import UserInfo
 from satvu_api_sdk.services.id.models.user_info_deprecated import UserInfoDeprecated
 from satvu_api_sdk.services.id.models.user_settings import UserSettings
 from satvu_api_sdk.services.id.models.webhook_response import WebhookResponse
+from satvu_api_sdk.shared.parsing import parse_response
 
 
 class IdService(SDKClient):
@@ -36,7 +35,7 @@ class IdService(SDKClient):
     def list_webhooks(
         self,
         per_page: Union[None, int] = 25,
-        token: Union[None, str] = None,
+        token: None | str = None,
     ) -> ListWebhookResponse:
         """
         List Webhooks
@@ -45,7 +44,7 @@ class IdService(SDKClient):
 
         Args:
             per_page (Union[None, int]): The number of webhooks to return per page. Default: 25.
-            token (Union[None, str]): The pagination token
+            token (None | str): The pagination token
 
         Returns:
             ListWebhookResponse
@@ -63,9 +62,7 @@ class IdService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), ListWebhookResponse, self.__class__
-            )
+            return parse_response(response.json(), ListWebhookResponse)
         return response.json()
 
     def create_webhook(self, body: CoreWebhook) -> CreateWebhookResponse:
@@ -90,9 +87,7 @@ class IdService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), CreateWebhookResponse, self.__class__
-            )
+            return parse_response(response.json(), CreateWebhookResponse)
         return response.json()
 
     def get_webhook(
@@ -117,9 +112,7 @@ class IdService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), WebhookResponse, self.__class__
-            )
+            return parse_response(response.json(), WebhookResponse)
         return response.json()
 
     def delete_webhook(
@@ -170,9 +163,7 @@ class IdService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), WebhookResponse, self.__class__
-            )
+            return parse_response(response.json(), WebhookResponse)
         return response.json()
 
     def get_webhook_events(
@@ -195,9 +186,7 @@ class IdService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), list[NotificationDescription], self.__class__
-            )
+            return parse_response(response.json(), list[NotificationDescription])
         return response.json()
 
     def rotate_webhook_signing_key(
@@ -222,9 +211,7 @@ class IdService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), PostWebhookResponse, self.__class__
-            )
+            return parse_response(response.json(), PostWebhookResponse)
         return response.json()
 
     def test_webhook(
@@ -249,9 +236,7 @@ class IdService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), TestWebhookResponse, self.__class__
-            )
+            return parse_response(response.json(), TestWebhookResponse)
         return response.json()
 
     def get_user_client__contract_id__client_get(
@@ -276,7 +261,7 @@ class IdService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), ClientID, self.__class__)
+            return parse_response(response.json(), ClientID)
         if response.status_code == 204:
             return response.json()
         return response.json()
@@ -303,9 +288,7 @@ class IdService(SDKClient):
         )
 
         if response.status_code == 201:
-            return deep_parse_from_annotation(
-                response.json(), ClientCredentials, self.__class__
-            )
+            return parse_response(response.json(), ClientCredentials)
         return response.json()
 
     def rotate_client_secret__contract_id__client_reset_post(
@@ -330,9 +313,7 @@ class IdService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), ClientCredentials, self.__class__
-            )
+            return parse_response(response.json(), ClientCredentials)
         return response.json()
 
     def get_user_details__contract_id__user_details_get(
@@ -357,9 +338,7 @@ class IdService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), UserInfoDeprecated, self.__class__
-            )
+            return parse_response(response.json(), UserInfoDeprecated)
         return response.json()
 
     def credit__contract_id__wallet_credit_get(
@@ -388,9 +367,7 @@ class IdService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), CreditBalanceResponse, self.__class__
-            )
+            return parse_response(response.json(), CreditBalanceResponse)
         return response.json()
 
     def get_user_client(
@@ -413,7 +390,7 @@ class IdService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), ClientID, self.__class__)
+            return parse_response(response.json(), ClientID)
         if response.status_code == 204:
             return response.json()
         return response.json()
@@ -438,9 +415,7 @@ class IdService(SDKClient):
         )
 
         if response.status_code == 201:
-            return deep_parse_from_annotation(
-                response.json(), ClientCredentials, self.__class__
-            )
+            return parse_response(response.json(), ClientCredentials)
         return response.json()
 
     def rotate_client_secret(
@@ -463,9 +438,7 @@ class IdService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), ClientCredentials, self.__class__
-            )
+            return parse_response(response.json(), ClientCredentials)
         return response.json()
 
     def get_user_details(
@@ -488,7 +461,7 @@ class IdService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), UserInfo, self.__class__)
+            return parse_response(response.json(), UserInfo)
         return response.json()
 
     def edit_user_settings(self, body: UserSettings) -> UserInfo:
@@ -513,5 +486,5 @@ class IdService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), UserInfo, self.__class__)
+            return parse_response(response.json(), UserInfo)
         return response.json()

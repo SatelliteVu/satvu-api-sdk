@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -24,10 +24,10 @@ class CreateUserResponse(BaseModel):
         user_email (str): The email address of the user.
         user_name (str): The full name of the user.
         user_id (str): The unique identifier for the user.
-        company_kyc_completed_on (Union[None, datetime.date]): The date when KYC was completed for the company, if
-            applicable. In YYYY-MM-DD format.
-        user_kyc_completed_on (Union[None, datetime.date]): The date when KYC was completed for the user, if applicable.
+        company_kyc_completed_on (datetime.date | None): The date when KYC was completed for the company, if applicable.
             In YYYY-MM-DD format.
+        user_kyc_completed_on (datetime.date | None): The date when KYC was completed for the user, if applicable. In
+            YYYY-MM-DD format.
     """
 
     company_kyc_status: "KYCStatus" = Field(
@@ -52,12 +52,12 @@ class CreateUserResponse(BaseModel):
     user_id: str = Field(
         ..., description="The unique identifier for the user.", alias="user_id"
     )
-    company_kyc_completed_on: Union[None, datetime.date] = Field(
+    company_kyc_completed_on: datetime.date | None = Field(
         None,
         description="The date when KYC was completed for the company, if applicable. In YYYY-MM-DD format.",
         alias="company_kyc_completed_on",
     )
-    user_kyc_completed_on: Union[None, datetime.date] = Field(
+    user_kyc_completed_on: datetime.date | None = Field(
         None,
         description="The date when KYC was completed for the user, if applicable. In YYYY-MM-DD format.",
         alias="user_kyc_completed_on",

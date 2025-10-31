@@ -4,8 +4,6 @@ from typing import Any, Union
 from uuid import UUID
 
 from satvu_api_sdk.core import SDKClient
-from satvu_api_sdk.shared.utils import deep_parse_from_annotation
-
 from satvu_api_sdk.services.otm.models.assured_order_request import AssuredOrderRequest
 from satvu_api_sdk.services.otm.models.edit_order_payload import EditOrderPayload
 from satvu_api_sdk.services.otm.models.feasibility_request import FeasibilityRequest
@@ -44,6 +42,7 @@ from satvu_api_sdk.services.otm.models.stored_feasibility_request import (
     StoredFeasibilityRequest,
 )
 from satvu_api_sdk.services.otm.models.stored_order_response import StoredOrderResponse
+from satvu_api_sdk.shared.parsing import parse_response
 
 
 class OtmService(SDKClient):
@@ -56,7 +55,7 @@ class OtmService(SDKClient):
         self,
         contract_id: UUID,
         per_page: Union[None, int] = 25,
-        token: Union[None, str] = None,
+        token: None | str = None,
     ) -> ListStoredOrdersResponse:
         """
         List all tasking orders.
@@ -67,7 +66,7 @@ class OtmService(SDKClient):
         Args:
             contract_id (UUID): Contract ID
             per_page (Union[None, int]): The number of orders to return per page. Default: 25.
-            token (Union[None, str]): The pagination token
+            token (None | str): The pagination token
 
         Returns:
             ListStoredOrdersResponse
@@ -85,9 +84,7 @@ class OtmService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), ListStoredOrdersResponse, self.__class__
-            )
+            return parse_response(response.json(), ListStoredOrdersResponse)
         return response.json()
 
     def post_tasking_orders(
@@ -128,10 +125,8 @@ class OtmService(SDKClient):
         )
 
         if response.status_code == 201:
-            return deep_parse_from_annotation(
-                response.json(),
-                Union["ResellerStoredOrderResponse", "StoredOrderResponse"],
-                self.__class__,
+            return parse_response(
+                response.json(), ResellerStoredOrderResponse | StoredOrderResponse
             )
         return response.json()
 
@@ -161,10 +156,8 @@ class OtmService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(),
-                Union["GetOrderResponse", "ResellerGetOrderResponse"],
-                self.__class__,
+            return parse_response(
+                response.json(), GetOrderResponse | ResellerGetOrderResponse
             )
         return response.json()
 
@@ -196,10 +189,8 @@ class OtmService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(),
-                Union["GetOrderResponse", "ResellerGetOrderResponse"],
-                self.__class__,
+            return parse_response(
+                response.json(), GetOrderResponse | ResellerGetOrderResponse
             )
         return response.json()
 
@@ -277,9 +268,7 @@ class OtmService(SDKClient):
             return zip_bytes
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), OrderItemDownloadUrl, self.__class__
-            )
+            return parse_response(response.json(), OrderItemDownloadUrl)
         if response.status_code == 202:
             return response.json()
         return response.json()
@@ -310,16 +299,14 @@ class OtmService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), StacFeature, self.__class__
-            )
+            return parse_response(response.json(), StacFeature)
         return response.json()
 
     def get_tasking_feasibility_requests(
         self,
         contract_id: UUID,
         per_page: Union[None, int] = 25,
-        token: Union[None, str] = None,
+        token: None | str = None,
     ) -> StoredFeasibilityFeatureCollection:
         """
         List all feasibility requests owned by a user.
@@ -329,7 +316,7 @@ class OtmService(SDKClient):
         Args:
             contract_id (UUID): Contract ID
             per_page (Union[None, int]): The number of orders to return per page Default: 25.
-            token (Union[None, str]): The pagination token
+            token (None | str): The pagination token
 
         Returns:
             StoredFeasibilityFeatureCollection
@@ -347,9 +334,7 @@ class OtmService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), StoredFeasibilityFeatureCollection, self.__class__
-            )
+            return parse_response(response.json(), StoredFeasibilityFeatureCollection)
         return response.json()
 
     def post_tasking_feasibility(
@@ -377,9 +362,7 @@ class OtmService(SDKClient):
         )
 
         if response.status_code == 202:
-            return deep_parse_from_annotation(
-                response.json(), StoredFeasibilityRequest, self.__class__
-            )
+            return parse_response(response.json(), StoredFeasibilityRequest)
         return response.json()
 
     def get_tasking_feasibility_request(
@@ -408,9 +391,7 @@ class OtmService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), StoredFeasibilityRequest, self.__class__
-            )
+            return parse_response(response.json(), StoredFeasibilityRequest)
         return response.json()
 
     def get_tasking_feasibility_response(
@@ -440,9 +421,7 @@ class OtmService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), FeasibilityResponse, self.__class__
-            )
+            return parse_response(response.json(), FeasibilityResponse)
         return response.json()
 
     def get_price(self, contract_id: UUID, body: PriceRequest) -> OrderPrice:
@@ -468,9 +447,7 @@ class OtmService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), OrderPrice, self.__class__
-            )
+            return parse_response(response.json(), OrderPrice)
         return response.json()
 
     def search(self, contract_id: UUID, body: SearchRequest) -> SearchResponse:
@@ -496,7 +473,5 @@ class OtmService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), SearchResponse, self.__class__
-            )
+            return parse_response(response.json(), SearchResponse)
         return response.json()

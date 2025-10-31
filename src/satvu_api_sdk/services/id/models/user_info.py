@@ -15,7 +15,7 @@ class UserInfo(BaseModel):
         name (str): The name of the user.
         email (str): The email of the user.
         user_metadata (Union[None, UserMetadata]):
-        last_login (Union[None, str]): The datetime at which the user last logged in.
+        last_login (None | str): The datetime at which the user last logged in.
     """
 
     user_id: str = Field(..., description="The ID of the user.", alias="user_id")
@@ -24,7 +24,7 @@ class UserInfo(BaseModel):
     user_metadata: Union[None, "UserMetadata"] = Field(
         None, description=None, alias="user_metadata"
     )
-    last_login: Union[None, str] = Field(
+    last_login: None | str = Field(
         None,
         description="The datetime at which the user last logged in.",
         alias="last_login",

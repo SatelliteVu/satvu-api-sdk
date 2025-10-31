@@ -20,7 +20,7 @@ class GeometryCollection(BaseModel):
         type_ (Literal['GeometryCollection']):
         geometries (list[Union['GeometryCollection', 'LineString', 'MultiLineString', 'MultiPoint', 'MultiPolygon',
             'Point', 'Polygon']]):
-        bbox (Union[None, list[float]]):
+        bbox (list[float] | None):
     """
 
     type_: Literal["GeometryCollection"] = Field(
@@ -37,6 +37,6 @@ class GeometryCollection(BaseModel):
             "Polygon",
         ]
     ] = Field(..., description=None, alias="geometries")
-    bbox: Union[None, list[float]] = Field(None, description=None, alias="bbox")
+    bbox: list[float] | None = Field(None, description=None, alias="bbox")
 
     model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

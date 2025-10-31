@@ -17,7 +17,7 @@ class Link(BaseModel):
         href (str): The actual link in the format of an URL. Relative and absolute links are both allowed.
         rel (str): Relationship between the current document and the linked document.
         type_ (str): Media type of the referenced entity.
-        title (Union[None, str]): A human readable title to be used in rendered displays of the link.
+        title (None | str): A human readable title to be used in rendered displays of the link.
         method (Union[None, 'LinkMethod']): The HTTP method of the request. Default: LinkMethod.GET.
         body (Union['LinkBodyType0', None]): A JSON object containing fields/values that must be included in the body of
             the next request.
@@ -38,7 +38,7 @@ class Link(BaseModel):
     type_: str = Field(
         ..., description="Media type of the referenced entity.", alias="type"
     )
-    title: Union[None, str] = Field(
+    title: None | str = Field(
         None,
         description="A human readable title to be used in rendered displays of the link.",
         alias="title",

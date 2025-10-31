@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Literal, Union
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -11,11 +11,11 @@ class LineString(BaseModel):
     Attributes:
         type_ (Literal['LineString']):
         coordinates (list[list[float]]):
-        bbox (Union[None, list[float]]):
+        bbox (list[float] | None):
     """
 
     type_: Literal["LineString"] = Field("LineString", description=None, alias="type")
     coordinates: list[list[float]] = Field(..., description=None, alias="coordinates")
-    bbox: Union[None, list[float]] = Field(None, description=None, alias="bbox")
+    bbox: list[float] | None = Field(None, description=None, alias="bbox")
 
     model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

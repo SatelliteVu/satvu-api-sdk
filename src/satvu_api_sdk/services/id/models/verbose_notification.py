@@ -15,14 +15,14 @@ class VerboseNotification(BaseModel):
     """
     Attributes:
         category (Union['NotificationCategory', 'ResellerNotificationCategory', None]): Category for notification topic
-        settings (Union[None, list[NotificationSettings]]): Configuration of notification settings related to a specific
+        settings (list[NotificationSettings] | None): Configuration of notification settings related to a specific
             topic.
     """
 
     category: Union["NotificationCategory", "ResellerNotificationCategory", None] = (
         Field(None, description="Category for notification topic", alias="category")
     )
-    settings: Union[None, list[NotificationSettings]] = Field(
+    settings: list[NotificationSettings] | None = Field(
         None,
         description="Configuration of notification settings related to a specific topic.",
         alias="settings",

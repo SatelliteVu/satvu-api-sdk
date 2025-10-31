@@ -4,8 +4,6 @@ from typing import Any, Union
 from uuid import UUID
 
 from satvu_api_sdk.core import SDKClient
-from satvu_api_sdk.shared.utils import deep_parse_from_annotation
-
 from satvu_api_sdk.services.cos.models.download_order_collections_type_0_item import (
     DownloadOrderCollectionsType0Item,
 )
@@ -27,6 +25,7 @@ from satvu_api_sdk.services.cos.models.reseller_feature_collection_order import 
 from satvu_api_sdk.services.cos.models.reseller_submission_order_payload import (
     ResellerSubmissionOrderPayload,
 )
+from satvu_api_sdk.shared.parsing import parse_response
 
 
 class CosService(SDKClient):
@@ -61,10 +60,8 @@ class CosService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(),
-                Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"],
-                self.__class__,
+            return parse_response(
+                response.json(), FeatureCollectionOrder | ResellerFeatureCollectionOrder
             )
         return response.json()
 
@@ -96,18 +93,16 @@ class CosService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(),
-                Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"],
-                self.__class__,
+            return parse_response(
+                response.json(), FeatureCollectionOrder | ResellerFeatureCollectionOrder
             )
         return response.json()
 
     def query_orders(
         self,
         contract_id: UUID,
-        limit: Union[None, int] = 25,
-        token: Union[None, str] = None,
+        limit: int | None = 25,
+        token: None | str = None,
     ) -> OrderPage:
         """
         Query orders
@@ -116,8 +111,8 @@ class CosService(SDKClient):
 
         Args:
             contract_id (UUID): The contract ID.
-            limit (Union[None, int]): The number of orders to return per page. Default: 25.
-            token (Union[None, str]): The pagination token.
+            limit (int | None): The number of orders to return per page. Default: 25.
+            token (None | str): The pagination token.
 
         Returns:
             OrderPage
@@ -135,9 +130,7 @@ class CosService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), OrderPage, self.__class__
-            )
+            return parse_response(response.json(), OrderPage)
         return response.json()
 
     def submit_order(
@@ -172,10 +165,8 @@ class CosService(SDKClient):
         )
 
         if response.status_code == 201:
-            return deep_parse_from_annotation(
-                response.json(),
-                Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"],
-                self.__class__,
+            return parse_response(
+                response.json(), FeatureCollectionOrder | ResellerFeatureCollectionOrder
             )
         return response.json()
 
@@ -226,9 +217,7 @@ class CosService(SDKClient):
             return zip_bytes
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), OrderItemDownloadUrl, self.__class__
-            )
+            return parse_response(response.json(), OrderItemDownloadUrl)
         if response.status_code == 202:
             return response.json()
         return response.json()
@@ -237,7 +226,7 @@ class CosService(SDKClient):
         self,
         contract_id: UUID,
         order_id: UUID,
-        collections: Union[None, list["DownloadOrderCollectionsType0Item"]] = None,
+        collections: list["DownloadOrderCollectionsType0Item"] | None = None,
         redirect: Union[None, bool] = True,
     ) -> Union[OrderDownloadUrl, Any, io.BytesIO]:
         """
@@ -253,7 +242,7 @@ class CosService(SDKClient):
         Args:
             contract_id (UUID): The contract ID.
             order_id (UUID): The order ID.
-            collections (Union[None, list['DownloadOrderCollectionsType0Item']]): Specify a subset of
+            collections (list['DownloadOrderCollectionsType0Item'] | None): Specify a subset of
                 collections to download.
                             Defaults to None, which will download only the ordered product.
                             To specify multiple collections, repeat the query parameter.
@@ -285,9 +274,7 @@ class CosService(SDKClient):
             return zip_bytes
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), OrderDownloadUrl, self.__class__
-            )
+            return parse_response(response.json(), OrderDownloadUrl)
         if response.status_code == 202:
             return response.json()
         return response.json()

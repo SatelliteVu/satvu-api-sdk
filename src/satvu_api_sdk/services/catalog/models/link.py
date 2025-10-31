@@ -16,8 +16,8 @@ class Link(BaseModel):
         rel (str): The relationship between the current document and the linked document. Example: parent.
         body (Union[None, LinkBody]): A JSON object containing fields/values that must by included in the body of the
             next request.
-        merge (Union[None, bool]): If true, the body fields in the next link must be merged into the original request
-            and be sent combined in the next request.
+        merge (bool | None): If true, the body fields in the next link must be merged into the original request and be
+            sent combined in the next request.
         title (Union[None, str]): The title of the link. Example: Example Link.
         type_ (Union[None, str]): Media type of the referenced entity. Example: application/geo+json.
     """
@@ -40,7 +40,7 @@ class Link(BaseModel):
         description="A JSON object containing fields/values that must by included in the body of the next request.",
         alias="body",
     )
-    merge: Union[None, bool] = Field(
+    merge: bool | None = Field(
         None,
         description="If true, the body fields in the next link must be merged into the original request and be sent combined in the next request.",
         alias="merge",

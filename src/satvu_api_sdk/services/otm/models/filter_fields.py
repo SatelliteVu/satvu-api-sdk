@@ -1,23 +1,21 @@
 from __future__ import annotations
 
-from typing import Union
-
 from pydantic import BaseModel, ConfigDict, Field
 
 
 class FilterFields(BaseModel):
     """
     Attributes:
-        status (Union[None, list[str], str]):
-        min_off_nadir (Union[None, int, list[int]]):
-        max_off_nadir (Union[None, int, list[int]]):
+        status (list[str] | None | str):
+        min_off_nadir (int | list[int] | None):
+        max_off_nadir (int | list[int] | None):
     """
 
-    status: Union[None, list[str], str] = Field(None, description=None, alias="status")
-    min_off_nadir: Union[None, int, list[int]] = Field(
+    status: list[str] | None | str = Field(None, description=None, alias="status")
+    min_off_nadir: int | list[int] | None = Field(
         None, description=None, alias="min_off_nadir"
     )
-    max_off_nadir: Union[None, int, list[int]] = Field(
+    max_off_nadir: int | list[int] | None = Field(
         None, description=None, alias="max_off_nadir"
     )
 

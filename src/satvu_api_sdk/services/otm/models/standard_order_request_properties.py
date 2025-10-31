@@ -11,13 +11,13 @@ class StandardOrderRequestProperties(BaseModel):
     """
     Attributes:
         datetime_ (str): The closed date-time interval of the tasking order request.
-        licence_level (Union[None, str]): The optional licence level for the order Licence levels are specific to the
+        licence_level (None | str): The optional licence level for the order Licence levels are specific to the
             contract. If not specified, the option will be set to the licence with the smallest uplift in the relevant
             contract.
-        addon_withhold (Union[None, str]): The optional ISO8601 string describing the duration that an order will be
-            withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option
-            will be set to the default specified in the relevant contract.
-        name (Union[None, str]): The name of the order.
+        addon_withhold (None | str): The optional ISO8601 string describing the duration that an order will be withheld
+            from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set
+            to the default specified in the relevant contract.
+        name (None | str): The name of the order.
         product (Union[Literal['standard'], None]): Standard Priority. Default: 'standard'.
         satvu_day_night_mode (Union[None, 'DayNightMode']):
         max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage. Measured in percent.
@@ -33,19 +33,17 @@ class StandardOrderRequestProperties(BaseModel):
         description="The closed date-time interval of the tasking order request.",
         alias="datetime",
     )
-    licence_level: Union[None, str] = Field(
+    licence_level: None | str = Field(
         None,
         description="The optional licence level for the order Licence levels are specific to the contract. If not specified, the option will be set to the licence with the smallest uplift in the relevant contract.",
         alias="licence_level",
     )
-    addon_withhold: Union[None, str] = Field(
+    addon_withhold: None | str = Field(
         None,
         description="The optional ISO8601 string describing the duration that an order will be withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set to the default specified in the relevant contract.",
         alias="addon:withhold",
     )
-    name: Union[None, str] = Field(
-        None, description="The name of the order.", alias="name"
-    )
+    name: None | str = Field(None, description="The name of the order.", alias="name")
     product: Union[Literal["standard"], None] = Field(
         "standard", description="Standard Priority.", alias="product"
     )

@@ -22,7 +22,7 @@ class SearchResponseFeatureAssuredOrderRequest(BaseModel):
         contract_id (UUID): Contract ID associated with the search.
         collection (str): Name of collection associated with the search result item.
         price (Price):
-        bbox (Union[None, list[float]]):
+        bbox (list[float] | None):
         links (Union[None, list[Link]]): A list of links to the STAC item that fulfilled the order, if applicable.
     """
 
@@ -45,7 +45,7 @@ class SearchResponseFeatureAssuredOrderRequest(BaseModel):
         alias="collection",
     )
     price: "Price" = Field(..., description=None, alias="price")
-    bbox: Union[None, list[float]] = Field(None, description=None, alias="bbox")
+    bbox: list[float] | None = Field(None, description=None, alias="bbox")
     links: Union[None, list[Link]] = Field(
         None,
         description="A list of links to the STAC item that fulfilled the order, if applicable.",

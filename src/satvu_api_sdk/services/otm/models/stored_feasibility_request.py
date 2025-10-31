@@ -27,7 +27,7 @@ class StoredFeasibilityRequest(BaseModel):
         id (UUID): Feasibility Request ID.
         links (list[Link]): A list of related links for the feasibility request.
         contract_id (UUID): Contract ID.
-        bbox (Union[None, list[float]]):
+        bbox (list[float] | None):
     """
 
     type_: Literal["Feature"] = Field("Feature", description=None, alias="type")
@@ -47,6 +47,6 @@ class StoredFeasibilityRequest(BaseModel):
         alias="links",
     )
     contract_id: UUID = Field(..., description="Contract ID.", alias="contract_id")
-    bbox: Union[None, list[float]] = Field(None, description=None, alias="bbox")
+    bbox: list[float] | None = Field(None, description=None, alias="bbox")
 
     model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

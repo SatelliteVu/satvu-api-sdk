@@ -29,15 +29,15 @@ class PostSearchInput(BaseModel):
             that intersects the bounding box are selected. Example: [-90, -45, 90, 45].
         collections (Union[None, list[str]]): Array of Collection IDs to include in the search for items. Only Item
             objects in one of the provided collections will be searched. Example: ['collection1', 'collection2'].
-        datetime_ (Union[None, str]): Single date+time, or a range ('/') separator, formatted to RFC3339 section 5.6.
-            Use double dots for open ranges. Example: 1985-04-12T23:20:50.52Z/...
+        datetime_ (None | str): Single date+time, or a range ('/') separator, formatted to RFC3339 section 5.6. Use
+            double dots for open ranges. Example: 1985-04-12T23:20:50.52Z/...
         filter_ (Union['AndOrExpression', 'BinaryComparisonPredicate', 'IsBetweenPredicate', 'IsInListPredicate',
             'IsLikePredicate', 'IsNullPredicate', 'NotExpression', bool]): Filter using Common Query Language (CQL2).
         ids (Union[None, list[str]]): Array of Item IDs to return. Example: ['item1', 'item2'].
-        intersects (Union['GeoJSONGeometryCollection1', 'GeoJSONLineString', 'GeoJSONMultiLineString',
-            'GeoJSONMultiPoint', 'GeoJSONMultiPolygon', 'GeoJSONPoint', 'GeoJSONPolygon']): Search for items by performing
+        intersects (Union[None, Union['GeoJSONGeometryCollection1', 'GeoJSONLineString', 'GeoJSONMultiLineString',
+            'GeoJSONMultiPoint', 'GeoJSONMultiPolygon', 'GeoJSONPoint', 'GeoJSONPolygon']]): Search for items by performing
             intersection between their geometry and a provided GeoJSON geometry.
-        limit (Union[None, int]): The maximum number of results to return per page. Example: 10.
+        limit (int | None): The maximum number of results to return per page. Example: 10.
         sortby (Union[None, list[TypesSortByElement]]): An array of objects containing a property name and sort
             direction.
         token (Union[None, str]): The pagination token.
@@ -53,7 +53,7 @@ class PostSearchInput(BaseModel):
         description="Array of Collection IDs to include in the search for items. Only Item objects in one of the provided collections will be searched.",
         alias="collections",
     )
-    datetime_: Union[None, str] = Field(
+    datetime_: None | str = Field(
         None,
         description="Single date+time, or a range ('/') separator, formatted to RFC3339 section 5.6. Use double dots for open ranges.",
         alias="datetime",
@@ -74,19 +74,22 @@ class PostSearchInput(BaseModel):
         None, description="Array of Item IDs to return.", alias="ids"
     )
     intersects: Union[
-        "GeoJSONGeometryCollection1",
-        "GeoJSONLineString",
-        "GeoJSONMultiLineString",
-        "GeoJSONMultiPoint",
-        "GeoJSONMultiPolygon",
-        "GeoJSONPoint",
-        "GeoJSONPolygon",
+        None,
+        Union[
+            "GeoJSONGeometryCollection1",
+            "GeoJSONLineString",
+            "GeoJSONMultiLineString",
+            "GeoJSONMultiPoint",
+            "GeoJSONMultiPolygon",
+            "GeoJSONPoint",
+            "GeoJSONPolygon",
+        ],
     ] = Field(
         None,
         description="Search for items by performing intersection between their geometry and a provided GeoJSON geometry.",
         alias="intersects",
     )
-    limit: Union[None, int] = Field(
+    limit: int | None = Field(
         None,
         description="The maximum number of results to return per page.",
         alias="limit",

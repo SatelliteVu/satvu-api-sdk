@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -12,14 +12,14 @@ if TYPE_CHECKING:
 class UserSettings(BaseModel):
     """
     Attributes:
-        notifications (Union[None, list[NotificationUpdate], list[ResellerNotificationUpdate]]): Update user
-            notifications settings.A full list of notification preferences can be found with the GET user details endpoint.
-            Sending empty or null objects will not modify existing preferences.
+        notifications (list[NotificationUpdate] | list[ResellerNotificationUpdate] | None): Update user notifications
+            settings.A full list of notification preferences can be found with the GET user details endpoint. Sending empty
+            or null objects will not modify existing preferences.
     """
 
-    notifications: Union[
-        None, list[NotificationUpdate], list[ResellerNotificationUpdate]
-    ] = Field(
+    notifications: (
+        list[NotificationUpdate] | list[ResellerNotificationUpdate] | None
+    ) = Field(
         None,
         description="Update user notifications settings.A full list of notification preferences can be found with the GET user details endpoint. Sending empty or null objects will not modify existing preferences.",
         alias="notifications",

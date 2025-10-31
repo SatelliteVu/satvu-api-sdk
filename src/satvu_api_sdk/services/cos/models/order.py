@@ -14,16 +14,14 @@ if TYPE_CHECKING:
 class Order(BaseModel):
     """
     Attributes:
-        item_id (Union[list[str], str]): The item ID.
+        item_id (list[str] | str): The item ID.
         order_id (UUID): The order ID.
         created_at (datetime.datetime): The datetime at which the order was created.
         price (Price): Pricing information.
         stac_metadata (Union['StacMetadata', None]): Metadata about the item.
     """
 
-    item_id: Union[list[str], str] = Field(
-        ..., description="The item ID.", alias="item_id"
-    )
+    item_id: list[str] | str = Field(..., description="The item ID.", alias="item_id")
     order_id: UUID = Field(..., description="The order ID.", alias="order_id")
     created_at: datetime.datetime = Field(
         ...,

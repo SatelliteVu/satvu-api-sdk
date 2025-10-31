@@ -20,7 +20,7 @@ class StacFeature(BaseModel):
         collection (str): The ID of the STAC Collection this item references to.
         links (list[Link]): A list of link objects to resources and related URLs.
         assets (StacFeatureAssets): A map of asset objects that can be downloaded, each with a unique key.
-        bbox (list[Union[float, int]]): The bounding box of the asset represented by this item.
+        bbox (list[float | int]): The bounding box of the asset represented by this item.
         type_ (Union[Literal['Feature'], None]):  Default: 'Feature'.
         geometry (Union['PointGeometry', 'PolygonGeometry', None]): Defines the full footprint of the asset represented
             by the item.
@@ -51,7 +51,7 @@ class StacFeature(BaseModel):
         description="A map of asset objects that can be downloaded, each with a unique key.",
         alias="assets",
     )
-    bbox: list[Union[float, int]] = Field(
+    bbox: list[float | int] = Field(
         ...,
         description="The bounding box of the asset represented by this item.",
         alias="bbox",

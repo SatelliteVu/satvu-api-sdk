@@ -17,7 +17,7 @@ class UserInfoDeprecated(BaseModel):
         name (str):
         email (str):
         user_metadata (Union['UserInfoDeprecatedUserMetadataType0', None]):
-        last_login (Union[None, str]):
+        last_login (None | str):
     """
 
     user_id: str = Field(..., description=None, alias="user_id")
@@ -26,6 +26,6 @@ class UserInfoDeprecated(BaseModel):
     user_metadata: Union["UserInfoDeprecatedUserMetadataType0", None] = Field(
         None, description=None, alias="user_metadata"
     )
-    last_login: Union[None, str] = Field(None, description=None, alias="last_login")
+    last_login: None | str = Field(None, description=None, alias="last_login")
 
     model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

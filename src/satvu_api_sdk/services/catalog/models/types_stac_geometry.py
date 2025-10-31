@@ -12,7 +12,7 @@ class TypesStacGeometry(BaseModel):
         bbox (Union[None, list[int]]): Bounding box.
         coordinates (Union[None, list[int]]): The coordinates of the Geometry object.
         geometries (Union[None, list[int]]):
-        type_ (Union[None, str]): The type of geometry represented.
+        type_ (None | str): The type of geometry represented.
     """
 
     bbox: Union[None, list[int]] = Field(
@@ -24,7 +24,7 @@ class TypesStacGeometry(BaseModel):
     geometries: Union[None, list[int]] = Field(
         None, description=None, alias="geometries"
     )
-    type_: Union[None, str] = Field(
+    type_: None | str = Field(
         None, description="The type of geometry represented.", alias="type"
     )
 

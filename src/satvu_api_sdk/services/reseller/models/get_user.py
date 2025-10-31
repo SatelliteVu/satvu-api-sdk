@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import datetime
-from typing import Union
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -22,10 +21,10 @@ class GetUser(BaseModel):
         user_id (str): The unique identifier for the user.
         user_created_date (datetime.date): The date when the user was created.
         user_updated_date (datetime.date): The date when the user was last updated.
-        company_kyc_completed_on (Union[None, datetime.date]): The date when KYC was completed for the company, if
-            applicable. In YYYY-MM-DD format.
-        user_kyc_completed_on (Union[None, datetime.date]): The date when KYC was completed for the user, if applicable.
+        company_kyc_completed_on (datetime.date | None): The date when KYC was completed for the company, if applicable.
             In YYYY-MM-DD format.
+        user_kyc_completed_on (datetime.date | None): The date when KYC was completed for the user, if applicable. In
+            YYYY-MM-DD format.
     """
 
     company_kyc_status: "KYCStatus" = Field(
@@ -57,12 +56,12 @@ class GetUser(BaseModel):
         description="The date when the user was last updated.",
         alias="user_updated_date",
     )
-    company_kyc_completed_on: Union[None, datetime.date] = Field(
+    company_kyc_completed_on: datetime.date | None = Field(
         None,
         description="The date when KYC was completed for the company, if applicable. In YYYY-MM-DD format.",
         alias="company_kyc_completed_on",
     )
-    user_kyc_completed_on: Union[None, datetime.date] = Field(
+    user_kyc_completed_on: datetime.date | None = Field(
         None,
         description="The date when KYC was completed for the user, if applicable. In YYYY-MM-DD format.",
         alias="user_kyc_completed_on",

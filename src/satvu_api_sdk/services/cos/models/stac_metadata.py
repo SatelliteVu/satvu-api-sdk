@@ -17,7 +17,7 @@ class StacMetadata(BaseModel):
         id (str): The unique image identifier.
         collection (str): Collection ID.
         assets (StacMetadataAssets): A dictionary of asset objects that can be downloaded, each with a unique key.
-        bbox (list[Union[float, int]]): The bounding box of the asset represented by this item.
+        bbox (list[float | int]): The bounding box of the asset represented by this item.
         properties (Union['StacPropertiesV4', 'StacPropertiesV6', 'StacPropertiesV7']): A dictionary of additional
             metadata for the item.
     """
@@ -29,7 +29,7 @@ class StacMetadata(BaseModel):
         description="A dictionary of asset objects that can be downloaded, each with a unique key.",
         alias="assets",
     )
-    bbox: list[Union[float, int]] = Field(
+    bbox: list[float | int] = Field(
         ...,
         description="The bounding box of the asset represented by this item.",
         alias="bbox",

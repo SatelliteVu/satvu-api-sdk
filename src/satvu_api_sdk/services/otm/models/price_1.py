@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Union
-
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -15,8 +13,8 @@ class Price1(BaseModel):
         total (int): The total price of the order in minor units of the currency e.g. pence, cents. This is the sum of
             the base and addon prices.
         value (int): Price of the order in minor units of the currency e.g. pence, cents.
-        licence_level (Union[None, int]): The price of the order from the chosen licence level in minor units of the
-            currency e.g. pence, cents.
+        licence_level (int | None): The price of the order from the chosen licence level in minor units of the currency
+            e.g. pence, cents.
     """
 
     currency: str = Field(
@@ -42,7 +40,7 @@ class Price1(BaseModel):
         description="Price of the order in minor units of the currency e.g. pence, cents.",
         alias="value",
     )
-    licence_level: Union[None, int] = Field(
+    licence_level: int | None = Field(
         None,
         description="The price of the order from the chosen licence level in minor units of the currency e.g. pence, cents.",
         alias="licence_level",

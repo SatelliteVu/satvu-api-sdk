@@ -14,14 +14,14 @@ if TYPE_CHECKING:
 class FeatureOrder(BaseModel):
     """
     Attributes:
-        id (Union[UUID, str]): The unique identifier of the item within the order.
+        id (str | UUID): The unique identifier of the item within the order.
         type_ (Union[Literal['Feature'], None]):  Default: 'Feature'.
         geometry (Union['PointGeometry', 'PolygonGeometry', None]): Defines the full footprint of the asset represented
             by the item.
         properties (Union['Order', None]): A dictionary of additional metadata for the item.
     """
 
-    id: Union[UUID, str] = Field(
+    id: str | UUID = Field(
         ...,
         description="The unique identifier of the item within the order.",
         alias="id",

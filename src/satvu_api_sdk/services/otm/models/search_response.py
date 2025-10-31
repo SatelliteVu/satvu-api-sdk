@@ -44,7 +44,7 @@ class SearchResponse(BaseModel):
             'SearchResponseFeatureStandardOrderRequest']]): A list of features that match the search filters.
         context (ResponseContext): Context about the response.
         links (list[Link]): A list of links to next and/or previous pages of the search.
-        bbox (Union[None, list[float]]):
+        bbox (list[float] | None):
     """
 
     type_: Literal["FeatureCollection"] = Field(
@@ -74,6 +74,6 @@ class SearchResponse(BaseModel):
         description="A list of links to next and/or previous pages of the search.",
         alias="links",
     )
-    bbox: Union[None, list[float]] = Field(None, description=None, alias="bbox")
+    bbox: list[float] | None = Field(None, description=None, alias="bbox")
 
     model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

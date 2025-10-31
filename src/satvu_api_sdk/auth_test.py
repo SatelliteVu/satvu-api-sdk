@@ -343,3 +343,45 @@ def test_form_encoded_request_format(auth_service):
     assert is_ok(result)
     token = result.unwrap()
     assert token == access_token
+
+
+@pook.on
+def test_invalid_token_response_structure(auth_service):
+    """Test that invalid token response structure is handled properly."""
+    # Return 200 but with missing required fields
+    pook.post("https://auth.satellitevu.com/oauth/token").reply(200).json(
+        {
+            "access_token": "some_token",
+            # Missing refresh_token field
+            "token_type": "Bearer",
+            "expires_in": 3600,
+        }
+    )
+
+    result = auth_service.token(
+        client_id="test_client_id",
+        client_secret="test_client_secret",  # pragma: allowlist secret
+    )
+
+    assert is_err(result)
+    error = result.error()
+    assert isinstance(error, AuthError)
+    assert "Invalid token response structure" in str(error)
+
+
+@pook.on
+def test_oauth_token_response_model_validation():
+    """Test OAuthTokenResponse Pydantic model validation."""
+    from satvu_api_sdk.auth import OAuthTokenResponse
+
+    # Valid construction
+    token_response = OAuthTokenResponse(
+        access_token="test_access_token", refresh_token="test_refresh_token"
+    )
+    assert token_response.access_token == "test_access_token"
+    assert token_response.refresh_token == "test_refresh_token"
+
+    # Test model_dump
+    token_dict = token_response.model_dump()
+    assert token_dict["access_token"] == "test_access_token"
+    assert token_dict["refresh_token"] == "test_refresh_token"

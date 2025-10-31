@@ -7,8 +7,10 @@ from logging import getLogger
 import os
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Protocol, TypedDict
+from typing import Protocol
 from urllib.parse import urljoin
+
+from pydantic import BaseModel, ValidationError
 
 try:
     from appdirs import user_cache_dir
@@ -28,7 +30,9 @@ class AuthError(RuntimeError):
     pass
 
 
-class OAuthTokenResponse(TypedDict):
+class OAuthTokenResponse(BaseModel):
+    """OAuth token response containing access and refresh tokens."""
+
     access_token: str
     refresh_token: str
 
@@ -75,8 +79,8 @@ class AppDirCache:
             parser.add_section(client_id)
         except DuplicateSectionError:
             pass
-        parser[client_id]["access_token"] = value["access_token"]
-        parser[client_id]["refresh_token"] = value["refresh_token"]
+        parser[client_id]["access_token"] = value.access_token
+        parser[client_id]["refresh_token"] = value.refresh_token
 
         with NamedTemporaryFile("w", dir=str(self.cache_dir), delete=False) as handle:
             parser.write(handle)
@@ -143,7 +147,7 @@ class AuthService(SDKClient):
 
         cached_token = self.cache.load(cache_key.hexdigest())
 
-        if not cached_token or self.is_expired_token(cached_token["access_token"]):
+        if not cached_token or self.is_expired_token(cached_token.access_token):
             auth_result = self._auth(client_id, client_secret, scopes)
             if is_err(auth_result):
                 return auth_result  # Propagate error
@@ -153,7 +157,7 @@ class AuthService(SDKClient):
         else:
             token = cached_token
 
-        return Ok(token["access_token"])
+        return Ok(token.access_token)
 
     def _auth(
         self,
@@ -229,4 +233,11 @@ class AuthService(SDKClient):
             )
 
         payload = json_result.unwrap()
-        return Ok(payload)
+
+        # Parse into Pydantic model for validation
+        try:
+            token_response = OAuthTokenResponse(**payload)
+        except ValidationError as e:
+            return Err(AuthError(f"Invalid token response structure: {e}"))
+
+        return Ok(token_response)

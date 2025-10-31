@@ -1,6 +1,7 @@
 """HTTPX HTTP adapter."""
 
-from typing import Any
+import json as json_lib
+from typing import Any, cast
 
 try:
     import httpx
@@ -10,7 +11,19 @@ except ImportError:
         'Install it with: pip install "satvu-api-sdk[http-httpx]"'
     )
 
+from satvu_api_sdk.http.errors import (
+    ClientError,
+    ConnectionTimeoutError,
+    JsonDecodeError,
+    NetworkError,
+    ProxyError,
+    ReadTimeoutError,
+    SSLError,
+    ServerError,
+    TextDecodeError,
+)
 from satvu_api_sdk.http.protocol import HttpMethod, HttpResponse
+from satvu_api_sdk.result import Err, Ok, Result, is_err
 
 
 class HttpxResponse:
@@ -32,11 +45,45 @@ class HttpxResponse:
         return self._response.content
 
     @property
-    def text(self) -> str:
-        return self._response.text
+    def text(self) -> Result[str, TextDecodeError]:
+        """Decode response body as text with error handling."""
+        try:
+            return Ok(self._response.text)
+        except UnicodeDecodeError as e:
+            return Err(
+                TextDecodeError(
+                    message=f"Failed to decode response body: {e}",
+                    encoding=self._response.encoding,
+                    original_error=e,
+                )
+            )
 
-    def json(self) -> Any:
-        return self._response.json()
+    def json(self) -> Result[Any, JsonDecodeError | TextDecodeError]:
+        """Parse response body as JSON with error handling."""
+        # httpx.Response.json() internally calls .text then json.loads
+        # We'll replicate this to have control over error types
+        text_result = self.text
+        if is_err(text_result):
+            text_err = text_result.error()
+            return Err(
+                JsonDecodeError(
+                    message=f"Cannot parse JSON: {text_err.message}",
+                    body=None,
+                    original_error=text_err.original_error,
+                )
+            )
+
+        text_value = text_result.unwrap()
+        try:
+            return Ok(json_lib.loads(text_value))
+        except json_lib.JSONDecodeError as e:
+            return Err(
+                JsonDecodeError(
+                    message=f"Failed to parse JSON: {e}",
+                    body=text_value,
+                    original_error=e,
+                )
+            )
 
 
 class HttpxAdapter:
@@ -79,21 +126,133 @@ class HttpxAdapter:
         data: dict[str, str] | None = None,
         timeout: float = 5.0,
         follow_redirects: bool = False,
-    ) -> HttpResponse:
+    ) -> Result[
+        HttpResponse,
+        ClientError
+        | ServerError
+        | NetworkError
+        | ConnectionTimeoutError
+        | ReadTimeoutError
+        | SSLError
+        | ProxyError,
+    ]:
         """Make an HTTP request using httpx."""
         # Filter out None values from params
         if params:
             params = {k: v for k, v in params.items() if v is not None}
 
-        response = self.client.request(
-            method=method,
-            url=url,
-            headers=headers,
-            params=params,
-            json=json,
-            data=data,
-            timeout=timeout,
-            follow_redirects=follow_redirects,
-        )
+        try:
+            response = self.client.request(
+                method=method,
+                url=url,
+                headers=headers,
+                params=params,
+                json=json,
+                data=data,
+                timeout=timeout,
+                follow_redirects=follow_redirects,
+            )
 
-        return HttpxResponse(response)
+            response_wrapper = HttpxResponse(response)
+
+            # Check for error status codes
+            if 400 <= response.status_code < 500:
+                return Err(
+                    ClientError(
+                        message=f"Client error: {response.status_code}",
+                        status_code=response.status_code,
+                        url=str(response.url),
+                        response_body=response.content,
+                        response_headers=dict(response.headers.items()),
+                    )
+                )
+            elif 500 <= response.status_code < 600:
+                return Err(
+                    ServerError(
+                        message=f"Server error: {response.status_code}",
+                        status_code=response.status_code,
+                        url=str(response.url),
+                        response_body=response.content,
+                        response_headers=dict(response.headers.items()),
+                    )
+                )
+
+            return Ok(cast(HttpResponse, response_wrapper))
+
+        except httpx.ConnectTimeout as e:
+            return Err(
+                ConnectionTimeoutError(
+                    message=f"Connection timeout after {timeout} seconds",
+                    url=url,
+                    timeout=timeout,
+                    original_error=e,
+                )
+            )
+
+        except httpx.ReadTimeout as e:
+            return Err(
+                ReadTimeoutError(
+                    message=f"Read timeout after {timeout} seconds",
+                    url=url,
+                    timeout=timeout,
+                    original_error=e,
+                )
+            )
+
+        except httpx.TimeoutException as e:
+            # Generic timeout (could be connect, read, write, or pool)
+            return Err(
+                ReadTimeoutError(
+                    message=f"Request timeout after {timeout} seconds",
+                    url=url,
+                    timeout=timeout,
+                    original_error=e,
+                )
+            )
+
+        except httpx.ProxyError as e:
+            return Err(
+                ProxyError(
+                    message=f"Proxy error: {e}",
+                    url=url,
+                    original_error=e,
+                )
+            )
+
+        except httpx.SSLError as e:
+            return Err(
+                SSLError(
+                    message=f"SSL/TLS error: {e}",
+                    url=url,
+                    original_error=e,
+                )
+            )
+
+        except httpx.ConnectError as e:
+            return Err(
+                NetworkError(
+                    message=f"Connection error: {e}",
+                    url=url,
+                    original_error=e,
+                )
+            )
+
+        except httpx.NetworkError as e:
+            # Generic network error (base class for connect, timeout, etc.)
+            return Err(
+                NetworkError(
+                    message=f"Network error: {e}",
+                    url=url,
+                    original_error=e,
+                )
+            )
+
+        except httpx.HTTPError as e:
+            # Catch-all for any other httpx HTTP errors
+            return Err(
+                NetworkError(
+                    message=f"HTTP error: {e}",
+                    url=url,
+                    original_error=e,
+                )
+            )

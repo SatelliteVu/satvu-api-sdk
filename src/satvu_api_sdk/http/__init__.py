@@ -79,28 +79,25 @@ def _create_backend(
     backend: str, base_url: str | None = None, **options: Any
 ) -> HttpClient:
     """Internal helper to instantiate a specific backend."""
-    # Adapters expect str, not None. Use empty string if None.
-    url = base_url or ""
-
     if backend == "httpx":
         from satvu_api_sdk.http.httpx_adapter import HttpxAdapter
 
-        return cast(HttpClient, HttpxAdapter(base_url=url, **options))
+        return cast(HttpClient, HttpxAdapter(base_url=base_url, **options))
 
     elif backend == "requests":
         from satvu_api_sdk.http.requests_adapter import RequestsAdapter
 
-        return cast(HttpClient, RequestsAdapter(base_url=url, **options))
+        return cast(HttpClient, RequestsAdapter(base_url=base_url, **options))
 
     elif backend == "urllib3":
         from satvu_api_sdk.http.urllib3_adapter import Urllib3Adapter
 
-        return cast(HttpClient, Urllib3Adapter(base_url=url, **options))
+        return cast(HttpClient, Urllib3Adapter(base_url=base_url, **options))
 
     elif backend == "stdlib":
         from satvu_api_sdk.http.stdlib_adapter import StdlibAdapter
 
-        return cast(HttpClient, StdlibAdapter(base_url=url, **options))
+        return cast(HttpClient, StdlibAdapter(base_url=base_url, **options))
 
     raise ValueError(f"Unknown backend: {backend}")
 

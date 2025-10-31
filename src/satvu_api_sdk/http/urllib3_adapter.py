@@ -99,13 +99,15 @@ class Urllib3Adapter:
     """
 
     def __init__(
-        self, base_url: str = "", pool_manager: urllib3.PoolManager | None = None
+        self,
+        base_url: str | None = None,
+        pool_manager: urllib3.PoolManager | None = None,
     ):
         """
         Initialize the urllib3 adapter.
 
         Args:
-            base_url: Base URL for all requests. Relative URLs will be joined to this.
+            base_url: Optional base URL for all requests. Relative URLs will be joined to this.
             pool_manager: Optional pre-configured urllib3.PoolManager instance.
                          If not provided, a new one will be created.
         """

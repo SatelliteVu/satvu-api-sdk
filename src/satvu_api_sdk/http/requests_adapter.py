@@ -92,12 +92,14 @@ class RequestsAdapter:
     and elegant API. Widely used and well-documented.
     """
 
-    def __init__(self, base_url: str = "", session: requests.Session | None = None):
+    def __init__(
+        self, base_url: str | None = None, session: requests.Session | None = None
+    ):
         """
         Initialize the requests adapter.
 
         Args:
-            base_url: Base URL for all requests. Relative URLs will be joined to this.
+            base_url: Optional base URL for all requests. Relative URLs will be joined to this.
             session: Optional pre-configured requests.Session instance. If not provided,
                     a new session will be created.
         """

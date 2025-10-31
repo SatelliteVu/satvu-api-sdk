@@ -12,6 +12,7 @@ dependencies = ["httpx>=0.28.1", "pydantic>=2.11.7"]
 
 [project.optional-dependencies]
 standard = ["appdirs>=1.4.4"]
+http-urllib3 = ["urllib3>=2.0.0"]
 
 [build-system]
 requires = ["hatchling"]
@@ -25,6 +26,7 @@ dev = [
     "openapi-python-client>=0.27.0",
     "pook>=2.1.0",
     "pytest>=8.3.4",
+    "urllib3>=2.0.0",
 ]
 
 [tool.fawltydeps]

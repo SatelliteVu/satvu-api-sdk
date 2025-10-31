@@ -4,13 +4,11 @@ from typing import Any, Union
 from uuid import UUID
 
 from satvu_api_sdk.core import SDKClient
-from satvu_api_sdk.shared.utils import deep_parse_from_annotation
-
-from satvu_api_sdk.services.cos.models.download_order_collections_type_0_item import (
-    DownloadOrderCollectionsType0Item,
+from satvu_api_sdk.services.cos.models.download_order_get_collections_type_0_item import (
+    DownloadOrderGetCollectionsType0Item,
 )
-from satvu_api_sdk.services.cos.models.feature_collection_order import (
-    FeatureCollectionOrder,
+from satvu_api_sdk.services.cos.models.feature_collection_order_1 import (
+    FeatureCollectionOrder1,
 )
 from satvu_api_sdk.services.cos.models.order_download_url import OrderDownloadUrl
 from satvu_api_sdk.services.cos.models.order_edit_payload import OrderEditPayload
@@ -21,12 +19,14 @@ from satvu_api_sdk.services.cos.models.order_page import OrderPage
 from satvu_api_sdk.services.cos.models.order_submission_payload import (
     OrderSubmissionPayload,
 )
-from satvu_api_sdk.services.cos.models.reseller_feature_collection_order import (
-    ResellerFeatureCollectionOrder,
+from satvu_api_sdk.services.cos.models.reseller_feature_collection_order_1 import (
+    ResellerFeatureCollectionOrder1,
 )
 from satvu_api_sdk.services.cos.models.reseller_submission_order_payload import (
     ResellerSubmissionOrderPayload,
 )
+from satvu_api_sdk.services.cos.models.search_request import SearchRequest
+from satvu_api_sdk.shared.parsing import parse_response
 
 
 class CosService(SDKClient):
@@ -35,11 +35,11 @@ class CosService(SDKClient):
     def __init__(self, get_token: Callable[[], str], env: str | None):
         super().__init__(env=env, get_token=get_token)
 
-    def get_order_details(
+    def order_details__get(
         self,
         contract_id: UUID,
         order_id: UUID,
-    ) -> Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"]:
+    ) -> Union["FeatureCollectionOrder1", "ResellerFeatureCollectionOrder1"]:
         """
         Order details
 
@@ -50,7 +50,7 @@ class CosService(SDKClient):
             order_id (UUID): The order ID.
 
         Returns:
-            Union['FeatureCollectionOrder', 'ResellerFeatureCollectionOrder']
+            Union['FeatureCollectionOrder1', 'ResellerFeatureCollectionOrder1']
         """
 
         response = self.make_request(
@@ -61,16 +61,18 @@ class CosService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
+            return parse_response(
                 response.json(),
-                Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"],
-                self.__class__,
+                FeatureCollectionOrder1 | ResellerFeatureCollectionOrder1,
             )
         return response.json()
 
-    def edit_order(
-        self, contract_id: UUID, order_id: UUID, body: OrderEditPayload
-    ) -> Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"]:
+    def edit_order__patch(
+        self,
+        body: OrderEditPayload,
+        contract_id: UUID,
+        order_id: UUID,
+    ) -> Union["FeatureCollectionOrder1", "ResellerFeatureCollectionOrder1"]:
         """
         Edit Order
 
@@ -82,7 +84,7 @@ class CosService(SDKClient):
             body (OrderEditPayload): Request payload for editing an order.
 
         Returns:
-            Union['FeatureCollectionOrder', 'ResellerFeatureCollectionOrder']
+            Union['FeatureCollectionOrder1', 'ResellerFeatureCollectionOrder1']
         """
 
         json_body = body.model_dump(by_alias=True)
@@ -96,18 +98,17 @@ class CosService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
+            return parse_response(
                 response.json(),
-                Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"],
-                self.__class__,
+                FeatureCollectionOrder1 | ResellerFeatureCollectionOrder1,
             )
         return response.json()
 
-    def query_orders(
+    def query_orders__get(
         self,
         contract_id: UUID,
-        limit: Union[None, int] = 25,
-        token: Union[None, str] = None,
+        limit: int | None = 25,
+        token: None | str = None,
     ) -> OrderPage:
         """
         Query orders
@@ -116,8 +117,8 @@ class CosService(SDKClient):
 
         Args:
             contract_id (UUID): The contract ID.
-            limit (Union[None, int]): The number of orders to return per page. Default: 25.
-            token (Union[None, str]): The pagination token.
+            limit (int | None): The number of orders to return per page. Default: 25.
+            token (None | str): The pagination token.
 
         Returns:
             OrderPage
@@ -135,16 +136,14 @@ class CosService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), OrderPage, self.__class__
-            )
+            return parse_response(response.json(), OrderPage)
         return response.json()
 
-    def submit_order(
+    def submit_order__post(
         self,
-        contract_id: UUID,
         body: Union["OrderSubmissionPayload", "ResellerSubmissionOrderPayload"],
-    ) -> Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"]:
+        contract_id: UUID,
+    ) -> Union["FeatureCollectionOrder1", "ResellerFeatureCollectionOrder1"]:
         """
         Submit order
 
@@ -160,7 +159,7 @@ class CosService(SDKClient):
                 - ResellerSubmissionOrderPayload: Order payload for resellers
 
         Returns:
-            Union['FeatureCollectionOrder', 'ResellerFeatureCollectionOrder']
+            Union['FeatureCollectionOrder1', 'ResellerFeatureCollectionOrder1']
         """
 
         json_body = body.model_dump(by_alias=True)
@@ -172,14 +171,41 @@ class CosService(SDKClient):
         )
 
         if response.status_code == 201:
-            return deep_parse_from_annotation(
+            return parse_response(
                 response.json(),
-                Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"],
-                self.__class__,
+                FeatureCollectionOrder1 | ResellerFeatureCollectionOrder1,
             )
         return response.json()
 
-    def download_item(
+    def search_orders__post(
+        self,
+        body: SearchRequest,
+        contract_id: UUID,
+    ) -> OrderPage:
+        """
+        Search orders
+
+        Args:
+            contract_id (UUID): The contract ID.
+            body (SearchRequest):
+
+        Returns:
+            OrderPage
+        """
+
+        json_body = body.model_dump(by_alias=True)
+
+        response = self.make_request(
+            method="post",
+            url="/{contract_id}/search/".format(contract_id=contract_id),
+            json=json_body,
+        )
+
+        if response.status_code == 200:
+            return parse_response(response.json(), OrderPage)
+        return response.json()
+
+    def download_item__get(
         self,
         contract_id: UUID,
         order_id: UUID,
@@ -226,18 +252,16 @@ class CosService(SDKClient):
             return zip_bytes
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), OrderItemDownloadUrl, self.__class__
-            )
+            return parse_response(response.json(), OrderItemDownloadUrl)
         if response.status_code == 202:
             return response.json()
         return response.json()
 
-    def download_order(
+    def download_order__get(
         self,
         contract_id: UUID,
         order_id: UUID,
-        collections: Union[None, list["DownloadOrderCollectionsType0Item"]] = None,
+        collections: list["DownloadOrderGetCollectionsType0Item"] | None = None,
         redirect: Union[None, bool] = True,
     ) -> Union[OrderDownloadUrl, Any, io.BytesIO]:
         """
@@ -253,7 +277,7 @@ class CosService(SDKClient):
         Args:
             contract_id (UUID): The contract ID.
             order_id (UUID): The order ID.
-            collections (Union[None, list['DownloadOrderCollectionsType0Item']]): Specify a subset of
+            collections (list['DownloadOrderGetCollectionsType0Item'] | None): Specify a subset of
                 collections to download.
                             Defaults to None, which will download only the ordered product.
                             To specify multiple collections, repeat the query parameter.
@@ -285,9 +309,7 @@ class CosService(SDKClient):
             return zip_bytes
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), OrderDownloadUrl, self.__class__
-            )
+            return parse_response(response.json(), OrderDownloadUrl)
         if response.status_code == 202:
             return response.json()
         return response.json()

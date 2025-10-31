@@ -6,9 +6,11 @@ from .company_search import CompanySearch
 from .company_search_fields import CompanySearchFields
 from .create_user import CreateUser
 from .create_user_response import CreateUserResponse
+from .create_user_response_1 import CreateUserResponse1
 from .get_companies import GetCompanies
 from .get_company import GetCompany
 from .get_user import GetUser
+from .get_user_1 import GetUser1
 from .get_users import GetUsers
 from .http_validation_error import HTTPValidationError
 from .kyc_status import KYCStatus
@@ -30,9 +32,11 @@ __all__ = (
     "CompanySearchFields",
     "CreateUser",
     "CreateUserResponse",
+    "CreateUserResponse1",
     "GetCompanies",
     "GetCompany",
     "GetUser",
+    "GetUser1",
     "GetUsers",
     "HTTPValidationError",
     "KYCStatus",

@@ -8,11 +8,11 @@ from pydantic import BaseModel, ConfigDict, Field
 class PointGeometry(BaseModel):
     """
     Attributes:
-        coordinates (list[Union[float, int]]): The coordinates of the item.
+        coordinates (list[float | int]): The coordinates of the item.
         type_ (Union[Literal['Point'], None]):  Default: 'Point'.
     """
 
-    coordinates: list[Union[float, int]] = Field(
+    coordinates: list[float | int] = Field(
         ..., description="The coordinates of the item.", alias="coordinates"
     )
     type_: Union[Literal["Point"], None] = Field(

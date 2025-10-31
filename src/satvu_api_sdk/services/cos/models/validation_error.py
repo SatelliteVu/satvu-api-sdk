@@ -1,19 +1,17 @@
 from __future__ import annotations
 
-from typing import Union
-
 from pydantic import BaseModel, ConfigDict, Field
 
 
 class ValidationError(BaseModel):
     """
     Attributes:
-        loc (list[Union[int, str]]):
+        loc (list[int | str]):
         msg (str):
         type_ (str):
     """
 
-    loc: list[Union[int, str]] = Field(..., description=None, alias="loc")
+    loc: list[int | str] = Field(..., description=None, alias="loc")
     msg: str = Field(..., description=None, alias="msg")
     type_: str = Field(..., description=None, alias="type")
 

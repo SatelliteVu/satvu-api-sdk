@@ -3,6 +3,14 @@
 
 {# Generate arguments for function #}
 {%- macro arguments(endpoint) %}
+{# Any allowed bodies #}
+{%- if endpoint.bodies | length -%}
+{%- if endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[") -%}
+items: {{ endpoint.bodies[0].prop.get_type_string() }},
+{%- else -%}
+body: {% for body in endpoint.bodies %}{{ body.prop.get_type_string() }}{% if not loop.last %}|{% endif %}{% endfor %},
+{% endif %}
+{% endif %}
 {# path parameters #}
 {% for parameter in endpoint.path_parameters %}
 {{ parameter.to_string() }},
@@ -11,14 +19,6 @@
 {%- for parameter in endpoint.query_parameters -%}
 {{ parameter.to_string() }},
 {%- endfor -%}
-{# Any allowed bodies #}
-{%- if endpoint.bodies | length -%}
-{%- if endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[") -%}
-items: {{ endpoint.bodies[0].prop.get_type_string() }},
-{%- else -%}
-body: {% for body in endpoint.bodies %}{{ body.prop.get_type_string() }}{% if not loop.last %}|{% endif %}{% endfor %}
-{% endif %}
-{% endif %}
 {% endmacro %}
 
 {# Build url #}

@@ -23,7 +23,7 @@ class ResellerSearchResponseFeatureAssuredOrderRequest(BaseModel):
         collection (str): Name of collection associated with the search result item.
         price (Price):
         reseller_end_user_id (UUID):
-        bbox (Union[None, list[float]]):
+        bbox (list[float] | None):
         links (Union[None, list[Link]]): A list of links to the STAC item that fulfilled the order, if applicable.
     """
 
@@ -49,7 +49,7 @@ class ResellerSearchResponseFeatureAssuredOrderRequest(BaseModel):
     reseller_end_user_id: UUID = Field(
         ..., description=None, alias="reseller_end_user_id"
     )
-    bbox: Union[None, list[float]] = Field(None, description=None, alias="bbox")
+    bbox: list[float] | None = Field(None, description=None, alias="bbox")
     links: Union[None, list[Link]] = Field(
         None,
         description="A list of links to the STAC item that fulfilled the order, if applicable.",

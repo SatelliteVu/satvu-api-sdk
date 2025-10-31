@@ -19,10 +19,10 @@ class GetAssuredOrderProperties(BaseModel):
         status ('OrderStatus'):
         created_at (datetime.datetime): The datetime at which the order was created.
         updated_at (datetime.datetime): The datetime at which the order was last updated.
-        stac_item_id (Union[None, str]): The item id of the STAC item that fulfilled the order, if the order has been
+        stac_item_id (None | str): The item id of the STAC item that fulfilled the order, if the order has been
             fulfilled.
-        stac_datetime (Union[None, datetime.datetime]): The acquisition datetime of the STAC item that fulfilled the
-            order, if the order has been fulfilled.
+        stac_datetime (datetime.datetime | None): The acquisition datetime of the STAC item that fulfilled the order, if
+            the order has been fulfilled.
         satvu_day_night_mode (Union[None, 'DayNightMode']):
         max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage. Measured in percent.
             Default: 15.
@@ -30,13 +30,13 @@ class GetAssuredOrderProperties(BaseModel):
             in decimal degrees. Default: 0.
         max_off_nadir (Union[None, int]): The maximum angle from the sensor between nadir and the scene center. Measured
             in decimal degrees. Must be larger than `min_off_nadir`. Default: 30.
-        licence_level (Union[None, str]): The optional licence level for the order Licence levels are specific to the
+        licence_level (None | str): The optional licence level for the order. Licence levels are specific to the
             contract. If not specified, the option will be set to the licence with the smallest uplift in the relevant
             contract.
-        addon_withhold (Union[None, str]): The optional ISO8601 string describing the duration that an order will be
-            withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option
-            will be set to the default specified in the relevant contract.
-        name (Union[None, str]): The name of the order.
+        addon_withhold (None | str): The optional ISO8601 string describing the duration that an order will be withheld
+            from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set
+            to the default specified in the relevant contract.
+        name (None | str): The name of the order.
     """
 
     product: Literal["assured"] = Field(
@@ -59,12 +59,12 @@ class GetAssuredOrderProperties(BaseModel):
         description="The datetime at which the order was last updated.",
         alias="updated_at",
     )
-    stac_item_id: Union[None, str] = Field(
+    stac_item_id: None | str = Field(
         None,
         description="The item id of the STAC item that fulfilled the order, if the order has been fulfilled.",
         alias="stac:item_id",
     )
-    stac_datetime: Union[None, datetime.datetime] = Field(
+    stac_datetime: datetime.datetime | None = Field(
         None,
         description="The acquisition datetime of the STAC item that fulfilled the order, if the order has been fulfilled.",
         alias="stac:datetime",
@@ -87,18 +87,16 @@ class GetAssuredOrderProperties(BaseModel):
         description="The maximum angle from the sensor between nadir and the scene center. Measured in decimal degrees. Must be larger than `min_off_nadir`.",
         alias="max_off_nadir",
     )
-    licence_level: Union[None, str] = Field(
+    licence_level: None | str = Field(
         None,
-        description="The optional licence level for the order Licence levels are specific to the contract. If not specified, the option will be set to the licence with the smallest uplift in the relevant contract.",
+        description="The optional licence level for the order. Licence levels are specific to the contract. If not specified, the option will be set to the licence with the smallest uplift in the relevant contract.",
         alias="licence_level",
     )
-    addon_withhold: Union[None, str] = Field(
+    addon_withhold: None | str = Field(
         None,
         description="The optional ISO8601 string describing the duration that an order will be withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set to the default specified in the relevant contract.",
         alias="addon:withhold",
     )
-    name: Union[None, str] = Field(
-        None, description="The name of the order.", alias="name"
-    )
+    name: None | str = Field(None, description="The name of the order.", alias="name")
 
     model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

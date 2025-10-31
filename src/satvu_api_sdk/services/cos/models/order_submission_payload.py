@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Union
-
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -9,19 +7,21 @@ class OrderSubmissionPayload(BaseModel):
     """Request payload for submitting an order.
 
     Attributes:
-        item_id (Union[list[str], str]): The item ID.
-        name (Union[None, str]): The optional name of the order
-        licence_level (Union[None, str]):
+        item_id (list[str] | str): The item ID.
+        name (None | str): The optional name of the order
+        licence_level (None | str): The optional licence level for the order. Licence levels are specific to the
+            contract. If not specified, the option will be set to the licence with the smallest uplift in the relevant
+            contract.
     """
 
-    item_id: Union[list[str], str] = Field(
-        ..., description="The item ID.", alias="item_id"
-    )
-    name: Union[None, str] = Field(
+    item_id: list[str] | str = Field(..., description="The item ID.", alias="item_id")
+    name: None | str = Field(
         None, description="The optional name of the order", alias="name"
     )
-    licence_level: Union[None, str] = Field(
-        None, description=None, alias="licence_level"
+    licence_level: None | str = Field(
+        None,
+        description="The optional licence level for the order. Licence levels are specific to the contract. If not specified, the option will be set to the licence with the smallest uplift in the relevant contract.",
+        alias="licence_level",
     )
 
     model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

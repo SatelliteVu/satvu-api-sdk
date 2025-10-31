@@ -22,13 +22,13 @@ if TYPE_CHECKING:
 class SearchRequest(BaseModel):
     """
     Attributes:
-        token (Union[None, str]): The pagination token.
-        limit (Union[None, int]): The number of items to return per page. Default: 25.
-        collections (Union[None, list['Collections']]): A list of collection types.
-        ids (Union[None, list[UUID]]): A list of IDs.
-        datetime_ (Union[None, str]):
-        created_at (Union[None, str]): The datetime interval during which the entity was created.
-        updated_at (Union[None, str]): The datetime interval during which the entity was last updated.
+        token (None | str): The pagination token.
+        limit (int | None): The number of items to return per page. Default: 25.
+        collections (list['Collections'] | None): A list of collection types.
+        ids (list[UUID] | None): A list of IDs.
+        datetime_ (None | str):
+        created_at (None | str): The datetime interval during which the entity was created.
+        updated_at (None | str): The datetime interval during which the entity was last updated.
         properties (Union['FilterFields', None]): Allowed properties to filter a search. Filterable string fields allow
             one value or a list of values resulting in an equality or 'IN' comparison respectively. For numeric fields, one
             value similarly achieves an equality operation. A tuple of 2 values can also be provided to search inclusively
@@ -36,28 +36,24 @@ class SearchRequest(BaseModel):
         intersects (Union['GeometryCollection', 'LineString', 'MultiLineString', 'MultiPoint', 'MultiPolygon', 'Point',
             'Polygon', None]): A GeoJSON geometry to filter for. Items are returned if the geometry of the item intersects
             with the geometry provided.
-        sort_by (Union[None, list[SortEntities]]): Sort the order in which results are returned.
+        sort_by (list[SortEntities] | None): Sort the order in which results are returned.
     """
 
-    token: Union[None, str] = Field(
-        None, description="The pagination token.", alias="token"
-    )
-    limit: Union[None, int] = Field(
+    token: None | str = Field(None, description="The pagination token.", alias="token")
+    limit: int | None = Field(
         25, description="The number of items to return per page.", alias="limit"
     )
-    collections: Union[None, list["Collections"]] = Field(
+    collections: list["Collections"] | None = Field(
         None, description="A list of collection types.", alias="collections"
     )
-    ids: Union[None, list[UUID]] = Field(
-        None, description="A list of IDs.", alias="ids"
-    )
-    datetime_: Union[None, str] = Field(None, description=None, alias="datetime")
-    created_at: Union[None, str] = Field(
+    ids: list[UUID] | None = Field(None, description="A list of IDs.", alias="ids")
+    datetime_: None | str = Field(None, description=None, alias="datetime")
+    created_at: None | str = Field(
         None,
         description="The datetime interval during which the entity was created.",
         alias="created_at",
     )
-    updated_at: Union[None, str] = Field(
+    updated_at: None | str = Field(
         None,
         description="The datetime interval during which the entity was last updated.",
         alias="updated_at",
@@ -81,7 +77,7 @@ class SearchRequest(BaseModel):
         description="A GeoJSON geometry to filter for. Items are returned if the geometry of the item intersects with the geometry provided.",
         alias="intersects",
     )
-    sort_by: Union[None, list[SortEntities]] = Field(
+    sort_by: list[SortEntities] | None = Field(
         None,
         description="Sort the order in which results are returned.",
         alias="sort_by",

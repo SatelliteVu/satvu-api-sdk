@@ -18,14 +18,6 @@ class StandardFeasibilityResponseProperties(BaseModel):
         datetime_ (str): The closed date-time interval of the tasking order request.
         created_at (datetime.datetime): The datetime at which the feasibility response was created.
         updated_at (datetime.datetime): The datetime at which the feasibility response was last updated.
-        min_sun_el (float): The minimum sun elevation angle of the pass. Measured in decimal degrees from the
-            horizontal.
-        max_sun_el (float): The maximum sun elevation angle of the pass. Measured in decimal degrees from the
-            horizontal.
-        min_gsd (float): The minimum ground sample distance value of the pass. Measured in metres representing the
-            square root of the area of the pixel size projected onto the earth.
-        max_gsd (float): The maximum ground sample distance value of the pass. Measured in metres representing the
-            square root of the area of the pixel size projected onto the earth.
         product (Union[Literal['standard'], None]): Standard Priority. Default: 'standard'.
         satvu_day_night_mode (Union[None, 'DayNightMode']):
         max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage. Measured in percent.
@@ -35,6 +27,14 @@ class StandardFeasibilityResponseProperties(BaseModel):
         max_off_nadir (Union[None, int]): The maximum angle from the sensor between nadir and the scene center. Measured
             in decimal degrees. Must be larger than `min_off_nadir`. Default: 30.
         price (Union['Price', None]): Pricing information.
+        min_sun_el (float | None): The minimum sun elevation angle of the pass. Measured in decimal degrees from the
+            horizontal.
+        max_sun_el (float | None): The maximum sun elevation angle of the pass. Measured in decimal degrees from the
+            horizontal.
+        min_gsd (float | None): The minimum ground sample distance value of the pass. Measured in metres representing
+            the square root of the area of the pixel size projected onto the earth.
+        max_gsd (float | None): The maximum ground sample distance value of the pass. Measured in metres representing
+            the square root of the area of the pixel size projected onto the earth.
     """
 
     datetime_: str = Field(
@@ -51,26 +51,6 @@ class StandardFeasibilityResponseProperties(BaseModel):
         ...,
         description="The datetime at which the feasibility response was last updated.",
         alias="updated_at",
-    )
-    min_sun_el: float = Field(
-        ...,
-        description="The minimum sun elevation angle of the pass. Measured in decimal degrees from the horizontal.",
-        alias="min_sun_el",
-    )
-    max_sun_el: float = Field(
-        ...,
-        description="The maximum sun elevation angle of the pass. Measured in decimal degrees from the horizontal.",
-        alias="max_sun_el",
-    )
-    min_gsd: float = Field(
-        ...,
-        description="The minimum ground sample distance value of the pass. Measured in metres representing the square root of the area of the pixel size projected onto the earth.",
-        alias="min_gsd",
-    )
-    max_gsd: float = Field(
-        ...,
-        description="The maximum ground sample distance value of the pass. Measured in metres representing the square root of the area of the pixel size projected onto the earth.",
-        alias="max_gsd",
     )
     product: Union[Literal["standard"], None] = Field(
         "standard", description="Standard Priority.", alias="product"
@@ -95,6 +75,26 @@ class StandardFeasibilityResponseProperties(BaseModel):
     )
     price: Union["Price", None] = Field(
         None, description="Pricing information.", alias="price"
+    )
+    min_sun_el: float | None = Field(
+        None,
+        description="The minimum sun elevation angle of the pass. Measured in decimal degrees from the horizontal.",
+        alias="min_sun_el",
+    )
+    max_sun_el: float | None = Field(
+        None,
+        description="The maximum sun elevation angle of the pass. Measured in decimal degrees from the horizontal.",
+        alias="max_sun_el",
+    )
+    min_gsd: float | None = Field(
+        None,
+        description="The minimum ground sample distance value of the pass. Measured in metres representing the square root of the area of the pixel size projected onto the earth.",
+        alias="min_gsd",
+    )
+    max_gsd: float | None = Field(
+        None,
+        description="The maximum ground sample distance value of the pass. Measured in metres representing the square root of the area of the pixel size projected onto the earth.",
+        alias="max_gsd",
     )
 
     model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

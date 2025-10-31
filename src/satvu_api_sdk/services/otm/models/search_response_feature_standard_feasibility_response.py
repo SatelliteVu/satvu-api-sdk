@@ -8,7 +8,6 @@ from pydantic import BaseModel, ConfigDict, Field
 if TYPE_CHECKING:
     from ..models.link import Link
     from ..models.point import Point
-    from ..models.price import Price
     from ..models.standard_feasibility_response_properties import (
         StandardFeasibilityResponseProperties,
     )
@@ -23,8 +22,7 @@ class SearchResponseFeatureStandardFeasibilityResponse(BaseModel):
         id (UUID): ID of an item associated with the search parameters.
         contract_id (UUID): Contract ID associated with the search.
         collection (str): Name of collection associated with the search result item.
-        price (Price):
-        bbox (Union[None, list[float]]):
+        bbox (list[float] | None):
         links (Union[None, list[Link]]): A list of links to the STAC item that fulfilled the order, if applicable.
     """
 
@@ -46,8 +44,7 @@ class SearchResponseFeatureStandardFeasibilityResponse(BaseModel):
         description="Name of collection associated with the search result item.",
         alias="collection",
     )
-    price: "Price" = Field(..., description=None, alias="price")
-    bbox: Union[None, list[float]] = Field(None, description=None, alias="bbox")
+    bbox: list[float] | None = Field(None, description=None, alias="bbox")
     links: Union[None, list[Link]] = Field(
         None,
         description="A list of links to the STAC item that fulfilled the order, if applicable.",

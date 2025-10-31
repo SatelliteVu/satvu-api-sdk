@@ -14,14 +14,14 @@ class ResellerNotificationUpdate(BaseModel):
     """
     Attributes:
         category (Union['ResellerNotificationCategory', None]): Category for notification topic
-        settings (Union[None, list[ResellerNotificationConfig]]): Configuration of notification settings related to a
-            specific topic.
+        settings (list[ResellerNotificationConfig] | None): Configuration of notification settings related to a specific
+            topic.
     """
 
     category: Union["ResellerNotificationCategory", None] = Field(
         None, description="Category for notification topic", alias="category"
     )
-    settings: Union[None, list[ResellerNotificationConfig]] = Field(
+    settings: list[ResellerNotificationConfig] | None = Field(
         None,
         description="Configuration of notification settings related to a specific topic.",
         alias="settings",

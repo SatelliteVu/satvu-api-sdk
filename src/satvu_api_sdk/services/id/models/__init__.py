@@ -33,6 +33,7 @@ from .user_info_deprecated_user_metadata_type_0 import (
     UserInfoDeprecatedUserMetadataType0,
 )
 from .user_metadata import UserMetadata
+from .user_metadata_1 import UserMetadata1
 from .user_settings import UserSettings
 from .validation_error import ValidationError
 from .verbose_notification import VerboseNotification
@@ -71,6 +72,7 @@ __all__ = (
     "UserInfoDeprecated",
     "UserInfoDeprecatedUserMetadataType0",
     "UserMetadata",
+    "UserMetadata1",
     "UserSettings",
     "ValidationError",
     "VerboseNotification",

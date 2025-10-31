@@ -1,14 +1,17 @@
 from collections.abc import Callable
 from typing import Union
+from uuid import UUID
 
 from satvu_api_sdk.core import SDKClient
-from satvu_api_sdk.shared.utils import deep_parse_from_annotation
-
+from satvu_api_sdk.services.catalog.models.catalog import Catalog
 from satvu_api_sdk.services.catalog.models.collection import Collection
+from satvu_api_sdk.services.catalog.models.collections import Collections
+from satvu_api_sdk.services.catalog.models.conformance import Conformance
 from satvu_api_sdk.services.catalog.models.cql_2_queryables_schema import (
     Cql2QueryablesSchema,
 )
 from satvu_api_sdk.services.catalog.models.feature import Feature
+from satvu_api_sdk.services.catalog.models.feature_collection import FeatureCollection
 from satvu_api_sdk.services.catalog.models.filter_ import Filter
 from satvu_api_sdk.services.catalog.models.geo_json_geometry_collection_1 import (
     GeoJSONGeometryCollection1,
@@ -24,15 +27,8 @@ from satvu_api_sdk.services.catalog.models.geo_json_multi_polygon import (
 from satvu_api_sdk.services.catalog.models.geo_json_point import GeoJSONPoint
 from satvu_api_sdk.services.catalog.models.geo_json_polygon import GeoJSONPolygon
 from satvu_api_sdk.services.catalog.models.post_search_input import PostSearchInput
-from satvu_api_sdk.services.catalog.models.router_conformance import RouterConformance
-from satvu_api_sdk.services.catalog.models.types_catalog import TypesCatalog
-from satvu_api_sdk.services.catalog.models.types_collections import TypesCollections
-from satvu_api_sdk.services.catalog.models.types_feature_collection import (
-    TypesFeatureCollection,
-)
-from satvu_api_sdk.services.catalog.models.types_search_response_data import (
-    TypesSearchResponseData,
-)
+from satvu_api_sdk.services.catalog.models.search_response import SearchResponse
+from satvu_api_sdk.shared.parsing import parse_response
 
 
 class CatalogService(SDKClient):
@@ -43,8 +39,8 @@ class CatalogService(SDKClient):
 
     def landing_page(
         self,
-        contract_id: str,
-    ) -> TypesCatalog:
+        contract_id: UUID,
+    ) -> Catalog:
         """
         Landing Page
 
@@ -52,10 +48,10 @@ class CatalogService(SDKClient):
         applications and API documentation.
 
         Args:
-            contract_id (str):
+            contract_id (UUID): SatVu Contract ID
 
         Returns:
-            TypesCatalog
+            Catalog
         """
 
         response = self.make_request(
@@ -64,25 +60,23 @@ class CatalogService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), TypesCatalog, self.__class__
-            )
+            return parse_response(response.json(), Catalog)
         return response.json()
 
     def conformance(
         self,
-        contract_id: str,
-    ) -> RouterConformance:
+        contract_id: UUID,
+    ) -> Conformance:
         """
         Conformance
 
         List of implemented conformance classes
 
         Args:
-            contract_id (str):
+            contract_id (UUID): SatVu Contract ID
 
         Returns:
-            RouterConformance
+            Conformance
         """
 
         response = self.make_request(
@@ -91,14 +85,12 @@ class CatalogService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), RouterConformance, self.__class__
-            )
+            return parse_response(response.json(), Conformance)
         return response.json()
 
     def queryables(
         self,
-        contract_id: str,
+        contract_id: UUID,
     ) -> Cql2QueryablesSchema:
         """
         Queryables
@@ -106,7 +98,7 @@ class CatalogService(SDKClient):
         List of queryables available for CQL2 filtering
 
         Args:
-            contract_id (str):
+            contract_id (UUID): SatVu Contract ID
 
         Returns:
             Cql2QueryablesSchema
@@ -118,32 +110,33 @@ class CatalogService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), Cql2QueryablesSchema, self.__class__
-            )
+            return parse_response(response.json(), Cql2QueryablesSchema)
         return response.json()
 
     def get_search(
         self,
-        contract_id: str,
+        contract_id: UUID,
         bbox: Union[None, list[float]] = None,
         collections: Union[None, list[str]] = None,
-        datetime_: Union[None, str] = None,
-        filter_: Union[None, "Filter"] = None,
+        datetime_: None | str = None,
+        filter_: Union[None, Filter] = None,
         ids: Union[None, list[str]] = None,
         intersects: Union[
-            "GeoJSONGeometryCollection1",
-            "GeoJSONLineString",
-            "GeoJSONMultiLineString",
-            "GeoJSONMultiPoint",
-            "GeoJSONMultiPolygon",
-            "GeoJSONPoint",
-            "GeoJSONPolygon",
+            None,
+            Union[
+                "GeoJSONGeometryCollection1",
+                "GeoJSONLineString",
+                "GeoJSONMultiLineString",
+                "GeoJSONMultiPoint",
+                "GeoJSONMultiPolygon",
+                "GeoJSONPoint",
+                "GeoJSONPolygon",
+            ],
         ] = None,
-        limit: Union[None, int] = None,
+        limit: int | None = None,
         sortby: Union[None, list[str]] = None,
         token: Union[None, str] = None,
-    ) -> TypesFeatureCollection:
+    ) -> FeatureCollection:
         """
         Search
 
@@ -151,29 +144,29 @@ class CatalogService(SDKClient):
         Collection. Both GET and POST methods are supported for this request.
 
         Args:
-            contract_id (str):
+            contract_id (UUID): SatVu Contract ID
             bbox (Union[None, list[float]]): Comma separated list of floats representing a bounding
                 box. Only features that have a geometry that intersects the bounding box are selected.
                 Example: -90,-45,90,45.
             collections (Union[None, list[str]]): Comma separated list of Collection IDs to include in
                 the search for items. Only Item objects in one of the provided collections will be
                 searched. Example: collection1,collection2.
-            datetime_ (Union[None, str]): Single date+time, or a range ('/') separator, formatted to
-                RFC3339 section 5.6. Use double dots for open ranges. Example: 1985-04-12T23:20:50.52Z/...
+            datetime_ (None | str): Single date+time, or a range ('/') separator, formatted to RFC3339
+                section 5.6. Use double dots for open ranges. Example: 1985-04-12T23:20:50.52Z/...
             filter_ (Union[None, Filter]): Filters using Common Query Language (CQL2).
             ids (Union[None, list[str]]): Comma separated list of Item IDs to return. Example:
                 item1,item2.
-            intersects (Union['GeoJSONGeometryCollection1', 'GeoJSONLineString',
+            intersects (Union[None, Union['GeoJSONGeometryCollection1', 'GeoJSONLineString',
                 'GeoJSONMultiLineString', 'GeoJSONMultiPoint', 'GeoJSONMultiPolygon', 'GeoJSONPoint',
-                'GeoJSONPolygon']): Search for items by performing intersection between their geometry and
-                a provided GeoJSON geometry.
-            limit (Union[None, int]): The maximum number of results to return per page. Example: 10.
+                'GeoJSONPolygon']]): Search for items by performing intersection between their geometry
+                and a provided GeoJSON geometry.
+            limit (int | None): The maximum number of results to return per page. Example: 10.
             sortby (Union[None, list[str]]): An array of property names, prefixed by either '+' for
                 ascending or '-' for descending. If no prefix is provided, '-' is assumed.
             token (Union[None, str]): The pagination token.
 
         Returns:
-            TypesFeatureCollection
+            FeatureCollection
         """
 
         params = {
@@ -195,14 +188,14 @@ class CatalogService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), TypesFeatureCollection, self.__class__
-            )
+            return parse_response(response.json(), FeatureCollection)
         return response.json()
 
     def post_search(
-        self, contract_id: str, body: PostSearchInput
-    ) -> TypesFeatureCollection:
+        self,
+        body: PostSearchInput,
+        contract_id: UUID,
+    ) -> FeatureCollection:
         """
         Search
 
@@ -210,11 +203,11 @@ class CatalogService(SDKClient):
         Collection. Both GET and POST methods are supported for this request.
 
         Args:
-            contract_id (str):
+            contract_id (UUID): SatVu Contract ID
             body (PostSearchInput):
 
         Returns:
-            TypesFeatureCollection
+            FeatureCollection
         """
 
         json_body = body.model_dump(by_alias=True)
@@ -226,25 +219,23 @@ class CatalogService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), TypesFeatureCollection, self.__class__
-            )
+            return parse_response(response.json(), FeatureCollection)
         return response.json()
 
     def get_collections(
         self,
-        contract_id: str,
-    ) -> TypesCollections:
+        contract_id: UUID,
+    ) -> Collections:
         """
         Get Collections
 
         List STAC Collections available within the catalog.
 
         Args:
-            contract_id (str):
+            contract_id (UUID): SatVu Contract ID
 
         Returns:
-            TypesCollections
+            Collections
         """
 
         response = self.make_request(
@@ -253,14 +244,12 @@ class CatalogService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), TypesCollections, self.__class__
-            )
+            return parse_response(response.json(), Collections)
         return response.json()
 
     def get_collection(
         self,
-        contract_id: str,
+        contract_id: UUID,
         collection_id: str,
     ) -> Collection:
         """
@@ -270,7 +259,7 @@ class CatalogService(SDKClient):
         catalog. To see all available Collections, please refer to GET /collections.
 
         Args:
-            contract_id (str):
+            contract_id (UUID): SatVu Contract ID
             collection_id (str): Collection ID. Example: collection.
 
         Returns:
@@ -285,16 +274,14 @@ class CatalogService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), Collection, self.__class__
-            )
+            return parse_response(response.json(), Collection)
         return response.json()
 
     def get_item_collection(
         self,
-        contract_id: str,
+        contract_id: UUID,
         collection_id: str,
-    ) -> TypesSearchResponseData:
+    ) -> SearchResponse:
         """
         Get Item Collection
 
@@ -302,11 +289,11 @@ class CatalogService(SDKClient):
         Collection ID.
 
         Args:
-            contract_id (str):
+            contract_id (UUID): SatVu Contract ID
             collection_id (str): Collection ID. Example: collection.
 
         Returns:
-            TypesSearchResponseData
+            SearchResponse
         """
 
         response = self.make_request(
@@ -317,14 +304,12 @@ class CatalogService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), TypesSearchResponseData, self.__class__
-            )
+            return parse_response(response.json(), SearchResponse)
         return response.json()
 
     def get_item(
         self,
-        contract_id: str,
+        contract_id: UUID,
         collection_id: str,
         item_id: str,
     ) -> Feature:
@@ -335,7 +320,7 @@ class CatalogService(SDKClient):
         represented as a Feature dataset.
 
         Args:
-            contract_id (str):
+            contract_id (UUID): SatVu Contract ID
             collection_id (str): Collection ID. Example: collection.
             item_id (str): Item ID. Example: item.
 
@@ -351,5 +336,5 @@ class CatalogService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(response.json(), Feature, self.__class__)
+            return parse_response(response.json(), Feature)
         return response.json()

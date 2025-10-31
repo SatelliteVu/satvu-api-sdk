@@ -27,10 +27,10 @@ class Feature(BaseModel):
             intersection between their geometry and a provided GeoJSON geometry.
         id (str): The identifier of the Item, unique within the Collection that contains the Item. Example: item.
         links (list[Link]): A list of link objects to resources and related URLs.
-        properties (FeatureProperties):
+        properties (FeatureProperties): Properties of the Item
         stac_version (str): The STAC version the Item implements. Example: 1.0.0.
         type_ (str): Feature. Example: Feature.
-        assets (Union[None, FeatureAssets]): Dictionary of asset objects that can be downloaded, each with a unique key.
+        assets (Union[None, FeatureAssets]): Mapping of asset objects that can be downloaded, each with a unique key.
         stac_extensions (Union[None, list[str]]): A list of extensions the Item implements.
     """
 
@@ -67,14 +67,16 @@ class Feature(BaseModel):
         description="A list of link objects to resources and related URLs.",
         alias="links",
     )
-    properties: "FeatureProperties" = Field(..., description=None, alias="properties")
+    properties: "FeatureProperties" = Field(
+        ..., description="Properties of the Item", alias="properties"
+    )
     stac_version: str = Field(
         ..., description="The STAC version the Item implements.", alias="stac_version"
     )
     type_: str = Field(..., description="Feature.", alias="type")
     assets: Union[None, "FeatureAssets"] = Field(
         None,
-        description="Dictionary of asset objects that can be downloaded, each with a unique key.",
+        description="Mapping of asset objects that can be downloaded, each with a unique key.",
         alias="assets",
     )
     stac_extensions: Union[None, list[str]] = Field(

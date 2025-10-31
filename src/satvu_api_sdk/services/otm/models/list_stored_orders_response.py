@@ -6,16 +6,16 @@ from pydantic import BaseModel, ConfigDict, Field
 
 if TYPE_CHECKING:
     from ..models.link import Link
-    from ..models.reseller_stored_order_response import ResellerStoredOrderResponse
+    from ..models.reseller_stored_order_response_1 import ResellerStoredOrderResponse1
     from ..models.response_context import ResponseContext
-    from ..models.stored_order_response import StoredOrderResponse
+    from ..models.stored_order_response_1 import StoredOrderResponse1
 
 
 class ListStoredOrdersResponse(BaseModel):
     """
     Attributes:
         type_ (Literal['FeatureCollection']):
-        features (list[Union['ResellerStoredOrderResponse', 'StoredOrderResponse']]): List of stored order requests.
+        features (list[Union['ResellerStoredOrderResponse1', 'StoredOrderResponse1']]): List of stored order requests.
         links (list[Link]): Links to previous and/or next page.
         context (ResponseContext): Context about the response.
     """
@@ -23,8 +23,8 @@ class ListStoredOrdersResponse(BaseModel):
     type_: Literal["FeatureCollection"] = Field(
         "FeatureCollection", description=None, alias="type"
     )
-    features: list[Union["ResellerStoredOrderResponse", "StoredOrderResponse"]] = Field(
-        ..., description="List of stored order requests.", alias="features"
+    features: list[Union["ResellerStoredOrderResponse1", "StoredOrderResponse1"]] = (
+        Field(..., description="List of stored order requests.", alias="features")
     )
     links: list[Link] = Field(
         ..., description="Links to previous and/or next page.", alias="links"

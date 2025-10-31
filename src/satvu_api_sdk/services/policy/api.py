@@ -1,8 +1,6 @@
 from collections.abc import Callable
 
 from satvu_api_sdk.core import SDKClient
-from satvu_api_sdk.shared.utils import deep_parse_from_annotation
-
 from satvu_api_sdk.services.policy.models.post_active_contracts_input import (
     PostActiveContractsInput,
 )
@@ -16,6 +14,7 @@ from satvu_api_sdk.services.policy.models.terms_user_terms_accepted import (
 from satvu_api_sdk.services.policy.models.user_acceptance_terms_input import (
     UserAcceptanceTermsInput,
 )
+from satvu_api_sdk.shared.parsing import parse_response
 
 
 class PolicyService(SDKClient):
@@ -25,7 +24,8 @@ class PolicyService(SDKClient):
         super().__init__(env=env, get_token=get_token)
 
     def post_active_contracts(
-        self, body: PostActiveContractsInput
+        self,
+        body: PostActiveContractsInput,
     ) -> RouterActiveContractsResponse:
         """
         Active Contracts
@@ -48,9 +48,7 @@ class PolicyService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), RouterActiveContractsResponse, self.__class__
-            )
+            return parse_response(response.json(), RouterActiveContractsResponse)
         return response.json()
 
     def policy_query(
@@ -73,13 +71,12 @@ class PolicyService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), RouterQueryResult, self.__class__
-            )
+            return parse_response(response.json(), RouterQueryResult)
         return response.json()
 
     def user_acceptance_terms(
-        self, body: UserAcceptanceTermsInput
+        self,
+        body: UserAcceptanceTermsInput,
     ) -> TermsUserTermsAccepted:
         """
         User Acceptance Terms
@@ -102,7 +99,5 @@ class PolicyService(SDKClient):
         )
 
         if response.status_code == 200:
-            return deep_parse_from_annotation(
-                response.json(), TermsUserTermsAccepted, self.__class__
-            )
+            return parse_response(response.json(), TermsUserTermsAccepted)
         return response.json()

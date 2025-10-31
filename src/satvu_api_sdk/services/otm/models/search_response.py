@@ -6,30 +6,30 @@ from pydantic import BaseModel, ConfigDict, Field
 
 if TYPE_CHECKING:
     from ..models.link import Link
-    from ..models.reseller_search_response_feature_assured_order_request import (
-        ResellerSearchResponseFeatureAssuredOrderRequest,
+    from ..models.reseller_search_response_feature_assured_order_request_1 import (
+        ResellerSearchResponseFeatureAssuredOrderRequest1,
     )
-    from ..models.reseller_search_response_feature_standard_order_request import (
-        ResellerSearchResponseFeatureStandardOrderRequest,
+    from ..models.reseller_search_response_feature_standard_order_request_1 import (
+        ResellerSearchResponseFeatureStandardOrderRequest1,
     )
     from ..models.response_context import ResponseContext
-    from ..models.search_response_feature_assured_feasibility_request import (
-        SearchResponseFeatureAssuredFeasibilityRequest,
+    from ..models.search_response_feature_assured_feasibility_request_1 import (
+        SearchResponseFeatureAssuredFeasibilityRequest1,
     )
-    from ..models.search_response_feature_assured_feasibility_response import (
-        SearchResponseFeatureAssuredFeasibilityResponse,
+    from ..models.search_response_feature_assured_feasibility_response_1 import (
+        SearchResponseFeatureAssuredFeasibilityResponse1,
     )
-    from ..models.search_response_feature_assured_order_request import (
-        SearchResponseFeatureAssuredOrderRequest,
+    from ..models.search_response_feature_assured_order_request_1 import (
+        SearchResponseFeatureAssuredOrderRequest1,
     )
-    from ..models.search_response_feature_standard_feasibility_request import (
-        SearchResponseFeatureStandardFeasibilityRequest,
+    from ..models.search_response_feature_standard_feasibility_request_1 import (
+        SearchResponseFeatureStandardFeasibilityRequest1,
     )
-    from ..models.search_response_feature_standard_feasibility_response import (
-        SearchResponseFeatureStandardFeasibilityResponse,
+    from ..models.search_response_feature_standard_feasibility_response_1 import (
+        SearchResponseFeatureStandardFeasibilityResponse1,
     )
-    from ..models.search_response_feature_standard_order_request import (
-        SearchResponseFeatureStandardOrderRequest,
+    from ..models.search_response_feature_standard_order_request_1 import (
+        SearchResponseFeatureStandardOrderRequest1,
     )
 
 
@@ -37,14 +37,14 @@ class SearchResponse(BaseModel):
     """
     Attributes:
         type_ (Literal['FeatureCollection']):
-        features (list[Union['ResellerSearchResponseFeatureAssuredOrderRequest',
-            'ResellerSearchResponseFeatureStandardOrderRequest', 'SearchResponseFeatureAssuredFeasibilityRequest',
-            'SearchResponseFeatureAssuredFeasibilityResponse', 'SearchResponseFeatureAssuredOrderRequest',
-            'SearchResponseFeatureStandardFeasibilityRequest', 'SearchResponseFeatureStandardFeasibilityResponse',
-            'SearchResponseFeatureStandardOrderRequest']]): A list of features that match the search filters.
+        features (list[Union['ResellerSearchResponseFeatureAssuredOrderRequest1',
+            'ResellerSearchResponseFeatureStandardOrderRequest1', 'SearchResponseFeatureAssuredFeasibilityRequest1',
+            'SearchResponseFeatureAssuredFeasibilityResponse1', 'SearchResponseFeatureAssuredOrderRequest1',
+            'SearchResponseFeatureStandardFeasibilityRequest1', 'SearchResponseFeatureStandardFeasibilityResponse1',
+            'SearchResponseFeatureStandardOrderRequest1']]): A list of features that match the search filters.
         context (ResponseContext): Context about the response.
         links (list[Link]): A list of links to next and/or previous pages of the search.
-        bbox (Union[None, list[float]]):
+        bbox (list[float] | None):
     """
 
     type_: Literal["FeatureCollection"] = Field(
@@ -52,14 +52,14 @@ class SearchResponse(BaseModel):
     )
     features: list[
         Union[
-            "ResellerSearchResponseFeatureAssuredOrderRequest",
-            "ResellerSearchResponseFeatureStandardOrderRequest",
-            "SearchResponseFeatureAssuredFeasibilityRequest",
-            "SearchResponseFeatureAssuredFeasibilityResponse",
-            "SearchResponseFeatureAssuredOrderRequest",
-            "SearchResponseFeatureStandardFeasibilityRequest",
-            "SearchResponseFeatureStandardFeasibilityResponse",
-            "SearchResponseFeatureStandardOrderRequest",
+            "ResellerSearchResponseFeatureAssuredOrderRequest1",
+            "ResellerSearchResponseFeatureStandardOrderRequest1",
+            "SearchResponseFeatureAssuredFeasibilityRequest1",
+            "SearchResponseFeatureAssuredFeasibilityResponse1",
+            "SearchResponseFeatureAssuredOrderRequest1",
+            "SearchResponseFeatureStandardFeasibilityRequest1",
+            "SearchResponseFeatureStandardFeasibilityResponse1",
+            "SearchResponseFeatureStandardOrderRequest1",
         ]
     ] = Field(
         ...,
@@ -74,6 +74,6 @@ class SearchResponse(BaseModel):
         description="A list of links to next and/or previous pages of the search.",
         alias="links",
     )
-    bbox: Union[None, list[float]] = Field(None, description=None, alias="bbox")
+    bbox: list[float] | None = Field(None, description=None, alias="bbox")
 
     model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

@@ -11,9 +11,9 @@ class WebhookResult(BaseModel):
     """
     Attributes:
         success (bool): Whether the request to the webhook URL was successful.
-        status_code (Union[None, int]): The HTTP status code responded by the webhook URL, if applicable.
+        status_code (int | None): The HTTP status code responded by the webhook URL, if applicable.
         title (Union['WebhookFailureTitle', None]): The cause of the test failure, if applicable.
-        detail (Union[None, str]): Detail about why the test failed, if applicable.
+        detail (None | str): Detail about why the test failed, if applicable.
     """
 
     success: bool = Field(
@@ -21,7 +21,7 @@ class WebhookResult(BaseModel):
         description="Whether the request to the webhook URL was successful.",
         alias="success",
     )
-    status_code: Union[None, int] = Field(
+    status_code: int | None = Field(
         None,
         description="The HTTP status code responded by the webhook URL, if applicable.",
         alias="status_code",
@@ -29,7 +29,7 @@ class WebhookResult(BaseModel):
     title: Union["WebhookFailureTitle", None] = Field(
         None, description="The cause of the test failure, if applicable.", alias="title"
     )
-    detail: Union[None, str] = Field(
+    detail: None | str = Field(
         None,
         description="Detail about why the test failed, if applicable.",
         alias="detail",

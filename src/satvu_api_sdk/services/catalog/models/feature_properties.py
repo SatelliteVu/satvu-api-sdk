@@ -10,7 +10,8 @@ if TYPE_CHECKING:
 
 
 class FeatureProperties(BaseModel):
-    """
+    """Properties of the Item
+
     Attributes:
         datetime_ (datetime.datetime): Acquisition datetime. Example: 2023-10-10T01:22:55Z.
         eo_cloud_cover (float): Estimate of cloud cover. Example: 25.

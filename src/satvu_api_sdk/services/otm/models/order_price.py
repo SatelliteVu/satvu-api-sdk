@@ -10,7 +10,7 @@ if TYPE_CHECKING:
         AssuredFeasibilityFieldsWithAddons,
     )
     from ..models.point import Point
-    from ..models.price_1 import Price1
+    from ..models.price_information import PriceInformation
     from ..models.standard_order_fields_with_addons import StandardOrderFieldsWithAddons
 
 
@@ -22,7 +22,7 @@ class OrderPrice(BaseModel):
         properties (Union['AssuredFeasibilityFieldsWithAddons', 'StandardOrderFieldsWithAddons']): A map of additional
             metadata about the requested image.
         created_at (datetime.datetime): The current UTC time.
-        price (Price1):
+        price (PriceInformation): Pricing information.
     """
 
     type_: Literal["Feature"] = Field("Feature", description=None, alias="type")
@@ -37,6 +37,8 @@ class OrderPrice(BaseModel):
     created_at: datetime.datetime = Field(
         ..., description="The current UTC time.", alias="created_at"
     )
-    price: "Price1" = Field(..., description=None, alias="price")
+    price: "PriceInformation" = Field(
+        ..., description="Pricing information.", alias="price"
+    )
 
     model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

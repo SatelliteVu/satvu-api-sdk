@@ -8,7 +8,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from ..models.satvu_filter import SatvuFilter
 
 if TYPE_CHECKING:
-    from ..models.polygon_1 import Polygon1
+    from ..models.polygon import Polygon
     from ..models.stac_properties_v7_processing_software_name_version import (
         StacPropertiesV7ProcessingSoftwareNameVersion,
     )
@@ -32,20 +32,18 @@ class StacPropertiesV7(BaseModel):
         view_sun_azimuth (float): Sun azimuth angle. The angle between truth north and the sun at the scene centre.
             Measured clockwise in degrees.
         view_sun_elevation (float): Sun elevation angle. The angle from the tangent of the scene center to the sun
-        eo_cloud_cover (Union[None, float]): Estimate of cloud cover
-        proj_bbox (Union[None, list[float]]):
-        proj_geometry (Union['Polygon1', None]): Defines the projected footprint.
-        proj_transform (Union[None, list[float]]): The affine transformation coefficients for the default grid
+        eo_cloud_cover (float | None): Estimate of cloud cover
+        proj_bbox (list[float] | None):
+        proj_geometry (Union['Polygon', None]): Defines the projected footprint.
+        proj_transform (list[float] | None): The affine transformation coefficients for the default grid
         satvu_filter (Union['SatvuFilter', None]): Filter used for earth view acquisition
-        satvu_geometric_calibration (Union[None, bool]): Flag indiciating if refined geometric processing was applied
-        satvu_radiometric_calibration (Union[None, bool]): Flag indicating if radiometric calibration parameters are
-            available
-        satvu_atmospheric_model (Union[None, bool]): Flag indicating if atmospheric model parameters are available
-        satvu_atmospheric_model_transmission (Union[None, float]): Atmospheric model transmission
-        satvu_atmospheric_model_upwelling (Union[None, float]): Model upwelling radiance term
-        satvu_atmospheric_model_downwelling (Union[None, float]): Model downwelling radiance term
-        satvu_sensitivity (Union[None, float]): Modelled one-sigma brightness temperature temporal noise at 300 K in
-            kelvin
+        satvu_geometric_calibration (bool | None): Flag indiciating if refined geometric processing was applied
+        satvu_radiometric_calibration (bool | None): Flag indicating if radiometric calibration parameters are available
+        satvu_atmospheric_model (bool | None): Flag indicating if atmospheric model parameters are available
+        satvu_atmospheric_model_transmission (float | None): Atmospheric model transmission
+        satvu_atmospheric_model_upwelling (float | None): Model upwelling radiance term
+        satvu_atmospheric_model_downwelling (float | None): Model downwelling radiance term
+        satvu_sensitivity (float | None): Modelled one-sigma brightness temperature temporal noise at 300 K in kelvin
     """
 
     datetime_: datetime.datetime = Field(
@@ -100,16 +98,14 @@ class StacPropertiesV7(BaseModel):
         description="Sun elevation angle. The angle from the tangent of the scene center to the sun",
         alias="view:sun_elevation",
     )
-    eo_cloud_cover: Union[None, float] = Field(
+    eo_cloud_cover: float | None = Field(
         None, description="Estimate of cloud cover", alias="eo:cloud_cover"
     )
-    proj_bbox: Union[None, list[float]] = Field(
-        None, description=None, alias="proj:bbox"
-    )
-    proj_geometry: Union["Polygon1", None] = Field(
+    proj_bbox: list[float] | None = Field(None, description=None, alias="proj:bbox")
+    proj_geometry: Union["Polygon", None] = Field(
         None, description="Defines the projected footprint.", alias="proj:geometry"
     )
-    proj_transform: Union[None, list[float]] = Field(
+    proj_transform: list[float] | None = Field(
         None,
         description="The affine transformation coefficients for the default grid",
         alias="proj:transform",
@@ -117,37 +113,37 @@ class StacPropertiesV7(BaseModel):
     satvu_filter: Union["SatvuFilter", None] = Field(
         None, description="Filter used for earth view acquisition", alias="satvu:filter"
     )
-    satvu_geometric_calibration: Union[None, bool] = Field(
+    satvu_geometric_calibration: bool | None = Field(
         None,
         description="Flag indiciating if refined geometric processing was applied",
         alias="satvu:geometric_calibration",
     )
-    satvu_radiometric_calibration: Union[None, bool] = Field(
+    satvu_radiometric_calibration: bool | None = Field(
         None,
         description="Flag indicating if radiometric calibration parameters are available",
         alias="satvu:radiometric_calibration",
     )
-    satvu_atmospheric_model: Union[None, bool] = Field(
+    satvu_atmospheric_model: bool | None = Field(
         None,
         description="Flag indicating if atmospheric model parameters are available",
         alias="satvu:atmospheric_model",
     )
-    satvu_atmospheric_model_transmission: Union[None, float] = Field(
+    satvu_atmospheric_model_transmission: float | None = Field(
         None,
         description="Atmospheric model transmission",
         alias="satvu:atmospheric_model_transmission",
     )
-    satvu_atmospheric_model_upwelling: Union[None, float] = Field(
+    satvu_atmospheric_model_upwelling: float | None = Field(
         None,
         description="Model upwelling radiance term",
         alias="satvu:atmospheric_model_upwelling",
     )
-    satvu_atmospheric_model_downwelling: Union[None, float] = Field(
+    satvu_atmospheric_model_downwelling: float | None = Field(
         None,
         description="Model downwelling radiance term",
         alias="satvu:atmospheric_model_downwelling",
     )
-    satvu_sensitivity: Union[None, float] = Field(
+    satvu_sensitivity: float | None = Field(
         None,
         description="Modelled one-sigma brightness temperature temporal noise at 300 K in kelvin",
         alias="satvu:sensitivity",

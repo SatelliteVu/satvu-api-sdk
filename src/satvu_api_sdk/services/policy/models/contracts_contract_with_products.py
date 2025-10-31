@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -24,6 +24,7 @@ class ContractsContractWithProducts(BaseModel):
         products (list[ContractsProduct]): List of products the contract has access to
         reseller (bool): Whether the contract is marked for reselling Example: True.
         start_date (CivilDate): Contract end date
+        credit_limit (Union[None, int]):
     """
 
     active: bool = Field(
@@ -58,5 +59,6 @@ class ContractsContractWithProducts(BaseModel):
     start_date: "CivilDate" = Field(
         ..., description="Contract end date", alias="start_date"
     )
+    credit_limit: Union[None, int] = Field(None, description=None, alias="credit_limit")
 
     model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

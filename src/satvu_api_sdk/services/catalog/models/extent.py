@@ -6,7 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 if TYPE_CHECKING:
     from ..models.spatial_extent import SpatialExtent
-    from ..models.types_temporal_extent import TypesTemporalExtent
+    from ..models.temporal_extent import TemporalExtent
 
 
 class Extent(BaseModel):
@@ -14,7 +14,7 @@ class Extent(BaseModel):
 
     Attributes:
         spatial (SpatialExtent): Potential spatial extents covered by the Collection.
-        temporal (TypesTemporalExtent): Potential temporal extents covered by the Collection.
+        temporal (TemporalExtent): Potential temporal extents covered by the Collection.
     """
 
     spatial: "SpatialExtent" = Field(
@@ -22,7 +22,7 @@ class Extent(BaseModel):
         description="Potential spatial extents covered by the Collection.",
         alias="spatial",
     )
-    temporal: "TypesTemporalExtent" = Field(
+    temporal: "TemporalExtent" = Field(
         ...,
         description="Potential temporal extents covered by the Collection.",
         alias="temporal",

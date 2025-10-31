@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Union
 from pydantic import BaseModel, ConfigDict, Field
 
 if TYPE_CHECKING:
-    from ..models.user_metadata import UserMetadata
+    from ..models.user_metadata_1 import UserMetadata1
 
 
 class UserInfo(BaseModel):
@@ -14,17 +14,17 @@ class UserInfo(BaseModel):
         user_id (str): The ID of the user.
         name (str): The name of the user.
         email (str): The email of the user.
-        user_metadata (Union[None, UserMetadata]):
-        last_login (Union[None, str]): The datetime at which the user last logged in.
+        user_metadata (Union[None, UserMetadata1]):
+        last_login (None | str): The datetime at which the user last logged in.
     """
 
     user_id: str = Field(..., description="The ID of the user.", alias="user_id")
     name: str = Field(..., description="The name of the user.", alias="name")
     email: str = Field(..., description="The email of the user.", alias="email")
-    user_metadata: Union[None, "UserMetadata"] = Field(
+    user_metadata: Union[None, "UserMetadata1"] = Field(
         None, description=None, alias="user_metadata"
     )
-    last_login: Union[None, str] = Field(
+    last_login: None | str = Field(
         None,
         description="The datetime at which the user last logged in.",
         alias="last_login",

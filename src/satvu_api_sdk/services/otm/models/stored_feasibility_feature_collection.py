@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, Union
+from typing import TYPE_CHECKING, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -18,7 +18,7 @@ class StoredFeasibilityFeatureCollection(BaseModel):
         features (list[StoredFeasibilityRequest]): List of stored feasibility requests.
         links (list[Link]): Links to previous and/or next page.
         context (ResponseContext): Context about the response.
-        bbox (Union[None, list[float]]):
+        bbox (list[float] | None):
     """
 
     type_: Literal["FeatureCollection"] = Field(
@@ -33,6 +33,6 @@ class StoredFeasibilityFeatureCollection(BaseModel):
     context: "ResponseContext" = Field(
         ..., description="Context about the response.", alias="context"
     )
-    bbox: Union[None, list[float]] = Field(None, description=None, alias="bbox")
+    bbox: list[float] | None = Field(None, description=None, alias="bbox")
 
     model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

@@ -20,8 +20,8 @@ class Link(BaseModel):
             the next request.
         merge (Union[None, bool]): If `true`, the headers/body fields in the `next` link must be merged into the
             original request and be sent combined in the next request. Default: False.
-        type_ (Union[None, str]): The media type of the referenced entity.
-        title (Union[None, str]): Title of the link
+        type_ (None | str): The media type of the referenced entity.
+        title (None | str): Title of the link
     """
 
     href: str = Field(..., description="The link in the format of a URL.", alias="href")
@@ -41,11 +41,9 @@ class Link(BaseModel):
         description="If `true`, the headers/body fields in the `next` link must be merged into the original request and be sent combined in the next request.",
         alias="merge",
     )
-    type_: Union[None, str] = Field(
+    type_: None | str = Field(
         None, description="The media type of the referenced entity.", alias="type"
     )
-    title: Union[None, str] = Field(
-        None, description="Title of the link", alias="title"
-    )
+    title: None | str = Field(None, description="Title of the link", alias="title")
 
     model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

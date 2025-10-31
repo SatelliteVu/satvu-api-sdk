@@ -194,7 +194,13 @@ def to_pydantic_model_field(self: PropertyProtocol) -> str:
     else:
         field_start = f"{self.python_name}: {self.get_type_string()}"
 
-    description = f'"{self.description}"' if self.description else "None"
+    # Escape description string and handle multiline descriptions
+    if self.description:
+        # Replace newlines with spaces and escape quotes
+        escaped_desc = self.description.replace("\n", " ").replace('"', '\\"')
+        description = f'"{escaped_desc}"'
+    else:
+        description = "None"
 
     # For const (literal) properties, default to the value of the constant
     if isinstance(self, openapi_python_client.parser.properties.const.ConstProperty):

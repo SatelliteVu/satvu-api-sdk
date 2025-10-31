@@ -5,16 +5,22 @@ from typing import TYPE_CHECKING
 from pydantic import BaseModel, ConfigDict, Field
 
 if TYPE_CHECKING:
-    from ..models.order_name import OrderName
+    from ..models.edit_order_properties import EditOrderProperties
 
 
 class EditOrderPayload(BaseModel):
     """Payload for editing an order.
 
     Attributes:
-        properties (OrderName):
+        properties (EditOrderProperties): Properties that can be edited in an order.
+
+            All fields are optional - only provided fields will be updated.
     """
 
-    properties: "OrderName" = Field(..., description=None, alias="properties")
+    properties: "EditOrderProperties" = Field(
+        ...,
+        description="Properties that can be edited in an order.  All fields are optional - only provided fields will be updated.",
+        alias="properties",
+    )
 
     model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

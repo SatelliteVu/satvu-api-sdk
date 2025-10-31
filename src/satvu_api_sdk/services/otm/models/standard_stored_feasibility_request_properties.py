@@ -1,15 +1,12 @@
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Literal, Union
+from typing import Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from ..models.day_night_mode import DayNightMode
 from ..models.feasibility_request_status import FeasibilityRequestStatus
-
-if TYPE_CHECKING:
-    from ..models.price import Price
 
 
 class StandardStoredFeasibilityRequestProperties(BaseModel):
@@ -28,7 +25,6 @@ class StandardStoredFeasibilityRequestProperties(BaseModel):
             in decimal degrees. Default: 0.
         max_off_nadir (Union[None, int]): The maximum angle from the sensor between nadir and the scene center. Measured
             in decimal degrees. Must be larger than `min_off_nadir`. Default: 30.
-        price (Union['Price', None]): Pricing information.
     """
 
     datetime_: str = Field(
@@ -69,9 +65,6 @@ class StandardStoredFeasibilityRequestProperties(BaseModel):
         30,
         description="The maximum angle from the sensor between nadir and the scene center. Measured in decimal degrees. Must be larger than `min_off_nadir`.",
         alias="max_off_nadir",
-    )
-    price: Union["Price", None] = Field(
-        None, description="Pricing information.", alias="price"
     )
 
     model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

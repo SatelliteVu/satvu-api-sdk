@@ -7,8 +7,8 @@ from pydantic import BaseModel, ConfigDict, Field
 if TYPE_CHECKING:
     from ..models.stac_metadata_assets import StacMetadataAssets
     from ..models.stac_properties_v4 import StacPropertiesV4
-    from ..models.stac_properties_v6 import StacPropertiesV6
     from ..models.stac_properties_v7 import StacPropertiesV7
+    from ..models.stac_properties_v8 import StacPropertiesV8
 
 
 class StacMetadata(BaseModel):
@@ -17,8 +17,8 @@ class StacMetadata(BaseModel):
         id (str): The unique image identifier.
         collection (str): Collection ID.
         assets (StacMetadataAssets): A dictionary of asset objects that can be downloaded, each with a unique key.
-        bbox (list[Union[float, int]]): The bounding box of the asset represented by this item.
-        properties (Union['StacPropertiesV4', 'StacPropertiesV6', 'StacPropertiesV7']): A dictionary of additional
+        bbox (list[float | int]): The bounding box of the asset represented by this item.
+        properties (Union['StacPropertiesV4', 'StacPropertiesV7', 'StacPropertiesV8']): A dictionary of additional
             metadata for the item.
     """
 
@@ -29,12 +29,12 @@ class StacMetadata(BaseModel):
         description="A dictionary of asset objects that can be downloaded, each with a unique key.",
         alias="assets",
     )
-    bbox: list[Union[float, int]] = Field(
+    bbox: list[float | int] = Field(
         ...,
         description="The bounding box of the asset represented by this item.",
         alias="bbox",
     )
-    properties: Union["StacPropertiesV4", "StacPropertiesV6", "StacPropertiesV7"] = (
+    properties: Union["StacPropertiesV4", "StacPropertiesV7", "StacPropertiesV8"] = (
         Field(
             ...,
             description="A dictionary of additional metadata for the item.",

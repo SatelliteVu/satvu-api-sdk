@@ -95,12 +95,12 @@ class StdlibAdapter:
     Zero external dependencies. Suitable for minimal installations.
     """
 
-    def __init__(self, base_url: str = ""):
+    def __init__(self, base_url: str | None = None):
         """
         Initialize the stdlib adapter.
 
         Args:
-            base_url: Base URL for all requests. Relative URLs will be joined to this.
+            base_url: Optional base URL for all requests. Relative URLs will be joined to this.
         """
         self.base_url = base_url.rstrip("/") if base_url else ""
 

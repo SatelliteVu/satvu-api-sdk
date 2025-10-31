@@ -94,12 +94,12 @@ class HttpxAdapter:
     and better performance than stdlib.
     """
 
-    def __init__(self, base_url: str = "", client: httpx.Client | None = None):
+    def __init__(self, base_url: str | None = None, client: httpx.Client | None = None):
         """
         Initialize the httpx adapter.
 
         Args:
-            base_url: Base URL for all requests. Relative URLs will be joined to this.
+            base_url: Optional base URL for all requests. Relative URLs will be joined to this.
             client: Optional pre-configured httpx.Client instance. If not provided,
                    a new client will be created.
         """
@@ -107,7 +107,7 @@ class HttpxAdapter:
             self.client = client
             self._owns_client = False
         else:
-            self.client = httpx.Client(base_url=base_url)
+            self.client = httpx.Client(base_url=base_url or "")
             self._owns_client = True
 
     def __del__(self):

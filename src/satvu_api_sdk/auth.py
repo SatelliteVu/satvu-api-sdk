@@ -18,7 +18,7 @@ except ImportError:
 from satvu_api_sdk.core import SDKClient
 from satvu_api_sdk.http import HttpClient
 from satvu_api_sdk.http.errors import ClientError, ServerError
-from satvu_api_sdk.result import is_err
+from satvu_api_sdk.result import Err, Ok, Result, is_err
 
 
 logger = getLogger(__name__)
@@ -123,25 +123,57 @@ class AuthService(SDKClient):
 
     def token(
         self, client_id: str, client_secret: str, scopes: list[str] | None = None
-    ) -> str:
+    ) -> Result[str, AuthError]:
+        """
+        Get an OAuth access token, using cache if available.
+
+        Args:
+            client_id: OAuth client ID
+            client_secret: OAuth client secret
+            scopes: Optional list of OAuth scopes
+
+        Returns:
+            Result containing either:
+            - Ok(str) with the access token
+            - Err(AuthError) if authentication fails
+        """
         scopes = scopes or []
         cache_key = sha1(client_id.encode("utf-8"), usedforsecurity=False)
         cache_key.update("".join(scopes).encode("utf-8"))
 
-        token = self.cache.load(cache_key.hexdigest())
+        cached_token = self.cache.load(cache_key.hexdigest())
 
-        if not token or self.is_expired_token(token["access_token"]):
-            token = self._auth(client_id, client_secret, scopes)
+        if not cached_token or self.is_expired_token(cached_token["access_token"]):
+            auth_result = self._auth(client_id, client_secret, scopes)
+            if is_err(auth_result):
+                return auth_result  # Propagate error
+
+            token = auth_result.unwrap()
             self.cache.save(cache_key.hexdigest(), token)
+        else:
+            token = cached_token
 
-        return token["access_token"]
+        return Ok(token["access_token"])
 
     def _auth(
         self,
         client_id: str,
         client_secret: str,
         scopes: list[str],
-    ) -> OAuthTokenResponse:
+    ) -> Result[OAuthTokenResponse, AuthError]:
+        """
+        Perform OAuth client credentials authentication.
+
+        Args:
+            client_id: OAuth client ID
+            client_secret: OAuth client secret
+            scopes: List of OAuth scopes to request
+
+        Returns:
+            Result containing either:
+            - Ok(OAuthTokenResponse) with access and refresh tokens
+            - Err(AuthError) if authentication fails
+        """
         logger.info("performing client_credential authentication")
         token_url = urljoin(self.base_path, "token")
 
@@ -167,28 +199,34 @@ class AuthService(SDKClient):
                 body_text = (
                     error.response_body.decode("utf-8") if error.response_body else ""
                 )
-                raise AuthError(
-                    f"Auth request failed with status {error.status_code}: {body_text}"
+                return Err(
+                    AuthError(
+                        f"Auth request failed with status {error.status_code}: {body_text}"
+                    )
                 )
             # Transport error (network, timeout, SSL, etc.)
-            raise AuthError(f"HTTP request failed: {error}")
+            return Err(AuthError(f"HTTP request failed: {error}"))
 
         response = result.unwrap()
 
         if response.status_code != 200:
             text = response.text.unwrap_or("")
-            raise AuthError(
-                "Unexpected error code for client_credential flow: "
-                f"{response.status_code} - {text}"
+            return Err(
+                AuthError(
+                    "Unexpected error code for client_credential flow: "
+                    f"{response.status_code} - {text}"
+                )
             )
 
         # Parse JSON response
         json_result = response.json()
         if is_err(json_result):
             error = json_result.error()
-            raise AuthError(
-                f"Unexpected response body for client_credential flow: {error}"
+            return Err(
+                AuthError(
+                    f"Unexpected response body for client_credential flow: {error}"
+                )
             )
 
         payload = json_result.unwrap()
-        return payload
+        return Ok(payload)

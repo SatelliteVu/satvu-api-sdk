@@ -7,6 +7,7 @@ from pydantic import BaseModel
 from satvu_api_sdk.core import SDKClient
 from satvu_api_sdk.http import create_http_client
 from satvu_api_sdk.http.errors import ClientError, ServerError
+from satvu_api_sdk.result import is_err, is_ok
 
 
 class ParameterTestModel(BaseModel):
@@ -102,8 +103,10 @@ def test_make_request_success_get(sdk_client):
         {"status": "success", "data": {"id": 123}}
     )
 
-    response = sdk_client.make_request("GET", "/endpoint")
+    result = sdk_client.make_request("GET", "/endpoint")
 
+    assert is_ok(result)
+    response = result.unwrap()
     assert response.status_code == 200
     json_result = response.json()
     assert not json_result.is_err()
@@ -119,10 +122,12 @@ def test_make_request_success_post(sdk_client):
         {"id": 456, "created": True}
     )
 
-    response = sdk_client.make_request(
+    result = sdk_client.make_request(
         "POST", "/create", json={"name": "test", "value": 42}
     )
 
+    assert is_ok(result)
+    response = result.unwrap()
     assert response.status_code == 201
     json_result = response.json()
     data = json_result.unwrap()
@@ -137,10 +142,12 @@ def test_make_request_with_params(sdk_client):
         "limit", "10"
     ).reply(200).json({"results": []})
 
-    response = sdk_client.make_request(
+    result = sdk_client.make_request(
         "GET", "/search", params={"query": "test", "limit": "10"}
     )
 
+    assert is_ok(result)
+    response = result.unwrap()
     assert response.status_code == 200
 
 
@@ -153,10 +160,12 @@ def test_make_request_params_with_pydantic_model(sdk_client):
         {"status": "ok"}
     )
 
-    response = sdk_client.make_request(
+    result = sdk_client.make_request(
         "GET", "/endpoint", params={"model": model, "other": "value"}
     )
 
+    assert is_ok(result)
+    response = result.unwrap()
     assert response.status_code == 200
 
 
@@ -167,12 +176,14 @@ def test_make_request_params_filters_none_values(sdk_client):
         "param1", "value1"
     ).reply(200).json({"status": "ok"})
 
-    response = sdk_client.make_request(
+    result = sdk_client.make_request(
         "GET",
         "/endpoint",
         params={"param1": "value1", "param2": None, "param3": None},
     )
 
+    assert is_ok(result)
+    response = result.unwrap()
     assert response.status_code == 200
 
 
@@ -183,10 +194,12 @@ def test_make_request_client_error(sdk_client):
         {"error": "Not found"}
     )
 
-    with pytest.raises(ClientError) as exc_info:
-        sdk_client.make_request("GET", "/notfound")
+    result = sdk_client.make_request("GET", "/notfound")
 
-    assert exc_info.value.status_code == 404
+    assert is_err(result)
+    error = result.error()
+    assert isinstance(error, ClientError)
+    assert error.status_code == 404
 
 
 @pook.on
@@ -196,10 +209,12 @@ def test_make_request_server_error(sdk_client):
         {"error": "Internal server error"}
     )
 
-    with pytest.raises(ServerError) as exc_info:
-        sdk_client.make_request("GET", "/error")
+    result = sdk_client.make_request("GET", "/error")
 
-    assert exc_info.value.status_code == 500
+    assert is_err(result)
+    error = result.error()
+    assert isinstance(error, ServerError)
+    assert error.status_code == 500
 
 
 @pook.on
@@ -209,8 +224,10 @@ def test_make_request_with_follow_redirects(sdk_client):
         {"status": "ok"}
     )
 
-    response = sdk_client.make_request("GET", "/redirect", follow_redirects=True)
+    result = sdk_client.make_request("GET", "/redirect", follow_redirects=True)
 
+    assert is_ok(result)
+    response = result.unwrap()
     assert response.status_code == 200
 
 
@@ -221,8 +238,10 @@ def test_make_request_with_custom_timeout(sdk_client):
         {"status": "completed"}
     )
 
-    response = sdk_client.make_request("GET", "/slow", timeout=30)
+    result = sdk_client.make_request("GET", "/slow", timeout=30)
 
+    assert is_ok(result)
+    response = result.unwrap()
     assert response.status_code == 200
 
 
@@ -234,8 +253,10 @@ def test_make_request_with_auth_token(sdk_client_with_token):
         {"authenticated": True}
     )
 
-    response = sdk_client_with_token.make_request("GET", "/secure")
+    result = sdk_client_with_token.make_request("GET", "/secure")
 
+    assert is_ok(result)
+    response = result.unwrap()
     assert response.status_code == 200
 
 
@@ -246,8 +267,10 @@ def test_make_request_put_method(sdk_client):
         {"id": 123, "updated": True}
     )
 
-    response = sdk_client.make_request("PUT", "/update/123", json={"name": "updated"})
+    result = sdk_client.make_request("PUT", "/update/123", json={"name": "updated"})
 
+    assert is_ok(result)
+    response = result.unwrap()
     assert response.status_code == 200
 
 
@@ -256,8 +279,10 @@ def test_make_request_delete_method(sdk_client):
     """Test DELETE request."""
     pook.delete("https://api.satellitevu.com/test/delete/123").reply(204)
 
-    response = sdk_client.make_request("DELETE", "/delete/123")
+    result = sdk_client.make_request("DELETE", "/delete/123")
 
+    assert is_ok(result)
+    response = result.unwrap()
     assert response.status_code == 204
 
 
@@ -268,8 +293,8 @@ def test_make_request_patch_method(sdk_client):
         {"id": 123, "patched": True}
     )
 
-    response = sdk_client.make_request(
-        "PATCH", "/patch/123", json={"field": "new_value"}
-    )
+    result = sdk_client.make_request("PATCH", "/patch/123", json={"field": "new_value"})
 
+    assert is_ok(result)
+    response = result.unwrap()
     assert response.status_code == 200

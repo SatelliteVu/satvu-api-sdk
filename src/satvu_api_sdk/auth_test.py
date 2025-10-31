@@ -10,6 +10,7 @@ from freezegun import freeze_time
 
 from satvu_api_sdk.auth import AuthError, AuthService, MemoryCache
 from satvu_api_sdk.http import create_http_client
+from satvu_api_sdk.result import is_err, is_ok
 
 # Fixed timestamp for consistent testing
 FIXED_TIMESTAMP = 1640000000  # 2021-12-20 12:13:20 UTC
@@ -69,12 +70,14 @@ def test_successful_token_acquisition(auth_service):
         }
     )
 
-    token = auth_service.token(
+    result = auth_service.token(
         client_id="test_client_id",
         client_secret="test_client_secret",  # pragma: allowlist secret
         scopes=["read:data", "write:data"],
     )
 
+    assert is_ok(result)
+    token = result.unwrap()
     assert token == access_token
     assert not auth_service.is_expired_token(token)
 
@@ -97,19 +100,23 @@ def test_token_caching(auth_service):
     )
 
     # First call - should hit the API
-    token1 = auth_service.token(
+    result1 = auth_service.token(
         client_id="test_client_id",
         client_secret="test_client_secret",  # pragma: allowlist secret
         scopes=["read:data"],
     )
 
     # Second call - should use cached token
-    token2 = auth_service.token(
+    result2 = auth_service.token(
         client_id="test_client_id",
         client_secret="test_client_secret",  # pragma: allowlist secret
         scopes=["read:data"],
     )
 
+    assert is_ok(result1)
+    assert is_ok(result2)
+    token1 = result1.unwrap()
+    token2 = result2.unwrap()
     assert token1 == token2
     assert token1 == access_token
 
@@ -134,11 +141,13 @@ def test_expired_token_refresh(auth_service):
     )
 
     # Get the expired token
-    token1 = auth_service.token(
+    result1 = auth_service.token(
         client_id="test_client_id",
         client_secret="test_client_secret",  # pragma: allowlist secret
     )
 
+    assert is_ok(result1)
+    token1 = result1.unwrap()
     assert auth_service.is_expired_token(token1)
 
     # Second response with fresh token
@@ -152,18 +161,20 @@ def test_expired_token_refresh(auth_service):
     )
 
     # Should fetch a new token because the cached one is expired
-    token2 = auth_service.token(
+    result2 = auth_service.token(
         client_id="test_client_id",
         client_secret="test_client_secret",  # pragma: allowlist secret
     )
 
+    assert is_ok(result2)
+    token2 = result2.unwrap()
     assert token2 == fresh_token
     assert not auth_service.is_expired_token(token2)
 
 
 @pook.on
 def test_auth_error_non_200_response(auth_service):
-    """Test that non-200 responses raise AuthError."""
+    """Test that non-200 responses return AuthError."""
     pook.post("https://auth.satellitevu.com/oauth/token").reply(401).json(
         {
             "error": "invalid_client",
@@ -171,26 +182,34 @@ def test_auth_error_non_200_response(auth_service):
         }
     )
 
-    with pytest.raises(AuthError, match="Auth request failed with status 401"):
-        auth_service.token(
-            client_id="invalid_client",
-            client_secret="invalid_secret",  # pragma: allowlist secret
-        )
+    result = auth_service.token(
+        client_id="invalid_client",
+        client_secret="invalid_secret",  # pragma: allowlist secret
+    )
+
+    assert is_err(result)
+    error = result.error()
+    assert isinstance(error, AuthError)
+    assert "Auth request failed with status 401" in str(error)
 
 
 @pook.on
 def test_auth_error_invalid_json_response(auth_service):
-    """Test that invalid JSON responses raise AuthError."""
+    """Test that invalid JSON responses return AuthError."""
     # Return 200 but with invalid JSON - this should raise when we try to parse it
     pook.post("https://auth.satellitevu.com/oauth/token").reply(200).type(
         "text/plain"
     ).body("not valid json content")
 
-    with pytest.raises(AuthError, match="Unexpected response body"):
-        auth_service.token(
-            client_id="test_client_id",
-            client_secret="test_client_secret",  # pragma: allowlist secret
-        )
+    result = auth_service.token(
+        client_id="test_client_id",
+        client_secret="test_client_secret",  # pragma: allowlist secret
+    )
+
+    assert is_err(result)
+    error = result.error()
+    assert isinstance(error, AuthError)
+    assert "Unexpected response body" in str(error)
 
 
 @freeze_time("2021-12-20 12:13:20")
@@ -209,11 +228,13 @@ def test_auth_with_custom_http_client(auth_service_with_custom_client):
         }
     )
 
-    token = auth_service_with_custom_client.token(
+    result = auth_service_with_custom_client.token(
         client_id="test_client_id",
         client_secret="test_client_secret",  # pragma: allowlist secret
     )
 
+    assert is_ok(result)
+    token = result.unwrap()
     assert token == access_token
 
 
@@ -252,7 +273,7 @@ def test_different_scopes_use_different_cache_keys(auth_service):
         }
     )
 
-    token1 = auth_service.token(
+    result1 = auth_service.token(
         client_id="test_client_id",
         client_secret="test_client_secret",  # pragma: allowlist secret
         scopes=["read:data"],
@@ -268,13 +289,17 @@ def test_different_scopes_use_different_cache_keys(auth_service):
         }
     )
 
-    token2 = auth_service.token(
+    result2 = auth_service.token(
         client_id="test_client_id",
         client_secret="test_client_secret",  # pragma: allowlist secret
         scopes=["write:data"],
     )
 
     # Main test: different scopes should produce different tokens
+    assert is_ok(result1)
+    assert is_ok(result2)
+    token1 = result1.unwrap()
+    token2 = result2.unwrap()
     assert token1 != token2
 
 
@@ -308,11 +333,13 @@ def test_form_encoded_request_format(auth_service):
         }
     )
 
-    token = auth_service.token(
+    result = auth_service.token(
         client_id="test_client_id",
         client_secret="test_client_secret",  # pragma: allowlist secret
         scopes=["read:data"],
     )
 
     # Verify we got a valid token back
+    assert is_ok(result)
+    token = result.unwrap()
     assert token == access_token

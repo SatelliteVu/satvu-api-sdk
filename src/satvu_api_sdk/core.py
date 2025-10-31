@@ -4,7 +4,9 @@ from typing import Any
 from pydantic import BaseModel
 
 from satvu_api_sdk.http import HttpClient, create_http_client
-from satvu_api_sdk.result import is_err
+from satvu_api_sdk.http.errors import HttpError
+from satvu_api_sdk.http.protocol import HttpResponse
+from satvu_api_sdk.result import Result
 
 
 class SDKClient:
@@ -49,7 +51,23 @@ class SDKClient:
         params: dict[str, Any] | None = None,
         follow_redirects: bool = False,
         timeout: int = 5,
-    ):
+    ) -> Result[HttpResponse, HttpError]:
+        """
+        Make an HTTP request and return a Result.
+
+        Args:
+            method: HTTP method (GET, POST, PUT, PATCH, DELETE, etc.)
+            url: URL to request
+            json: Optional JSON body
+            params: Optional query parameters
+            follow_redirects: Whether to follow redirects
+            timeout: Request timeout in seconds
+
+        Returns:
+            Result containing either:
+            - Ok(HttpResponse) on success
+            - Err(HttpError) on failure
+        """
         if params:
             # Convert any pydantic model objects in params to json-serializable dicts
             for key, val in params.items():
@@ -59,7 +77,7 @@ class SDKClient:
             # Drop any params that are None
             params = {k: v for k, v in params.items() if v}
 
-        result = self.client.request(
+        return self.client.request(
             method=method,  # type: ignore
             url=url,
             json=json,
@@ -67,10 +85,3 @@ class SDKClient:
             follow_redirects=follow_redirects,
             timeout=float(timeout),
         )
-
-        # Handle Result type - raise exception on error
-        if is_err(result):
-            raise result.error()
-
-        # Return response for backward compatibility
-        return result.unwrap()

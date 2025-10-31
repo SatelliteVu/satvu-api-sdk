@@ -1,8 +1,10 @@
 from collections.abc import Callable
 from typing import Any
 
-import httpx
 from pydantic import BaseModel
+
+from satvu_api_sdk.http import HttpClient, create_http_client
+from satvu_api_sdk.result import is_err
 
 
 class SDKClient:
@@ -15,15 +17,21 @@ class SDKClient:
         env: str | None,
         get_token: Callable[[], str] | None = None,
         subdomain: str = "api",
+        http_client: HttpClient | None = None,
     ):
         base_url = f"{self.build_url(subdomain, env=env).rstrip('/')}/{self.base_path.lstrip('/')}"
-        if get_token:
+
+        if http_client is not None:
+            self.client = http_client
+        elif get_token:
             auth_token = get_token()
-            self.client = httpx.Client(
-                base_url=base_url, headers={"Authorization": f"Bearer {auth_token}"}
+            self.client = create_http_client(
+                "auto",
+                base_url=base_url,
+                headers={"Authorization": f"Bearer {auth_token}"},
             )
         else:
-            self.client = httpx.Client(base_url=base_url)
+            self.client = create_http_client("auto", base_url=base_url)
 
     @staticmethod
     def build_url(subdomain: str, env: str | None):
@@ -51,11 +59,18 @@ class SDKClient:
             # Drop any params that are None
             params = {k: v for k, v in params.items() if v}
 
-        return self.client.request(
-            method=method,
+        result = self.client.request(
+            method=method,  # type: ignore
             url=url,
             json=json,
             params=params,
             follow_redirects=follow_redirects,
-            timeout=timeout,
+            timeout=float(timeout),
         )
+
+        # Handle Result type - raise exception on error
+        if is_err(result):
+            raise result.error()
+
+        # Return response for backward compatibility
+        return result.unwrap()

@@ -16,6 +16,9 @@ except ImportError:
     user_cache_dir = None
 
 from satvu_api_sdk.core import SDKClient
+from satvu_api_sdk.http import HttpClient
+from satvu_api_sdk.http.errors import ClientError, ServerError
+from satvu_api_sdk.result import is_err
 
 
 logger = getLogger(__name__)
@@ -31,8 +34,8 @@ class OAuthTokenResponse(TypedDict):
 
 
 class TokenCache(Protocol):
-    def save(self, cache_key: str, value: OAuthTokenResponse): ...
-    def load(self, cache_key: str) -> OAuthTokenResponse | None: ...
+    def save(self, client_id: str, value: OAuthTokenResponse): ...
+    def load(self, client_id: str) -> OAuthTokenResponse | None: ...
 
 
 class MemoryCache:
@@ -55,9 +58,8 @@ class AppDirCache:
 
     def __init__(self, cache_dir: str | None = None):
         if user_cache_dir is None:
-            pkg = __package__.split(".")[0]
             raise RuntimeError(
-                f'To use the AppDirCache, please install "{pkg}[standard]": pip install "{pkg}[standard]"'
+                'To use the AppDirCache, please install "satvu-api-sdk[standard]": pip install "satvu-api-sdk[standard]"'
             )
         self.cache_dir = Path(cache_dir if cache_dir else user_cache_dir("SatelliteVu"))
         self.cache_file = self.cache_dir / "tokencache"
@@ -97,8 +99,15 @@ class AppDirCache:
 class AuthService(SDKClient):
     base_path = "/oauth"
 
-    def __init__(self, env: str | None, token_cache: TokenCache | None = None):
-        super().__init__(subdomain="auth", env=env, get_token=None)
+    def __init__(
+        self,
+        env: str | None,
+        token_cache: TokenCache | None = None,
+        http_client: HttpClient | None = None,
+    ):
+        super().__init__(
+            subdomain="auth", env=env, get_token=None, http_client=http_client
+        )
         self.audience = self.build_url("api", env=env)
         self.cache = token_cache or MemoryCache()
 
@@ -135,7 +144,9 @@ class AuthService(SDKClient):
     ) -> OAuthTokenResponse:
         logger.info("performing client_credential authentication")
         token_url = urljoin(self.base_path, "token")
-        response = self.client.post(
+
+        result = self.client.request(
+            "POST",
             token_url,
             headers={"content-type": "application/x-www-form-urlencoded"},
             data={
@@ -147,15 +158,37 @@ class AuthService(SDKClient):
             },
         )
 
+        # Handle Result type
+        if is_err(result):
+            error = result.error()
+            # Distinguish between HTTP status errors and transport errors
+            if isinstance(error, (ClientError, ServerError)):
+                # HTTP error response (4xx/5xx) - server responded with error status
+                body_text = (
+                    error.response_body.decode("utf-8") if error.response_body else ""
+                )
+                raise AuthError(
+                    f"Auth request failed with status {error.status_code}: {body_text}"
+                )
+            # Transport error (network, timeout, SSL, etc.)
+            raise AuthError(f"HTTP request failed: {error}")
+
+        response = result.unwrap()
+
         if response.status_code != 200:
+            text = response.text.unwrap_or("")
             raise AuthError(
                 "Unexpected error code for client_credential flow: "
-                f"{response.status_code} - {response.text}"
+                f"{response.status_code} - {text}"
             )
-        try:
-            payload = response.json()
-            return payload
-        except Exception:
+
+        # Parse JSON response
+        json_result = response.json()
+        if is_err(json_result):
+            error = json_result.error()
             raise AuthError(
-                "Unexpected response body for client_credential flow: " + response.text
+                f"Unexpected response body for client_credential flow: {error}"
             )
+
+        payload = json_result.unwrap()
+        return payload

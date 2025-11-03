@@ -31,7 +31,7 @@ You can find the available API names in `builder/config.py`.
 If you want to generate the SDK for all APIs, run:
 
 ```bash
-uv run python -m builder all
+uv build
 ```
 
 [openapi-python-client]: https://github.com/openapi-generators/openapi-python-client

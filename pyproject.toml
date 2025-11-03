@@ -17,7 +17,12 @@ http-requests = ["requests>=2.32.0"]
 http-httpx = ["httpx>=0.28.1"]
 
 [build-system]
-requires = ["hatchling"]
+requires = [
+    "hatchling",
+    "openapi-python-client>=0.27.0",
+    "httpx>=0.28.1",
+    "attr>=0.3.2",
+]
 build-backend = "hatchling.build"
 
 [dependency-groups]
@@ -33,9 +38,27 @@ dev = [
     "urllib3>=2.0.0",
 ]
 
+[tool.hatch.build.hooks.custom]
+path = "hatch_build.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/satvu_api_sdk"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"builder" = "builder"
+
+[tool.hatch.build.targets.sdist]
+include = ["/src", "/builder"]
+
+[tool.hatch.envs.default.scripts]
+build-sdk = "uv run python -m builder all"
+
 [tool.fawltydeps]
 ignore_unused = ["notebook"]
-ignore_undeclared = ["satvu_api_sdk"]  # Allow self-referencing imports in tests
+ignore_undeclared = [
+    "satvu_api_sdk", # Allow self-referencing imports in tests
+    "hatchling",
+]
 
 [tool.fawltydeps.custom_mapping]
 satvu-api-sdk = ["satvu_api_sdk"]

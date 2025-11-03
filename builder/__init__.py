@@ -128,7 +128,7 @@ openapi_python_client.parser.openapi.Endpoint.from_data = from_data
 
 # Override lots of methods to avoid the use of 'Unset'
 # This patches ListProperty.get_type_string
-def get_type_string(
+def _list_property_get_type_string(
     self,
     no_optional: bool = False,
     json: bool = False,
@@ -146,19 +146,19 @@ def get_type_string(
 
 
 # Avoid quoted list type annotations
-def get_base_type_string(self, *, quoted: bool = False) -> str:
+def _list_property_get_base_type_string(self, *, quoted: bool = False) -> str:
     return f"list[{self.inner_property.get_type_string()}]"
 
 
-def get_base_json_type_string(self, *, quoted: bool = False) -> str:
+def _list_property_get_base_json_type_string(self, *, quoted: bool = False) -> str:
     return f"list[{self.inner_property.get_type_string(json=True)}]"
 
 
 openapi_python_client.parser.properties.list_property.ListProperty.get_type_string = (
-    get_type_string
+    _list_property_get_type_string
 )
-openapi_python_client.parser.properties.list_property.ListProperty.get_base_type_string = get_base_type_string
-openapi_python_client.parser.properties.list_property.ListProperty.get_base_json_type_string = get_base_json_type_string
+openapi_python_client.parser.properties.list_property.ListProperty.get_base_type_string = _list_property_get_base_type_string
+openapi_python_client.parser.properties.list_property.ListProperty.get_base_json_type_string = _list_property_get_base_json_type_string
 
 
 def to_string(self) -> str:
@@ -216,7 +216,7 @@ def to_pydantic_model_field(self: PropertyProtocol) -> str:
         return f'{field_start} = Field(..., description={description}, alias="{self.name}")'
 
 
-def get_type_string(
+def _property_protocol_get_type_string(
     self,
     no_optional: bool = False,
     json: bool = False,
@@ -241,12 +241,12 @@ def get_type_string(
 
 openapi_python_client.parser.properties.protocol.PropertyProtocol.to_string = to_string
 openapi_python_client.parser.properties.protocol.PropertyProtocol.get_type_string = (
-    get_type_string
+    _property_protocol_get_type_string
 )
 openapi_python_client.parser.properties.protocol.PropertyProtocol.to_pydantic_model_field = to_pydantic_model_field
 
 
-def get_type_string(
+def _const_get_type_string(
     self,
     no_optional: bool = False,
     json: bool = False,
@@ -259,10 +259,10 @@ def get_type_string(
     return lit
 
 
-openapi_python_client.parser.properties.const.get_type_string = get_type_string
+openapi_python_client.parser.properties.const.get_type_string = _const_get_type_string
 
 
-def get_type_string(
+def _const_property_get_type_string(
     self,
     no_optional: bool = False,
     json: bool = False,
@@ -276,7 +276,7 @@ def get_type_string(
 
 
 openapi_python_client.parser.properties.const.ConstProperty.get_type_string = (
-    get_type_string
+    _const_property_get_type_string
 )
 
 
@@ -327,21 +327,21 @@ def _get_type_string_from_inner_type_strings(self, inner_types: set[str]) -> str
         return " | ".join(sorted(inner_types, key=lambda x: x.lower()))
 
 
-def get_base_type_string(self, *, quoted: bool = True) -> str:
+def _union_property_get_base_type_string(self, *, quoted: bool = True) -> str:
     """Get base type string with control over whether ModelProperty types are quoted"""
     return self._get_type_string_from_inner_type_strings(
         self._get_inner_type_strings(json=False, quoted=quoted)
     )
 
 
-def get_base_json_type_string(self, *, quoted: bool = True) -> str:
+def _union_property_get_base_json_type_string(self, *, quoted: bool = True) -> str:
     """Get base JSON type string with control over whether ModelProperty types are quoted"""
     return self._get_type_string_from_inner_type_strings(
         self._get_inner_type_strings(json=True, quoted=quoted)
     )
 
 
-def get_type_string_union(
+def _union_property_get_type_string(
     self,
     no_optional: bool = False,
     json: bool = False,
@@ -359,7 +359,12 @@ def get_type_string_union(
 
     # Check if None is already in the union (e.g., from anyOf: [string, null])
     # This prevents duplicate None in types like "None | None | str"
-    if "None" in type_string or "null" in type_string.lower():
+    # Check the actual inner properties rather than the string representation
+    has_none = any(
+        isinstance(p, openapi_python_client.parser.properties.none.NoneProperty)
+        for p in self.inner_properties
+    )
+    if has_none:
         return type_string
 
     # If type_string contains quoted types (forward references), use Union[None, ...] syntax
@@ -376,15 +381,15 @@ openapi_python_client.parser.properties.union.UnionProperty._get_inner_type_stri
 )
 openapi_python_client.parser.properties.union.UnionProperty._get_type_string_from_inner_type_strings = _get_type_string_from_inner_type_strings
 openapi_python_client.parser.properties.union.UnionProperty.get_base_type_string = (
-    get_base_type_string
+    _union_property_get_base_type_string
 )
-openapi_python_client.parser.properties.union.UnionProperty.get_base_json_type_string = get_base_json_type_string
+openapi_python_client.parser.properties.union.UnionProperty.get_base_json_type_string = _union_property_get_base_json_type_string
 openapi_python_client.parser.properties.union.UnionProperty.get_type_string = (
-    get_type_string_union
+    _union_property_get_type_string
 )
 
 
-def get_type_string(
+def _model_property_get_type_string(
     self,
     no_optional: bool = False,
     json: bool = False,
@@ -405,7 +410,7 @@ def get_type_string(
     return f"Union[None, {type_string}]"
 
 
-def build(
+def _model_property_build(
     data: Schema,
     name: str,
     schemas: Schemas,
@@ -501,9 +506,11 @@ def build(
 
 
 openapi_python_client.parser.properties.model_property.ModelProperty.get_type_string = (
-    get_type_string
+    _model_property_get_type_string
 )
-openapi_python_client.parser.properties.model_property.ModelProperty.build = build
+openapi_python_client.parser.properties.model_property.ModelProperty.build = (
+    _model_property_build
+)
 
 
 # Override the sanitize function to replace colons with underscores

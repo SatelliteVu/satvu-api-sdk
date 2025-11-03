@@ -219,16 +219,16 @@ class HttpxAdapter:
                 )
             )
 
-        except httpx.SSLError as e:
-            return Err(
-                SSLError(
-                    message=f"SSL/TLS error: {e}",
-                    url=url,
-                    original_error=e,
-                )
-            )
-
         except httpx.ConnectError as e:
+            # SSL/TLS errors are a type of ConnectError in httpx
+            if "SSL" in str(e) or "TLS" in str(e) or "certificate" in str(e).lower():
+                return Err(
+                    SSLError(
+                        message=f"SSL/TLS error: {e}",
+                        url=url,
+                        original_error=e,
+                    )
+                )
             return Err(
                 NetworkError(
                     message=f"Connection error: {e}",

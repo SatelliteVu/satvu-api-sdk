@@ -33,8 +33,9 @@ class SatVuSDK:
         self._reseller = None
         self._wallet = None
 
-    def get_token(self):
-        return self.auth.token(self.client_id, self.client_secret)
+    def get_token(self) -> str:
+        """Get authentication token, unwrapping the Result or raising on error."""
+        return self.auth.token(self.client_id, self.client_secret).unwrap()
 
     @property
     def auth(self) -> AuthService:
@@ -44,7 +45,7 @@ class SatVuSDK:
 
     @property
     def catalog(self) -> CatalogService:
-        if not self._auth:
+        if not self._catalog:
             self._catalog = CatalogService(env=self.env, get_token=self.get_token)
         return self._catalog
 

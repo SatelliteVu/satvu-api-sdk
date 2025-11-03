@@ -132,6 +132,7 @@ from typing import Any, Unpack, Union, List, Dict
 from uuid import UUID
 
 from satvu_api_sdk.core import SDKClient
+from satvu_api_sdk.http import HttpClient
 from satvu_api_sdk.shared.parsing import normalize_keys, parse_response
 
 {% for endpoint in endpoints %}
@@ -152,8 +153,8 @@ from satvu_api_sdk.shared.parsing import normalize_keys, parse_response
 class {{ api_id | title }}Service(SDKClient):
     base_path = "{{ base_path }}"
 
-    def __init__(self, get_token: Callable[[], str], env: str | None):
-        super().__init__(env=env, get_token=get_token)
+    def __init__(self, env: str | None, get_token: Callable[[], str], http_client: HttpClient | None = None):
+        super().__init__(env=env, get_token=get_token, http_client=http_client)
 
     {% for endpoint in endpoints %}
     {# Filter for 2xx success responses by checking the pattern string #}

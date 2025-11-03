@@ -34,7 +34,7 @@ class OAuthTokenResponse(BaseModel):
     """OAuth token response containing access and refresh tokens."""
 
     access_token: str
-    refresh_token: str
+    refresh_token: str | None = None
 
 
 class TokenCache(Protocol):
@@ -80,7 +80,7 @@ class AppDirCache:
         except DuplicateSectionError:
             pass
         parser[client_id]["access_token"] = value.access_token
-        parser[client_id]["refresh_token"] = value.refresh_token
+        parser[client_id]["refresh_token"] = value.refresh_token or ""
 
         with NamedTemporaryFile("w", dir=str(self.cache_dir), delete=False) as handle:
             parser.write(handle)

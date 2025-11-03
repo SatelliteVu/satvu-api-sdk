@@ -85,7 +85,7 @@ class SatVuProject(Project):
 
         print(f"Generating {self.project_dir}")
         try:
-            self.project_dir.mkdir()
+            self.project_dir.mkdir(parents=True)
         except FileExistsError:
             if not self.config.overwrite:
                 return [

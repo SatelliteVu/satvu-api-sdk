@@ -10,3 +10,4 @@ build/
 dist/
 tasks-*.md
 wheels/
+/src/satvu_api_sdk/services

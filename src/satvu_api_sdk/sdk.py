@@ -6,6 +6,7 @@ from satvu_api_sdk.services.policy.api import PolicyService
 from satvu_api_sdk.services.reseller.api import ResellerService
 from satvu_api_sdk.auth import AuthService, TokenCache
 from satvu_api_sdk.services.wallet.api import WalletService
+from satvu_api_sdk.http import HttpClient
 
 
 class SatVuSDK:
@@ -17,11 +18,13 @@ class SatVuSDK:
         client_secret: str,
         env: str | None = None,
         token_cache: TokenCache | None = None,
+        http_client: HttpClient | None = None,
     ):
         self.client_id = client_id
         self.client_secret = client_secret
         self.token_cache = token_cache
         self.env = env
+        self.http_client = http_client
 
         # for lazy service initialisation
         self._auth = None
@@ -40,7 +43,9 @@ class SatVuSDK:
     @property
     def auth(self) -> AuthService:
         if not self._auth:
-            self._auth = AuthService(env=self.env, token_cache=self.token_cache)
+            self._auth = AuthService(
+                env=self.env, token_cache=self.token_cache, http_client=self.http_client
+            )
         return self._auth
 
     @property
@@ -52,35 +57,47 @@ class SatVuSDK:
     @property
     def cos(self) -> CosService:
         if not self._cos:
-            self._cos = CosService(env=self.env, get_token=self.get_token)
+            self._cos = CosService(
+                env=self.env, get_token=self.get_token, http_client=self.http_client
+            )
         return self._cos
 
     @property
     def id(self) -> IdService:
         if not self._id:
-            self._id = IdService(env=self.env, get_token=self.get_token)
+            self._id = IdService(
+                env=self.env, get_token=self.get_token, http_client=self.http_client
+            )
         return self._id
 
     @property
     def otm(self) -> OtmService:
         if not self._otm:
-            self._otm = OtmService(env=self.env, get_token=self.get_token)
+            self._otm = OtmService(
+                env=self.env, get_token=self.get_token, http_client=self.http_client
+            )
         return self._otm
 
     @property
     def policy(self) -> PolicyService:
         if not self._policy:
-            self._policy = PolicyService(env=self.env, get_token=self.get_token)
+            self._policy = PolicyService(
+                env=self.env, get_token=self.get_token, http_client=self.http_client
+            )
         return self._policy
 
     @property
     def reseller(self) -> ResellerService:
         if not self._reseller:
-            self._reseller = ResellerService(env=self.env, get_token=self.get_token)
+            self._reseller = ResellerService(
+                env=self.env, get_token=self.get_token, http_client=self.http_client
+            )
         return self._reseller
 
     @property
     def wallet(self) -> WalletService:
         if not self._wallet:
-            self._wallet = WalletService(env=self.env, get_token=self.get_token)
+            self._wallet = WalletService(
+                env=self.env, get_token=self.get_token, http_client=self.http_client
+            )
         return self._wallet

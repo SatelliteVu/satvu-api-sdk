@@ -25,15 +25,12 @@ class SDKClient:
 
         if http_client is not None:
             self.client = http_client
-        elif get_token:
-            auth_token = get_token()
+        else:
             self.client = create_http_client(
                 "auto",
                 base_url=base_url,
-                headers={"Authorization": f"Bearer {auth_token}"},
+                get_token=get_token,
             )
-        else:
-            self.client = create_http_client("auto", base_url=base_url)
 
     @staticmethod
     def build_url(subdomain: str, env: str | None):

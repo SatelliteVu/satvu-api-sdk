@@ -3,6 +3,7 @@
 import json as json_lib
 import socket
 import warnings
+from collections.abc import Callable
 from http.client import HTTPResponse as StdlibHTTPResponse
 from typing import Any, cast
 from urllib.error import HTTPError, URLError
@@ -95,14 +96,19 @@ class StdlibAdapter:
     Zero external dependencies. Suitable for minimal installations.
     """
 
-    def __init__(self, base_url: str | None = None):
+    def __init__(
+        self, base_url: str | None = None, get_token: Callable[[], str] | None = None
+    ):
         """
         Initialize the stdlib adapter.
 
         Args:
             base_url: Optional base URL for all requests. Relative URLs will be joined to this.
+            get_token: Optional callback to get the current access token. Will be called
+                      before each request to support token refresh.
         """
         self.base_url = base_url.rstrip("/") if base_url else ""
+        self.get_token = get_token
 
     def request(
         self,
@@ -150,8 +156,11 @@ class StdlibAdapter:
                 separator = "&" if "?" in full_url else "?"
                 full_url = f"{full_url}{separator}{query_string}"
 
-        # Prepare headers
+        # Prepare headers with auth token if get_token is available
         req_headers = headers.copy() if headers else {}
+        if self.get_token:
+            token = self.get_token()
+            req_headers["Authorization"] = f"Bearer {token}"
 
         # Prepare body
         body_data: bytes | None = None

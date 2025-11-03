@@ -1,6 +1,7 @@
 """HTTPX HTTP adapter."""
 
 import json as json_lib
+from collections.abc import Callable
 from typing import Any, cast
 
 try:
@@ -94,7 +95,12 @@ class HttpxAdapter:
     and better performance than stdlib.
     """
 
-    def __init__(self, base_url: str | None = None, client: httpx.Client | None = None):
+    def __init__(
+        self,
+        base_url: str | None = None,
+        client: httpx.Client | None = None,
+        get_token: Callable[[], str] | None = None,
+    ):
         """
         Initialize the httpx adapter.
 
@@ -102,7 +108,10 @@ class HttpxAdapter:
             base_url: Optional base URL for all requests. Relative URLs will be joined to this.
             client: Optional pre-configured httpx.Client instance. If not provided,
                    a new client will be created.
+            get_token: Optional callback to get the current access token. Will be called
+                      before each request to support token refresh.
         """
+        self.get_token = get_token
         if client is not None:
             self.client = client
             self._owns_client = False
@@ -137,6 +146,12 @@ class HttpxAdapter:
         | ProxyError,
     ]:
         """Make an HTTP request using httpx."""
+        # Prepare headers with auth token if get_token is available
+        req_headers = headers.copy() if headers else {}
+        if self.get_token:
+            token = self.get_token()
+            req_headers["Authorization"] = f"Bearer {token}"
+
         # Filter out None values from params
         if params:
             params = {k: v for k, v in params.items() if v is not None}
@@ -145,7 +160,7 @@ class HttpxAdapter:
             response = self.client.request(
                 method=method,
                 url=url,
-                headers=headers,
+                headers=req_headers,
                 params=params,
                 json=json,
                 data=data,

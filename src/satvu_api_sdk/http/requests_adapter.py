@@ -1,6 +1,7 @@
 """Requests HTTP adapter."""
 
 import json as json_lib
+from collections.abc import Callable
 from typing import Any, cast
 
 try:
@@ -93,7 +94,10 @@ class RequestsAdapter:
     """
 
     def __init__(
-        self, base_url: str | None = None, session: requests.Session | None = None
+        self,
+        base_url: str | None = None,
+        session: requests.Session | None = None,
+        get_token: Callable[[], str] | None = None,
     ):
         """
         Initialize the requests adapter.
@@ -102,8 +106,11 @@ class RequestsAdapter:
             base_url: Optional base URL for all requests. Relative URLs will be joined to this.
             session: Optional pre-configured requests.Session instance. If not provided,
                     a new session will be created.
+            get_token: Optional callback to get the current access token. Will be called
+                      before each request to support token refresh.
         """
         self.base_url = base_url.rstrip("/") if base_url else ""
+        self.get_token = get_token
 
         if session is not None:
             self.session = session
@@ -145,6 +152,12 @@ class RequestsAdapter:
         else:
             full_url = url
 
+        # Prepare headers with auth token if get_token is available
+        req_headers = headers.copy() if headers else {}
+        if self.get_token:
+            token = self.get_token()
+            req_headers["Authorization"] = f"Bearer {token}"
+
         # Filter out None values from params
         if params:
             params = {k: v for k, v in params.items() if v is not None}
@@ -154,7 +167,7 @@ class RequestsAdapter:
             response = self.session.request(
                 method=method,
                 url=full_url,
-                headers=headers,
+                headers=req_headers,
                 params=params,
                 json=json,
                 data=data,

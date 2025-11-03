@@ -62,7 +62,7 @@ json_body = body.model_dump(by_alias=True)
 {%- if endpoint.query_parameters -%}
 {{ query_params(endpoint) }}
 {%- endif -%}
-response = self.make_request(method="{{ endpoint.method }}", url={{ url(endpoint) }},
+result = self.make_request(method="{{ endpoint.method }}", url={{ url(endpoint) }},
 {%- if endpoint.bodies | length -%}
 json=json_body,
 {%- endif -%}
@@ -70,11 +70,12 @@ json=json_body,
 params=params,
 {%- endif -%}
 {%- if follow_redirects -%}
-follow_redirects=redirect,
+follow_redirects=redirect if redirect is not None else True,
 timeout=60 if redirect else 5,
 {# TODO: probably want to allow users to choose timeout #}
 {%- endif -%}
 )
+response = result.unwrap()
 {% endmacro %}
 
 {%- macro docstring_content(endpoint, return_string) %}
@@ -185,7 +186,7 @@ class {{ api_id | title }}Service(SDKClient):
 
         {% if redirect_response %}
         if response.headers.get("Content-Type") == 'application/zip':
-            zip_bytes = io.BytesIO(response.content)
+            zip_bytes = io.BytesIO(response.body)
             return zip_bytes
         {% endif %}
 
@@ -193,10 +194,10 @@ class {{ api_id | title }}Service(SDKClient):
         if response.status_code == {{ response.status_code.pattern }}:
             {% set response_type = response.prop.get_type_string(quoted=False) %}
             {% if response_type == 'Any' %}
-            return response.json()
+            return response.json().unwrap()
             {% else %}
-            return parse_response(response.json(), {{ response_type }})
+            return parse_response(response.json().unwrap(), {{ response_type }})
             {% endif %}
         {% endfor %}
-        return response.json()
+        return response.json().unwrap()
     {% endfor %}

@@ -5,7 +5,7 @@ This module provides Rust-style Result types with Ok and Err variants
 for handling operations that may fail without using exceptions.
 """
 
-from typing import Callable, Generic, TypeGuard, TypeVar, Union
+from typing import Callable, Generic, NoReturn, TypeGuard, TypeVar, Union
 
 T = TypeVar("T")  # Success value type
 E = TypeVar("E")  # Error value type
@@ -175,7 +175,7 @@ class Err(Generic[E]):
         """Check if this is an Err result."""
         return True
 
-    def unwrap(self) -> T:
+    def unwrap(self) -> NoReturn:
         """
         Get the contained value (raises for Err).
 
@@ -221,7 +221,7 @@ class Err(Generic[E]):
         """
         return op(self._error)
 
-    def expect(self, msg: str) -> T:
+    def expect(self, msg: str) -> NoReturn:
         """
         Get the contained value with a custom panic message.
 

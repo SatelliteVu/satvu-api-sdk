@@ -33,6 +33,15 @@ If you want to generate the SDK for all APIs, run:
 ```bash
 uv build
 ```
+## Building a release
+
+NOTE: This uses [dagger](https://docs.dagger.io).
+
+Build the release distribution in dagger and export the resulting dist dir:
+
+```sh
+dagger -c "build-release --is-qa --build-number 123 | export './dist' --wipe"
+```
 
 [openapi-python-client]: https://github.com/openapi-generators/openapi-python-client
 [uv]: https://docs.astral.sh/uv/

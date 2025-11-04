@@ -1,5 +1,7 @@
 """Tests for SDKClient core functionality."""
 
+from unittest.mock import MagicMock
+
 import pook
 import pytest
 from pydantic import BaseModel
@@ -7,7 +9,7 @@ from pydantic import BaseModel
 from satvu_api_sdk.core import SDKClient
 from satvu_api_sdk.http import create_http_client
 from satvu_api_sdk.http.errors import ClientError, ServerError
-from satvu_api_sdk.result import is_err, is_ok
+from satvu_api_sdk.result import is_err, is_ok, Ok
 
 
 class ParameterTestModel(BaseModel):
@@ -298,3 +300,69 @@ def test_make_request_patch_method(sdk_client):
     assert is_ok(result)
     response = result.unwrap()
     assert response.status_code == 200
+
+
+def test_sdk_client_default_timeout():
+    """Test SDKClient initialization with default timeout."""
+    client = ConcreteSDKClient(env=None)
+    assert client.timeout == 30  # Default timeout
+
+
+def test_sdk_client_custom_timeout():
+    """Test SDKClient initialization with custom timeout."""
+    client = ConcreteSDKClient(env=None, timeout=60)
+    assert client.timeout == 60
+
+
+def test_make_request_uses_instance_timeout():
+    """Test that make_request uses instance timeout when no timeout specified."""
+    client = ConcreteSDKClient(env=None, timeout=45)
+
+    # Mock the HTTP client to verify timeout parameter
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    client.client.request = MagicMock(return_value=Ok(mock_response))
+
+    # Call without timeout parameter - should use instance timeout (45)
+    client.make_request("GET", "/endpoint")
+
+    # Verify the HTTP client was called with the instance timeout
+    client.client.request.assert_called_once()
+    call_kwargs = client.client.request.call_args[1]
+    assert call_kwargs["timeout"] == 45.0
+
+
+def test_make_request_timeout_override():
+    """Test that explicit timeout parameter overrides instance timeout."""
+    client = ConcreteSDKClient(env=None, timeout=30)
+
+    # Mock the HTTP client to verify timeout parameter
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    client.client.request = MagicMock(return_value=Ok(mock_response))
+
+    # Override instance timeout with explicit timeout
+    client.make_request("GET", "/slow", timeout=120)
+
+    # Verify the HTTP client was called with the overridden timeout
+    client.client.request.assert_called_once()
+    call_kwargs = client.client.request.call_args[1]
+    assert call_kwargs["timeout"] == 120.0
+
+
+def test_make_request_timeout_zero_override():
+    """Test that timeout=0 (explicit zero) overrides instance timeout."""
+    client = ConcreteSDKClient(env=None, timeout=30)
+
+    # Mock the HTTP client to verify timeout parameter
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    client.client.request = MagicMock(return_value=Ok(mock_response))
+
+    # Use timeout=0 explicitly
+    client.make_request("GET", "/endpoint", timeout=0)
+
+    # Verify the HTTP client was called with timeout=0
+    client.client.request.assert_called_once()
+    call_kwargs = client.client.request.call_args[1]
+    assert call_kwargs["timeout"] == 0.0

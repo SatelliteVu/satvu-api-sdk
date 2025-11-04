@@ -108,9 +108,14 @@ class AuthService(SDKClient):
         env: str | None,
         token_cache: TokenCache | None = None,
         http_client: HttpClient | None = None,
+        timeout: int = 30,
     ):
         super().__init__(
-            subdomain="auth", env=env, get_token=None, http_client=http_client
+            subdomain="auth",
+            env=env,
+            get_token=None,
+            http_client=http_client,
+            timeout=timeout,
         )
         self.audience = self.build_url("api", env=env)
         self.cache = token_cache or MemoryCache()
@@ -192,6 +197,7 @@ class AuthService(SDKClient):
                 "audience": self.audience,
                 "scope": " ".join(scopes),
             },
+            timeout=float(self.timeout),
         )
 
         # Handle Result type

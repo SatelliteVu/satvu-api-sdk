@@ -19,6 +19,7 @@ body: {% for body in endpoint.bodies %}{{ body.prop.get_type_string() }}{% if no
 {%- for parameter in endpoint.query_parameters -%}
 {{ parameter.to_string() }},
 {%- endfor -%}
+timeout: int | None = None,
 {% endmacro %}
 
 {# Build url #}
@@ -71,9 +72,8 @@ params=params,
 {%- endif -%}
 {%- if follow_redirects -%}
 follow_redirects=redirect if redirect is not None else True,
-timeout=60 if redirect else 5,
-{# TODO: probably want to allow users to choose timeout #}
 {%- endif -%}
+timeout=timeout,
 )
 response = result.unwrap()
 {% endmacro %}
@@ -99,6 +99,8 @@ Args:
     {% for string in endpoint.body_docstrings %}
     {{ string | wordwrap(90) | indent(8) }}
     {% endfor %}
+    timeout: Optional request timeout in seconds. Overrides the instance timeout if
+        provided.
 
 Returns:
     {{ return_string }}
@@ -153,8 +155,8 @@ from satvu_api_sdk.shared.parsing import normalize_keys, parse_response
 class {{ api_id | title }}Service(SDKClient):
     base_path = "{{ base_path }}"
 
-    def __init__(self, env: str | None, get_token: Callable[[], str], http_client: HttpClient | None = None):
-        super().__init__(env=env, get_token=get_token, http_client=http_client)
+    def __init__(self, env: str | None, get_token: Callable[[], str], http_client: HttpClient | None = None, timeout: int = 30):
+        super().__init__(env=env, get_token=get_token, http_client=http_client, timeout=timeout)
 
     {% for endpoint in endpoints %}
     {# Filter for 2xx success responses by checking the pattern string #}

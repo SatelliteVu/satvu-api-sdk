@@ -20,7 +20,9 @@ class SDKClient:
         get_token: Callable[[], str] | None = None,
         subdomain: str = "api",
         http_client: HttpClient | None = None,
+        timeout: int = 30,
     ):
+        self.timeout = timeout
         base_url = f"{self.build_url(subdomain, env=env).rstrip('/')}/{self.base_path.lstrip('/')}"
 
         if http_client is not None:
@@ -47,7 +49,7 @@ class SDKClient:
         json: list | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         follow_redirects: bool = False,
-        timeout: int = 5,
+        timeout: int | None = None,
     ) -> Result[HttpResponse, HttpError]:
         """
         Make an HTTP request and return a Result.
@@ -58,7 +60,7 @@ class SDKClient:
             json: Optional JSON body
             params: Optional query parameters
             follow_redirects: Whether to follow redirects
-            timeout: Request timeout in seconds
+            timeout: Request timeout in seconds (uses instance timeout if None)
 
         Returns:
             Result containing either:
@@ -74,11 +76,14 @@ class SDKClient:
             # Drop any params that are None
             params = {k: v for k, v in params.items() if v}
 
+        # Use instance timeout if not specified
+        timeout_val = timeout if timeout is not None else self.timeout
+
         return self.client.request(
             method=method,  # type: ignore
             url=url,
             json=json,
             params=params,
             follow_redirects=follow_redirects,
-            timeout=float(timeout),
+            timeout=float(timeout_val),
         )

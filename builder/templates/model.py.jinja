@@ -48,7 +48,7 @@ class {{ class_name }}(BaseModel):
     {{ safe_docstring(class_docstring_content(model)) | indent(4) }}
 
     {% for property in model.required_properties + model.optional_properties %}
-    {{ property.to_pydantic_model_field() }}
+    {{ property | to_pydantic_field }}
     {% endfor %}
 
     model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

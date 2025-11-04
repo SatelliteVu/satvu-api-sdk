@@ -1,3 +1,4 @@
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Sequence
@@ -279,11 +280,11 @@ def build(api_id: str, use_cached: bool = False) -> None:
     if api_id == "all":
         results = build_all(use_cached)
         if any(results.values()):
-            exit(1)
+            sys.exit(1)
     else:
         errors = build_service(api_id, use_cached)
         if errors:
             print("\nErrors:")
             for error in errors:
                 print(f"  {error.detail}")
-            exit(1)
+            sys.exit(1)

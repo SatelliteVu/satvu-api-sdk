@@ -21,17 +21,17 @@ def to_pydantic_model_field(prop: PropertyProtocol) -> str:
     else:
         field_start = f"{prop.python_name}: {prop.get_type_string()}"
 
-    description = f'"{prop.description}"' if prop.description else "None"
+    description = f'"""{prop.description}"""' if prop.description else "None"
 
     # For const (literal) properties, default to the value of the constant
     if isinstance(prop, ConstProperty):
-        return f'{field_start} = Field({prop.value.python_code}, description={description}, alias="{prop.name}")'
+        return f'{field_start} = Field(default={prop.value.python_code}, description={description}, alias="{prop.name}")'
 
     if prop.default is not None:
-        return f'{field_start} = Field({prop.default.python_code}, description={description}, alias="{prop.name}")'
+        return f'{field_start} = Field(default={prop.default.python_code}, description={description}, alias="{prop.name}")'
 
     elif not prop.required:
-        return f'{field_start} = Field(None, description={description}, alias="{prop.name}")'
+        return f'{field_start} = Field(default=None, description={description}, alias="{prop.name}")'
 
     else:
         return f'{field_start} = Field(..., description={description}, alias="{prop.name}")'

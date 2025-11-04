@@ -54,11 +54,20 @@ include = ["/src", "/builder"]
 build-sdk = "uv run python -m builder all"
 
 [tool.fawltydeps]
-ignore_unused = ["notebook"]
+ignore_unused = ["dagger-io", "notebook", "toml"]
 ignore_undeclared = [
-    "satvu_api_sdk", # Allow self-referencing imports in tests
+    "dagger",
     "hatchling",
+    "satvu_api_sdk", # Allow self-referencing imports in tests
+    "toml",
 ]
 
 [tool.fawltydeps.custom_mapping]
 satvu-api-sdk = ["satvu_api_sdk"]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "$version"
+version_scheme = "pep440"
+version_provider = "uv"
+update_changelog_on_bump = true

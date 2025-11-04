@@ -6,9 +6,10 @@
   "reportMissingImports": true,
   "reportMissingTypeStubs": false,
   "exclude": [
-    "**/node_modules",
-    "**/__pycache__",
+    ".dagger",
     ".venv",
+    "**/__pycache__",
+    "**/node_modules",
     "builder"
   ]
 }

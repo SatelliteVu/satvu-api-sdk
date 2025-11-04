@@ -79,7 +79,47 @@ openapi_python_client.parser.properties.list_property.ListProperty.get_base_json
 
 
 # ============================================================================
-# PATCH 5-6: ConstProperty type strings
+# PATCH 5: PropertyProtocol.get_type_string with quoted parameter
+# ============================================================================
+# Base protocol needs to accept quoted parameter so subclasses can use it
+
+
+def property_protocol_get_type_string(
+    self,
+    no_optional: bool = False,
+    json: bool = False,
+    *,
+    quoted: bool = False,
+) -> str:
+    """
+    Get type string for any property with optional quoted parameter support.
+
+    This is the base implementation for PropertyProtocol that accepts the quoted
+    parameter. Specific property types (ModelProperty, UnionProperty, etc.) will
+    override this with their own implementations that actually use the parameter.
+    """
+    if json:
+        # Try to call get_base_json_type_string with quoted parameter
+        try:
+            type_string = self.get_base_json_type_string(quoted=quoted)
+        except TypeError:
+            # Fallback if the property doesn't support quoted parameter
+            type_string = self.get_base_json_type_string()
+    else:
+        type_string = self.get_base_type_string()
+
+    if no_optional or self.required:
+        return type_string
+    return f"Union[None, {type_string}]"
+
+
+openapi_python_client.parser.properties.protocol.PropertyProtocol.get_type_string = (
+    property_protocol_get_type_string
+)
+
+
+# ============================================================================
+# PATCH 6-7: ConstProperty type strings
 # ============================================================================
 # Handle Literal types for const properties
 
@@ -105,7 +145,7 @@ openapi_python_client.parser.properties.const.ConstProperty.get_type_string = (
 
 
 # ============================================================================
-# PATCH 7-12: UnionProperty type handling
+# PATCH 8-13: UnionProperty type handling
 # ============================================================================
 # These are CRITICAL patches for handling Union types correctly.
 # The main issue: quoted forward references need Union[...] syntax.
@@ -186,8 +226,13 @@ def union_get_type_string(
     if no_optional or self.required:
         return type_string
 
-    # Avoid duplicate None in union (e.g., from anyOf: [string, null])
-    if "None" in type_string or "null" in type_string.lower():
+    # Check if None is already in the union (e.g., from anyOf: [string, null])
+    # This prevents duplicate None in types like "None | None | str"
+    has_none = any(
+        isinstance(p, openapi_python_client.parser.properties.none.NoneProperty)
+        for p in self.inner_properties
+    )
+    if has_none:
         return type_string
 
     # Use Union[None, ...] for quoted types, None | ... for others
@@ -212,7 +257,7 @@ openapi_python_client.parser.properties.union.UnionProperty.get_type_string = (
 
 
 # ============================================================================
-# PATCH 13: ModelProperty.get_type_string with quoted support
+# PATCH 14: ModelProperty.get_type_string with quoted support
 # ============================================================================
 # Add quoted parameter to control forward reference quoting
 
@@ -246,7 +291,7 @@ openapi_python_client.parser.properties.model_property.ModelProperty.get_type_st
 
 
 # ============================================================================
-# PATCH 14: utils.sanitize - Replace colons in field names
+# PATCH 15: utils.sanitize - Replace colons in field names
 # ============================================================================
 # Some APIs use colons in field names (e.g., GeoJSON: geo:lat, geo:lon)
 # Colons aren't valid in Python identifiers, so replace with underscores
@@ -268,7 +313,7 @@ openapi_python_client.utils.sanitize = sanitize
 
 
 # ============================================================================
-# PATCH 15: EnumProperty.get_base_type_string - Always quote enums
+# PATCH 16: EnumProperty.get_base_type_string - Always quote enums
 # ============================================================================
 # Enum types should always be quoted as forward references
 
@@ -282,7 +327,35 @@ openapi_python_client.parser.properties.enum_property.EnumProperty.get_base_type
 
 
 # ============================================================================
-# PATCH 16: ModelProperty.build - Handle duplicate model names
+# PATCH 17: PropertyProtocol.to_string - Use None instead of UNSET for parameters
+# ============================================================================
+# Override to_string to generate parameter strings with None instead of UNSET
+
+
+def property_to_string(self) -> str:
+    """
+    Generate parameter string with None instead of UNSET.
+
+    For optional parameters, use None as default instead of UNSET.
+    """
+    type_string = self.get_type_string()
+
+    if self.required or self.default is not None:
+        if self.default is not None:
+            return f"{self.python_name}: {type_string} = {self.default.python_code}"
+        return f"{self.python_name}: {type_string}"
+
+    # Optional parameter - use None instead of UNSET
+    return f"{self.python_name}: {type_string} = None"
+
+
+openapi_python_client.parser.properties.protocol.PropertyProtocol.to_string = (
+    property_to_string
+)
+
+
+# ============================================================================
+# PATCH 18: ModelProperty.build - Handle duplicate model names
 # ============================================================================
 # When OpenAPI specs have duplicate schema names (common with composed schemas),
 # add numeric suffixes to make them unique: Model, Model1, Model2, etc.
@@ -393,10 +466,13 @@ openapi_python_client.parser.properties.model_property.ModelProperty.build = (
 # ============================================================================
 # PATCHES SUMMARY
 # ============================================================================
-print("✅ Applied 16 minimal patches to openapi-python-client")
-print("   📦 Type System (13 patches):")
+print("✅ Applied 18 minimal patches to openapi-python-client")
+print("   📦 Type System (15 patches):")
 print(
     "      • ListProperty: 3 patches (get_type_string, get_base_type_string, get_base_json_type_string)"
+)
+print(
+    "      • PropertyProtocol: 2 patches (get_type_string with quoted parameter, to_string with None)"
 )
 print("      • ConstProperty: 2 patches (Literal type handling)")
 print("      • UnionProperty: 6 patches (quoted forward references, Union[...] syntax)")

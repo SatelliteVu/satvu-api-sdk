@@ -49,8 +49,8 @@ sdk = SatVuSDK(
 )
 
 # Set up time window for feasibility (tomorrow to 6 days from now)
-tomorrow = datetime.today() + timedelta(days=1)
-six_days = datetime.today() + timedelta(days=6)
+tomorrow = datetime.now() + timedelta(days=1)
+six_days = datetime.now() + timedelta(days=6)
 datetime_range = f"{tomorrow.isoformat()}/{six_days.isoformat()}"
 
 # Define target location (Madrid, Spain as example)
@@ -90,7 +90,7 @@ if feasibility_response.features:
     first_feature = feasibility_response.features[0]
     print(f"   Product: {first_feature.properties.product}")
     print(f"   DateTime window: {first_feature.properties.datetime_}")
-    print(f"   Signature: {first_feature.signature[:50]}...")
+    print(f"   Signature: {first_feature.signature[:50]}...")  # type: ignore
 
 # Step 3: Submit order based on feasibility
 print("\n3. Submitting order...")
@@ -99,7 +99,7 @@ order = sdk.otm.post_tasking_orders(
     contract_id=UUID(CONTRACT_ID),
     body=AssuredOrderRequest(
         properties=AssuredOrderRequestProperties(
-            signature=feasibility_response.features[0].signature,
+            signature=feasibility_response.features[0].signature,  # type: ignore
             name="Example Assured Order",
         )
     ),

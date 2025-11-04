@@ -345,14 +345,42 @@ def test_form_encoded_request_format(auth_service):
     assert token == access_token
 
 
+@freeze_time("2021-12-20 12:13:20")
+@pook.on
+def test_optional_refresh_token(auth_service):
+    """Test that missing refresh_token field is handled gracefully."""
+    # Create a valid JWT token without refresh_token in response
+    access_token = create_mock_jwt_token()
+
+    # Return 200 but with missing optional refresh_token field
+    pook.post("https://auth.satellitevu.com/oauth/token").reply(200).json(
+        {
+            "access_token": access_token,
+            # Missing optional refresh_token field
+            "token_type": "Bearer",
+            "expires_in": 3600,
+        }
+    )
+
+    result = auth_service.token(
+        client_id="test_optional_refresh",  # Use unique client_id
+        client_secret="test_client_secret",  # pragma: allowlist secret
+    )
+
+    # Should succeed since refresh_token is optional
+    assert is_ok(result)
+    token = result.unwrap()
+    assert token == access_token
+
+
 @pook.on
 def test_invalid_token_response_structure(auth_service):
     """Test that invalid token response structure is handled properly."""
-    # Return 200 but with missing required fields
+    # Return 200 but with missing required access_token field
     pook.post("https://auth.satellitevu.com/oauth/token").reply(200).json(
         {
-            "access_token": "some_token",
-            # Missing refresh_token field
+            # Missing required access_token field
+            "refresh_token": "some_refresh_token",
             "token_type": "Bearer",
             "expires_in": 3600,
         }

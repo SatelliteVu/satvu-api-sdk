@@ -19,12 +19,14 @@ class SatVuSDK:
         env: str | None = None,
         token_cache: TokenCache | None = None,
         http_client: HttpClient | None = None,
+        timeout: int = 30,
     ):
         self.client_id = client_id
         self.client_secret = client_secret
         self.token_cache = token_cache
         self.env = env
         self.http_client = http_client
+        self.timeout = timeout
 
         # for lazy service initialisation
         self._auth = None
@@ -44,21 +46,32 @@ class SatVuSDK:
     def auth(self) -> AuthService:
         if not self._auth:
             self._auth = AuthService(
-                env=self.env, token_cache=self.token_cache, http_client=self.http_client
+                env=self.env,
+                token_cache=self.token_cache,
+                http_client=self.http_client,
+                timeout=self.timeout,
             )
         return self._auth
 
     @property
     def catalog(self) -> CatalogService:
         if not self._catalog:
-            self._catalog = CatalogService(env=self.env, get_token=self.get_token)
+            self._catalog = CatalogService(
+                env=self.env,
+                get_token=self.get_token,
+                http_client=self.http_client,
+                timeout=self.timeout,
+            )
         return self._catalog
 
     @property
     def cos(self) -> CosService:
         if not self._cos:
             self._cos = CosService(
-                env=self.env, get_token=self.get_token, http_client=self.http_client
+                env=self.env,
+                get_token=self.get_token,
+                http_client=self.http_client,
+                timeout=self.timeout,
             )
         return self._cos
 
@@ -66,7 +79,10 @@ class SatVuSDK:
     def id(self) -> IdService:
         if not self._id:
             self._id = IdService(
-                env=self.env, get_token=self.get_token, http_client=self.http_client
+                env=self.env,
+                get_token=self.get_token,
+                http_client=self.http_client,
+                timeout=self.timeout,
             )
         return self._id
 
@@ -74,7 +90,10 @@ class SatVuSDK:
     def otm(self) -> OtmService:
         if not self._otm:
             self._otm = OtmService(
-                env=self.env, get_token=self.get_token, http_client=self.http_client
+                env=self.env,
+                get_token=self.get_token,
+                http_client=self.http_client,
+                timeout=self.timeout,
             )
         return self._otm
 
@@ -82,7 +101,10 @@ class SatVuSDK:
     def policy(self) -> PolicyService:
         if not self._policy:
             self._policy = PolicyService(
-                env=self.env, get_token=self.get_token, http_client=self.http_client
+                env=self.env,
+                get_token=self.get_token,
+                http_client=self.http_client,
+                timeout=self.timeout,
             )
         return self._policy
 
@@ -90,7 +112,10 @@ class SatVuSDK:
     def reseller(self) -> ResellerService:
         if not self._reseller:
             self._reseller = ResellerService(
-                env=self.env, get_token=self.get_token, http_client=self.http_client
+                env=self.env,
+                get_token=self.get_token,
+                http_client=self.http_client,
+                timeout=self.timeout,
             )
         return self._reseller
 
@@ -98,6 +123,9 @@ class SatVuSDK:
     def wallet(self) -> WalletService:
         if not self._wallet:
             self._wallet = WalletService(
-                env=self.env, get_token=self.get_token, http_client=self.http_client
+                env=self.env,
+                get_token=self.get_token,
+                http_client=self.http_client,
+                timeout=self.timeout,
             )
         return self._wallet

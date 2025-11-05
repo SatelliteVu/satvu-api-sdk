@@ -124,10 +124,27 @@ class SatvuApiSdkCi:
         await self.lint_fawltydeps(source)
 
     @function
-    async def test(self, source: SOURCE, add_opts: str = ""):
+    async def test(self, source: SOURCE, add_opts: str = "") -> dagger.Directory:
         """Runs test suite"""
-        return (
+
+        run = (
             await self.build_container(source, install_deps=True)
             .with_env_variable("PYTEST_ADDOPTS", add_opts)
-            .with_exec(["pytest"])
+            .with_exec(
+                [
+                    "pytest",
+                    "--junitxml=/tmp/pytest.xml",
+                    "--cov-report=term-missing:skip-covered",
+                    "--cov=src",
+                ],
+                redirect_stdout="/tmp/pytest-coverage.txt",  # nosec: B108
+            )
+        )
+
+        return dag.directory().with_files(
+            ".",
+            sources=[
+                run.file("/tmp/pytest.xml"),  # nosec: B108
+                run.file("/tmp/pytest-coverage.txt"),  # nosec: B108
+            ],
         )

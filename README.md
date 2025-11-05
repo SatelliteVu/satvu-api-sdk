@@ -14,9 +14,16 @@ library.
 
 ### Getting Started
 
+These scripts run things locally:
+
 - `./scripts/bootstrap.sh` to install dependencies
 - `./scripts/test.sh` to run the tests, pytest options and arguments can be passed to the script
 - `./scripts/lint.sh` to run the linters
+
+[Dagger](https://docs.dagger.io) can be used to run portable CI:
+
+- `dagger call -v test`: run pytest suite
+- `dagger call -v lint`: run linter suite
 
 ## Generating the SDK
 

@@ -33,6 +33,7 @@ dev = [
     "openapi-python-client>=0.27.0",
     "pook>=2.1.0",
     "pytest>=8.3.4",
+    "pytest-cov>=7.0.0",
     "requests>=2.32.0",
     "urllib3>=2.0.0",
 ]
@@ -53,7 +54,7 @@ include = ["/src", "/builder"]
 build-sdk = "uv run python -m builder all"
 
 [tool.fawltydeps]
-ignore_unused = ["dagger-io", "toml"]
+ignore_unused = ["dagger-io", "toml", "pytest-cov"]
 ignore_undeclared = [
     "dagger",
     "hatchling",
@@ -70,3 +71,9 @@ tag_format = "$version"
 version_scheme = "pep440"
 version_provider = "uv"
 update_changelog_on_bump = true
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
+sort = "Cover"
+omit = ["**/*_test.py", "**/conftest.py"]

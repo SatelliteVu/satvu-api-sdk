@@ -30,7 +30,6 @@ dev = [
     "attr>=0.3.2",
     "freezegun>=1.5.5",
     "httpx>=0.28.1",
-    "notebook>=7.4.7",
     "openapi-python-client>=0.27.0",
     "pook>=2.1.0",
     "pytest>=8.3.4",
@@ -54,7 +53,7 @@ include = ["/src", "/builder"]
 build-sdk = "uv run python -m builder all"
 
 [tool.fawltydeps]
-ignore_unused = ["dagger-io", "notebook", "toml"]
+ignore_unused = ["dagger-io", "toml"]
 ignore_undeclared = [
     "dagger",
     "hatchling",

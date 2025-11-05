@@ -259,7 +259,3 @@ Service methods:
 The SDK includes a zero-dependency stdlib adapter that uses Python's built-in `urllib`, so HTTP functionality works without any optional dependencies.
 
 Install with extras: `uv pip install satvu-api-sdk[standard,http-httpx,http-urllib3,http-requests]`
-
-### Notebooks
-
-Jupyter notebooks in `notebooks/` demonstrate usage of each API service. These are useful references for SDK usage patterns.

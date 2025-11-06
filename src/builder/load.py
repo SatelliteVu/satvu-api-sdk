@@ -8,7 +8,7 @@ from httpx import get
 
 from builder.config import BASE_URL, APIS
 
-BASE_DIR = (Path(__file__).parent / "..").resolve()
+BASE_DIR = (Path(__file__).parent / ".." / "..").resolve()
 CACHE_DIR = BASE_DIR / ".cache"
 
 

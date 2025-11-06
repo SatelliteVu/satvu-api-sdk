@@ -17,7 +17,7 @@ from builder.openapi_preprocessor import preprocess_for_sdk_generation
 import openapi_python_client.parser.openapi
 
 
-BASE_DIR = (Path(__file__).parent / "..").resolve()
+BASE_DIR = (Path(__file__).parent / ".." / "..").resolve()
 TEMPLATE_DIR = Path(__file__).parent / "templates"
 SRC_DIR = BASE_DIR / "src" / "satvu_api_sdk" / "services"
 

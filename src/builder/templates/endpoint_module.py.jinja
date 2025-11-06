@@ -129,7 +129,7 @@ Returns:
 {% endmacro %}
 import io
 
-from collections.abc import Callable
+from collections.abc import Callable, Generator
 from typing import Any, Unpack, Union, List, Dict
 from uuid import UUID
 
@@ -203,4 +203,106 @@ class {{ api_id | title }}Service(SDKClient):
             {% endif %}
         {% endfor %}
         return response.json().unwrap()
+
+    {% if endpoint.pagination %}
+    def {{ endpoint.name }}_iter(
+        self,
+        {% if endpoint.bodies %}
+        {# POST endpoint with body - accept body parameter #}
+        {% if endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[") %}
+        items: {{ endpoint.bodies[0].prop.get_type_string() }},
+        {% else %}
+        body: {% for body in endpoint.bodies %}{{ body.prop.get_type_string() }}{% if not loop.last %}|{% endif %}{% endfor %},
+        {% endif %}
+        {% endif %}
+        {% for param in endpoint.path_parameters %}
+        {{ param.to_string() }},
+        {% endfor %}
+        {% for param in endpoint.query_parameters %}
+        {% if param.python_name != 'token' %}
+        {{ param.to_string() }},
+        {% endif %}
+        {% endfor %}
+        max_pages: int | None = None,
+    ) -> Generator[{{ success_responses[0].prop.get_type_string(quoted=False) }}, None, None]:
+        """
+        {{ endpoint.summary }} (Paginated Iterator)
+
+        Automatically handles pagination by following STAC links.
+
+        Args:
+            {% if endpoint.bodies %}
+            {% for string in endpoint.body_docstrings %}
+            {{ string | wordwrap(90) | indent(12) }}
+            {% endfor %}
+            {% endif %}
+            {% for param in endpoint.path_parameters %}
+            {{ param.to_docstring() | wordwrap(90) | indent(12) }}
+            {% endfor %}
+            {% for param in endpoint.query_parameters %}
+            {% if param.python_name != 'token' %}
+            {{ param.to_docstring() | wordwrap(90) | indent(12) }}
+            {% endif %}
+            {% endfor %}
+            max_pages: Stop after fetching this many pages (default: unlimited)
+
+        Yields:
+            Response pages from paginated results
+
+        Example:
+            ```python
+            for page in sdk.{{ api_id }}.{{ endpoint.name }}_iter(
+                {% if endpoint.bodies %}
+                body=...,
+                {% endif %}
+                {% for param in endpoint.path_parameters %}
+                {{ param.python_name }}=...,
+                {% endfor %}
+                max_pages=10
+            ):
+                for item in page.{{ endpoint.pagination.items_field }}:
+                    print(item)
+            ```
+        """
+        token = None
+        page_count = 0
+
+        while True:
+            if max_pages and page_count >= max_pages:
+                break
+
+            {% if endpoint.bodies %}
+            {# POST endpoint - update body with current token #}
+            {% if endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[") %}
+            response = self.{{ endpoint.name }}(
+                items=items,
+            {% else %}
+            body_with_token = body.model_copy(update={"token": token})
+            response = self.{{ endpoint.name }}(
+                body=body_with_token,
+            {% endif %}
+            {% else %}
+            {# GET endpoint - pass token as query param #}
+            response = self.{{ endpoint.name }}(
+            {% endif %}
+                {% for param in endpoint.path_parameters %}
+                {{ param.python_name }}={{ param.python_name }},
+                {% endfor %}
+                {% for param in endpoint.query_parameters %}
+                {% if param.python_name != 'token' %}
+                {{ param.python_name }}={{ param.python_name }},
+                {% endif %}
+                {% endfor %}
+                {% if not endpoint.bodies %}
+                token=token,
+                {% endif %}
+            )
+            page_count += 1
+
+            yield response
+
+            token = self.extract_next_token(response)
+            if not token:
+                break
+    {% endif %}
     {% endfor %}

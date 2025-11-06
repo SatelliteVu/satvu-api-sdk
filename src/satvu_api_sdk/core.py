@@ -1,5 +1,6 @@
 from collections.abc import Callable
 from typing import Any
+from urllib.parse import parse_qs, urlparse
 
 from pydantic import BaseModel
 
@@ -87,3 +88,44 @@ class SDKClient:
             follow_redirects=follow_redirects,
             timeout=float(timeout_val),
         )
+
+    @staticmethod
+    def extract_next_token(response: BaseModel) -> str | None:
+        """
+        Extract pagination token from STAC links array.
+
+        Handles both GET (token in URL) and POST (token in body) patterns
+        used across all SatVu APIs for pagination.
+
+        Args:
+            response: API response with links array
+
+        Returns:
+            Next pagination token or None if no more pages
+        """
+        if not hasattr(response, "links"):
+            return None
+
+        # Find link with rel="next"
+        next_link = next(
+            (link for link in response.links if link.rel == "next"),
+            None,
+        )
+
+        if not next_link:
+            return None
+
+        # Method 1: GET request - token in URL query parameter
+        if next_link.method == "GET":
+            parsed = urlparse(next_link.href)
+            params = parse_qs(parsed.query)
+            return params.get("token", [None])[0]
+
+        # Method 2: POST request - token in body
+        if next_link.method == "POST" and next_link.body:
+            if isinstance(next_link.body, dict):
+                return next_link.body.get("token")
+            if hasattr(next_link.body, "token"):
+                return next_link.body.token
+
+        return None

@@ -4,9 +4,9 @@ import sys
 from pathlib import Path
 from hatchling.builders.hooks.plugin.interface import BuildHookInterface  # type: ignore[import-not-found]
 
-# Add the project root to sys.path so we can import builder
+# Add src to sys.path so we can import builder
 ROOT_DIR = Path(__file__).parent
-sys.path.insert(0, str(ROOT_DIR))
+sys.path.insert(0, str(ROOT_DIR / "src"))
 
 
 class CustomBuildHook(BuildHookInterface):

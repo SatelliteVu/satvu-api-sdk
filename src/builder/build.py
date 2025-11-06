@@ -56,11 +56,26 @@ class BuildContext:
 
 
 @dataclass
+class PaginationInfo:
+    """Metadata about paginated endpoint."""
+
+    items_field: str
+    """Name of the array field containing items (e.g., 'features', 'orders', 'users')"""
+
+    items_type: str | None
+    """Type of items in the array (e.g., 'Feature', 'Order', None if unknown)"""
+
+    has_limit_param: bool
+    """Whether the endpoint has a 'limit' query parameter"""
+
+
+@dataclass
 class EnhancedEndpoint:
     """Endpoint with additional metadata for template rendering."""
 
     endpoint: Endpoint
     body_docstrings: list[str] = field(default_factory=list)
+    pagination: PaginationInfo | None = None
 
 
 class EndpointTransformer:
@@ -85,9 +100,17 @@ class EndpointTransformer:
                 endpoint.bodies[0]
             )
 
+        # Detect pagination
+        enhanced.pagination = self._detect_pagination(endpoint)
+        if enhanced.pagination:
+            print(
+                f"  [PAGINATION] Detected for {endpoint.name}: items_field={enhanced.pagination.items_field}, items_type={enhanced.pagination.items_type}"
+            )
+
         return enhanced
 
-    def _generate_body_docstrings(self, body: Body) -> list[str]:
+    @staticmethod
+    def _generate_body_docstrings(body: Body) -> list[str]:
         """Generate docstrings for request body."""
         docstrings = []
 
@@ -111,6 +134,104 @@ class EndpointTransformer:
             docstrings.append(docstring)
 
         return docstrings
+
+    @staticmethod
+    def _detect_pagination(endpoint: Endpoint) -> PaginationInfo | None:
+        """
+        Detect if endpoint supports pagination by inspecting OpenAPI schema.
+
+        Detection criteria (ALL must be true):
+        1. Has 'token' query parameter OR token field in request body
+        2. Response has 'links' array field
+        3. Response has an items array field (not 'links')
+
+        Args:
+            endpoint: Parsed endpoint from OpenAPI spec
+
+        Returns:
+            PaginationInfo if endpoint supports pagination, None otherwise
+        """
+        # Check 1: Must have 'token' query parameter OR token in request body
+        has_token_param = any(
+            p.python_name == "token" for p in endpoint.query_parameters
+        )
+
+        # Also check for token in request body properties
+        has_token_in_body = False
+        if endpoint.bodies:
+            body = endpoint.bodies[0]
+            body_prop = body.prop
+
+            # Check if body has required_properties or optional_properties
+            if hasattr(body_prop, "required_properties"):
+                has_token_in_body = any(
+                    p.name == "token" for p in body_prop.required_properties
+                )
+            if not has_token_in_body and hasattr(body_prop, "optional_properties"):
+                has_token_in_body = any(
+                    p.name == "token" for p in body_prop.optional_properties
+                )
+
+        if not has_token_param and not has_token_in_body:
+            return None
+
+        # Check 2: Get success response (200)
+        success_response = next(
+            (r for r in endpoint.responses if r.status_code.pattern == "200"),
+            None,
+        )
+
+        if not success_response or not success_response.prop:
+            return None
+
+        response_prop = success_response.prop
+
+        # Check 3: Response must be a ModelProperty with required_properties
+        if not hasattr(response_prop, "required_properties"):
+            return None
+
+        # Combine required and optional properties
+        all_properties = []
+        if hasattr(response_prop, "required_properties"):
+            all_properties.extend(response_prop.required_properties)
+        if hasattr(response_prop, "optional_properties"):
+            all_properties.extend(response_prop.optional_properties)
+
+        # Check 4: Must have 'links' array field
+        has_links = any(
+            p.name == "links" and isinstance(p, ListProperty) for p in all_properties
+        )
+
+        if not has_links:
+            return None
+
+        # Check 5: Find items field (array field that isn't 'links')
+        items_field = None
+        items_type = None
+
+        for prop in all_properties:
+            if prop.name != "links" and isinstance(prop, ListProperty):
+                items_field = prop.name
+
+                # Extract item type directly from ListProperty.inner_property
+                if hasattr(prop, "inner_property") and prop.inner_property:
+                    items_type = prop.inner_property.get_type_string()
+
+                break
+
+        if not items_field:
+            return None
+
+        # Check if endpoint has 'limit' parameter
+        has_limit_param = any(
+            p.python_name == "limit" for p in endpoint.query_parameters
+        )
+
+        return PaginationInfo(
+            items_field=items_field,
+            items_type=items_type,
+            has_limit_param=has_limit_param,
+        )
 
 
 class ServiceCodeGenerator:
@@ -172,11 +293,12 @@ class ServiceCodeGenerator:
             "base_path": self.context.base_path,
         }
 
-        # Add body_docstrings to endpoints
+        # Add body_docstrings and pagination to endpoints
         for enhanced, endpoint in zip(
             enhanced_endpoints, template_context["endpoints"]
         ):
             endpoint.body_docstrings = enhanced.body_docstrings
+            endpoint.pagination = enhanced.pagination
 
         api_class_path.write_text(
             endpoint_template.render(**template_context),

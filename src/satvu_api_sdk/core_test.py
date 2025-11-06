@@ -366,3 +366,220 @@ def test_make_request_timeout_zero_override():
     client.client.request.assert_called_once()
     call_kwargs = client.client.request.call_args[1]
     assert call_kwargs["timeout"] == 0.0
+
+
+class LinkModel(BaseModel):
+    """Mock STAC link model."""
+
+    href: str
+    rel: str
+    method: str = "GET"
+    body: dict | BaseModel | None = None
+
+
+class PaginatedResponseModel(BaseModel):
+    """Mock paginated response with STAC links."""
+
+    links: list[LinkModel]
+    items: list[dict]
+
+
+class TokenBodyModel(BaseModel):
+    """Mock body model with token attribute."""
+
+    token: str | None = None
+    filter: str | None = None
+
+
+class TestTokenExtraction:
+    """Tests for pagination token extraction from STAC links."""
+
+    def test_extract_next_token_get_request(self):
+        """Test extracting token from GET request (token in URL query parameter)."""
+        response = PaginatedResponseModel(
+            links=[
+                LinkModel(
+                    href="https://api.example.com/search?token=abc123&limit=10",
+                    rel="next",
+                    method="GET",
+                )
+            ],
+            items=[{"id": 1}, {"id": 2}],
+        )
+
+        token = SDKClient.extract_next_token(response)
+        assert token == "abc123"
+
+    def test_extract_next_token_post_request_dict_body(self):
+        """Test extracting token from POST request (token in body dict)."""
+        response = PaginatedResponseModel(
+            links=[
+                LinkModel(
+                    href="https://api.example.com/search",
+                    rel="next",
+                    method="POST",
+                    body={"token": "xyz789", "filter": "visual"},
+                )
+            ],
+            items=[{"id": 1}],
+        )
+
+        token = SDKClient.extract_next_token(response)
+        assert token == "xyz789"
+
+    def test_extract_next_token_post_request_object_body(self):
+        """Test extracting token from POST request (token in body object)."""
+        body_model = TokenBodyModel(token="token456", filter="thermal")
+
+        response = PaginatedResponseModel(
+            links=[
+                LinkModel(
+                    href="https://api.example.com/search",
+                    rel="next",
+                    method="POST",
+                    body=body_model,
+                )
+            ],
+            items=[{"id": 1}],
+        )
+
+        token = SDKClient.extract_next_token(response)
+        assert token == "token456"
+
+    def test_extract_next_token_no_links_attribute(self):
+        """Test extraction when response has no links attribute."""
+
+        class ResponseWithoutLinks(BaseModel):
+            items: list[dict]
+
+        response = ResponseWithoutLinks(items=[{"id": 1}])
+
+        token = SDKClient.extract_next_token(response)
+        assert token is None
+
+    def test_extract_next_token_no_next_link(self):
+        """Test extraction when links array has no 'next' relation."""
+        response = PaginatedResponseModel(
+            links=[
+                LinkModel(
+                    href="https://api.example.com/self", rel="self", method="GET"
+                ),
+                LinkModel(
+                    href="https://api.example.com/prev?token=prev123",
+                    rel="prev",
+                    method="GET",
+                ),
+            ],
+            items=[{"id": 1}],
+        )
+
+        token = SDKClient.extract_next_token(response)
+        assert token is None
+
+    def test_extract_next_token_empty_links(self):
+        """Test extraction when links array is empty."""
+        response = PaginatedResponseModel(links=[], items=[{"id": 1}])
+
+        token = SDKClient.extract_next_token(response)
+        assert token is None
+
+    def test_extract_next_token_get_no_token_in_url(self):
+        """Test extraction when GET next link has no token parameter."""
+        response = PaginatedResponseModel(
+            links=[
+                LinkModel(
+                    href="https://api.example.com/search?limit=10",
+                    rel="next",
+                    method="GET",
+                )
+            ],
+            items=[{"id": 1}],
+        )
+
+        token = SDKClient.extract_next_token(response)
+        assert token is None
+
+    def test_extract_next_token_post_no_body(self):
+        """Test extraction when POST next link has no body."""
+        response = PaginatedResponseModel(
+            links=[
+                LinkModel(
+                    href="https://api.example.com/search", rel="next", method="POST"
+                )
+            ],
+            items=[{"id": 1}],
+        )
+
+        token = SDKClient.extract_next_token(response)
+        assert token is None
+
+    def test_extract_next_token_post_body_no_token(self):
+        """Test extraction when POST body has no token field."""
+        response = PaginatedResponseModel(
+            links=[
+                LinkModel(
+                    href="https://api.example.com/search",
+                    rel="next",
+                    method="POST",
+                    body={"filter": "visual", "limit": 10},
+                )
+            ],
+            items=[{"id": 1}],
+        )
+
+        token = SDKClient.extract_next_token(response)
+        assert token is None
+
+    def test_extract_next_token_get_multiple_query_params(self):
+        """Test extraction from GET URL with multiple query parameters."""
+        response = PaginatedResponseModel(
+            links=[
+                LinkModel(
+                    href="https://api.example.com/search?limit=10&token=multi123&sort=asc",
+                    rel="next",
+                    method="GET",
+                )
+            ],
+            items=[{"id": 1}],
+        )
+
+        token = SDKClient.extract_next_token(response)
+        assert token == "multi123"
+
+    def test_extract_next_token_multiple_next_links(self):
+        """Test extraction when multiple next links exist (uses first)."""
+        response = PaginatedResponseModel(
+            links=[
+                LinkModel(
+                    href="https://api.example.com/search?token=first",
+                    rel="next",
+                    method="GET",
+                ),
+                LinkModel(
+                    href="https://api.example.com/search?token=second",
+                    rel="next",
+                    method="GET",
+                ),
+            ],
+            items=[{"id": 1}],
+        )
+
+        token = SDKClient.extract_next_token(response)
+        assert token == "first"  # Should use first match
+
+    def test_extract_next_token_none_token_value(self):
+        """Test extraction when token value is None in body."""
+        response = PaginatedResponseModel(
+            links=[
+                LinkModel(
+                    href="https://api.example.com/search",
+                    rel="next",
+                    method="POST",
+                    body={"token": None, "filter": "visual"},
+                )
+            ],
+            items=[{"id": 1}],
+        )
+
+        token = SDKClient.extract_next_token(response)
+        assert token is None

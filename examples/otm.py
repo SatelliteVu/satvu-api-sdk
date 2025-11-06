@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Simple SDK usage example for the OTM (Order Tasking Management) Service.
+SDK usage examples for the OTM (Order Tasking Management) Service.
 
-This example demonstrates the complete workflow for ordering satellite imagery:
-1. Request a feasibility check (Assured tier)
-2. Retrieve feasibility results
-3. Submit an order based on feasibility results
-4. Edit the order
-5. Retrieve order details
+Demonstrates:
+- Complete Assured order workflow (feasibility → order → edit → cancel)
+- Paginated iterators for orders, feasibility requests, and search
 
 Set the following environment variables before running:
 - SATVU_CLIENT_ID
@@ -24,6 +21,7 @@ from uuid import UUID
 
 from satvu_api_sdk import SatVuSDK
 from satvu_api_sdk.services.otm.models import (
+    SearchRequest,
     AssuredFeasibilityFields,
     AssuredOrderRequest,
     AssuredOrderRequestProperties,
@@ -148,3 +146,68 @@ print("=" * 80)
 print("\nFull order details:")
 print("=" * 80)
 pprint(order_details.model_dump(mode="json"))
+
+# ============================================================================
+# Iterator Examples
+# ============================================================================
+
+print("\n" + "=" * 80)
+print("Iterator Examples")
+print("=" * 80)
+
+print("\n7. Paginated orders iterator...")
+print("   Fetching up to 2 pages with 5 orders each...")
+total_orders = 0
+for page_num, page in enumerate(
+    sdk.otm.get_tasking_orders_iter(
+        contract_id=UUID(CONTRACT_ID),
+        per_page=5,
+        max_pages=2,
+    ),
+    start=1,
+):
+    print(f"   Page {page_num}: {len(page.features)} orders")
+    total_orders += len(page.features)
+    for feature in page.features[:2]:  # Show first 2 from each page
+        print(f"      - Order ID: {feature.id} | Status: {feature.properties.status}")
+print(f"   Total orders retrieved: {total_orders}")
+
+print("\n8. Paginated feasibility requests iterator...")
+print("   Fetching up to 2 pages with 5 requests each...")
+total_requests = 0
+for page_num, page in enumerate(
+    sdk.otm.get_tasking_feasibility_requests_iter(
+        contract_id=UUID(CONTRACT_ID),
+        per_page=5,
+        max_pages=2,
+    ),
+    start=1,
+):
+    print(f"   Page {page_num}: {len(page.features)} feasibility requests")
+    total_requests += len(page.features)
+    for feature in page.features[:2]:  # Show first 2 from each page
+        print(
+            f"      - Request ID: {feature.id} | Product: {feature.properties.product}"
+        )
+print(f"   Total feasibility requests retrieved: {total_requests}")
+
+print("\n9. Search with pagination iterator...")
+
+search_body = SearchRequest(limit=5)
+print("   Searching with pagination (up to 2 pages)...")
+total_features = 0
+for page_num, page in enumerate(
+    sdk.otm.search_iter(
+        contract_id=UUID(CONTRACT_ID),
+        body=search_body,
+        max_pages=2,
+    ),
+    start=1,
+):
+    print(f"   Page {page_num}: {len(page.features)} features")
+    total_features += len(page.features)
+print(f"   Total search features retrieved: {total_features}")
+
+print("\n" + "=" * 80)
+print("All examples completed!")
+print("=" * 80)

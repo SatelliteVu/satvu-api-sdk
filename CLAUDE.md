@@ -44,9 +44,16 @@ uv build
 
 Use `--cached` flag to use cached OpenAPI specs instead of fetching fresh ones (only works with direct builder invocation, not `uv build`).
 
-Available API names are defined in `builder/config.py`: catalog, cos, id, policy, otm, reseller, wallet.
+Available API names are defined in `src/builder/config.py`: catalog, cos, id, policy, otm, reseller, wallet.
 
 **Note:** `uv build` triggers the Hatch build hook (`hatch_build.py`) which runs `build(api_id="all", use_cached=False)` internally before packaging.
+
+**Dagger CI:**
+```bash
+dagger call -v test    # Run pytest suite
+dagger call -v lint    # Run linter suite
+dagger -c "build-release --is-qa --build-number 123 | export './dist' --wipe"  # Build release
+```
 
 ## Architecture
 
@@ -141,16 +148,30 @@ Authentication is handled by `AuthService` (src/satvu_api_sdk/auth.py):
 
 ### Builder System
 
-The builder system (builder/ directory) generates SDK code:
+The builder system (`src/builder/`) generates SDK code from OpenAPI specifications:
 
+**Key Files:**
 1. **load.py**: Fetches OpenAPI specs from SatVu APIs, resolves external $refs, and bundles them into a single schema. Uses caching in `.cache/` directory.
 
-2. **build.py**: Orchestrates SDK generation using a custom `SatVuProject` class that extends openapi-python-client's Project. Customizations include:
-   - Strips version prefixes from endpoint paths
+2. **build.py**: Orchestrates SDK generation using a custom `SatVuProject` class that extends openapi-python-client's Project. Key features:
+   - Strips version prefixes (e.g., `/v2/`) from endpoint paths
    - Generates body docstrings for request bodies including Union types
-   - Uses custom Jinja2 templates from `builder/templates/`
+   - Detects and adds pagination support for STAC-compliant endpoints
+   - Uses custom Jinja2 templates from `src/builder/templates/`
 
-3. **Templates**: Jinja2 templates in `builder/templates/` define the structure of generated API client code.
+3. **openapi_preprocessor.py**: Preprocesses OpenAPI specs before generation to handle SatVu-specific patterns
+
+4. **patches.py**: Monkey patches openapi-python-client to customize code generation behavior
+
+**Templates:**
+Jinja2 templates in `src/builder/templates/` define the structure of generated code:
+- `endpoint_module.py.jinja`: Main template for service classes with endpoint methods
+- `macros/return_annotation.jinja`: Generates return type annotations (handles 204 No Content, Union types, redirects)
+- `model.py.jinja`: Template for Pydantic model classes
+- Property templates: Define how different property types are rendered
+
+**CRITICAL - Template Whitespace:**
+When modifying Jinja2 templates, use `{%-` and `-%}` to strip whitespace. Regular `{%` and `%}` will introduce line breaks in generated code. This is especially important in `macros/return_annotation.jinja` which renders inline in function signatures.
 
 ### Response Parsing
 
@@ -242,8 +263,19 @@ The SDK provides two error handling approaches:
 Service methods:
 - Accept Pydantic models or primitives as parameters
 - Return Pydantic models for successful responses (status 200)
+- Return `None` for 204 No Content responses (empty body)
 - Return raw JSON dict for error responses
 - Use `model_dump(by_alias=True)` when serializing request bodies
+
+**Response Code Handling:**
+Generated endpoint methods handle different HTTP status codes:
+- **200 OK**: Parse and return response body as Pydantic model
+- **201 Created**: Parse and return response body as Pydantic model
+- **204 No Content**: Return `None` (no body to parse)
+- **3xx Redirects**: Some endpoints handle redirects for file downloads, returning `io.BytesIO`
+- **4xx/5xx Errors**: Return `HttpError` via Result type
+
+The template system (`endpoint_module.py.jinja` and `macros/return_annotation.jinja`) automatically generates the correct handling logic and return type annotations based on the OpenAPI spec.
 
 ### Dependencies
 

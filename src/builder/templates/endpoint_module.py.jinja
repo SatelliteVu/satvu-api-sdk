@@ -195,11 +195,15 @@ class {{ api_id | title }}Service(SDKClient):
 
         {% for response in success_responses %}
         if response.status_code == {{ response.status_code.pattern }}:
+            {% if response.status_code.pattern == '204' %}
+            return None
+            {% else %}
             {% set response_type = response.prop.get_type_string(quoted=False) %}
             {% if response_type == 'Any' %}
             return response.json().unwrap()
             {% else %}
             return parse_response(response.json().unwrap(), {{ response_type }})
+            {% endif %}
             {% endif %}
         {% endfor %}
         return response.json().unwrap()

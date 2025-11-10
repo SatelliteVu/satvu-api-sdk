@@ -1,7 +1,7 @@
 """HTTPX HTTP adapter."""
 
 import json as json_lib
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from typing import Any, cast
 
 try:
@@ -44,6 +44,33 @@ class HttpxResponse:
     @property
     def body(self) -> bytes:
         return self._response.content
+
+    def iter_bytes(self, chunk_size: int = 8192) -> Iterator[bytes]:
+        """
+        Stream response body in chunks without loading it all into memory.
+
+        httpx has excellent native streaming support via iter_bytes(), which we
+        leverage directly. httpx handles the complexity of chunked transfer encoding,
+        compression, and other HTTP details automatically.
+
+        Args:
+            chunk_size: Number of bytes to read per chunk (default: 8KB)
+
+        Yields:
+            Chunks of bytes from the response body
+
+        Note:
+            httpx's iter_bytes() can only be called once. If the response content
+            has already been accessed via .content or .text, this will yield the
+            cached content in chunks (httpx handles this automatically).
+
+        Implementation:
+            We delegate directly to httpx.Response.iter_bytes() which provides
+            efficient streaming with proper connection management.
+        """
+        # httpx.Response.iter_bytes() is a generator that yields chunks
+        # It handles all the complexity: chunked encoding, compression, etc.
+        return self._response.iter_bytes(chunk_size=chunk_size)
 
     @property
     def text(self) -> Result[str, TextDecodeError]:

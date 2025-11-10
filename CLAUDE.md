@@ -222,6 +222,26 @@ When validation fails, provides detailed error messages showing:
 **Debug Logging:**
 Enable `logging.DEBUG` for `satvu_api_sdk.shared.parsing` to see TypeAdapter cache hits and parsing details
 
+**Key Normalization:**
+The parsing module includes a `normalize_keys()` helper function that recursively converts colons in dictionary keys to underscores (e.g., `geo:lat` → `geo_lat`). This is useful for APIs that return keys with colons, which aren't valid Python identifiers.
+
+### Pagination Support
+
+The SDK provides built-in pagination support for STAC-compliant endpoints through `SDKClient.extract_next_token()` (src/satvu_api_sdk/core.py):
+
+**How it works:**
+- Extracts pagination tokens from STAC `links` array with `rel="next"`
+- Handles both GET (token in URL query param) and POST (token in request body) patterns
+- Returns `None` when no more pages are available
+
+**Auto-detection:**
+The builder system automatically detects paginated endpoints during SDK generation based on:
+1. Presence of `token` query parameter or token field in request body
+2. Response has `links` array field
+3. Response has an items array field (e.g., `features`, `orders`, `users`)
+
+When detected, generated service methods include pagination support with `items_field`, `items_type`, and `has_limit_param` metadata.
+
 ### Generated Code
 
 Generated code lives in `src/satvu_api_sdk/services/{api_name}/`:
@@ -245,6 +265,7 @@ The SDK provides two error handling approaches:
 - No exceptions thrown during normal operation
 - Used by the HTTP adapter system
 - Enables Railway-Oriented Programming patterns with `.map()`, `.and_then()`, `.or_else()` methods
+- See `docs/TYPED_ERRORS_GUIDE.md` for comprehensive guide with examples and best practices
 
 ### When Regenerating SDKs
 

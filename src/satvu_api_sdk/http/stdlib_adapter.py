@@ -3,7 +3,7 @@
 import json as json_lib
 import socket
 import warnings
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from http.client import HTTPResponse as StdlibHTTPResponse
 from typing import Any, cast
 from urllib.error import HTTPError, URLError
@@ -17,8 +17,8 @@ from satvu_api_sdk.http.errors import (
     NetworkError,
     ProxyError,
     ReadTimeoutError,
-    SSLError,
     ServerError,
+    SSLError,
     TextDecodeError,
 )
 from satvu_api_sdk.http.protocol import HttpMethod, HttpResponse
@@ -32,6 +32,7 @@ class StdlibResponse:
         self._response = response
         self._url = url
         self._body: bytes | None = None
+        self._consumed = False  # Track if response stream has been consumed
 
     @property
     def status_code(self) -> int:
@@ -47,6 +48,51 @@ class StdlibResponse:
         if self._body is None:
             self._body = self._response.read()
         return self._body
+
+    def iter_bytes(self, chunk_size: int = 8192) -> Iterator[bytes]:
+        """
+        Stream response body in chunks without loading it all into memory.
+
+        This is the key method for handling large file downloads efficiently.
+        It reads the response incrementally using the underlying urllib response object.
+
+        Args:
+            chunk_size: Number of bytes to read per chunk (default: 8KB)
+
+        Yields:
+            Chunks of bytes from the response body
+
+        Raises:
+            RuntimeError: If response stream has already been consumed by a previous
+                         call to iter_bytes()
+
+        Implementation Notes:
+            - If .body property was already called, the cached body is yielded in chunks
+            - Otherwise, reads directly from the urllib response object in a streaming fashion
+            - Marks response as consumed after first streaming call to prevent double consumption
+        """
+        if self._consumed is True:
+            raise RuntimeError(
+                "Response body has already been consumed via iter_bytes(). "
+                "Each response can only be streamed once."
+            )
+
+        # Case 1: Body was already loaded via .body property
+        # In this case, we yield the cached body in chunks (still useful for uniform API)
+        if self._body is not None:
+            for i in range(0, len(self._body), chunk_size):
+                yield self._body[i : i + chunk_size]
+            return
+
+        # Case 2: Stream directly from the underlying response (memory-efficient)
+        # This is the main use case for large file downloads
+        self._consumed = True
+        while True:
+            chunk = self._response.read(chunk_size)
+            if not chunk:
+                # End of response reached
+                break
+            yield chunk
 
     @property
     def text(self) -> Result[str, TextDecodeError]:

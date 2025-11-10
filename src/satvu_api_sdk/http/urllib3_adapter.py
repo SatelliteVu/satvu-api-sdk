@@ -1,7 +1,7 @@
 """Urllib3 HTTP adapter."""
 
 import json as json_lib
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from typing import Any, cast
 from urllib.parse import urlencode, urljoin
 
@@ -34,6 +34,7 @@ class Urllib3Response:
     def __init__(self, response: urllib3.BaseHTTPResponse):
         self._response = response
         self._body: bytes | None = None
+        self._consumed = False  # Track if response stream has been consumed
 
     @property
     def status_code(self) -> int:
@@ -50,6 +51,47 @@ class Urllib3Response:
         # Type checker doesn't know _body is not None after assignment
         assert self._body is not None  # nosec B101
         return self._body
+
+    def iter_bytes(self, chunk_size: int = 8192) -> Iterator[bytes]:
+        """
+        Stream response body in chunks without loading it all into memory.
+
+        urllib3 provides streaming via the stream() method on its response object.
+        We leverage this for memory-efficient downloads of large files.
+
+        Args:
+            chunk_size: Number of bytes to read per chunk (default: 8KB)
+
+        Yields:
+            Chunks of bytes from the response body
+
+        Raises:
+            RuntimeError: If response stream has already been consumed by a previous
+                         call to iter_bytes()
+
+        Implementation Notes:
+            - If .body/.data was already accessed, the cached body is yielded in chunks
+            - Otherwise, reads directly from urllib3's response stream
+            - urllib3's stream() method handles chunked transfer encoding automatically
+            - Marks response as consumed after first streaming call to prevent double consumption
+        """
+        if self._consumed:
+            raise RuntimeError(
+                "Response body has already been consumed via iter_bytes(). "
+                "Each response can only be streamed once."
+            )
+
+        # Case 1: Body was already loaded via .body/.data property
+        if self._body is not None:
+            for i in range(0, len(self._body), chunk_size):
+                yield self._body[i : i + chunk_size]
+            return
+
+        # Case 2: Stream directly from urllib3 response (memory-efficient)
+        self._consumed = True
+        # urllib3's stream() method yields chunks as they arrive
+        for chunk in self._response.stream(amt=chunk_size):
+            yield chunk
 
     @property
     def text(self) -> Result[str, TextDecodeError]:

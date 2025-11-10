@@ -1,7 +1,7 @@
 """Requests HTTP adapter."""
 
 import json as json_lib
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from typing import Any, cast
 
 try:
@@ -44,6 +44,34 @@ class RequestsResponse:
     @property
     def body(self) -> bytes:
         return self._response.content
+
+    def iter_bytes(self, chunk_size: int = 8192) -> Iterator[bytes]:
+        """
+        Stream response body in chunks without loading it all into memory.
+
+        The requests library has excellent streaming support via iter_content().
+        This is one of the most popular and well-documented streaming APIs in Python.
+
+        Args:
+            chunk_size: Number of bytes to read per chunk (default: 8KB)
+
+        Yields:
+            Chunks of bytes from the response body
+
+        Note:
+            requests' iter_content() can only be called once. If the response content
+            has already been accessed via .content or .text, this will yield the
+            cached content in chunks (requests handles this automatically).
+
+        Implementation:
+            We delegate directly to requests.Response.iter_content() which provides
+            robust streaming with automatic handling of chunked transfer encoding,
+            compression, and connection management.
+        """
+        # requests.Response.iter_content() is a generator that yields chunks
+        # It handles chunked encoding, compression, and other HTTP complexities
+        # decode_unicode=False ensures we get bytes, not strings
+        return self._response.iter_content(chunk_size=chunk_size, decode_unicode=False)
 
     @property
     def text(self) -> Result[str, TextDecodeError]:

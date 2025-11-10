@@ -1,5 +1,6 @@
 """HTTP client protocol definitions for SDK adapters."""
 
+from collections.abc import Iterator
 from typing import TYPE_CHECKING, Any, Literal, Protocol
 
 if TYPE_CHECKING:
@@ -24,7 +25,39 @@ class HttpResponse(Protocol):
 
     @property
     def body(self) -> bytes:
-        """Raw response body as bytes."""
+        """
+        Raw response body as bytes.
+
+        Loads the entire response into memory. For large responses (e.g., file downloads),
+        use iter_bytes() instead to stream the response in chunks.
+        """
+        ...
+
+    def iter_bytes(self, chunk_size: int = 8192) -> Iterator[bytes]:
+        """
+        Stream response body in chunks without loading it all into memory.
+
+        This method is ideal for downloading large files (e.g., satellite imagery)
+        as it yields chunks incrementally instead of loading the entire response.
+
+        Args:
+            chunk_size: Number of bytes to read per chunk (default: 8KB)
+
+        Yields:
+            Chunks of bytes from the response body
+
+        Important:
+            - Can only be called once per response
+            - Cannot use .body property after calling this (response is consumed)
+            - If .body was already accessed, this will yield the cached body in chunks
+
+        Example:
+            >>> result = client.request("GET", "https://api.example.com/large-file.zip")
+            >>> response = result.unwrap()
+            >>> with open("output.zip", "wb") as f:
+            ...     for chunk in response.iter_bytes(chunk_size=65536):
+            ...         f.write(chunk)
+        """
         ...
 
     @property

@@ -1,4 +1,5 @@
 from collections.abc import Callable
+from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, urlparse
 
@@ -88,6 +89,62 @@ class SDKClient:
             follow_redirects=follow_redirects,
             timeout=float(timeout_val),
         )
+
+    @staticmethod
+    def stream_to_file(
+        response: HttpResponse,
+        output_path: Path | str,
+        chunk_size: int = 8192,
+        progress_callback: Callable[[int, int | None], None] | None = None,
+    ) -> Path:
+        """
+        Stream HTTP response to disk with optional progress tracking.
+
+        Memory-efficient: streams response in chunks without loading entire file into memory.
+        Ideal for large file downloads (satellite imagery, archives, etc.).
+
+        Args:
+            response: HTTP response to stream
+            output_path: Where to save the file (Path or string)
+            chunk_size: Bytes per chunk (default: 8KB). Increase for better throughput
+                       on fast connections (e.g., 64KB), decrease for progress granularity.
+            progress_callback: Optional callback called after each chunk is written.
+                             Signature: callback(bytes_downloaded: int, total_bytes: int | None)
+                             total_bytes is None if Content-Length header is not present.
+
+        Returns:
+            Path object pointing to the downloaded file
+
+        Note:
+            This method uses response.iter_bytes() which can only be called once per response.
+            The response stream is consumed during this operation.
+        """
+        output_path = Path(output_path)
+
+        # Get total file size from Content-Length header (if available)
+        total_bytes: int | None = None
+        content_length = response.headers.get("Content-Length") or response.headers.get(
+            "content-length"
+        )
+        if content_length:
+            try:
+                total_bytes = int(content_length)
+            except (ValueError, TypeError):
+                # Content-Length header exists but isn't a valid integer
+                total_bytes = None
+
+        # Stream response to disk in chunks
+        bytes_downloaded = 0
+        with output_path.open("wb") as f:
+            for chunk in response.iter_bytes(chunk_size=chunk_size):
+                f.write(chunk)
+                bytes_downloaded += len(chunk)
+
+                # Call progress callback if provided
+                if progress_callback:
+                    progress_callback(bytes_downloaded, total_bytes)
+
+        return output_path
 
     @staticmethod
     def extract_next_token(response: BaseModel) -> str | None:

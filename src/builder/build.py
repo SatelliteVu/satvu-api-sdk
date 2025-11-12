@@ -3,19 +3,20 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Sequence
 
+import openapi_python_client.parser.openapi
 from openapi_python_client import Project
 from openapi_python_client.config import Config, ConfigFile, MetaType
-from openapi_python_client.parser.openapi import GeneratorData, Endpoint
-from openapi_python_client.parser.errors import GeneratorError
 from openapi_python_client.parser.bodies import Body
-from openapi_python_client.parser.properties import UnionProperty, ListProperty
+from openapi_python_client.parser.errors import GeneratorError
+from openapi_python_client.parser.openapi import Endpoint, GeneratorData
+from openapi_python_client.parser.properties.list_property import ListProperty
+from openapi_python_client.parser.properties.union import UnionProperty
 
 from builder.config import APIS
-from builder.load import load_openapi
 from builder.jinja_filters import to_pydantic_model_field
+from builder.load import load_openapi
 from builder.openapi_preprocessor import preprocess_for_sdk_generation
-import openapi_python_client.parser.openapi
-
+from builder.streaming_post_processor import add_streaming_methods
 
 BASE_DIR = (Path(__file__).parent / ".." / "..").resolve()
 TEMPLATE_DIR = Path(__file__).parent / "templates"
@@ -258,6 +259,14 @@ class ServiceCodeGenerator:
         # Run post hooks
         self.project._run_post_hooks()
 
+        # Post-process: Add streaming download methods
+        try:
+            self._add_streaming_methods()
+        except Exception as e:
+            errors.append(
+                GeneratorError(detail=f"Failed to add streaming methods: {e}")
+            )
+
         return errors + list(self.project._get_errors())
 
     def _build_service_class(self):
@@ -304,6 +313,22 @@ class ServiceCodeGenerator:
             endpoint_template.render(**template_context),
             encoding=self.project.config.file_encoding,
         )
+
+    def _add_streaming_methods(self):
+        """Add streaming download methods to generated API service."""
+
+        api_file = self.project.package_dir / "api.py"
+        if not api_file.exists():
+            return  # No API file generated
+
+        endpoints = [
+            ep
+            for collection in self.project.openapi.endpoint_collections_by_tag.values()
+            for ep in collection.endpoints
+        ]
+
+        # Add streaming methods
+        add_streaming_methods(api_file, self.context.api_id, endpoints)
 
 
 def build_service(api_id: str, use_cached: bool = False) -> Sequence[GeneratorError]:

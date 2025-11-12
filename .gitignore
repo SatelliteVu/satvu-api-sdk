@@ -14,3 +14,4 @@ pytest-coverage.txt
 pytest.xml
 tasks-*.md
 wheels/
+.claude/

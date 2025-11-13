@@ -9,6 +9,8 @@ from builder.streaming_detector import (
     StreamingEndpointDetector,
 )
 
+# TODO: Use AST parsing instead of string manipulation
+
 # Template for streaming methods
 STREAMING_METHOD_TEMPLATE = """
     def {stream_method}(
@@ -280,3 +282,6 @@ def _insert_after_method(content: str, base_method: str, method_code: str) -> st
 
     lines.insert(method_end_idx, method_code)
     return "\n".join(lines)
+
+
+# TODO: Add streaming to BytesIO

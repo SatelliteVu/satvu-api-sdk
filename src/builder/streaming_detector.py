@@ -52,21 +52,11 @@ class StreamingEndpointDetector:
         Returns:
             List of streaming endpoint configurations
         """
-        streaming_configs = []
-
-        for endpoint in endpoints:
-            config = self._detect_endpoint(endpoint)
-            if config:
-                streaming_configs.append(config)
-
-        return streaming_configs
-
-    def _detect_endpoint(self, endpoint: Endpoint) -> StreamingEndpointConfig | None:
-        """Detect if a single endpoint should have streaming variant."""
-
-        # Only use extension-based detection
-        # Check for x-streaming-download extension in OpenAPI spec
-        return self._check_streaming_extension(endpoint)
+        return [
+            config
+            for endpoint in endpoints
+            if (config := self._check_streaming_extension(endpoint)) is not None
+        ]
 
     def _check_streaming_extension(
         self, endpoint: Endpoint

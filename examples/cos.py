@@ -9,7 +9,8 @@ Demonstrates:
 - Editing order properties
 - Paginated GET query with iterator
 - Paginated POST search with iterator
-- Downloading order items
+- Getting download URLs
+- Streaming downloads with progress tracking (memory-efficient for large files)
 
 Set the following environment variables before running:
 - SATVU_CLIENT_ID
@@ -17,17 +18,17 @@ Set the following environment variables before running:
 - SATVU_CONTRACT_ID
 """
 
-from os import getenv
-from uuid import UUID
 import sys
+import tempfile
+from os import getenv
+from pathlib import Path
+from uuid import UUID
 
 from satvu_api_sdk import SatVuSDK
+from satvu_api_sdk.services.cos.models import OrderEditPayload, SearchRequest
 from satvu_api_sdk.services.cos.models import (
-    OrderEditPayload,
-    OrderSubmissionPayload,
-    SearchRequest,
+    OrderSubmissionPayloadV3 as OrderSubmissionPayload,
 )
-
 
 CLIENT_ID = getenv("SATVU_CLIENT_ID")
 assert CLIENT_ID is not None, "Please set the SATVU_CLIENT_ID environment variable"  # nosec B101
@@ -64,7 +65,8 @@ print(f"   Using {len(feature_ids)} items for order")
 print("\n2. Submitting a new order...")
 order_payload = OrderSubmissionPayload(
     item_id=feature_ids,
-    name="Example COS Order",
+    licence_level="Evaluation Licence",
+    name="Example COS Order - SDK",
 )
 
 order = sdk.cos.submit_order__post(
@@ -89,7 +91,7 @@ print("\n4. Editing order...")
 updated_order = sdk.cos.edit_order__patch(
     contract_id=contract_id,
     order_id=order.id,
-    body=OrderEditPayload(name="Updated COS Order Name"),
+    body=OrderEditPayload(name="Updated COS Order Name - sdk"),
 )
 print("   ✓ Order updated")
 print(f"   New name: {updated_order.name}")
@@ -147,11 +149,72 @@ if order_details.features:
             contract_id=contract_id,
             order_id=order.id,
             item_id=first_feature.id,
+            redirect=False,  # Get URL instead of downloading
         )
         print(f"   ✓ Download URL retrieved for item: {first_feature.id}")
         print(f"   URL expires: {download_url.expiry}")
     except Exception as e:
         print(f"   Note: Download may not be ready yet: {e}")
+
+print("\n" + "=" * 80)
+print("Streaming Download Examples")
+print("=" * 80)
+
+print("\n8. Download individual item to file (streaming)...")
+print("   Memory-efficient streaming download for large files")
+
+if order_details.features:
+    first_feature = order_details.features[0]
+    output_path = Path(tempfile.gettempdir()) / f"cos_item_{first_feature.id}.zip"
+
+    # Progress tracking function
+    def show_progress(bytes_downloaded: int, total_bytes: int | None):
+        if total_bytes:
+            percent = (bytes_downloaded / total_bytes) * 100
+            print(
+                f"   Progress: {bytes_downloaded:,} / {total_bytes:,} bytes ({percent:.1f}%)"
+            )
+        else:
+            print(f"   Downloaded: {bytes_downloaded:,} bytes")
+
+    result = sdk.cos.download_item_to_file(
+        contract_id=contract_id,
+        order_id=order.id,
+        item_id=first_feature.id,
+        output_path=output_path,
+        chunk_size=65536,  # 64KB chunks for faster downloads
+        progress_callback=show_progress,
+    )
+
+    # Handle Result type (Railway-Oriented Programming)
+    if result.is_ok():
+        saved_path = result.unwrap()
+        print(f"   ✓ Downloaded to: {saved_path}")
+    else:
+        error = result.unwrap_or(None)
+        print(f"   ✗ Download failed: {error}")
+        print("   Note: Item may not be ready yet")
+
+print("\n9. Download entire order to file (streaming)...")
+print("   Downloads all order items as a single ZIP file")
+
+output_path = Path(tempfile.gettempdir()) / f"cos_order_{order.id}.zip"
+
+result = sdk.cos.download_order_to_file(
+    contract_id=contract_id,
+    order_id=order.id,
+    output_path=output_path,
+    chunk_size=65536,
+    progress_callback=show_progress,
+)
+
+if result.is_ok():
+    saved_path = result.unwrap()
+    print(f"   ✓ Downloaded to: {saved_path}")
+else:
+    error = result.unwrap_or(None)
+    print(f"   ✗ Download failed: {error}")
+    print("   Note: Order may not be ready yet")
 
 print("\n" + "=" * 80)
 print("All examples completed!")

@@ -6,6 +6,7 @@ SDK usage examples for the OTM (Order Tasking Management) Service.
 Demonstrates:
 - Complete Assured order workflow (feasibility → order → edit → cancel)
 - Paginated iterators for orders, feasibility requests, and search
+- Streaming downloads with progress tracking (memory-efficient for large files)
 
 Set the following environment variables before running:
 - SATVU_CLIENT_ID
@@ -14,14 +15,15 @@ Set the following environment variables before running:
 - SATVU_ENV (optional, defaults to production)
 """
 
+import tempfile
 from datetime import datetime, timedelta
 from os import getenv
+from pathlib import Path
 from pprint import pprint
 from uuid import UUID
 
 from satvu_api_sdk import SatVuSDK
 from satvu_api_sdk.services.otm.models import (
-    SearchRequest,
     AssuredFeasibilityFields,
     AssuredOrderRequest,
     AssuredOrderRequestProperties,
@@ -29,8 +31,8 @@ from satvu_api_sdk.services.otm.models import (
     EditOrderProperties,
     FeasibilityRequest,
     Point,
+    SearchRequest,
 )
-
 
 CLIENT_ID = getenv("SATVU_CLIENT_ID")
 assert CLIENT_ID is not None, "Please set the SATVU_CLIENT_ID environment variable"  # nosec B101
@@ -207,6 +209,47 @@ for page_num, page in enumerate(
     print(f"   Page {page_num}: {len(page.features)} features")
     total_features += len(page.features)
 print(f"   Total search features retrieved: {total_features}")
+
+print("\n" + "=" * 80)
+print("Streaming Download Example")
+print("=" * 80)
+
+print("\n10. Download tasking order to file (streaming)...")
+print("   Memory-efficient download for large fulfilled tasking orders")
+print("   Note: This will only work for fulfilled orders")
+
+
+# Progress tracking function
+def show_progress(bytes_downloaded: int, total_bytes: int | None):
+    if total_bytes:
+        percent = (bytes_downloaded / total_bytes) * 100
+        mb_downloaded = bytes_downloaded / (1024 * 1024)
+        mb_total = total_bytes / (1024 * 1024)
+        print(f"   Progress: {mb_downloaded:.2f} / {mb_total:.2f} MB ({percent:.1f}%)")
+    else:
+        mb_downloaded = bytes_downloaded / (1024 * 1024)
+        print(f"   Downloaded: {mb_downloaded:.2f} MB")
+
+
+output_path = Path(tempfile.gettempdir()) / f"otm_order_{order.id}.zip"
+
+result = sdk.otm.download_tasking_order_to_file(
+    contract_id=UUID(CONTRACT_ID),
+    order_id=order.id,
+    output_path=output_path,
+    chunk_size=65536,  # 64KB chunks for faster downloads
+    progress_callback=show_progress,
+)
+
+# Handle Result type (Railway-Oriented Programming)
+if result.is_ok():
+    saved_path = result.unwrap()
+    print(f"   ✓ Downloaded to: {saved_path}")
+    print("   Note: Order must be fulfilled before download is available")
+else:
+    error = result.unwrap_or(None)
+    print(f"   ✗ Download failed: {error}")
+    print("   Note: Order must be fulfilled before download is available")
 
 print("\n" + "=" * 80)
 print("All examples completed!")

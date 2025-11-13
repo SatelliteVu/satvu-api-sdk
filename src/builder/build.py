@@ -238,9 +238,10 @@ class EndpointTransformer:
 class ServiceCodeGenerator:
     """Generates service code using custom templates."""
 
-    def __init__(self, project: Project, context: BuildContext):
+    def __init__(self, project: Project, context: BuildContext, openapi_dict: dict):
         self.project = project
         self.context = context
+        self.openapi_dict = openapi_dict
         self.transformer = EndpointTransformer(context)
 
     def generate(self) -> Sequence[GeneratorError]:
@@ -261,7 +262,7 @@ class ServiceCodeGenerator:
 
         # Post-process: Add streaming download methods
         try:
-            self._add_streaming_methods()
+            self._add_streaming_methods(self.openapi_dict)
         except Exception as e:
             errors.append(
                 GeneratorError(detail=f"Failed to add streaming methods: {e}")
@@ -314,7 +315,7 @@ class ServiceCodeGenerator:
             encoding=self.project.config.file_encoding,
         )
 
-    def _add_streaming_methods(self):
+    def _add_streaming_methods(self, openapi_dict: dict):
         """Add streaming download methods to generated API service."""
 
         api_file = self.project.package_dir / "api.py"
@@ -328,8 +329,8 @@ class ServiceCodeGenerator:
             for ep in collection.endpoints
         ]
 
-        # Add streaming methods
-        add_streaming_methods(api_file, self.context.api_id, endpoints)
+        # Add streaming methods (pass raw OpenAPI dict for extension access)
+        add_streaming_methods(api_file, self.context.api_id, endpoints, openapi_dict)
 
 
 def build_service(api_id: str, use_cached: bool = False) -> Sequence[GeneratorError]:
@@ -393,8 +394,8 @@ def build_service(api_id: str, use_cached: bool = False) -> Sequence[GeneratorEr
     # Register custom Jinja filters
     project.env.filters["to_pydantic_field"] = to_pydantic_model_field
 
-    # Generate using our custom generator
-    generator = ServiceCodeGenerator(project, context)
+    # Generate using our custom generator (pass openapi_dict for extensions)
+    generator = ServiceCodeGenerator(project, context, openapi_dict)
     errors = generator.generate()
 
     if errors:

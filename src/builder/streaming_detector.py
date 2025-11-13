@@ -34,16 +34,17 @@ class StreamingEndpointConfig:
 class StreamingEndpointDetector:
     """Detects which endpoints should have streaming download variants."""
 
-    def __init__(self, api_id: str):
+    def __init__(self, api_id: str, openapi_dict: dict):
         self.api_id = api_id
+        self.openapi_dict = openapi_dict
 
     def detect_all(self, endpoints: list[Endpoint]) -> list[StreamingEndpointConfig]:
         """
         Detect all endpoints that should have streaming variants.
 
-        Detection strategy (in order of priority):
-        1. Pattern: Path contains '/download' and has redirect parameter
-        2. Response: Returns binary content types (application/zip, etc.)
+        Detection strategy:
+        - Extension-based only: Checks for x-streaming-download extension in OpenAPI spec
+        - Streaming methods are only generated when explicitly marked with x-streaming-download: true
 
         Args:
             endpoints: List of parsed endpoints from OpenAPI spec
@@ -63,54 +64,88 @@ class StreamingEndpointDetector:
     def _detect_endpoint(self, endpoint: Endpoint) -> StreamingEndpointConfig | None:
         """Detect if a single endpoint should have streaming variant."""
 
-        # Strategy 1: Pattern-based detection
-        # Check for download endpoints with redirect parameter
-        if self._is_download_endpoint_by_pattern(endpoint):
-            return self._build_config_from_pattern(endpoint)
+        # Only use extension-based detection
+        # Check for x-streaming-download extension in OpenAPI spec
+        return self._check_streaming_extension(endpoint)
 
-        # Strategy 2: Response type detection
-        # Check for endpoints that return binary content
-        if self._has_binary_response(endpoint):
-            return self._build_config_from_response(endpoint)
-
-        return None
-
-    def _is_download_endpoint_by_pattern(self, endpoint: Endpoint) -> bool:
-        """
-        Detect download endpoints by pattern matching.
-
-        Heuristics:
-        - Path contains '/download'
-        - Has 'redirect' query parameter (common pattern)
-        - HTTP method is GET
-        """
-        is_get = endpoint.method.lower() == "get"
-        has_download_path = "/download" in endpoint.path.lower()
-        has_redirect_param = any(
-            p.python_name == "redirect" for p in endpoint.query_parameters
-        )
-
-        return is_get and has_download_path and has_redirect_param
-
-    def _has_binary_response(self, endpoint: Endpoint) -> bool:
-        """Check if endpoint returns binary content."""
-        # Check for 3xx redirect responses (common for file downloads)
-        has_redirect = any(
-            r.status_code.pattern.startswith("3") for r in endpoint.responses
-        )
-
-        # Could also check response content types if available in parsed data
-        return has_redirect
-
-    def _build_config_from_pattern(self, endpoint: Endpoint) -> StreamingEndpointConfig:
-        """Build config from pattern detection."""
-        return self._build_config(endpoint)
-
-    def _build_config_from_response(
+    def _check_streaming_extension(
         self, endpoint: Endpoint
-    ) -> StreamingEndpointConfig:
-        """Build config from response type detection."""
-        return self._build_config(endpoint)
+    ) -> StreamingEndpointConfig | None:
+        """
+        Check if endpoint has x-streaming-download extension.
+
+        Looks up the endpoint in openapi_dict['paths'] to find custom extensions.
+        OpenAPI paths structure: openapi_dict['paths'][path][method]['x-streaming-download']
+
+        Args:
+            endpoint: Parsed endpoint from openapi-python-client
+
+        Returns:
+            StreamingEndpointConfig if extension found and enabled, None otherwise
+        """
+        # Look up path in OpenAPI dict
+        paths = self.openapi_dict.get("paths", {})
+
+        # Endpoint.path may have been modified by builder (e.g., version prefix stripped)
+        # We need to reconstruct the original path by looking at all OpenAPI paths
+        operation = None
+        method = endpoint.method.lower()
+
+        # Strategy 1: Try exact match first
+        if endpoint.path in paths:
+            operation = paths[endpoint.path].get(method)
+
+        # Strategy 2: If not found, search by matching path structure
+        # The builder may have stripped version prefixes like /v3
+        if not operation:
+            # Extract path segments from endpoint (without parameters)
+            endpoint_segments = [
+                seg
+                for seg in endpoint.path.split("/")
+                if seg and not seg.startswith("{")
+            ]
+
+            for path_pattern, path_item in paths.items():
+                # Extract segments from OpenAPI path
+                openapi_segments = [
+                    seg
+                    for seg in path_pattern.split("/")
+                    if seg and not seg.startswith("{")
+                ]
+
+                # Match if the non-parameter segments align
+                # (handles /v3/orders/download → /orders/download transformation)
+                if endpoint_segments and openapi_segments:
+                    # Check if endpoint segments are a suffix of openapi segments
+                    if openapi_segments[-len(endpoint_segments) :] == endpoint_segments:
+                        operation = path_item.get(method)
+                        if operation:
+                            break
+
+        if not operation:
+            return None
+
+        # Check for x-streaming-download extension
+        has_streaming = operation.get("x-streaming-download", False)
+
+        if not has_streaming:
+            return None
+
+        # Get x-streaming-config if present
+        streaming_config = operation.get("x-streaming-config", {})
+
+        # Extract configuration values
+        default_chunk_size = streaming_config.get("default_chunk_size", 8192)
+        example_filename = streaming_config.get("example_filename", "download.zip")
+        description_override = streaming_config.get("description_override")
+
+        # Build config using extracted values
+        return self._build_config(
+            endpoint,
+            example_filename=example_filename,
+            default_chunk_size=default_chunk_size,
+            description_override=description_override,
+        )
 
     def _build_config(
         self,

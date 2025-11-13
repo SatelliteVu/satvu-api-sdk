@@ -242,6 +242,120 @@ The builder system automatically detects paginated endpoints during SDK generati
 
 When detected, generated service methods include pagination support with `items_field`, `items_type`, and `has_limit_param` metadata.
 
+### Streaming Downloads
+
+The SDK provides memory-efficient streaming download functionality for large binary files (1GB+) through auto-generated `*_to_file()` methods.
+
+**Architecture:**
+
+1. **Core Implementation (src/satvu_api_sdk/core.py)**:
+   - `SDKClient.stream_to_file()`: Base method that handles chunked streaming to disk
+   - Uses `response.iter_bytes(chunk_size)` for memory-efficient downloads
+   - Supports progress callbacks for UX integration
+   - Returns `Path` object pointing to downloaded file
+
+2. **Auto-Generation (src/builder/streaming_post_processor.py)**:
+   - Detects download endpoints based on response Content-Type (application/zip, application/octet-stream)
+   - Automatically generates `*_to_file()` variants for each download endpoint
+   - Adds proper imports, type hints, and Result type handling
+
+**Generated Method Signature:**
+```python
+def download_order_to_file(
+    self,
+    contract_id: UUID,
+    order_id: UUID,
+    output_path: Path | str,
+    chunk_size: int = 8192,
+    progress_callback: Callable[[int, int | None], None] | None = None,
+    timeout: int | None = None,
+) -> Result[Path, HttpError]:
+    """
+    Order download - save to disk (memory-efficient for large files).
+
+    Downloads directly to disk using streaming, avoiding loading
+    the entire file into memory. Ideal for large files (1GB+).
+    """
+```
+
+**Key Features:**
+
+- **Memory Efficient**: Streams chunks to disk without loading entire file into memory
+- **Progress Tracking**: Optional callback receives `(bytes_downloaded, total_bytes)`
+- **Configurable Chunk Size**: Default 8KB, recommend 64KB+ for large files
+- **Result Type**: Returns `Result[Path, HttpError]` for explicit error handling
+- **Automatic Detection**: Builder auto-generates methods for binary download endpoints
+
+**Usage Example:**
+```python
+from pathlib import Path
+from satvu_api_sdk import SatVuSDK
+
+sdk = SatVuSDK(client_id="...", client_secret="...")
+
+# Progress callback for UX
+def show_progress(bytes_downloaded: int, total_bytes: int | None):
+    if total_bytes:
+        percent = (bytes_downloaded / total_bytes) * 100
+        print(f"Progress: {percent:.1f}%")
+
+# Download with streaming
+result = sdk.cos.download_order_to_file(
+    contract_id=contract_id,
+    order_id=order_id,
+    output_path=Path("/tmp/order.zip"),
+    chunk_size=65536,  # 64KB chunks
+    progress_callback=show_progress,
+)
+
+# Handle Result type
+if result.is_ok():
+    path = result.unwrap()
+    print(f"Downloaded to: {path}")
+else:
+    error = result.unwrap_or(None)
+    print(f"Download failed: {error}")
+```
+
+**Builder Integration:**
+
+The streaming post-processor (`add_streaming_methods()`) runs after initial code generation:
+1. Parses generated API file to find download endpoints
+2. Detects endpoints with binary response types (ZIP, octet-stream)
+3. Generates `*_to_file()` method that wraps the base download endpoint
+4. Injects code at the end of the service class with proper formatting
+
+**For OpenAPI Spec Authors:**
+
+Mark download endpoints with specific response content types:
+```yaml
+responses:
+  '200':
+    content:
+      application/zip:  # Auto-detected for streaming
+        schema:
+          type: string
+          format: binary
+```
+
+Supported content types for auto-detection:
+- `application/zip`
+- `application/octet-stream`
+- Any binary format returning large files
+
+**Testing:**
+
+Comprehensive unit tests in `src/satvu_api_sdk/core_streaming_test.py` cover:
+- Various chunk patterns and sizes
+- Content-Length header handling (present, missing, invalid)
+- Progress callback invocation
+- Binary data streaming
+- Error propagation
+- Parent directory requirements
+- File overwriting behavior
+
+See `examples/cos.py` and `examples/otm.py` for complete working examples.
+
 ### Generated Code
 
 Generated code lives in `src/satvu_api_sdk/services/{api_name}/`:

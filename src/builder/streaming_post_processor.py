@@ -69,6 +69,7 @@ def add_streaming_methods(
     api_file: Path,
     api_id: str,
     endpoints: list[Endpoint],
+    openapi_dict: dict,
 ) -> None:
     """
     Add streaming methods to generated API service file.
@@ -77,9 +78,10 @@ def add_streaming_methods(
         api_file: Path to generated api.py file
         api_id: API identifier (e.g., 'cos', 'otm')
         endpoints: List of parsed endpoints from OpenAPI spec
+        openapi_dict: Raw OpenAPI spec dict for reading x-streaming extensions
     """
     # Detect which endpoints need streaming variants
-    detector = StreamingEndpointDetector(api_id)
+    detector = StreamingEndpointDetector(api_id, openapi_dict)
     streaming_configs = detector.detect_all(endpoints)
 
     if not streaming_configs:

@@ -318,6 +318,7 @@ class ServiceCodeGenerator:
         """Add streaming download methods to generated API service."""
 
         api_file = self.project.package_dir / "api.py"
+
         if not api_file.exists():
             return  # No API file generated
 

@@ -1,3 +1,5 @@
+import logging
+import time
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
@@ -9,6 +11,8 @@ from satvu_api_sdk.http import HttpClient, create_http_client
 from satvu_api_sdk.http.errors import HttpError
 from satvu_api_sdk.http.protocol import HttpResponse
 from satvu_api_sdk.result import Result
+
+logger = logging.getLogger(__name__)
 
 
 class SDKClient:
@@ -23,8 +27,12 @@ class SDKClient:
         subdomain: str = "api",
         http_client: HttpClient | None = None,
         timeout: int = 30,
+        max_retry_attempts: int = 5,
+        max_retry_after_seconds: float = 300.0,
     ):
         self.timeout = timeout
+        self.max_retry_attempts = max_retry_attempts
+        self.max_retry_after_seconds = max_retry_after_seconds
         base_url = f"{self.build_url(subdomain, env=env).rstrip('/')}/{self.base_path.lstrip('/')}"
 
         if http_client is not None:
@@ -54,7 +62,12 @@ class SDKClient:
         timeout: int | None = None,
     ) -> Result[HttpResponse, HttpError]:
         """
-        Make an HTTP request and return a Result.
+        Make an HTTP request with automatic Retry-After handling.
+
+        Automatically retries requests when the server provides a Retry-After header
+        for a 202 Accepted response, respecting the server's requested delay.
+        The delay is capped at max_retry_after_seconds (default 5 minutes) and
+        will retry up to max_retry_attempts times (default 5).
 
         Args:
             method: HTTP method (GET, POST, PUT, PATCH, DELETE, etc.)
@@ -68,6 +81,62 @@ class SDKClient:
             Result containing either:
             - Ok(HttpResponse) on success
             - Err(HttpError) on failure
+        """
+        for attempt in range(1, self.max_retry_attempts + 1):
+            result = self._execute_request(
+                method, url, json, params, follow_redirects, timeout
+            )
+
+            if result.is_err():
+                return result
+
+            response = result.unwrap()
+
+            if response.status_code != 202:
+                return result
+
+            # Handle 202 with Retry-After
+            retry_after = self._parse_retry_after_from_headers(
+                response.headers, self.max_retry_after_seconds
+            )
+            if retry_after is None or attempt >= self.max_retry_attempts:
+                return result
+
+            # Log retry attempt
+            logger.info(
+                f"Received 202 Accepted - retrying in {retry_after:.0f}s "
+                f"(attempt {attempt}/{self.max_retry_attempts})"
+            )
+
+            time.sleep(retry_after)
+
+        return result
+
+    def _execute_request(
+        self,
+        method: str,
+        url: str,
+        json: list | dict[str, Any] | None = None,
+        params: dict[str, Any] | None = None,
+        follow_redirects: bool = False,
+        timeout: int | None = None,
+    ) -> Result[HttpResponse, HttpError]:
+        """
+        Execute HTTP request.
+
+        Args:
+            method: HTTP method (GET, POST, PUT, PATCH, DELETE, etc.)
+            url: URL to request
+            json: Optional JSON body
+            params: Optional query parameters
+            follow_redirects: Whether to follow redirects
+            timeout: Request timeout in seconds (uses instance timeout if None)
+
+        Returns:
+            Result containing either:
+            - Ok(HttpResponse) on success
+            - Err(HttpError) on failure
+
         """
         if params:
             # Convert any pydantic model objects in params to json-serializable dicts
@@ -89,6 +158,35 @@ class SDKClient:
             follow_redirects=follow_redirects,
             timeout=float(timeout_val),
         )
+
+    @staticmethod
+    def _parse_retry_after_from_headers(
+        headers: dict[str, str] | None, max_seconds: float
+    ) -> float | None:
+        """
+        Parse Retry-After header from response headers.
+
+        Args:
+            headers: Response headers dict (can be None)
+            max_seconds: Maximum delay to cap at
+
+        Returns:
+            Delay in seconds (capped at max_seconds), or None if no header present.
+        """
+        if not headers:
+            return None
+
+        # Case-insensitive header lookup
+        retry_after = next(
+            (val for key, val in headers.items() if key.lower() == "retry-after"), None
+        )
+
+        if not retry_after:
+            return None
+
+        # Parse as integer seconds
+        delay = float(retry_after)
+        return min(delay, max_seconds)
 
     @staticmethod
     def stream_to_file(

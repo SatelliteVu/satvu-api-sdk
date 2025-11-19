@@ -20,6 +20,8 @@ class SatVuSDK:
         token_cache: TokenCache | None = None,
         http_client: HttpClient | None = None,
         timeout: int = 30,
+        max_retry_attempts: int = 5,
+        max_retry_after_seconds: float = 300.0,
     ):
         self.client_id = client_id
         self.client_secret = client_secret
@@ -27,6 +29,8 @@ class SatVuSDK:
         self.env = env
         self.http_client = http_client
         self.timeout = timeout
+        self.max_retry_attempts = max_retry_attempts
+        self.max_retry_after_seconds = max_retry_after_seconds
 
         # for lazy service initialisation
         self._auth = None
@@ -61,6 +65,8 @@ class SatVuSDK:
                 get_token=self.get_token,
                 http_client=self.http_client,
                 timeout=self.timeout,
+                max_retry_attempts=self.max_retry_attempts,
+                max_retry_after_seconds=self.max_retry_after_seconds,
             )
         return self._catalog
 
@@ -72,6 +78,8 @@ class SatVuSDK:
                 get_token=self.get_token,
                 http_client=self.http_client,
                 timeout=self.timeout,
+                max_retry_attempts=self.max_retry_attempts,
+                max_retry_after_seconds=self.max_retry_after_seconds,
             )
         return self._cos
 
@@ -83,6 +91,8 @@ class SatVuSDK:
                 get_token=self.get_token,
                 http_client=self.http_client,
                 timeout=self.timeout,
+                max_retry_attempts=self.max_retry_attempts,
+                max_retry_after_seconds=self.max_retry_after_seconds,
             )
         return self._id
 
@@ -94,6 +104,8 @@ class SatVuSDK:
                 get_token=self.get_token,
                 http_client=self.http_client,
                 timeout=self.timeout,
+                max_retry_attempts=self.max_retry_attempts,
+                max_retry_after_seconds=self.max_retry_after_seconds,
             )
         return self._otm
 
@@ -105,6 +117,8 @@ class SatVuSDK:
                 get_token=self.get_token,
                 http_client=self.http_client,
                 timeout=self.timeout,
+                max_retry_attempts=self.max_retry_attempts,
+                max_retry_after_seconds=self.max_retry_after_seconds,
             )
         return self._policy
 
@@ -116,6 +130,8 @@ class SatVuSDK:
                 get_token=self.get_token,
                 http_client=self.http_client,
                 timeout=self.timeout,
+                max_retry_attempts=self.max_retry_attempts,
+                max_retry_after_seconds=self.max_retry_after_seconds,
             )
         return self._reseller
 
@@ -127,5 +143,7 @@ class SatVuSDK:
                 get_token=self.get_token,
                 http_client=self.http_client,
                 timeout=self.timeout,
+                max_retry_attempts=self.max_retry_attempts,
+                max_retry_after_seconds=self.max_retry_after_seconds,
             )
         return self._wallet

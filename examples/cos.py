@@ -51,7 +51,7 @@ print("=" * 80)
 
 # First, get some catalog items to order
 print("\n1. Searching catalog for items to order...")
-catalog_results = sdk.catalog.get_search(contract_id=contract_id, limit=1)
+catalog_results = sdk.catalog.get_search(contract_id=contract_id, limit=3)
 print(f"   Found {len(catalog_results.features)} catalog items")
 
 if not catalog_results.features:

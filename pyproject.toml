@@ -34,11 +34,14 @@ dev = [
     "fawltydeps>=0.20.0",
     "freezegun>=1.5.5",
     "httpx>=0.28.1",
+    "hypothesis>=6.148.2",
+    "hypothesis-jsonschema>=0.23.1",
     "openapi-python-client>=0.27.0",
     "pook>=2.1.0",
     "pyright>=1.1.407",
     "pytest>=8.3.4",
     "pytest-cov>=7.0.0",
+    "pytest-xdist>=3.8.0",
     "requests>=2.32.0",
     "ruff>=0.14.3",
     "urllib3>=2.0.0",
@@ -99,8 +102,10 @@ code = [
 ]
 ignore_unused = [
     "fawltydeps",
+    "hypothesis-jsonschema",
     "pyright",
     "pytest-cov",
+    "pytest-xdist",
     "ruff",
 ]
 ignore_undeclared = [
@@ -123,4 +128,4 @@ update_changelog_on_bump = true
 show_missing = true
 skip_empty = true
 sort = "Cover"
-omit = ["**/*_test.py", "**/conftest.py"]
+omit = ["**/*_test.py", "**/conftest.py", "src/builder/**"]

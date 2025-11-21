@@ -1,0 +1,69 @@
+"""
+Schemas for {{ api_name }} service tests.
+
+Generated from OpenAPI spec version {{ spec_version }}.
+These schemas are used with hypothesis-jsonschema to generate test data.
+
+Stores entire OpenAPI spec as operations with helper functions for access.
+"""
+
+# Component schemas for $ref resolution (cleaned for JSON Schema draft-07)
+_COMPONENTS = {{ components | pprint }}
+
+# Operations: (path, method) -> {responses, requestBody, parameters}
+# Each schema has definitions attached for $ref resolution
+_OPERATIONS = {{ operations | pprint }}
+
+
+def get_response_schema(path: str, method: str, status: str) -> dict:
+    """
+    Get response schema for given operation and status code.
+
+    Args:
+        path: Endpoint path (e.g., "/{contract_id}/")
+        method: HTTP method (e.g., "get", "post")
+        status: Status code (e.g., "200", "404")
+
+    Returns:
+        JSON Schema dict with definitions for $ref resolution
+    """
+    return _OPERATIONS[(path, method)]["responses"][status]["schema"]
+
+
+def get_request_body_schema(path: str, method: str) -> dict:
+    """
+    Get request body schema for given operation.
+
+    Args:
+        path: Endpoint path (e.g., "/{contract_id}/search")
+        method: HTTP method (e.g., "post", "put")
+
+    Returns:
+        JSON Schema dict with definitions for $ref resolution
+    """
+    return _OPERATIONS[(path, method)]["requestBody"]["schema"]
+
+
+def get_parameter_schema(path: str, method: str, param_name: str) -> dict:
+    """
+    Get query parameter schema for given operation.
+
+    Args:
+        path: Endpoint path
+        method: HTTP method
+        param_name: Parameter name (e.g., "limit", "token")
+
+    Returns:
+        JSON Schema dict
+    """
+    return _OPERATIONS[(path, method)]["parameters"][param_name]["schema"]
+
+
+def has_request_body(path: str, method: str) -> bool:
+    """Check if operation has a request body."""
+    return "requestBody" in _OPERATIONS.get((path, method), {})
+
+
+def has_parameter(path: str, method: str, param_name: str) -> bool:
+    """Check if operation has a specific parameter."""
+    return param_name in _OPERATIONS.get((path, method), {}).get("parameters", {})

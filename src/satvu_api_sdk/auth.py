@@ -116,7 +116,7 @@ class AuthService(SDKClient):
             http_client=http_client,
             timeout=timeout,
         )
-        self.audience = self.build_url("api", env=env)
+        self.audience = self.build_url("api")
         self.cache = token_cache or MemoryCache()
 
     @staticmethod

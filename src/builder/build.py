@@ -18,6 +18,7 @@ from builder.jinja_filters import to_pydantic_model_field
 from builder.load import load_openapi
 from builder.openapi_preprocessor import preprocess_for_sdk_generation
 from builder.streaming_post_processor import add_streaming_methods
+from builder.test_generator import generate_tests
 
 BASE_DIR = (Path(__file__).parent / ".." / "..").resolve()
 TEMPLATE_DIR = Path(__file__).parent / "templates"
@@ -266,6 +267,9 @@ class ServiceCodeGenerator:
                 GeneratorError(detail=f"Failed to add streaming methods: {e}")
             )
 
+        # Generate tests (non-fatal if it fails)
+        self._generate_tests()
+
         return errors + list(self.project._get_errors())
 
     def _build_service_class(self):
@@ -329,6 +333,22 @@ class ServiceCodeGenerator:
 
         # Add streaming methods (pass raw OpenAPI dict for extension access)
         add_streaming_methods(api_file, self.context.api_id, endpoints, openapi_dict)
+
+    def _generate_tests(self):
+        """Generate test files for this API service."""
+        try:
+            generate_tests(
+                api_name=self.context.api_id,
+                project=self.project,
+                openapi_dict=self.openapi_dict,
+                base_path=self.context.base_path,
+                output_dir=self.project.package_dir,
+            )
+        except Exception as e:
+            import traceback
+
+            print(f"  [TESTS] Warning: Failed to generate tests: {e}")
+            traceback.print_exc()
 
 
 def build_service(api_id: str, use_cached: bool = False) -> Sequence[GeneratorError]:

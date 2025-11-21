@@ -1,0 +1,192 @@
+"""
+Tests for {{ api_name }} service.
+
+Generated from OpenAPI spec version {{ spec_version }}.
+Uses property-based testing with hypothesis-jsonschema.
+"""
+
+from unittest.mock import Mock
+from uuid import uuid4
+
+import pook
+import pytest
+from hypothesis import HealthCheck, given, settings
+from hypothesis_jsonschema import from_schema
+from pydantic import TypeAdapter
+from typing import Union
+
+from satvu_api_sdk import SatVuSDK, create_http_client
+from .test_schemas import get_response_schema, get_request_body_schema, get_parameter_schema, has_request_body, has_parameter
+{%- set all_imports = [] %}
+{%- for endpoint_data in endpoints %}
+{%- for relative in endpoint_data.endpoint.relative_imports %}
+{%- if '.types import' not in relative %}
+{%- set fixed_import = relative.replace('from ' + api_name + '.', 'from satvu_api_sdk.services.' + api_name + '.') %}
+{%- set _ = all_imports.append(fixed_import) %}
+{%- endif %}
+{%- endfor %}
+{%- for response in endpoint_data.endpoint.responses %}
+{%- if response.prop %}
+{%- for relative in response.prop.get_imports(prefix=api_name + '.') %}
+{%- if '.types import' not in relative %}
+{%- set fixed_import = relative.replace('from ' + api_name + '.', 'from satvu_api_sdk.services.' + api_name + '.') %}
+{%- set _ = all_imports.append(fixed_import) %}
+{%- endif %}
+{%- endfor %}
+{%- endif %}
+{%- endfor %}
+{%- if endpoint_data.endpoint.bodies %}
+{%- for body in endpoint_data.endpoint.bodies %}
+{%- if body.prop %}
+{%- for relative in body.prop.get_imports(prefix=api_name + '.') %}
+{%- if '.types import' not in relative %}
+{%- set fixed_import = relative.replace('from ' + api_name + '.', 'from satvu_api_sdk.services.' + api_name + '.') %}
+{%- set _ = all_imports.append(fixed_import) %}
+{%- endif %}
+{%- endfor %}
+{%- endif %}
+{%- endfor %}
+{%- endif %}
+{%- endfor %}
+{%- for import in all_imports | unique | sort %}
+
+{{ import }}
+{%- endfor %}
+
+
+@pytest.mark.parametrize("backend", ["stdlib", "httpx", "urllib3", "requests"])
+class Test{{ service_class_name }}:
+    """Property-based tests for {{ service_class_name }}."""
+
+    @pytest.fixture(autouse=True)
+    def setup(self, backend):
+        """Set up test fixtures before each test method."""
+        # Mock the auth token
+        mock_get_token = Mock(return_value="test_token")
+
+        # Construct base URL for the {{ api_name }} service
+        # We need to match how SDKClient builds its base_url in __init__
+        subdomain = "api"
+        env_part = "qa."
+        base_path = "{{ base_path }}"
+        self.base_url = f"https://{subdomain}.{env_part}satellitevu.com{base_path}"
+
+        # Create HTTP client with specified backend
+        http_client = create_http_client(
+            backend=backend,
+            base_url=self.base_url,
+            get_token=mock_get_token,
+        )
+
+        self.sdk = SatVuSDK(
+            client_id="test_client_id",
+            client_secret="test_client_secret",
+            http_client=http_client,
+            env="qa",
+        )
+
+        # Override the token getter with our mock
+        self.sdk.{{ api_name }}._get_token = mock_get_token
+
+{% for endpoint_data in endpoints %}
+{%- set endpoint = endpoint_data.endpoint %}
+{%- for status_code, response_info in endpoint_data.responses.items() %}
+
+    @pook.on
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[HealthCheck.filter_too_much, HealthCheck.too_slow, HealthCheck.data_too_large],
+    )
+    @given(
+        response_data=from_schema(get_response_schema("{{ endpoint.path }}", "{{ endpoint.method }}", "{{ status_code }}")),
+{%- if endpoint.bodies %}
+        body_data=from_schema(get_request_body_schema("{{ endpoint.path }}", "{{ endpoint.method }}")),
+{%- endif %}
+{%- for param in endpoint.query_parameters %}
+{%- if param.required %}
+        {{ param.python_name }}=from_schema(get_parameter_schema("{{ endpoint.path }}", "{{ endpoint.method }}", "{{ param.name }}")),
+{%- endif %}
+{%- endfor %}
+    )
+    def test_{{ endpoint.name }}_{{ status_code }}(
+        self,
+        backend,
+        response_data,
+{%- if endpoint.bodies %}
+        body_data,
+{%- endif %}
+{%- for param in endpoint.query_parameters %}
+{%- if param.required %}
+        {{ param.python_name }},
+{%- endif %}
+{%- endfor %}
+    ):
+        """
+        Test {{ endpoint.name }} with {{ status_code }} response.
+        """
+        # Generate path parameters
+{% if endpoint.path_parameters %}
+{% for param in endpoint.path_parameters %}
+        {{ param.python_name }} = uuid4()
+{% endfor %}
+        path = "{{ endpoint.path }}".format(
+{% for param in endpoint.path_parameters %}
+            {{ param.python_name }}={{ param.python_name }}{% if not loop.last %},{% endif %}
+
+{% endfor %}
+        )
+{% else %}
+        path = "{{ endpoint.path }}"
+{% endif %}
+        url = f"{self.base_url}{path}"
+
+        # Mock the HTTP response
+        pook.{{ endpoint.method }}(url).reply({{ status_code }}).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+
+        # Call the service method
+{% if endpoint.bodies -%}
+{%- set body_type_string = endpoint.bodies[0].prop.get_type_string() -%}
+{%- if 'Union[' in body_type_string %}
+{%- set union_classes = body_type_string.replace('Union[', '').replace(']', '').replace("'", "").split(', ') %}
+        # For Union types, use TypeAdapter to validate
+        body_adapter = TypeAdapter(Union[{{ union_classes | join(', ') }}])
+        body = body_adapter.validate_python(body_data)
+{% elif 'list[' in body_type_string %}
+        # For list types, use TypeAdapter to validate
+        body_adapter = TypeAdapter({{ body_type_string }})
+        body = body_adapter.validate_python(body_data)
+{% else -%}
+{%- set body_class_name = body_type_string.split('[')[0] %}
+        # Parse body_data into Pydantic model
+        body = {{ body_class_name }}.model_validate(body_data)
+{% endif -%}
+{% endif %}
+        result = self.sdk.{{ api_name }}.{{ endpoint.name }}(
+{% for param in endpoint.path_parameters %}
+            {{ param.python_name }}={{ param.python_name }},
+{% endfor %}
+{% if endpoint.bodies %}
+            body=body,
+{% endif %}
+{% for param in endpoint.query_parameters %}
+{% if param.required %}
+            {{ param.python_name }}={{ param.python_name }},
+{% endif %}
+{% endfor %}
+        )
+
+        # Assert response parses correctly
+        assert result is not None
+
+        # Assert response type matches expected type
+{% if response_info.type_string.startswith('Union[') %}
+{% set union_classes = response_info.type_string.replace('Union[', '').replace(']', '').replace("'", "").split(', ') %}
+        assert isinstance(result, ({{ union_classes | join(', ') }}))
+{% else %}
+        assert isinstance(result, {{ response_info.type_string.split('[')[0] }})
+{% endif %}
+{% endfor %}
+{%- endfor %}

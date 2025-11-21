@@ -152,6 +152,7 @@ class SatvuApiSdkCi:
             # Verify correct Python version is being used
             .with_exec(["python", "--version"])
             .with_env_variable("PYTEST_ADDOPTS", add_opts)
+            .with_exec(["/bin/uv", "build"])
             .with_exec(
                 [
                     "pytest",

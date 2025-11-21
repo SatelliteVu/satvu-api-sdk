@@ -33,7 +33,11 @@ class SDKClient:
         self.timeout = timeout
         self.max_retry_attempts = max_retry_attempts
         self.max_retry_after_seconds = max_retry_after_seconds
-        base_url = f"{self.build_url(subdomain, env=env).rstrip('/')}/{self.base_path.lstrip('/')}"
+        self.env = env
+
+        base_url = (
+            f"{self.build_url(subdomain).rstrip('/')}/{self.base_path.lstrip('/')}"
+        )
 
         if http_client is not None:
             self.client = http_client
@@ -44,9 +48,8 @@ class SDKClient:
                 get_token=get_token,
             )
 
-    @staticmethod
-    def build_url(subdomain: str, env: str | None):
-        env = "" if not env else f"{env}."
+    def build_url(self, subdomain: str):
+        env = "" if not self.env else f"{self.env}."
         return f"https://{subdomain}.{env}satellitevu.com/"
 
     def make_request(

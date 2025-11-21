@@ -60,19 +60,22 @@ def sdk_client_with_custom_http():
 
 def test_build_url_no_env():
     """Test URL building without environment."""
-    url = SDKClient.build_url("api", None)
+    sdk_client = ConcreteSDKClient(env=None)
+    url = sdk_client.build_url("api")
     assert url == "https://api.satellitevu.com/"
 
 
 def test_build_url_with_env():
     """Test URL building with environment."""
-    url = SDKClient.build_url("api", "dev")
+    sdk_client = ConcreteSDKClient(env="dev")
+    url = sdk_client.build_url("api")
     assert url == "https://api.dev.satellitevu.com/"
 
 
 def test_build_url_custom_subdomain():
     """Test URL building with custom subdomain."""
-    url = SDKClient.build_url("auth", "staging")
+    sdk_client = ConcreteSDKClient(env="staging")
+    url = sdk_client.build_url("auth")
     assert url == "https://auth.staging.satellitevu.com/"
 
 

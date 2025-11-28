@@ -18,13 +18,12 @@ from os import getenv
 
 from satvu_api_sdk import SatVuSDK
 from satvu_api_sdk.services.reseller.models import (
+    CompanyAddress,
+    CompanyAddressCountryCode,
     CreateUser,
     SearchCompanies,
     SearchUsers,
-    CompanyAddress,
-    CompanyAddressCountryCode,
 )
-
 
 CLIENT_ID = getenv("SATVU_CLIENT_ID")
 assert CLIENT_ID is not None, "Please set the SATVU_CLIENT_ID environment variable"  # nosec B101

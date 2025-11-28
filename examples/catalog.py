@@ -21,7 +21,6 @@ from uuid import UUID
 from satvu_api_sdk import SatVuSDK
 from satvu_api_sdk.services.catalog.models.post_search_input import PostSearchInput
 
-
 CLIENT_ID = getenv("SATVU_CLIENT_ID")
 assert CLIENT_ID is not None, "Please set the SATVU_CLIENT_ID environment variable"  # nosec B101
 CLIENT_SECRET = getenv("SATVU_CLIENT_SECRET")

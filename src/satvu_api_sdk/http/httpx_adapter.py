@@ -6,11 +6,11 @@ from typing import Any, cast
 
 try:
     import httpx
-except ImportError:
+except ImportError as exc:
     raise ImportError(
         "httpx is required to use HTTPXAdapter. "
         'Install it with: pip install "satvu-api-sdk[http-httpx]"'
-    )
+    ) from exc
 
 from satvu_api_sdk.http.errors import (
     ClientError,
@@ -19,8 +19,8 @@ from satvu_api_sdk.http.errors import (
     NetworkError,
     ProxyError,
     ReadTimeoutError,
-    SSLError,
     ServerError,
+    SSLError,
     TextDecodeError,
 )
 from satvu_api_sdk.http.protocol import HttpMethod, HttpResponse

@@ -6,13 +6,13 @@ during request execution, from network issues to parsing failures.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Any
 
 
 class HttpError(Exception, ABC):
     """Base class for all HTTP-related errors."""
 
-    def __init__(self, message: str, context: Optional[dict[str, Any]] = None) -> None:
+    def __init__(self, message: str, context: dict[str, Any] | None = None) -> None:
         """
         Initialize an HTTP error.
 
@@ -55,8 +55,8 @@ class NetworkError(HttpError):
     def __init__(
         self,
         message: str,
-        url: Optional[str] = None,
-        original_error: Optional[Exception] = None,
+        url: str | None = None,
+        original_error: Exception | None = None,
     ) -> None:
         """
         Initialize a network error.
@@ -92,9 +92,9 @@ class ConnectionTimeoutError(HttpError):
     def __init__(
         self,
         message: str,
-        url: Optional[str] = None,
-        timeout: Optional[float] = None,
-        original_error: Optional[Exception] = None,
+        url: str | None = None,
+        timeout: float | None = None,
+        original_error: Exception | None = None,
     ) -> None:
         """
         Initialize a connection timeout error.
@@ -134,9 +134,9 @@ class ReadTimeoutError(HttpError):
     def __init__(
         self,
         message: str,
-        url: Optional[str] = None,
-        timeout: Optional[float] = None,
-        original_error: Optional[Exception] = None,
+        url: str | None = None,
+        timeout: float | None = None,
+        original_error: Exception | None = None,
     ) -> None:
         """
         Initialize a read timeout error.
@@ -176,8 +176,8 @@ class SSLError(HttpError):
     def __init__(
         self,
         message: str,
-        url: Optional[str] = None,
-        original_error: Optional[Exception] = None,
+        url: str | None = None,
+        original_error: Exception | None = None,
     ) -> None:
         """
         Initialize an SSL error.
@@ -213,9 +213,9 @@ class ProxyError(HttpError):
     def __init__(
         self,
         message: str,
-        url: Optional[str] = None,
-        proxy: Optional[str] = None,
-        original_error: Optional[Exception] = None,
+        url: str | None = None,
+        proxy: str | None = None,
+        original_error: Exception | None = None,
     ) -> None:
         """
         Initialize a proxy error.
@@ -261,9 +261,9 @@ class HttpStatusError(HttpError):
         self,
         message: str,
         status_code: int,
-        url: Optional[str] = None,
-        response_body: Optional[bytes] = None,
-        response_headers: Optional[dict[str, str]] = None,
+        url: str | None = None,
+        response_body: bytes | None = None,
+        response_headers: dict[str, str] | None = None,
     ) -> None:
         """
         Initialize an HTTP status error.
@@ -301,9 +301,9 @@ class ClientError(HttpStatusError):
         self,
         message: str,
         status_code: int,
-        url: Optional[str] = None,
-        response_body: Optional[bytes] = None,
-        response_headers: Optional[dict[str, str]] = None,
+        url: str | None = None,
+        response_body: bytes | None = None,
+        response_headers: dict[str, str] | None = None,
     ) -> None:
         """
         Initialize a client error.
@@ -335,9 +335,9 @@ class ServerError(HttpStatusError):
         self,
         message: str,
         status_code: int,
-        url: Optional[str] = None,
-        response_body: Optional[bytes] = None,
-        response_headers: Optional[dict[str, str]] = None,
+        url: str | None = None,
+        response_body: bytes | None = None,
+        response_headers: dict[str, str] | None = None,
     ) -> None:
         """
         Initialize a server error.
@@ -373,8 +373,8 @@ class JsonDecodeError(HttpError):
     def __init__(
         self,
         message: str,
-        body: Optional[str] = None,
-        original_error: Optional[Exception] = None,
+        body: str | None = None,
+        original_error: Exception | None = None,
     ) -> None:
         """
         Initialize a JSON decode error.
@@ -412,8 +412,8 @@ class TextDecodeError(HttpError):
     def __init__(
         self,
         message: str,
-        encoding: Optional[str] = None,
-        original_error: Optional[Exception] = None,
+        encoding: str | None = None,
+        original_error: Exception | None = None,
     ) -> None:
         """
         Initialize a text decode error.
@@ -454,7 +454,7 @@ class RequestValidationError(HttpError):
     def __init__(
         self,
         message: str,
-        parameter: Optional[str] = None,
+        parameter: str | None = None,
         value: Any = None,
     ) -> None:
         """

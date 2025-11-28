@@ -1,10 +1,10 @@
+import os
 from base64 import b64decode
 from configparser import ConfigParser, DuplicateSectionError
 from datetime import datetime
 from hashlib import sha1
 from json import loads
 from logging import getLogger
-import os
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Protocol
@@ -17,11 +17,12 @@ try:
 except ImportError:
     user_cache_dir = None
 
+import contextlib
+
 from satvu_api_sdk.core import SDKClient
 from satvu_api_sdk.http import HttpClient
 from satvu_api_sdk.http.errors import ClientError, ServerError
 from satvu_api_sdk.result import Err, Ok, Result, is_err
-
 
 logger = getLogger(__name__)
 
@@ -75,10 +76,8 @@ class AppDirCache:
         parser = ConfigParser()
         parser.read(self.cache_file)
 
-        try:
+        with contextlib.suppress(DuplicateSectionError):
             parser.add_section(client_id)
-        except DuplicateSectionError:
-            pass
         parser[client_id]["access_token"] = value.access_token
         parser[client_id]["refresh_token"] = value.refresh_token or ""
 
@@ -204,7 +203,7 @@ class AuthService(SDKClient):
         if is_err(result):
             error = result.error()
             # Distinguish between HTTP status errors and transport errors
-            if isinstance(error, (ClientError, ServerError)):
+            if isinstance(error, ClientError | ServerError):
                 # HTTP error response (4xx/5xx) - server responded with error status
                 body_text = (
                     error.response_body.decode("utf-8") if error.response_body else ""

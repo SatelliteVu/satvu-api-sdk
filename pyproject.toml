@@ -35,6 +35,7 @@ dev = [
     "pytest>=8.3.4",
     "pytest-cov>=7.0.0",
     "requests>=2.32.0",
+    "ruff>=0.14.3",
     "urllib3>=2.0.0",
 ]
 
@@ -53,8 +54,27 @@ include = ["/src"]
 [tool.hatch.envs.default.scripts]
 build-sdk = "uv run python -m builder all"
 
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "B", # flake8-bugbear
+    "E", # pycodestyle
+    "F", # pyflakes
+    "FURB", # refurb
+    "I", # isort
+    "SIM", # flake8-simplify
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501", # line too long
+    "UP007" # x | y syntax
+]
+
 [tool.fawltydeps]
-ignore_unused = ["dagger-io", "toml", "pytest-cov"]
+ignore_unused = ["dagger-io", "ruff", "toml", "pytest-cov"]
 ignore_undeclared = [
     "builder",
     "dagger",

@@ -12,8 +12,8 @@ from satvu_api_sdk.http.errors import (
     ProxyError,
     ReadTimeoutError,
     RequestValidationError,
-    SSLError,
     ServerError,
+    SSLError,
     TextDecodeError,
 )
 from satvu_api_sdk.http.protocol import HttpClient, HttpResponse

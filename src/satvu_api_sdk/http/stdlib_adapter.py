@@ -289,7 +289,7 @@ class StdlibAdapter:
                     )
                 )
 
-        except socket.timeout as e:
+        except TimeoutError as e:
             # Socket timeout - could be connection or read timeout
             # urllib doesn't distinguish, so we'll call it read timeout
             return Err(

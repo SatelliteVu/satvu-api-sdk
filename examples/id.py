@@ -20,10 +20,10 @@ from satvu_api_sdk import SatVuSDK
 from satvu_api_sdk.services.id.models import (
     CoreWebhook,
     EditWebhookPayload,
-    UserSettings,
-    NotificationUpdate,
     NotificationCategory,
     NotificationConfig,
+    NotificationUpdate,
+    UserSettings,
 )
 
 CLIENT_ID = getenv("SATVU_CLIENT_ID")

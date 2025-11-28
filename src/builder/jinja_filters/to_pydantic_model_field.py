@@ -1,8 +1,8 @@
-from openapi_python_client.parser.properties.protocol import PropertyProtocol
 from openapi_python_client.parser.properties import (
-    ModelProperty,
     ConstProperty,
+    ModelProperty,
 )
+from openapi_python_client.parser.properties.protocol import PropertyProtocol
 
 
 def to_pydantic_model_field(prop: PropertyProtocol) -> str:

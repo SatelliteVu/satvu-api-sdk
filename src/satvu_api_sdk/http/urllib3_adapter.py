@@ -7,11 +7,11 @@ from urllib.parse import urlencode, urljoin
 
 try:
     import urllib3
-except ImportError:
+except ImportError as exc:
     raise ImportError(
         "urllib3 is required to use Urllib3Adapter. "
         'Install it with: pip install "satvu-api-sdk[http-urllib3]"'
-    )
+    ) from exc
 
 from satvu_api_sdk.http.errors import (
     ClientError,
@@ -20,8 +20,8 @@ from satvu_api_sdk.http.errors import (
     NetworkError,
     ProxyError,
     ReadTimeoutError,
-    SSLError,
     ServerError,
+    SSLError,
     TextDecodeError,
 )
 from satvu_api_sdk.http.protocol import HttpMethod, HttpResponse
@@ -90,8 +90,7 @@ class Urllib3Response:
         # Case 2: Stream directly from urllib3 response (memory-efficient)
         self._consumed = True
         # urllib3's stream() method yields chunks as they arrive
-        for chunk in self._response.stream(amt=chunk_size):
-            yield chunk
+        yield from self._response.stream(amt=chunk_size)
 
     @property
     def text(self) -> Result[str, TextDecodeError]:

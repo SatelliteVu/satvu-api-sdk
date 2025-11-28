@@ -18,8 +18,11 @@ class StreamingEndpointConfig:
     url_pattern: str
     """URL pattern for the endpoint"""
 
-    params: list[tuple[str, str]]
-    """List of (name, type) tuples for parameters"""
+    path_params: list[tuple[str, str]]
+    """List of (name, type) tuples for path parameters (used in URL format)"""
+
+    query_params: list[tuple[str, str]]
+    """List of (name, type) tuples for query parameters (added to params dict)"""
 
     docstring: str
     """Description for streaming method"""
@@ -154,17 +157,18 @@ class StreamingEndpointDetector:
         stream_method = self._generate_stream_method_name(base_method)
 
         # Extract parameters
-        params = []
-        params = [
+        path_params = []
+        path_params = [
             (param.python_name, param.get_type_string())
             for param in endpoint.header_parameters
         ]
 
-        # Filter out 'redirect' from query params (we handle this internally)
-        # Also filter out 'collections' if it exists (optional parameter)
+        # Extract query parameters (added to params dict)
+        # Filter out 'redirect' - we handle this internally
+        query_params = []
         for param in endpoint.query_parameters:
             if param.python_name not in ["redirect"]:
-                params.append((param.python_name, param.get_type_string()))
+                query_params.append((param.python_name, param.get_type_string()))
 
         # Generate docstring
         docstring = (
@@ -177,7 +181,8 @@ class StreamingEndpointDetector:
             base_method=base_method,
             stream_method=stream_method,
             url_pattern=endpoint.path,
-            params=params,
+            path_params=path_params,
+            query_params=query_params,
             docstring=docstring,
             example_filename=example_filename,
             default_chunk_size=default_chunk_size,

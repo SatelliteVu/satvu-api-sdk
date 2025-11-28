@@ -156,11 +156,10 @@ class StreamingEndpointDetector:
         base_method = endpoint.name
         stream_method = self._generate_stream_method_name(base_method)
 
-        # Extract parameters
-        path_params = []
+        # Extract path parameters (used in URL format)
         path_params = [
             (param.python_name, param.get_type_string())
-            for param in endpoint.header_parameters
+            for param in endpoint.path_parameters
         ]
 
         # Extract query parameters (added to params dict)

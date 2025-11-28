@@ -7,7 +7,7 @@ authors = [
     { name = "Christian Wygoda", email = "christian.wygoda@satellitevu.com" },
     { name = "James Harrison", email = "james.harrison@satellitevu.com" },
 ]
-requires-python = ">=3.13"
+requires-python = ">=3.10"
 dependencies = ["pydantic>=2.11.7"]
 
 [project.optional-dependencies]

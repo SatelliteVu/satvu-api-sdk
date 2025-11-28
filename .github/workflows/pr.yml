@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Test
         uses: dagger/dagger-for-github@v8.2.0
         with:
@@ -25,27 +25,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Test
         uses: dagger/dagger-for-github@v8.2.0
         with:
           call: lint
 
   test:
-    name: Test
+    name: Test (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ['3.13']
+        python-version: ['3.10', '3.11', '3.12', '3.13']
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Set up dagger
-        uses: dagger/dagger-for-github@v8.2.0
+        uses: actions/checkout@v6
       - name: Run tests in dagger
-        run: test | export .
-        shell: dagger {0}
+        uses: dagger/dagger-for-github@v8.2.0
+        with:
+          call: test --python-version=${{ matrix.python-version }} export --path=.
       - name: Coverage comment
+        if: matrix.python-version == '3.13'
         uses: MishaKav/pytest-coverage-comment@v1.1.57
         with:
           pytest-coverage-path: ./pytest-coverage.txt

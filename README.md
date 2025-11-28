@@ -9,7 +9,7 @@ library.
 
 ### Requirements
 
-- Python >= 3.13 (TODO: support older versions)
+- Python >= 3.10, < 3.14
 - [uv]
 
 ### Getting Started
@@ -24,6 +24,7 @@ These scripts run things locally:
 
 - `dagger call -v test`: run pytest suite
 - `dagger call -v lint`: run linter suite
+- `dagger call -v test-all`: run tests on all supported python versions
 
 ## Generating the SDK
 

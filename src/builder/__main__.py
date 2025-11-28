@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 
-from builder.config import CMD_ARGS
 from builder.build import build
+from builder.config import CMD_ARGS
 
 parser = ArgumentParser(__package__, description="OpenAPI SDK builder")
 parser.add_argument("api", choices=CMD_ARGS.keys())

@@ -8,15 +8,15 @@ These tests verify that Pydantic's TypeAdapter correctly handles:
 - Validation errors
 """
 
-import pytest
 from typing import Union
+
+import pytest
 from pydantic import BaseModel, Field
 
 from satvu_api_sdk.shared.parsing import (
-    parse_response,
     _type_adapter_cache,
+    parse_response,
 )
-
 
 # ============================================================================
 # Test Fixtures - Minimal Pydantic Models
@@ -43,7 +43,7 @@ class ResellerOrder(BaseModel):
 class NestedContainer(BaseModel):
     """Model with nested Union field"""
 
-    orders: list[Union[SimpleOrder, ResellerOrder]] = Field(..., alias="orders")
+    orders: list[SimpleOrder | ResellerOrder] = Field(..., alias="orders")
     total: int = Field(..., alias="total")
 
 
@@ -338,7 +338,7 @@ class TestUnionResolution:
 
     def test_resolves_union_in_lists(self):
         """Should resolve Union types in lists"""
-        annotation = list[Union[SimpleOrder, ResellerOrder]]
+        annotation = list[SimpleOrder | ResellerOrder]
         data = [
             {"id": "O1", "name": "Order 1", "amount": 100},
             {"id": "O2", "name": "Order 2", "amount": 200, "reseller_id": "R1"},

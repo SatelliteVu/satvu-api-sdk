@@ -46,10 +46,7 @@ class SDKClient:
 
     @staticmethod
     def build_url(subdomain: str, env: str | None):
-        if not env:
-            env = ""
-        else:
-            env = f"{env}."
+        env = "" if not env else f"{env}."
         return f"https://{subdomain}.{env}satellitevu.com/"
 
     def make_request(

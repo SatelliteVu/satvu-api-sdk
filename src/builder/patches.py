@@ -276,9 +276,8 @@ def model_get_type_string(
         type_string = self.get_base_type_string()
 
     # Quote the type if requested (for forward references)
-    if quoted:
-        if type_string == self.class_info.name:
-            type_string = f"'{type_string}'"
+    if quoted and type_string == self.class_info.name:
+        type_string = f"'{type_string}'"
 
     if no_optional or self.required:
         return type_string

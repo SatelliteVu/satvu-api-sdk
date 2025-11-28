@@ -6,7 +6,7 @@ from typing import Any
 
 from httpx import get
 
-from builder.config import BASE_URL, APIS
+from builder.config import APIS, BASE_URL
 
 BASE_DIR = (Path(__file__).parent / ".." / "..").resolve()
 CACHE_DIR = BASE_DIR / ".cache"
@@ -77,7 +77,7 @@ def bundle_openapi_schema(schema: dict) -> dict:
     bundled = copy.deepcopy(schema)
     bundled = resolve_external_refs(bundled)
     if NEW_COMPONENTS:
-        for comp_type, comp_dict in NEW_COMPONENTS.items():
+        for comp_type in NEW_COMPONENTS:
             bundled["components"][comp_type].update(NEW_COMPONENTS["schemas"])
     return bundled
 

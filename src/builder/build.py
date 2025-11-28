@@ -1,7 +1,7 @@
 import sys
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Sequence
 
 import openapi_python_client.parser.openapi
 from openapi_python_client import Project
@@ -305,7 +305,7 @@ class ServiceCodeGenerator:
 
         # Add body_docstrings and pagination to endpoints
         for enhanced, endpoint in zip(
-            enhanced_endpoints, template_context["endpoints"]
+            enhanced_endpoints, template_context["endpoints"], strict=False
         ):
             endpoint.body_docstrings = enhanced.body_docstrings
             endpoint.pagination = enhanced.pagination
@@ -412,7 +412,7 @@ def build_all(use_cached: bool = False) -> dict[str, list[GeneratorError]]:
     """Build all API services."""
     results = {}
 
-    for api_id in APIS.keys():
+    for api_id in APIS:
         print(f"\n{'=' * 60}")
         errors = build_service(api_id, use_cached)
         results[api_id] = errors

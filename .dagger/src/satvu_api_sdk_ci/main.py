@@ -1,10 +1,9 @@
 from datetime import UTC, datetime
 from typing import Annotated, TypeAlias
-import toml
 
 import dagger
+import toml
 from dagger import dag, function, object_type
-
 
 SOURCE: TypeAlias = Annotated[
     dagger.Directory,
@@ -77,9 +76,9 @@ class SatvuApiSdkCi:
     async def lint_bandit(
         self,
         source: SOURCE,
-        paths: list[str] = [".dagger/src", "builder", "src"],
-        skip_test_ids: list[str] = ["B404", "B603", "B310"],
-        exclude_paths: list[str] = ["*_test.py", "conftest.py"],
+        paths: list[str] = [".dagger/src", "builder", "src"],  # noqa: B006
+        skip_test_ids: list[str] = ["B404", "B603", "B310"],  # noqa: B006
+        exclude_paths: list[str] = ["*_test.py", "conftest.py"],  # noqa: B006
     ):
         """Run bandit linter"""
         command = ["uvx", "bandit"]
@@ -94,7 +93,7 @@ class SatvuApiSdkCi:
     async def lint_detect_secrets(
         self,
         source: SOURCE,
-        paths: list[str] = ["src"],
+        paths: list[str] = ["src"],  # noqa: B006
     ):
         """Run detect-secrets linter"""
         runner = self.build_container(source)

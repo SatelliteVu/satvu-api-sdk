@@ -105,12 +105,15 @@ class StreamingEndpointDetector:
 
                 # Match if the non-parameter segments align
                 # (handles /v3/orders/download → /orders/download transformation)
-                if endpoint_segments and openapi_segments:
-                    # Check if endpoint segments are a suffix of openapi segments
-                    if openapi_segments[-len(endpoint_segments) :] == endpoint_segments:
-                        operation = path_item.get(method)
-                        if operation:
-                            break
+                # Check if endpoint segments are a suffix of openapi segments
+                if (
+                    endpoint_segments
+                    and openapi_segments
+                    and openapi_segments[-len(endpoint_segments) :]
+                ):
+                    operation = path_item.get(method)
+                    if operation:
+                        break
 
         if not operation:
             return None
@@ -152,8 +155,10 @@ class StreamingEndpointDetector:
 
         # Extract parameters
         params = []
-        for param in endpoint.path_parameters:
-            params.append((param.python_name, param.get_type_string()))
+        params = [
+            (param.python_name, param.get_type_string())
+            for param in endpoint.header_parameters
+        ]
 
         # Filter out 'redirect' from query params (we handle this internally)
         # Also filter out 'collections' if it exists (optional parameter)

@@ -9,7 +9,7 @@ from pydantic import BaseModel
 from satvu_api_sdk.core import SDKClient
 from satvu_api_sdk.http import create_http_client
 from satvu_api_sdk.http.errors import ClientError, ServerError
-from satvu_api_sdk.result import is_err, is_ok, Ok
+from satvu_api_sdk.result import Ok, is_err, is_ok
 
 
 class ParameterTestModel(BaseModel):

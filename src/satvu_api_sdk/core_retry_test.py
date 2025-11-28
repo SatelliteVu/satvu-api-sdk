@@ -160,7 +160,7 @@ class TestRetryAfter202:
             Ok(response_202),
         ]
 
-        result = client.make_request("GET", "/test")
+        client.make_request("GET", "/test")
 
         # Should have made only 2 attempts (custom max_retry_attempts)
         assert mock_http_client.request.call_count == 2

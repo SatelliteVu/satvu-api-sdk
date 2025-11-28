@@ -5,7 +5,8 @@ This module provides Rust-style Result types with Ok and Err variants
 for handling operations that may fail without using exceptions.
 """
 
-from typing import Callable, Generic, NoReturn, TypeGuard, TypeVar, Union
+from collections.abc import Callable
+from typing import Generic, NoReturn, TypeGuard, TypeVar, Union
 
 T = TypeVar("T")  # Success value type
 E = TypeVar("E")  # Error value type

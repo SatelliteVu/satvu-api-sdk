@@ -76,6 +76,7 @@ ignore = [
 [tool.fawltydeps]
 ignore_unused = ["dagger-io", "ruff", "toml", "pytest-cov"]
 ignore_undeclared = [
+    "black",        # Optional dependency for code formatting
     "builder",
     "dagger",
     "hatchling",

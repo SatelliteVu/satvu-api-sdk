@@ -16,6 +16,7 @@ from pydantic import TypeAdapter
 from typing import Union
 
 from satvu_api_sdk import SatVuSDK, create_http_client
+from satvu_api_sdk.http.errors import ClientError, ServerError, HttpError
 from .test_schemas import get_response_schema, get_request_body_schema, get_parameter_schema, has_request_body, has_parameter
 {%- set all_imports = [] %}
 {%- for endpoint_data in endpoints %}
@@ -53,6 +54,9 @@ from .test_schemas import get_response_schema, get_request_body_schema, get_para
 {{ import }}
 {%- endfor %}
 
+{% from "macros/test_success.jinja" import success_test %}
+{% from "macros/test_error.jinja" import error_test_with_schema, error_test_static %}
+{% from "macros/test_no_content.jinja" import no_content_test %}
 
 @pytest.mark.parametrize("backend", ["stdlib", "httpx", "urllib3", "requests"])
 class Test{{ service_class_name }}:
@@ -80,7 +84,7 @@ class Test{{ service_class_name }}:
 
         self.sdk = SatVuSDK(
             client_id="test_client_id",
-            client_secret="test_client_secret",
+            client_secret="test_client_secret",  # pragma: allowlist secret
             http_client=http_client,
             env="qa",
         )
@@ -90,103 +94,21 @@ class Test{{ service_class_name }}:
 
 {% for endpoint_data in endpoints %}
 {%- set endpoint = endpoint_data.endpoint %}
+{# ---- 2xx Success Response Tests ---- #}
 {%- for status_code, response_info in endpoint_data.responses.items() %}
-
-    @pook.on
-    @settings(
-        max_examples=10,
-        deadline=None,
-        suppress_health_check=[HealthCheck.filter_too_much, HealthCheck.too_slow, HealthCheck.data_too_large],
-    )
-    @given(
-        response_data=from_schema(get_response_schema("{{ endpoint.path }}", "{{ endpoint.method }}", "{{ status_code }}")),
-{%- if endpoint.bodies %}
-        body_data=from_schema(get_request_body_schema("{{ endpoint.path }}", "{{ endpoint.method }}")),
-{%- endif %}
-{%- for param in endpoint.query_parameters %}
-{%- if param.required %}
-        {{ param.python_name }}=from_schema(get_parameter_schema("{{ endpoint.path }}", "{{ endpoint.method }}", "{{ param.name }}")),
-{%- endif %}
-{%- endfor %}
-    )
-    def test_{{ endpoint.name }}_{{ status_code }}(
-        self,
-        backend,
-        response_data,
-{%- if endpoint.bodies %}
-        body_data,
-{%- endif %}
-{%- for param in endpoint.query_parameters %}
-{%- if param.required %}
-        {{ param.python_name }},
-{%- endif %}
-{%- endfor %}
-    ):
-        """
-        Test {{ endpoint.name }} with {{ status_code }} response.
-        """
-        # Generate path parameters
-{% if endpoint.path_parameters %}
-{% for param in endpoint.path_parameters %}
-        {{ param.python_name }} = uuid4()
+{{ success_test(endpoint, status_code, response_info, api_name) }}
 {% endfor %}
-        path = "{{ endpoint.path }}".format(
-{% for param in endpoint.path_parameters %}
-            {{ param.python_name }}={{ param.python_name }}{% if not loop.last %},{% endif %}
-
-{% endfor %}
-        )
+{# ---- 4xx/5xx Error Response Tests ---- #}
+{% for status_code, error_info in endpoint_data.error_responses.items() %}
+{%- set exception_type = "ClientError" if status_code | int < 500 else "ServerError" %}
+{% if error_info.has_schema %}
+{{ error_test_with_schema(endpoint, status_code, exception_type, api_name) }}
 {% else %}
-        path = "{{ endpoint.path }}"
-{% endif %}
-        url = f"{self.base_url}{path}"
-
-        # Mock the HTTP response
-        pook.{{ endpoint.method }}(url).reply({{ status_code }}).json(response_data).header(
-            "Content-Type", "application/json"
-        )
-
-        # Call the service method
-{% if endpoint.bodies -%}
-{%- set body_type_string = endpoint.bodies[0].prop.get_type_string() -%}
-{%- if 'Union[' in body_type_string %}
-{%- set union_classes = body_type_string.replace('Union[', '').replace(']', '').replace("'", "").split(', ') %}
-        # For Union types, use TypeAdapter to validate
-        body_adapter = TypeAdapter(Union[{{ union_classes | join(', ') }}])
-        body = body_adapter.validate_python(body_data)
-{% elif 'list[' in body_type_string %}
-        # For list types, use TypeAdapter to validate
-        body_adapter = TypeAdapter({{ body_type_string }})
-        body = body_adapter.validate_python(body_data)
-{% else -%}
-{%- set body_class_name = body_type_string.split('[')[0] %}
-        # Parse body_data into Pydantic model
-        body = {{ body_class_name }}.model_validate(body_data)
-{% endif -%}
-{% endif %}
-        result = self.sdk.{{ api_name }}.{{ endpoint.name }}(
-{% for param in endpoint.path_parameters %}
-            {{ param.python_name }}={{ param.python_name }},
-{% endfor %}
-{% if endpoint.bodies %}
-            body=body,
-{% endif %}
-{% for param in endpoint.query_parameters %}
-{% if param.required %}
-            {{ param.python_name }}={{ param.python_name }},
+{{ error_test_static(endpoint, status_code, exception_type, api_name) }}
 {% endif %}
 {% endfor %}
-        )
-
-        # Assert response parses correctly
-        assert result is not None
-
-        # Assert response type matches expected type
-{% if response_info.type_string.startswith('Union[') %}
-{% set union_classes = response_info.type_string.replace('Union[', '').replace(']', '').replace("'", "").split(', ') %}
-        assert isinstance(result, ({{ union_classes | join(', ') }}))
-{% else %}
-        assert isinstance(result, {{ response_info.type_string.split('[')[0] }})
-{% endif %}
-{% endfor %}
+{# ---- 204 No Content Tests ---- #}
+{%- if endpoint_data.has_204 %}
+{{ no_content_test(endpoint, api_name) }}
+{%- endif %}
 {%- endfor %}

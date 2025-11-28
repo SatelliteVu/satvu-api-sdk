@@ -30,23 +30,30 @@ Runs all pre-commit hooks (Ruff, Bandit, detect-secrets, FawltyDeps).
 
 ### SDK Generation
 
-Generate SDK for a specific API:
-```bash
-uv run python -m builder <API_NAME>
-```
+**IMPORTANT:** Always use `uv build` to generate SDK code. This is the canonical build method that ensures templates and source files are correctly processed.
 
 Generate all API SDKs:
 ```bash
-uv run python -m builder all
-# OR use the hatch build hook (generates all APIs, fetches fresh specs):
 uv build
 ```
 
-Use `--cached` flag to use cached OpenAPI specs instead of fetching fresh ones (only works with direct builder invocation, not `uv build`).
+This command:
+- Triggers the Hatch build hook (`hatch_build.py`)
+- Generates all API SDKs (catalog, cos, id, policy, otm, reseller, wallet)
+- Fetches fresh OpenAPI specs
+- Correctly processes Jinja2 templates from `src/builder/templates/`
+- Packages the distribution
+
+**Alternative (for development only):**
+```bash
+# Generate specific API (bypasses proper template path resolution)
+uv run python -m builder <API_NAME>
+
+# Use cached specs instead of fetching fresh ones
+uv run python -m builder <API_NAME> --cached
+```
 
 Available API names are defined in `src/builder/config.py`: catalog, cos, id, policy, otm, reseller, wallet.
-
-**Note:** `uv build` triggers the Hatch build hook (`hatch_build.py`) which runs `build(api_id="all", use_cached=False)` internally before packaging.
 
 **Dagger CI:**
 ```bash

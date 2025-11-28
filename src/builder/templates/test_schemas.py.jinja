@@ -67,3 +67,14 @@ def has_request_body(path: str, method: str) -> bool:
 def has_parameter(path: str, method: str, param_name: str) -> bool:
     """Check if operation has a specific parameter."""
     return param_name in _OPERATIONS.get((path, method), {}).get("parameters", {})
+
+
+def is_error_response(path: str, method: str, status: str) -> bool:
+    """Check if response is an error response (4xx/5xx)."""
+    response = _OPERATIONS.get((path, method), {}).get("responses", {}).get(status, {})
+    return response.get("is_error", False)
+
+
+def has_response_schema(path: str, method: str, status: str) -> bool:
+    """Check if operation has a response schema for given status."""
+    return status in _OPERATIONS.get((path, method), {}).get("responses", {})

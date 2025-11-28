@@ -236,19 +236,36 @@ def generate_tests(
 
             # Extract response schemas
             response_info = {}
+            error_response_info = {}
+            has_204 = False
             for response in endpoint.responses:
                 status_pattern = response.status_code.pattern
 
-                # Skip non-success responses for now (focus on 2xx)
-                if not status_pattern.startswith("2"):
+                # Track 204 No Content responses
+                if status_pattern == "204":
+                    has_204 = True
                     continue
 
-                # Skip 204 No Content (no body to test)
-                if status_pattern == "204":
-                    continue
+                # Determine if this is a success (2xx) or error (4xx/5xx) response
+                is_error_response = not status_pattern.startswith("2")
 
                 # Skip responses without a property (no schema)
                 if not response.prop:
+                    # For error responses without schema, create a minimal schema
+                    if is_error_response:
+                        minimal_schema = {"type": "object"}
+                        operation_data["responses"][status_pattern] = {
+                            "schema": minimal_schema,
+                            "is_error": True,
+                        }
+                        error_response_info[status_pattern] = {
+                            "status_code": int(status_pattern),
+                            "schema": minimal_schema,
+                            "has_schema": False,
+                            "description": response.data.description
+                            if hasattr(response.data, "description")
+                            else "",
+                        }
                     continue
 
                 # Extract raw JSON schema for hypothesis
@@ -260,17 +277,31 @@ def generate_tests(
                     # Attach definitions for $ref resolution
                     schema["definitions"] = components
 
-                    operation_data["responses"][status_pattern] = {"schema": schema}
-
-                    # Also store in response_info for template (backwards compat)
-                    response_info[status_pattern] = {
-                        "status_code": int(status_pattern),
+                    operation_data["responses"][status_pattern] = {
                         "schema": schema,
-                        "type_string": response.prop.get_type_string(),
-                        "description": response.data.description
-                        if hasattr(response.data, "description")
-                        else "",
+                        "is_error": is_error_response,
                     }
+
+                    if is_error_response:
+                        # Store error response info
+                        error_response_info[status_pattern] = {
+                            "status_code": int(status_pattern),
+                            "schema": schema,
+                            "has_schema": True,
+                            "description": response.data.description
+                            if hasattr(response.data, "description")
+                            else "",
+                        }
+                    else:
+                        # Store success response info for template (backwards compat)
+                        response_info[status_pattern] = {
+                            "status_code": int(status_pattern),
+                            "schema": schema,
+                            "type_string": response.prop.get_type_string(),
+                            "description": response.data.description
+                            if hasattr(response.data, "description")
+                            else "",
+                        }
 
             # Extract request body schema
             body_schema = extract_request_body_schema(endpoint)
@@ -290,14 +321,16 @@ def generate_tests(
                             "schema": param_schema
                         }
 
-            # Only include endpoints with testable responses
-            if response_info:
+            # Include endpoints with testable responses (success or error)
+            if response_info or error_response_info or has_204:
                 operations[key] = operation_data
 
                 endpoints_data.append(
                     {
                         "endpoint": endpoint,
                         "responses": response_info,
+                        "error_responses": error_response_info,
+                        "has_204": has_204,
                     }
                 )
 
@@ -338,13 +371,13 @@ def generate_tests(
 
     # Clean up generated test files with ruff
     # First apply autofixes (remove unused imports, etc.)
-    subprocess.run(
+    subprocess.run(  # nosec B607
         ["ruff", "check", "--fix", str(test_file), str(schemas_file)],
         check=False,
         capture_output=True,
     )
     # Then format the code
-    subprocess.run(
+    subprocess.run(  # nosec B607
         ["ruff", "format", str(test_file), str(schemas_file)],
         check=False,
         capture_output=True,

@@ -1,0 +1,77 @@
+{#- 4xx/5xx Error Response Test macros -#}
+{% from "macros/test_helpers.jinja" import generate_path, parse_body, method_call_args, given_params, test_params %}
+
+{#- Error Response Test with schema (property-based) -#}
+{%- macro error_test_with_schema(endpoint, status_code, exception_type, api_name) %}
+
+    @pook.on
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[HealthCheck.filter_too_much, HealthCheck.too_slow, HealthCheck.data_too_large],
+    )
+    @given(
+{{ given_params(endpoint, status_code) }}
+    )
+    def test_{{ endpoint.name }}_{{ status_code }}_error(
+        self,
+        backend,
+{{ test_params(endpoint) }}
+    ):
+        """
+        Test {{ endpoint.name }} with {{ status_code }} error response.
+
+        HTTP {{ status_code }} errors raise {{ exception_type }}.
+        """
+        # Generate path parameters
+{{ generate_path(endpoint) }}
+
+        # Mock the HTTP error response
+        pook.{{ endpoint.method }}(url).reply({{ status_code }}).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+
+{{ parse_body(endpoint) }}
+        # HTTP {{ status_code }} should raise {{ exception_type }}
+        with pytest.raises({{ exception_type }}) as exc_info:
+            self.sdk.{{ api_name }}.{{ endpoint.name }}(
+{{ method_call_args(endpoint) }}
+            )
+
+        # Verify the exception contains the correct status code
+        assert exc_info.value.status_code == {{ status_code }}
+{%- endmacro %}
+
+
+{#- Error Response Test without schema (static data) -#}
+{%- macro error_test_static(endpoint, status_code, exception_type, api_name) %}
+
+    @pook.on
+    def test_{{ endpoint.name }}_{{ status_code }}_error(
+        self,
+        backend,
+    ):
+        """
+        Test {{ endpoint.name }} with {{ status_code }} error response.
+
+        HTTP {{ status_code }} errors raise {{ exception_type }}.
+        No schema defined - using static error data.
+        """
+        # Generate path parameters
+{{ generate_path(endpoint) }}
+
+        # Mock the HTTP error response with static error data
+        error_data = {"detail": "Error", "message": "Request failed"}
+        pook.{{ endpoint.method }}(url).reply({{ status_code }}).json(error_data).header(
+            "Content-Type", "application/json"
+        )
+
+        # HTTP {{ status_code }} should raise {{ exception_type }}
+        with pytest.raises({{ exception_type }}) as exc_info:
+            self.sdk.{{ api_name }}.{{ endpoint.name }}(
+{{ method_call_args(endpoint, use_test_values=true) }}
+            )
+
+        # Verify the exception contains the correct status code
+        assert exc_info.value.status_code == {{ status_code }}
+{%- endmacro %}

@@ -1,0 +1,31 @@
+{#- 204 No Content Test macro -#}
+{% from "macros/test_helpers.jinja" import generate_path, method_call_args %}
+
+{%- macro no_content_test(endpoint, api_name) %}
+
+    @pook.on
+    def test_{{ endpoint.name }}_204_no_content(
+        self,
+        backend,
+    ):
+        """
+        Test {{ endpoint.name }} with 204 No Content response.
+
+        204 responses return None (no body).
+        """
+        # Generate path parameters
+{{ generate_path(endpoint) }}
+
+        # Mock the HTTP 204 No Content response
+        pook.{{ endpoint.method }}(url).reply(204).header(
+            "Content-Type", "application/json"
+        )
+
+        # Call the service method
+        result = self.sdk.{{ api_name }}.{{ endpoint.name }}(
+{{ method_call_args(endpoint, use_test_values=true) }}
+        )
+
+        # 204 No Content returns None
+        assert result is None
+{%- endmacro %}

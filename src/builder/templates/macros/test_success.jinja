@@ -1,0 +1,47 @@
+{#- 2xx Success Response Test macro -#}
+{% from "macros/test_helpers.jinja" import generate_path, parse_body, method_call_args, given_params, test_params %}
+
+{%- macro success_test(endpoint, status_code, response_info, api_name) %}
+
+    @pook.on
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[HealthCheck.filter_too_much, HealthCheck.too_slow, HealthCheck.data_too_large],
+    )
+    @given(
+{{ given_params(endpoint, status_code) }}
+    )
+    def test_{{ endpoint.name }}_{{ status_code }}(
+        self,
+        backend,
+{{ test_params(endpoint) }}
+    ):
+        """
+        Test {{ endpoint.name }} with {{ status_code }} response.
+        """
+        # Generate path parameters
+{{ generate_path(endpoint) }}
+
+        # Mock the HTTP response
+        pook.{{ endpoint.method }}(url).reply({{ status_code }}).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+
+        # Call the service method
+{{ parse_body(endpoint) }}
+        result = self.sdk.{{ api_name }}.{{ endpoint.name }}(
+{{ method_call_args(endpoint) }}
+        )
+
+        # Assert response parses correctly
+        assert result is not None
+
+        # Assert response type matches expected type
+{% if response_info.type_string.startswith('Union[') %}
+{% set union_classes = response_info.type_string.replace('Union[', '').replace(']', '').replace("'", "").split(', ') %}
+        assert isinstance(result, ({{ union_classes | join(', ') }}))
+{% else %}
+        assert isinstance(result, {{ response_info.type_string.split('[')[0] }})
+{% endif %}
+{%- endmacro %}

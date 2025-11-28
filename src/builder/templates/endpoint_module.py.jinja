@@ -79,6 +79,11 @@ follow_redirects=redirect if redirect is not None else True,
 {%- endif -%}
 timeout=timeout,
 )
+
+# Raise HttpError for failed requests (network errors, 4xx, 5xx, etc.)
+if result.is_err():
+    raise result.error()
+
 response = result.unwrap()
 {% endmacro %}
 

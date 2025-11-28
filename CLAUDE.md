@@ -254,18 +254,43 @@ The SDK provides memory-efficient streaming download functionality for large bin
    - Supports progress callbacks for UX integration
    - Returns `Path` object pointing to downloaded file
 
-2. **Auto-Generation (src/builder/streaming_post_processor.py)**:
-   - Detects download endpoints based on response Content-Type (application/zip, application/octet-stream)
-   - Automatically generates `*_to_file()` variants for each download endpoint
-   - Adds proper imports, type hints, and Result type handling
+2. **Auto-Generation System**:
+
+   **streaming_detector.py**: Detects which endpoints need streaming variants
+   - Checks for `x-streaming-download` extension in OpenAPI spec
+   - Separates path parameters (used in URL formatting) from query parameters (added to params dict)
+   - Builds `StreamingEndpointConfig` with separate `path_params` and `query_params` lists
+   - Example: `contract_id`, `order_id` are path params; `collections`, `primary_formats` are query params
+
+   **ast_generator.py**: Generates streaming method code using Python's AST module
+   - `ASTMethodBuilder` class builds syntactically correct function AST nodes
+   - Path params become required positional parameters
+   - Query params become keyword-only parameters with `None` defaults
+   - Guarantees type-safe code generation without string template fragility
+   - Key methods:
+     - `build_method()`: Orchestrates complete function generation
+     - `_build_arguments()`: Creates proper function signature with type annotations
+     - `_build_body()`: Generates method body (URL formatting uses only path params, params dict includes query params)
+     - `_build_docstring()`: Creates structured docstring with parameter documentation
+
+   **streaming_post_processor.py**: Coordinates the generation process
+   - Parses generated API file as AST
+   - Uses `add_imports_to_ast()` for intelligent import handling
+   - Uses `generate_streaming_method()` for AST-based code generation
+   - Uses `insert_method_after_base()` for AST manipulation
+   - Converts AST back to code with `ast.unparse()`
+   - Formats with Black if available (graceful fallback)
 
 **Generated Method Signature:**
 ```python
 def download_order_to_file(
     self,
-    contract_id: UUID,
-    order_id: UUID,
-    output_path: Path | str,
+    contract_id: UUID,           # Path param (required positional)
+    order_id: UUID,              # Path param (required positional)
+    output_path: Path | str,     # Required positional
+    *,                           # Keyword-only separator
+    collections: list[...] | None = None,        # Query param (keyword-only)
+    primary_formats: list[...] | None = None,   # Query param (keyword-only)
     chunk_size: int = 8192,
     progress_callback: Callable[[int, int | None], None] | None = None,
     timeout: int | None = None,
@@ -276,6 +301,20 @@ def download_order_to_file(
     Downloads directly to disk using streaming, avoiding loading
     the entire file into memory. Ideal for large files (1GB+).
     """
+    params = {
+        "redirect": True,
+        "collections": collections,          # Query params in params dict
+        "primary_formats": primary_formats,  # Query params in params dict
+    }
+    result = self.make_request(
+        method="get",
+        url="/{contract_id}/orders/{order_id}/download".format(
+            contract_id=contract_id,  # Only path params in URL format
+            order_id=order_id,        # Only path params in URL format
+        ),
+        params=params,
+        ...
+    )
 ```
 
 **Key Features:**
@@ -285,6 +324,9 @@ def download_order_to_file(
 - **Configurable Chunk Size**: Default 8KB, recommend 64KB+ for large files
 - **Result Type**: Returns `Result[Path, HttpError]` for explicit error handling
 - **Automatic Detection**: Builder auto-generates methods for binary download endpoints
+- **Type Safety**: AST-based generation guarantees syntactically correct code
+- **Proper Parameter Handling**: Path params in URL format, query params in params dict
+- **Keyword-Only Query Params**: Query parameters are keyword-only with None defaults for better API ergonomics
 
 **Usage Example:**
 ```python
@@ -319,11 +361,36 @@ else:
 
 **Builder Integration:**
 
-The streaming post-processor (`add_streaming_methods()`) runs after initial code generation:
-1. Parses generated API file to find download endpoints
-2. Detects endpoints with binary response types (ZIP, octet-stream)
-3. Generates `*_to_file()` method that wraps the base download endpoint
-4. Injects code at the end of the service class with proper formatting
+The streaming generation system runs after initial SDK code generation:
+
+1. **Detection Phase** (`streaming_detector.py`):
+   - Scans OpenAPI spec for endpoints with `x-streaming-download: true` extension
+   - Extracts endpoint metadata (path, method, parameters)
+   - Separates path parameters from query parameters
+   - Builds `StreamingEndpointConfig` objects with all necessary information
+
+2. **Generation Phase** (`ast_generator.py`):
+   - Constructs Python AST nodes for streaming methods
+   - Builds function signature with proper type annotations
+   - Path params → required positional parameters
+   - Query params → keyword-only parameters with defaults
+   - Generates method body with correct parameter usage
+   - Creates comprehensive docstrings
+
+3. **Integration Phase** (`streaming_post_processor.py`):
+   - Parses generated API file as AST
+   - Adds missing imports (Path, HttpError, Result, ResultOk)
+   - Generates streaming method code using AST builder
+   - Inserts new method into class AST after base method
+   - Converts AST back to Python code
+   - Formats with Black if available
+
+**Benefits of AST-Based Generation:**
+- Eliminates string template fragility and escaping issues
+- Guarantees syntactically correct Python code
+- Automatic handling of complex type annotations
+- Proper line number and column offset tracking
+- No manual string manipulation or formatting
 
 **For OpenAPI Spec Authors:**
 

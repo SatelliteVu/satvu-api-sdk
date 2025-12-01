@@ -9,7 +9,7 @@ library.
 
 ### Requirements
 
-- Python >= 3.10, < 3.14
+- Python >= 3.10 (tested with 3.10 to 3.13)
 - [uv]
 
 ### Getting Started

@@ -159,6 +159,8 @@ class SatvuApiSdkCi:
                     "--junitxml=/tmp/pytest.xml",
                     "--cov-report=term-missing:skip-covered",
                     "--cov=src",
+                    "-n=auto",
+                    "-v",
                 ],
                 redirect_stdout="/tmp/pytest-coverage.txt",  # nosec: B108
             )

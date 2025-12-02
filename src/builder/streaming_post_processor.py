@@ -13,11 +13,18 @@ from builder.ast_generator import (
 from builder.streaming_detector import StreamingEndpointDetector
 
 try:
-    import black
+    import subprocess
 
-    HAS_BLACK = True
-except ImportError:
-    HAS_BLACK = False
+    # Check if ruff is available in PATH
+    result = subprocess.run(
+        ["ruff", "--version"],  # nosec B607
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    HAS_RUFF = result.returncode == 0
+except (ImportError, FileNotFoundError):
+    HAS_RUFF = False
 
 
 def add_streaming_methods(
@@ -83,14 +90,24 @@ def add_streaming_methods(
     # Convert AST back to code
     final_code = ast.unparse(tree)
 
-    # Format with Black if available
-    if HAS_BLACK:
+    # Format with Ruff if available
+    if HAS_RUFF:
         try:
-            final_code = black.format_str(final_code, mode=black.FileMode())
+            result = subprocess.run(
+                ["ruff", "format", "-"],  # nosec B607
+                input=final_code,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            if result.returncode == 0:
+                final_code = result.stdout
+            else:
+                print(f"    ⚠ Ruff formatting failed: {result.stderr}")
         except Exception as e:
-            print(f"    ⚠ Black formatting failed, using unformatted code: {e}")
+            print(f"    ⚠ Ruff formatting failed, using unformatted code: {e}")
     else:
-        print("    ℹ Black not available, skipping formatting")
+        print("    ℹ Ruff not available, skipping formatting")
 
     # Write formatted code
     api_file.write_text(final_code)

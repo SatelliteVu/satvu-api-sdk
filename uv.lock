@@ -1026,7 +1026,6 @@ version = "0.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "pydantic" },
-    { name = "ruff" },
 ]
 
 [package.optional-dependencies]
@@ -1063,7 +1062,6 @@ requires-dist = [
     { name = "httpx", marker = "extra == 'http-httpx'", specifier = ">=0.28.1" },
     { name = "pydantic", specifier = ">=2.11.7" },
     { name = "requests", marker = "extra == 'http-requests'", specifier = ">=2.32.0" },
-    { name = "ruff", specifier = ">=0.14.3" },
     { name = "urllib3", marker = "extra == 'http-urllib3'", specifier = ">=2.0.0" },
 ]
 provides-extras = ["standard", "http-urllib3", "http-requests", "http-httpx"]

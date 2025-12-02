@@ -6,9 +6,13 @@ readme = "README.md"
 authors = [
     { name = "Christian Wygoda", email = "christian.wygoda@satellitevu.com" },
     { name = "James Harrison", email = "james.harrison@satellitevu.com" },
+    { name = "Zhelini Raveendran", email = "zhelini.raveendran@satellitevu.com" },
 ]
 requires-python = ">=3.10"
-dependencies = ["pydantic>=2.11.7"]
+dependencies = [
+    "pydantic>=2.11.7",
+    "ruff>=0.14.3",
+]
 
 [project.optional-dependencies]
 standard = ["appdirs>=1.4.4"]
@@ -76,10 +80,10 @@ ignore = [
 [tool.fawltydeps]
 ignore_unused = ["dagger-io", "ruff", "toml", "pytest-cov"]
 ignore_undeclared = [
-    "black",        # Optional dependency for code formatting
     "builder",
     "dagger",
     "hatchling",
+    "ruff",        # Optional dependency for code formatting
     "satvu_api_sdk", # Allow self-referencing imports in tests
     "toml",
 ]

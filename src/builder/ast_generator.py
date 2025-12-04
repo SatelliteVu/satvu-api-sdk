@@ -143,7 +143,11 @@ class ASTMethodBuilder:
             ]
         )
         kw_defaults.extend(
-            [ast.Constant(value=self.config.default_chunk_size), None, None]
+            [
+                ast.Constant(value=self.config.default_chunk_size),
+                ast.Constant(value=None),  # progress_callback default
+                ast.Constant(value=None),  # timeout default
+            ]
         )
 
         return ast.arguments(
@@ -455,7 +459,7 @@ def add_imports_to_ast(
     # Find where to insert imports (after existing imports)
     insert_idx = 0
     for i, node in enumerate(tree.body):
-        if isinstance(node, (ast.Import, ast.ImportFrom)):
+        if isinstance(node, ast.Import | ast.ImportFrom):
             insert_idx = i + 1
 
     # Check what imports already exist (including aliases)

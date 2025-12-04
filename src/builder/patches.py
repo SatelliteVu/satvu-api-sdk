@@ -4,9 +4,11 @@ Monkey-patches for openapi-python-client.
 
 import builtins
 import re
+from typing import Any, ClassVar
 
 import openapi_python_client
-from attr import evolve
+import openapi_python_client.parser.properties as props
+from attr import define, evolve
 from openapi_python_client import utils
 from openapi_python_client.config import Config
 from openapi_python_client.parser.errors import PropertyError
@@ -20,6 +22,8 @@ from openapi_python_client.parser.properties import (
 from openapi_python_client.parser.properties.model_property import (
     _process_property_data,
 )
+from openapi_python_client.parser.properties.protocol import PropertyProtocol, Value
+from openapi_python_client.schema import DataType as OAIDataType
 from openapi_python_client.schema import Schema as OAISchema
 
 # ============================================================================
@@ -354,7 +358,138 @@ openapi_python_client.parser.properties.protocol.PropertyProtocol.to_string = (
 
 
 # ============================================================================
-# PATCH 18: ModelProperty.build - Handle duplicate model names
+# PATCH 18: Free-form object schemas → DictProperty instead of ModelProperty
+# ============================================================================
+# OpenAPI pattern: anyOf: [{type: object, additionalProperties: true}, {type: null}]
+# This should generate: dict | None
+# But openapi-python-client creates an empty model class (e.g., LinkBodyType0)
+#
+# This patch intercepts property_from_data() to detect free-form object schemas
+# (type: object, additionalProperties: true, no explicit properties) and returns
+# a custom DictProperty instead of ModelProperty.
+
+
+@define
+class DictProperty(PropertyProtocol):
+    """A property that represents a free-form dictionary (dict)."""
+
+    name: str
+    required: bool
+    default: Value | None
+    python_name: utils.PythonIdentifier
+    description: str | None
+    example: str | None
+    _type_string: ClassVar[str] = "dict"
+    _json_type_string: ClassVar[str] = "dict"
+
+    @classmethod
+    def build(
+        cls,
+        name: str,
+        required: bool,
+        default: Any,
+        python_name: utils.PythonIdentifier,
+        description: str | None,
+        example: str | None,
+    ) -> "DictProperty":
+        return cls(
+            name=name,
+            required=required,
+            default=cls.convert_value(default),
+            python_name=python_name,
+            description=description,
+            example=example,
+        )
+
+    @classmethod
+    def convert_value(cls, value: Any) -> Value | None:
+        if value is None:
+            return None
+        return Value(python_code=repr(value), raw_value=value)
+
+
+# Store original function
+_original_property_from_data = props.property_from_data
+
+
+def _is_free_form_object(data: OAISchema) -> bool:
+    """
+    Check if schema is a free-form object (should be dict).
+
+    A free-form object has:
+    - type: object
+    - additionalProperties: true (or unset, which defaults to true)
+    - No explicit properties defined
+    """
+    if not isinstance(data, OAISchema):
+        return False
+
+    # Must be type: object
+    if data.type != OAIDataType.OBJECT:
+        return False
+
+    # Must have no explicit properties
+    if data.properties:
+        return False
+
+    # additionalProperties must be True or a schema (not False)
+    # When additionalProperties is True or a schema, it's a free-form dict
+    # The OAISchema.additionalProperties can be True, False, or a Schema
+    return data.additionalProperties is not False
+
+
+def patched_property_from_data(
+    name: str,
+    required: bool,
+    data,
+    schemas: Schemas,
+    parent_name: str,
+    config: Config,
+    process_properties: bool = True,
+    roots=None,
+):
+    """
+    Patched property_from_data that handles free-form objects as DictProperty.
+
+    This prevents openapi-python-client from generating empty model classes
+    for schemas like {type: object, additionalProperties: true}.
+    """
+    # Check if this is a free-form object schema
+    if isinstance(data, OAISchema) and _is_free_form_object(data):
+        return (
+            DictProperty.build(
+                name=name,
+                required=required,
+                default=data.default,
+                python_name=utils.PythonIdentifier(
+                    value=name, prefix=config.field_prefix
+                ),
+                description=data.description,
+                example=data.example,
+            ),
+            schemas,
+        )
+
+    # Otherwise, use the original function
+    return _original_property_from_data(
+        name=name,
+        required=required,
+        data=data,
+        schemas=schemas,
+        parent_name=parent_name,
+        config=config,
+        process_properties=process_properties,
+        roots=roots,
+    )
+
+
+# Apply the patch
+props.property_from_data = patched_property_from_data
+openapi_python_client.parser.properties.property_from_data = patched_property_from_data
+
+
+# ============================================================================
+# PATCH 19: ModelProperty.build - Handle duplicate model names
 # ============================================================================
 # When OpenAPI specs have duplicate schema names (common with composed schemas),
 # add numeric suffixes to make them unique: Model, Model1, Model2, etc.
@@ -465,7 +600,7 @@ openapi_python_client.parser.properties.model_property.ModelProperty.build = (
 # ============================================================================
 # PATCHES SUMMARY
 # ============================================================================
-print("✅ Applied 18 minimal patches to openapi-python-client")
+print("✅ Applied 19 patches to openapi-python-client")
 print("   📦 Type System (15 patches):")
 print(
     "      • ListProperty: 3 patches (get_type_string, get_base_type_string, get_base_json_type_string)"
@@ -477,7 +612,8 @@ print("      • ConstProperty: 2 patches (Literal type handling)")
 print("      • UnionProperty: 6 patches (quoted forward references, Union[...] syntax)")
 print("      • ModelProperty: 1 patch (get_type_string with quoted parameter)")
 print("      • EnumProperty: 1 patch (always quote enum names)")
-print("   🏗️  Model Building (1 patch):")
+print("   🏗️  Model Building (2 patches):")
+print("      • property_from_data: Free-form objects → DictProperty (not empty models)")
 print("      • ModelProperty.build: Handle duplicate model names with numeric suffixes")
 print("   🔧 Utilities (2 patches):")
 print("      • RESERVED_WORDS: Allow 'id' as field name")

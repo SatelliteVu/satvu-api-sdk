@@ -19,7 +19,7 @@ from os import getenv
 from satvu_api_sdk import SatVuSDK
 from satvu_api_sdk.services.reseller.models import (
     CompanyAddress,
-    CompanyAddressCountryCode,
+    CountryCode,
     CreateUser,
     SearchCompanies,
     SearchUsers,
@@ -43,7 +43,7 @@ print("\nNote: This API requires reseller permissions.")
 
 print("\n1. Creating end users...")
 company_address = CompanyAddress(
-    country_code=CompanyAddressCountryCode.GB,
+    country_code=CountryCode.GB,
     postcode="EX4 6DQ",
     street="Example Street",
 )

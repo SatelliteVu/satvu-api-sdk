@@ -37,7 +37,7 @@ print("Wallet Service Examples")
 print("=" * 80)
 
 print("\n1. Getting credit balance for contract...")
-credit_balance = sdk.wallet.credit__get(contract_id=contract_id)
+credit_balance = sdk.wallet.get_credit_balance(contract_id=contract_id)
 print("   ✓ Credit balance retrieved")
 print(f"   Contract ID: {contract_id}")
 print(f"   Balance: {credit_balance.balance}")

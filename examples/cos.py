@@ -69,7 +69,7 @@ order_payload = OrderSubmissionPayload(
     name="Example COS Order - SDK",
 )
 
-order = sdk.cos.submit_order__post(
+order = sdk.cos.submit_order(
     contract_id=contract_id,
     body=order_payload,
 )
@@ -79,7 +79,7 @@ print(f"   Order name: {order.name}")
 print(f"   Items: {len(order.features)}")
 
 print("\n3. Retrieving order details...")
-order_details = sdk.cos.order_details__get(
+order_details = sdk.cos.get_order(
     contract_id=contract_id,
     order_id=order.id,
 )
@@ -88,7 +88,7 @@ print(f"   Order ID: {order_details.id}")
 print(f"   Name: {order_details.name}")
 
 print("\n4. Editing order...")
-updated_order = sdk.cos.edit_order__patch(
+updated_order = sdk.cos.edit_order(
     contract_id=contract_id,
     order_id=order.id,
     body=OrderEditPayload(name="Updated COS Order Name - sdk"),
@@ -104,7 +104,7 @@ print("\n5. Query orders with GET pagination iterator...")
 print("   Fetching up to 2 pages with 10 orders each...")
 total_orders = 0
 for page_num, page in enumerate(
-    sdk.cos.query_orders__get_iter(
+    sdk.cos.query_orders_iter(
         contract_id=contract_id,
         limit=10,
         max_pages=2,
@@ -127,7 +127,7 @@ search_body = SearchRequest(
 print("   Searching orders with pagination (up to 2 pages)...")
 total_searched = 0
 for page_num, page in enumerate(
-    sdk.cos.search_orders__post_iter(
+    sdk.cos.search_orders_iter(
         contract_id=contract_id,
         body=search_body,
         max_pages=2,
@@ -145,7 +145,7 @@ print("\n7. Getting download URLs for order items...")
 if order_details.features:
     first_feature = order_details.features[0]
     try:
-        download_url = sdk.cos.download_item__get(
+        download_url = sdk.cos.download_order_item(
             contract_id=contract_id,
             order_id=order.id,
             item_id=first_feature.id,
@@ -177,7 +177,7 @@ if order_details.features:
         else:
             print(f"   Downloaded: {bytes_downloaded:,} bytes")
 
-    result = sdk.cos.download_item_to_file(
+    result = sdk.cos.download_order_item_to_file(
         contract_id=contract_id,
         order_id=order.id,
         item_id=first_feature.id,

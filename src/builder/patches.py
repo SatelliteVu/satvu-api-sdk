@@ -19,10 +19,13 @@ from openapi_python_client.parser.properties import (
     ReferencePath,
     Schemas,
 )
+from openapi_python_client.parser.properties.enum_property import EnumProperty
 from openapi_python_client.parser.properties.model_property import (
     _process_property_data,
 )
+from openapi_python_client.parser.properties.none import NoneProperty
 from openapi_python_client.parser.properties.protocol import PropertyProtocol, Value
+from openapi_python_client.parser.properties.union import UnionProperty
 from openapi_python_client.schema import DataType as OAIDataType
 from openapi_python_client.schema import Schema as OAISchema
 
@@ -598,9 +601,63 @@ openapi_python_client.parser.properties.model_property.ModelProperty.build = (
 
 
 # ============================================================================
+# PATCH 20: EnumProperty.build - Use title directly without parent prefix
+# ============================================================================
+# When an enum schema has an explicit title, use it as the class name directly
+# without prepending the parent context. This allows OpenAPI spec authors to
+# control enum naming by adding title fields.
+#
+# Example: title: "PrimaryFormat" → class PrimaryFormat (not DownloadOrderPrimaryFormat)
+
+_original_enum_build = EnumProperty.build
+
+
+@classmethod  # type: ignore[misc]
+def enum_build_with_title_support(
+    cls,
+    *,
+    data: OAISchema,
+    name: str,
+    required: bool,
+    schemas: Schemas,
+    parent_name: str,
+    config: Config,
+) -> tuple[EnumProperty | NoneProperty | UnionProperty | PropertyError, Schemas]:
+    """
+    Patched EnumProperty.build that uses title directly without parent prefix.
+
+    If the schema has a title, use it as the enum name without prepending
+    the parent context. Otherwise, fall back to original behavior.
+    """
+    # If there's a title, temporarily clear parent_name so it won't be prefixed
+    if data.title:
+        return _original_enum_build(
+            data=data,
+            name=name,
+            required=required,
+            schemas=schemas,
+            parent_name="",  # Empty parent = no prefix
+            config=config,
+        )
+
+    # Otherwise, use original behavior
+    return _original_enum_build(
+        data=data,
+        name=name,
+        required=required,
+        schemas=schemas,
+        parent_name=parent_name,
+        config=config,
+    )
+
+
+EnumProperty.build = enum_build_with_title_support
+
+
+# ============================================================================
 # PATCHES SUMMARY
 # ============================================================================
-print("✅ Applied 19 patches to openapi-python-client")
+print("✅ Applied 20 patches to openapi-python-client")
 print("   📦 Type System (15 patches):")
 print(
     "      • ListProperty: 3 patches (get_type_string, get_base_type_string, get_base_json_type_string)"
@@ -612,9 +669,10 @@ print("      • ConstProperty: 2 patches (Literal type handling)")
 print("      • UnionProperty: 6 patches (quoted forward references, Union[...] syntax)")
 print("      • ModelProperty: 1 patch (get_type_string with quoted parameter)")
 print("      • EnumProperty: 1 patch (always quote enum names)")
-print("   🏗️  Model Building (2 patches):")
+print("   🏗️  Model Building (3 patches):")
 print("      • property_from_data: Free-form objects → DictProperty (not empty models)")
 print("      • ModelProperty.build: Handle duplicate model names with numeric suffixes")
+print("      • EnumProperty.build: Use title directly without parent prefix")
 print("   🔧 Utilities (2 patches):")
 print("      • RESERVED_WORDS: Allow 'id' as field name")
 print("      • utils.sanitize: Replace colons in field names (geo:lat → geo_lat)")

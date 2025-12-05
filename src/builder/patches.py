@@ -8,6 +8,7 @@ from typing import Any, ClassVar
 
 import openapi_python_client
 import openapi_python_client.parser.properties as props
+import openapi_python_client.parser.properties.union as union_module
 from attr import define, evolve
 from openapi_python_client import utils
 from openapi_python_client.config import Config
@@ -655,9 +656,98 @@ EnumProperty.build = enum_build_with_title_support
 
 
 # ============================================================================
+# PATCH 21: UnionProperty.build - Propagate parent title to array enum items
+# ============================================================================
+# When a schema like this is encountered:
+#   anyOf: [{type: array, items: {enum: [...]}}, {type: null}]
+#   title: "Primary Formats"
+#
+# The title is on the parent (anyOf), not on the array or enum items inside.
+# This patch propagates the title from the anyOf schema down to array children
+# that contain enum items, so the enum gets a proper name (e.g., "PrimaryFormat"
+# instead of "DownloadOrderPrimaryFormatsType0Item").
+#
+# The title is singularized (e.g., "Primary Formats" → "PrimaryFormat") since
+# the enum represents individual items, not the collection.
+
+_original_union_build = union_module.UnionProperty.build
+
+
+def _singularize_title(title: str) -> str:
+    """
+    Convert a plural title to singular PascalCase.
+
+    "Primary Formats" → "PrimaryFormat"
+    "Collections" → "Collection"
+    """
+    # Simple singularization: remove trailing 's' if present (but not 'ss')
+    if title.endswith("s") and not title.endswith("ss"):
+        title = title[:-1]
+    # Convert to PascalCase without spaces
+    return "".join(word.capitalize() for word in title.split())
+
+
+@classmethod  # type: ignore[misc]
+def union_build_with_title_propagation(
+    cls,
+    *,
+    data: OAISchema,
+    name: str,
+    required: bool,
+    schemas: Schemas,
+    parent_name: str,
+    config: Config,
+) -> tuple:
+    """
+    Patched UnionProperty.build that propagates title to array enum items.
+
+    If the union schema has a title and contains an array with enum items,
+    propagate the title (singularized) to the enum items so they get proper names.
+    """
+    # Check if we should propagate title
+    if data.title and data.anyOf:
+        modified_any_of = []
+        for sub_schema in data.anyOf:
+            if (
+                isinstance(sub_schema, OAISchema)
+                and sub_schema.type == OAIDataType.ARRAY
+                and sub_schema.items is not None
+                and isinstance(sub_schema.items, OAISchema)
+                and sub_schema.items.enum is not None
+                and sub_schema.items.title is None
+            ):
+                # Propagate singularized title to the enum items
+                singular_title = _singularize_title(data.title)
+                modified_items = sub_schema.items.model_copy(
+                    update={"title": singular_title}
+                )
+                modified_sub_schema = sub_schema.model_copy(
+                    update={"items": modified_items}
+                )
+                modified_any_of.append(modified_sub_schema)
+            else:
+                modified_any_of.append(sub_schema)
+
+        # Create modified data with propagated titles
+        data = data.model_copy(update={"anyOf": modified_any_of})
+
+    return _original_union_build(
+        data=data,
+        name=name,
+        required=required,
+        schemas=schemas,
+        parent_name=parent_name,
+        config=config,
+    )
+
+
+union_module.UnionProperty.build = union_build_with_title_propagation
+
+
+# ============================================================================
 # PATCHES SUMMARY
 # ============================================================================
-print("✅ Applied 20 patches to openapi-python-client")
+print("✅ Applied 21 patches to openapi-python-client")
 print("   📦 Type System (15 patches):")
 print(
     "      • ListProperty: 3 patches (get_type_string, get_base_type_string, get_base_json_type_string)"
@@ -669,10 +759,11 @@ print("      • ConstProperty: 2 patches (Literal type handling)")
 print("      • UnionProperty: 6 patches (quoted forward references, Union[...] syntax)")
 print("      • ModelProperty: 1 patch (get_type_string with quoted parameter)")
 print("      • EnumProperty: 1 patch (always quote enum names)")
-print("   🏗️  Model Building (3 patches):")
+print("   🏗️  Model Building (4 patches):")
 print("      • property_from_data: Free-form objects → DictProperty (not empty models)")
 print("      • ModelProperty.build: Handle duplicate model names with numeric suffixes")
 print("      • EnumProperty.build: Use title directly without parent prefix")
+print("      • UnionProperty.build: Propagate parent title to array enum items")
 print("   🔧 Utilities (2 patches):")
 print("      • RESERVED_WORDS: Allow 'id' as field name")
 print("      • utils.sanitize: Replace colons in field names (geo:lat → geo_lat)")

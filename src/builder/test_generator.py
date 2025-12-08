@@ -1,72 +1,25 @@
+"""
+Test generator for SDK service classes.
+
+Generates property-based tests using hypothesis-jsonschema from OpenAPI specs.
+Tests validate both SDK methods and Pydantic model parsing.
+"""
+
 import subprocess
 from pathlib import Path
 from typing import Any
 
 from openapi_python_client import Project
+from openapi_python_client.parser.openapi import Endpoint
 from openapi_python_client.parser.responses import Response
 from openapi_python_client.schema.openapi_schema_pydantic import Reference
 
-
-UUID_PATTERN_CONSTRAINT = (
-    "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+from builder.schema_utils import (
+    clean_schema,
+    find_recursive_refs,
+    remove_excluded_refs,
+    remove_recursive_refs,
 )
-
-
-def uuid_pattern_constraint(result: dict[str, Any]):
-    """
-    Add pattern constraint for UUID fields in JSON schema.
-    hypothesis-jsonschema treats format as a hint, so it can generate invalid UUIDs.
-    Adding pattern ensures hypothesis generates valid UUIDs that pass Pydantic validation.
-
-    Args:
-        result: JSON schema dict to modify
-    """
-    if result.get("type") == "string" and result.get("format") == "uuid":
-        if "pattern" not in result:
-            # Standard UUID regex pattern (lowercase hex with hyphens)
-            result["pattern"] = UUID_PATTERN_CONSTRAINT
-
-
-def clean_schema(obj: Any) -> Any:
-    """
-    Clean JSON schema for hypothesis-jsonschema compatibility.
-
-    Args:
-        obj: JSON schema object (dict, list, or primitive)
-
-    Returns:
-        Cleaned JSON schema object
-    """
-    if isinstance(obj, dict):
-        result = {}
-        for key, value in obj.items():
-            # Skip empty composition arrays and default nullable
-            if key in ("allOf", "anyOf", "oneOf", "prefixItems") and value == []:
-                continue
-            if key == "nullable" and value is False:
-                continue
-
-            # Handle OpenAPI 3.0 exclusive min/max (incompatible with JSON Schema draft-07)
-            # In OpenAPI 3.0: exclusiveMinimum is a number
-            # In JSON Schema draft-07: exclusiveMinimum is boolean, requires minimum
-            if key in ("exclusiveMinimum", "exclusiveMaximum"):
-                # Skip these for now - hypothesis-jsonschema doesn't handle them well
-                continue
-
-            # Rewrite OpenAPI 3.0 style refs to JSON Schema style
-            if key == "$ref" and isinstance(value, str):
-                result[key] = value.replace("#/components/schemas/", "#/definitions/")
-            else:
-                result[key] = clean_schema(value)
-
-        # Add UUID pattern constraint after processing all fields
-        uuid_pattern_constraint(result)
-
-        return result
-    elif isinstance(obj, list):
-        return [clean_schema(item) for item in obj]
-    else:
-        return obj
 
 
 def extract_response_schema(response: Response) -> dict[str, Any] | None:
@@ -156,7 +109,8 @@ def extract_request_body_schema(endpoint) -> dict[str, Any] | None:
         return schema_obj.model_dump(mode="json", by_alias=True, exclude_none=True)
 
     print(
-        f"  [TESTS] Warning: No data attribute on {endpoint.name} body prop (type: {type(body.prop).__name__})"
+        f"  [TESTS] Warning: No data attribute on {endpoint.name} body prop "
+        f"(type: {type(body.prop).__name__})"
     )
     return None
 
@@ -212,133 +166,253 @@ def generate_tests(
         - api_test.py: Test class with test methods
         - test_schemas.py: Operations dict with helper functions
     """
-    # Extract components/schemas for $ref resolution from raw OpenAPI dict
-    components = {}
-    if "components" in openapi_dict and "schemas" in openapi_dict["components"]:
-        raw_schemas = openapi_dict["components"]["schemas"]
-        # Clean and rewrite refs in each schema
+    # Extract and clean components/schemas for $ref resolution
+    components = _prepare_components(openapi_dict)
+
+    # Find recursive schemas once for all endpoints
+    recursive_refs = find_recursive_refs(components)
+    if recursive_refs:
+        print(f"  [TESTS] Detected recursive schemas: {recursive_refs}")
+        # Clean recursive refs from the definitions themselves
+        # This is necessary because hypothesis-jsonschema will resolve $refs
+        # to definitions, and those definitions must also be cycle-free
         components = {
-            name: clean_schema(schema) for name, schema in raw_schemas.items()
+            name: remove_recursive_refs(schema, recursive_refs)
+            for name, schema in components.items()
         }
 
-    # Build operations dict: (path, method) -> {responses, requestBody, parameters}
-    operations = {}
-    endpoints_data = []  # Still needed for template
+    # Build operations dict and endpoint data for templates
+    operations, endpoints_data = _extract_operations(
+        project, components, recursive_refs
+    )
 
-    for collection in project.openapi.endpoint_collections_by_tag.values():
-        for endpoint in collection.endpoints:
-            key = (endpoint.path, endpoint.method.lower())
-
-            operation_data = {
-                "responses": {},
-                "parameters": {},
-            }
-
-            # Extract response schemas
-            response_info = {}
-            error_response_info = {}
-            has_204 = False
-            for response in endpoint.responses:
-                status_pattern = response.status_code.pattern
-
-                # Track 204 No Content responses
-                if status_pattern == "204":
-                    has_204 = True
-                    continue
-
-                # Determine if this is a success (2xx) or error (4xx/5xx) response
-                is_error_response = not status_pattern.startswith("2")
-
-                # Skip responses without a property (no schema)
-                if not response.prop:
-                    # For error responses without schema, create a minimal schema
-                    if is_error_response:
-                        minimal_schema = {"type": "object"}
-                        operation_data["responses"][status_pattern] = {
-                            "schema": minimal_schema,
-                            "is_error": True,
-                        }
-                        error_response_info[status_pattern] = {
-                            "status_code": int(status_pattern),
-                            "schema": minimal_schema,
-                            "has_schema": False,
-                            "description": response.data.description
-                            if hasattr(response.data, "description")
-                            else "",
-                        }
-                    continue
-
-                # Extract raw JSON schema for hypothesis
-                schema = extract_response_schema(response)
-
-                if schema:
-                    # Clean schema and rewrite refs for hypothesis-jsonschema
-                    schema = clean_schema(schema)
-                    # Attach definitions for $ref resolution
-                    schema["definitions"] = components
-
-                    operation_data["responses"][status_pattern] = {
-                        "schema": schema,
-                        "is_error": is_error_response,
-                    }
-
-                    if is_error_response:
-                        # Store error response info
-                        error_response_info[status_pattern] = {
-                            "status_code": int(status_pattern),
-                            "schema": schema,
-                            "has_schema": True,
-                            "description": response.data.description
-                            if hasattr(response.data, "description")
-                            else "",
-                        }
-                    else:
-                        # Store success response info for template (backwards compat)
-                        response_info[status_pattern] = {
-                            "status_code": int(status_pattern),
-                            "schema": schema,
-                            "type_string": response.prop.get_type_string(),
-                            "description": response.data.description
-                            if hasattr(response.data, "description")
-                            else "",
-                        }
-
-            # Extract request body schema
-            body_schema = extract_request_body_schema(endpoint)
-            if body_schema:
-                body_schema = clean_schema(body_schema)
-                # Attach definitions for $ref resolution
-                body_schema["definitions"] = components
-                operation_data["requestBody"] = {"schema": body_schema}
-
-            # Extract required query parameter schemas
-            for param in endpoint.query_parameters:
-                if param.required:
-                    param_schema = extract_query_param_schema(param)
-                    if param_schema:
-                        param_schema = clean_schema(param_schema)
-                        operation_data["parameters"][param.python_name] = {
-                            "schema": param_schema
-                        }
-
-            # Include endpoints with testable responses (success or error)
-            if response_info or error_response_info or has_204:
-                operations[key] = operation_data
-
-                endpoints_data.append(
-                    {
-                        "endpoint": endpoint,
-                        "responses": response_info,
-                        "error_responses": error_response_info,
-                        "has_204": has_204,
-                    }
-                )
-
-    # If no endpoints with schemas, skip generation
+    # Skip if no testable endpoints
     if not endpoints_data:
         return
 
-    # Prepare template context
+    # Render and write test files
+    _render_test_files(
+        api_name=api_name,
+        project=project,
+        components=components,
+        operations=operations,
+        endpoints_data=endpoints_data,
+        base_path=base_path,
+        output_dir=output_dir,
+    )
+
+    print(f"  [TESTS] Generated {len(endpoints_data)} test cases")
+
+
+def _prepare_components(openapi_dict: dict) -> dict[str, Any]:
+    """
+    Extract and clean component schemas from OpenAPI dict.
+
+    Args:
+        openapi_dict: Raw OpenAPI dict
+
+    Returns:
+        Dict of schema name → cleaned schema
+    """
+    if "components" not in openapi_dict or "schemas" not in openapi_dict["components"]:
+        return {}
+
+    raw_schemas = openapi_dict["components"]["schemas"]
+    return {
+        name: remove_excluded_refs(clean_schema(schema))
+        for name, schema in raw_schemas.items()
+    }
+
+
+def _prepare_schema_for_hypothesis(
+    schema: dict[str, Any],
+    components: dict[str, Any],
+    recursive_refs: set[str],
+) -> dict[str, Any]:
+    """
+    Prepare a schema for hypothesis-jsonschema.
+
+    Applies all necessary transformations:
+    1. Clean schema (2020-12 → draft-07, etc.)
+    2. Remove excluded refs
+    3. Remove recursive refs
+    4. Attach definitions for $ref resolution
+
+    Args:
+        schema: Raw schema to prepare
+        components: All component schemas (for definitions)
+        recursive_refs: Set of recursive schema names to remove
+
+    Returns:
+        Schema ready for hypothesis-jsonschema
+    """
+    cleaned = remove_excluded_refs(clean_schema(schema))
+    cleaned = remove_recursive_refs(cleaned, recursive_refs)
+    return {**cleaned, "definitions": components}
+
+
+def _extract_operations(
+    project: Project,
+    components: dict[str, Any],
+    recursive_refs: set[str],
+) -> tuple[dict, list]:
+    """
+    Extract operations dict and endpoint data from project.
+
+    Args:
+        project: openapi-python-client Project
+        components: Cleaned component schemas
+        recursive_refs: Set of recursive schema names
+
+    Returns:
+        Tuple of (operations dict, endpoints_data list)
+    """
+    operations = {}
+    endpoints_data = []
+
+    for collection in project.openapi.endpoint_collections_by_tag.values():
+        for endpoint in collection.endpoints:
+            operation_data, endpoint_info = _process_endpoint(
+                endpoint, components, recursive_refs
+            )
+
+            if endpoint_info:
+                key = (endpoint.path, endpoint.method.lower())
+                operations[key] = operation_data
+                endpoints_data.append(endpoint_info)
+
+    return operations, endpoints_data
+
+
+def _process_endpoint(
+    endpoint: Endpoint,
+    components: dict[str, Any],
+    recursive_refs: set[str],
+) -> tuple[dict, dict | None]:
+    """
+    Process a single endpoint, extracting schemas and metadata.
+
+    Args:
+        endpoint: Parsed Endpoint from openapi-python-client
+        components: Cleaned component schemas
+        recursive_refs: Set of recursive schema names
+
+    Returns:
+        Tuple of (operation_data dict, endpoint_info dict or None)
+    """
+    operation_data: dict[str, Any] = {
+        "responses": {},
+        "parameters": {},
+    }
+
+    response_info = {}
+    error_response_info = {}
+    has_204 = False
+
+    # Process responses
+    for response in endpoint.responses:
+        status = response.status_code.pattern
+
+        if status == "204":
+            has_204 = True
+            continue
+
+        is_error = not status.startswith("2")
+
+        if not response.prop:
+            # Error responses without schema get a minimal schema
+            if is_error:
+                minimal_schema = {"type": "object"}
+                operation_data["responses"][status] = {
+                    "schema": minimal_schema,
+                    "is_error": True,
+                }
+                error_response_info[status] = {
+                    "status_code": int(status),
+                    "schema": minimal_schema,
+                    "has_schema": False,
+                    "description": getattr(response.data, "description", ""),
+                }
+            continue
+
+        schema = extract_response_schema(response)
+        if not schema:
+            continue
+
+        prepared = _prepare_schema_for_hypothesis(schema, components, recursive_refs)
+        operation_data["responses"][status] = {
+            "schema": prepared,
+            "is_error": is_error,
+        }
+
+        if is_error:
+            error_response_info[status] = {
+                "status_code": int(status),
+                "schema": prepared,
+                "has_schema": True,
+                "description": getattr(response.data, "description", ""),
+            }
+        else:
+            response_info[status] = {
+                "status_code": int(status),
+                "schema": prepared,
+                "type_string": response.prop.get_type_string(),
+                "description": getattr(response.data, "description", ""),
+            }
+
+    # Process request body
+    body_schema = extract_request_body_schema(endpoint)
+    if body_schema:
+        prepared = _prepare_schema_for_hypothesis(
+            body_schema, components, recursive_refs
+        )
+        operation_data["requestBody"] = {"schema": prepared}
+
+    # Process required query parameters
+    for param in endpoint.query_parameters:
+        if param.required:
+            param_schema = extract_query_param_schema(param)
+            if param_schema:
+                operation_data["parameters"][param.python_name] = {
+                    "schema": clean_schema(param_schema)
+                }
+
+    # Return None for endpoint_info if nothing testable
+    if not (response_info or error_response_info or has_204):
+        return operation_data, None
+
+    endpoint_info = {
+        "endpoint": endpoint,
+        "responses": response_info,
+        "error_responses": error_response_info,
+        "has_204": has_204,
+    }
+
+    return operation_data, endpoint_info
+
+
+def _render_test_files(
+    api_name: str,
+    project: Project,
+    components: dict[str, Any],
+    operations: dict,
+    endpoints_data: list,
+    base_path: str,
+    output_dir: Path,
+) -> None:
+    """
+    Render and write test files from templates.
+
+    Args:
+        api_name: API identifier
+        project: Project with Jinja2 environment
+        components: Component schemas
+        operations: Operations dict
+        endpoints_data: Endpoint metadata list
+        base_path: API base path
+        output_dir: Output directory
+    """
+    # Get spec version
     spec_version = "unknown"
     if hasattr(project.openapi, "info") and project.openapi.info:
         spec_version = getattr(project.openapi.info, "version", "unknown")
@@ -349,27 +423,36 @@ def generate_tests(
         "endpoints": endpoints_data,
         "spec_version": spec_version,
         "components": components,
-        "operations": operations,  # NEW: operations dict
+        "operations": operations,
         "base_path": base_path,
     }
 
-    # Load templates from custom_template_path (src/builder/templates/)
+    # Load and render templates
     test_template = project.env.get_template("test_module.py.jinja")
     schemas_template = project.env.get_template("test_schemas.py.jinja")
 
-    # Render and write
     test_content = test_template.render(**context)
     schemas_content = schemas_template.render(**context)
 
+    # Write files
     test_file = output_dir / "api_test.py"
     schemas_file = output_dir / "test_schemas.py"
 
     test_file.write_text(test_content, encoding="utf-8")
     schemas_file.write_text(schemas_content, encoding="utf-8")
 
-    print(f"  [TESTS] Generated {len(endpoints_data)} test cases")
+    # Clean up with ruff
+    _format_with_ruff(test_file, schemas_file)
 
-    # Clean up generated test files with ruff
+
+def _format_with_ruff(test_file: Path, schemas_file: Path) -> None:
+    """
+    Format generated files with ruff.
+
+    Args:
+        test_file: Path to test file
+        schemas_file: Path to schemas file
+    """
     # First apply autofixes (remove unused imports, etc.)
     subprocess.run(  # nosec B607
         ["ruff", "check", "--fix", str(test_file), str(schemas_file)],

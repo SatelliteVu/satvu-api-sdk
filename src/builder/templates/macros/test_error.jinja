@@ -4,7 +4,6 @@
 {#- Error Response Test with schema (property-based) -#}
 {%- macro error_test_with_schema(endpoint, status_code, exception_type, api_name) %}
 
-    @pook.on
     @settings(
         max_examples=10,
         deadline=None,
@@ -25,6 +24,10 @@
         """
         # Generate path parameters
 {{ generate_path(endpoint) }}
+
+        # Reset and activate pook for each hypothesis iteration
+        pook.reset()
+        pook.on()
 
         # Mock the HTTP error response
         pook.{{ endpoint.method }}(url).reply({{ status_code }}).json(response_data).header(

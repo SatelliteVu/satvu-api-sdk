@@ -3,7 +3,6 @@
 
 {%- macro success_test(endpoint, status_code, response_info, api_name) %}
 
-    @pook.on
     @settings(
         max_examples=10,
         deadline=None,
@@ -22,6 +21,10 @@
         """
         # Generate path parameters
 {{ generate_path(endpoint) }}
+
+        # Reset and activate pook for each hypothesis iteration
+        pook.reset()
+        pook.on()
 
         # Mock the HTTP response
         pook.{{ endpoint.method }}(url).reply({{ status_code }}).json(response_data).header(

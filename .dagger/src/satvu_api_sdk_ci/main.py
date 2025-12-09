@@ -142,8 +142,27 @@ class SatvuApiSdkCi:
             str, dagger.Doc("Python version to test against")
         ] = DEFAULT_PYTHON_VERSION,
         add_opts: str = "",
+        with_coverage: Annotated[
+            bool, dagger.Doc("Enable coverage reporting (disable for faster runs)")
+        ] = True,
     ) -> dagger.Directory:
         """Runs test suite for a specific Python version"""
+
+        pytest_args = [
+            "pytest",
+            "--junitxml=/tmp/pytest.xml",
+            "-n=auto",
+            "-v",
+        ]
+
+        # Only add coverage args when requested
+        if with_coverage:
+            pytest_args.extend(
+                [
+                    "--cov-report=term-missing:skip-covered",
+                    "--cov=src",
+                ]
+            )
 
         run = (
             await self.build_container(
@@ -154,14 +173,7 @@ class SatvuApiSdkCi:
             .with_env_variable("PYTEST_ADDOPTS", add_opts)
             .with_exec(["/bin/uv", "build"])
             .with_exec(
-                [
-                    "pytest",
-                    "--junitxml=/tmp/pytest.xml",
-                    "--cov-report=term-missing:skip-covered",
-                    "--cov=src",
-                    "-n=auto",
-                    "-v",
-                ],
+                pytest_args,
                 redirect_stdout="/tmp/pytest-coverage.txt",  # nosec: B108
             )
         )

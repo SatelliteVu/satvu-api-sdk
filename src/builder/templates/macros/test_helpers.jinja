@@ -45,7 +45,11 @@
             {{ param.python_name }}={{ param.python_name }},
 {% endfor %}
 {% if endpoint.bodies %}
+{%- if endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[") %}
+            items=body,
+{% else %}
             body=body,
+{% endif %}
 {% endif %}
 {% for param in endpoint.query_parameters %}
 {% if param.required %}

@@ -124,11 +124,72 @@ ignore_undeclared = [
 satvu-api-sdk = ["satvu_api_sdk"]
 
 [tool.commitizen]
-name = "cz_conventional_commits"
-tag_format = "$version"
-version_scheme = "pep440"
-version_provider = "uv"
-update_changelog_on_bump = true
+name = "cz_customize"
+
+[tool.commitizen.customize]
+message_template = "{{change_type}}({{scope}}): {{subject}}{% if body %}\n\n{{body}}{% endif %}{% if breaking %}\n\nBREAKING CHANGE: {{breaking}}{% endif %}"
+example = "feat(catalog): add thermal_anomaly collection support"
+schema = "<type>(<scope>): <subject>"
+schema_pattern = "^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)\\((core|auth|http|catalog|cos|id|otm|policy|reseller|wallet|builder|deps|docs|test|misc)\\): .{1,50}$"
+commit_parser = "^(?P<change_type>feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)\\((?P<scope>core|auth|http|catalog|cos|id|otm|policy|reseller|wallet|builder|deps|docs|test|misc)\\): (?P<message>.*)$"
+bump_pattern = "^(feat|fix|refactor|perf)"
+bump_map = {"feat" = "MINOR", "fix" = "PATCH", "refactor" = "PATCH", "perf" = "PATCH"}
+info = "Commits must follow: <type>(<scope>): <subject>"
+
+[[tool.commitizen.customize.questions]]
+type = "list"
+name = "change_type"
+message = "Select the type of change:"
+choices = [
+    {value = "feat", name = "feat:     A new feature"},
+    {value = "fix", name = "fix:      A bug fix"},
+    {value = "docs", name = "docs:     Documentation only"},
+    {value = "style", name = "style:    Code style (formatting, etc)"},
+    {value = "refactor", name = "refactor: Code change that neither fixes a bug nor adds a feature"},
+    {value = "perf", name = "perf:     Performance improvement"},
+    {value = "test", name = "test:     Adding or updating tests"},
+    {value = "build", name = "build:    Build system or dependencies"},
+    {value = "ci", name = "ci:       CI/CD configuration"},
+    {value = "chore", name = "chore:    Other changes (maintenance, tooling)"},
+    {value = "revert", name = "revert:   Revert a previous commit"},
+]
+
+[[tool.commitizen.customize.questions]]
+type = "list"
+name = "scope"
+message = "Select the scope of this change:"
+choices = [
+    {value = "core", name = "core:     SDK core (SDKClient, base functionality)"},
+    {value = "auth", name = "auth:     Authentication (AuthService, tokens)"},
+    {value = "http", name = "http:     HTTP adapters (httpx, requests, urllib3, stdlib)"},
+    {value = "catalog", name = "catalog:  Catalog API service"},
+    {value = "cos", name = "cos:      COS API service"},
+    {value = "id", name = "id:       ID API service"},
+    {value = "otm", name = "otm:      OTM API service"},
+    {value = "policy", name = "policy:   Policy API service"},
+    {value = "reseller", name = "reseller: Reseller API service"},
+    {value = "wallet", name = "wallet:   Wallet API service"},
+    {value = "builder", name = "builder:  SDK code generator"},
+    {value = "deps", name = "deps:     Dependencies"},
+    {value = "docs", name = "docs:     Documentation"},
+    {value = "test", name = "test:     Test infrastructure"},
+    {value = "misc", name = "misc:     Miscellaneous changes"},
+]
+
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "subject"
+message = "Write a short description (max 50 chars):"
+
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "body"
+message = "Longer description (optional, press enter to skip):"
+
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "breaking"
+message = "Breaking change description (optional, press enter to skip):"
 
 [tool.coverage.report]
 show_missing = true

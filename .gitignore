@@ -16,4 +16,5 @@ pytest.xml
 tasks-*.md
 wheels/
 .claude/
+.dagger/src/dagger_gen.py
 .hypothesis

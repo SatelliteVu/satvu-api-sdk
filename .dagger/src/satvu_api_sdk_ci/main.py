@@ -187,6 +187,81 @@ class SatvuApiSdkCi:
         )
 
     @function
+    async def test_api(
+        self,
+        source: SOURCE,
+        api: Annotated[
+            str,
+            dagger.Doc(
+                "API service to test: catalog, cos, id, otm, policy, reseller, wallet"
+            ),
+        ],
+        python_version: Annotated[
+            str, dagger.Doc("Python version to test against")
+        ] = DEFAULT_PYTHON_VERSION,
+    ) -> dagger.Directory:
+        """Runs core tests plus tests for a specific API service.
+
+        This is optimized for workflow_call triggers where only one API changed.
+        Core tests (auth, http, streaming, parsing) always run to verify the
+        SDK foundation. API-specific tests only run for the specified service.
+
+        For running all tests, use the `test` function instead.
+        """
+        # Valid API names
+        valid_apis = {"catalog", "cos", "id", "otm", "policy", "reseller", "wallet"}
+
+        if not api:
+            raise ValueError(
+                "API parameter is required. Use `test` function for all tests."
+            )
+
+        if api not in valid_apis:
+            raise ValueError(
+                f"Invalid API '{api}'. Must be one of: {', '.join(sorted(valid_apis))}"
+            )
+
+        # Core test paths (always run)
+        core_test_paths = [
+            "src/satvu_api_sdk/auth_test.py",
+            "src/satvu_api_sdk/core_test.py",
+            "src/satvu_api_sdk/core_streaming_test.py",
+            "src/satvu_api_sdk/core_retry_test.py",
+            "src/satvu_api_sdk/http/",
+            "src/satvu_api_sdk/shared/",
+        ]
+
+        # Core tests + specific API tests
+        test_paths = core_test_paths + [f"src/satvu_api_sdk/services/{api}/"]
+
+        pytest_args = [
+            "pytest",
+            "--junitxml=/tmp/pytest.xml",
+            "-n=auto",
+            "-v",
+        ] + test_paths
+
+        run = (
+            await self.build_container(
+                source, python_version=python_version, install_deps=True
+            )
+            .with_exec(["python", "--version"])
+            .with_exec(["/bin/uv", "build"])
+            .with_exec(
+                pytest_args,
+                redirect_stdout="/tmp/pytest-coverage.txt",  # nosec: B108
+            )
+        )
+
+        return dag.directory().with_files(
+            ".",
+            sources=[
+                run.file("/tmp/pytest.xml"),  # nosec: B108
+                run.file("/tmp/pytest-coverage.txt"),  # nosec: B108
+            ],
+        )
+
+    @function
     async def test_all(self, source: SOURCE) -> str:
         """Runs test suite across all supported Python versions in parallel"""
         import asyncio

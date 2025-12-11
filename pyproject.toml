@@ -31,10 +31,12 @@ build-backend = "hatchling.build"
 [dependency-groups]
 dev = [
     "attr>=0.3.2",
+    "fawltydeps>=0.20.0",
     "freezegun>=1.5.5",
     "httpx>=0.28.1",
     "openapi-python-client>=0.27.0",
     "pook>=2.1.0",
+    "pyright>=1.1.407",
     "pytest>=8.3.4",
     "pytest-cov>=7.0.0",
     "requests>=2.32.0",
@@ -76,15 +78,35 @@ ignore = [
     "UP007" # x | y syntax
 ]
 
+[tool.pyright]
+exclude = [
+    ".dagger/",
+    ".venv/",
+    "**/__pycache__/",
+    "**/node_modules/",
+    "src/builder/patches.py",
+]
+pythonVersion = "3.10"
+reportMissingImports = true
+reportMissingTypeStubs = false
+typeCheckingMode = "basic"
+venv = ".venv"
+venvPath = "."
+
 [tool.fawltydeps]
-ignore_unused = ["dagger-io", "ruff", "toml", "pytest-cov"]
+code = [
+    "src/"
+]
+ignore_unused = [
+    "fawltydeps",
+    "pyright",
+    "pytest-cov",
+    "ruff",
+]
 ignore_undeclared = [
     "builder",
-    "dagger",
     "hatchling",
-    "ruff",        # Optional dependency for code formatting
     "satvu_api_sdk", # Allow self-referencing imports in tests
-    "toml",
 ]
 
 [tool.fawltydeps.custom_mapping]

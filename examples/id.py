@@ -24,6 +24,7 @@ from satvu_api_sdk.services.id.models import (
     NotificationConfig,
     NotificationUpdate,
     UserSettings,
+    WebhookEvent,
 )
 
 CLIENT_ID = getenv("SATVU_CLIENT_ID")
@@ -70,7 +71,8 @@ updated_user = sdk.id.edit_user_settings(
     )
 )
 print("   ✓ User settings updated")
-print(f"   Notifications: {updated_user.user_metadata.notifications}")
+if updated_user.user_metadata:
+    print(f"   Notifications: {updated_user.user_metadata.notifications}")
 
 print("\n" + "=" * 80)
 print("Webhook Management Examples")
@@ -85,11 +87,11 @@ if len(events) > 5:
     print(f"      ... and {len(events) - 5} more")
 
 print("\n5. Creating a webhook...")
-# Create a test webhook
+# Create a test webhook using the first available event type
 webhook_payload = CoreWebhook(
     url="https://example.com/webhook",
     name="Example Webhook",
-    event_types=[events[0].topic],
+    event_types=[WebhookEvent(events[0].topic)],
 )
 
 webhook = sdk.id.create_webhook(body=webhook_payload)
@@ -114,12 +116,11 @@ updated_webhook = sdk.id.edit_webhook(
 )
 print("   ✓ Webhook updated")
 print(f"   New name: {updated_webhook.name}")
-print(f"   New description: {updated_webhook.description}")
 
 print("\n8. Testing webhook...")
 test_result = sdk.id.test_webhook(id=webhook.id)
 print("   ✓ Test webhook sent")
-if test_result.success:
+if test_result.webhook_result.success:
     print("   ✓ Webhook test succeeded")
     print(f"   Status Code: {test_result.webhook_result.status_code}")
 else:

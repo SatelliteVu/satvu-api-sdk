@@ -23,6 +23,7 @@ from pprint import pprint
 from uuid import UUID
 
 from satvu_api_sdk import SatVuSDK
+from satvu_api_sdk.result import is_err, is_ok
 from satvu_api_sdk.services.otm.models import (
     AssuredFeasibilityFields,
     AssuredOrderRequest,
@@ -242,12 +243,12 @@ result = sdk.otm.download_tasking_order_to_file(
 )
 
 # Handle Result type (Railway-Oriented Programming)
-if result.is_ok():
+if is_ok(result):
     saved_path = result.unwrap()
     print(f"   ✓ Downloaded to: {saved_path}")
     print("   Note: Order must be fulfilled before download is available")
-else:
-    error = result.unwrap_or(None)
+elif is_err(result):
+    error = result.error()
     print(f"   ✗ Download failed: {error}")
     print("   Note: Order must be fulfilled before download is available")
 

@@ -71,7 +71,7 @@ print("=" * 80)
 search_body = PostSearchInput(
     collections=["visual"],  # Filter by collection
     limit=10,
-    datetime_="2024-01-01T00:00:00Z/..",  # From 2024 onwards
+    datetime="2024-01-01T00:00:00Z/..",  # From 2024 onwards
 )
 result = sdk.catalog.post_search(body=search_body, contract_id=contract_id)
 print(f"Found {len(result.features)} features matching filters")
@@ -84,7 +84,7 @@ print("Searching with filters and pagination...")
 search_body = PostSearchInput(
     collections=["visual"],
     limit=5,
-    datetime_="2024-01-01T00:00:00Z/..",
+    datetime="2024-01-01T00:00:00Z/..",
 )
 total_features = 0
 for page_num, page in enumerate(

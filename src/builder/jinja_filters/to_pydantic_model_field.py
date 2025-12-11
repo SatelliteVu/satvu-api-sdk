@@ -1,7 +1,5 @@
-from openapi_python_client.parser.properties import (
-    ConstProperty,
-    ModelProperty,
-)
+from openapi_python_client.parser.properties.const import ConstProperty
+from openapi_python_client.parser.properties.model_property import ModelProperty
 from openapi_python_client.parser.properties.protocol import PropertyProtocol
 
 

@@ -125,6 +125,7 @@ jobs:
         if: inputs.api != ''
         env:
           SATVU_TRIGGERED_API: ${{ inputs.api }}
+          SATVU_SPEC_ENV: ${{ inputs.qa == true && 'qa' || 'prod' }}
         run: |
           dagger call test-api --api=${{ inputs.api }}
 
@@ -133,6 +134,7 @@ jobs:
         if: inputs.api == ''
         env:
           SATVU_TRIGGERED_API: none
+          SATVU_SPEC_ENV: ${{ inputs.qa == true && 'qa' || 'prod' }}
         run: |
           dagger call test
 
@@ -242,6 +244,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SATVU_TRIGGERED_API: ${{ inputs.api || 'none' }}
+          SATVU_SPEC_ENV: prod
         run: semantic-release
 
       # Publish to PyPI using trusted publishing (OIDC)
@@ -254,6 +257,7 @@ jobs:
         if: inputs.qa == true
         env:
           SATVU_TRIGGERED_API: ${{ inputs.api || 'none' }}
+          SATVU_SPEC_ENV: qa
         run: |
           dagger call build-release --is-qa=true export --path=./dist --wipe
 

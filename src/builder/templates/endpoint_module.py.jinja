@@ -54,7 +54,11 @@ params = {
 {%- if endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[") %}
 json_body = [item.model_dump(mode="json") for item in items]
 {%- elif endpoint.bodies | length %}
+{%- if not endpoint.bodies[0].prop.required %}
+json_body = body.model_dump(by_alias=True, mode="json") if body else None
+{%- else %}
 json_body = body.model_dump(by_alias=True, mode="json")
+{%- endif %}
 {% endif %}
 {%- endmacro %}
 
@@ -281,7 +285,11 @@ class {{ api_id | title }}Service(SDKClient):
             response = self.{{ endpoint.name }}(
                 items=items,
             {% else %}
+            {% if not endpoint.bodies[0].prop.required %}
+            body_with_token = body.model_copy(update={"token": token}) if body else None
+            {% else %}
             body_with_token = body.model_copy(update={"token": token})
+            {% endif %}
             response = self.{{ endpoint.name }}(
                 body=body_with_token,
             {% endif %}

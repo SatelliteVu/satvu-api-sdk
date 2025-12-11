@@ -13,7 +13,7 @@ from urllib.parse import urljoin
 from pydantic import BaseModel, ValidationError
 
 try:
-    from appdirs import user_cache_dir
+    from appdirs import user_cache_dir  # type: ignore[import-not-found]
 except ImportError:
     user_cache_dir = None
 

@@ -10,6 +10,7 @@ from openapi_python_client.parser.bodies import Body
 from openapi_python_client.parser.errors import GeneratorError
 from openapi_python_client.parser.openapi import Endpoint, GeneratorData
 from openapi_python_client.parser.properties.list_property import ListProperty
+from openapi_python_client.parser.properties.model_property import ModelProperty
 from openapi_python_client.parser.properties.union import UnionProperty
 
 from builder.config import APIS
@@ -163,15 +164,15 @@ class EndpointTransformer:
             body = endpoint.bodies[0]
             body_prop = body.prop
 
-            # Check if body has required_properties or optional_properties
-            if hasattr(body_prop, "required_properties"):
+            # Check if body is a ModelProperty with required/optional properties
+            if isinstance(body_prop, ModelProperty):
                 has_token_in_body = any(
-                    p.name == "token" for p in body_prop.required_properties
+                    p.name == "token" for p in (body_prop.required_properties or [])
                 )
-            if not has_token_in_body and hasattr(body_prop, "optional_properties"):
-                has_token_in_body = any(
-                    p.name == "token" for p in body_prop.optional_properties
-                )
+                if not has_token_in_body:
+                    has_token_in_body = any(
+                        p.name == "token" for p in (body_prop.optional_properties or [])
+                    )
 
         if not has_token_param and not has_token_in_body:
             return None
@@ -188,15 +189,12 @@ class EndpointTransformer:
         response_prop = success_response.prop
 
         # Check 3: Response must be a ModelProperty with required_properties
-        if not hasattr(response_prop, "required_properties"):
+        if not isinstance(response_prop, ModelProperty):
             return None
 
         # Combine required and optional properties
-        all_properties = []
-        if hasattr(response_prop, "required_properties"):
-            all_properties.extend(response_prop.required_properties)
-        if hasattr(response_prop, "optional_properties"):
-            all_properties.extend(response_prop.optional_properties)
+        all_properties = list(response_prop.required_properties or [])
+        all_properties.extend(response_prop.optional_properties or [])
 
         # Check 4: Must have 'links' array field
         has_links = any(

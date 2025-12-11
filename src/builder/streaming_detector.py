@@ -158,16 +158,16 @@ class StreamingEndpointDetector:
 
         # Extract path parameters (used in URL format)
         path_params = [
-            (param.python_name, param.get_type_string())
+            (str(param.python_name), param.get_type_string())
             for param in endpoint.path_parameters
         ]
 
         # Extract query parameters (added to params dict)
         # Filter out 'redirect' - we handle this internally
-        query_params = []
+        query_params: list[tuple[str, str]] = []
         for param in endpoint.query_parameters:
             if param.python_name not in ["redirect"]:
-                query_params.append((param.python_name, param.get_type_string()))
+                query_params.append((str(param.python_name), param.get_type_string()))
 
         # Generate docstring
         docstring = (

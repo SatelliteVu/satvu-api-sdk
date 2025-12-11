@@ -25,8 +25,10 @@ from pathlib import Path
 from uuid import UUID
 
 from satvu_api_sdk import SatVuSDK
+from satvu_api_sdk.result import is_err, is_ok
 from satvu_api_sdk.services.cos.models import (
     OrderEditPayload,
+    OrderItemDownloadUrl,
     OrderSubmissionPayload,
     SearchRequest,
 )
@@ -146,14 +148,16 @@ print("\n7. Getting download URLs for order items...")
 if order_details.features:
     first_feature = order_details.features[0]
     try:
-        download_url = sdk.cos.download_order_item(
+        download_result = sdk.cos.download_order_item(
             contract_id=contract_id,
             order_id=order.id,
-            item_id=first_feature.id,
+            item_id=first_feature.properties.item_id,
             redirect=False,  # Get URL instead of downloading
         )
-        print(f"   ✓ Download URL retrieved for item: {first_feature.id}")
-        print(f"   URL expires: {download_url.expiry}")
+        # When redirect=False, returns OrderItemDownloadUrl
+        if isinstance(download_result, OrderItemDownloadUrl):
+            print(f"   ✓ Download URL retrieved for item: {first_feature.id}")
+            print(f"   URL TTL: {download_result.ttl} seconds")
     except Exception as e:
         print(f"   Note: Download may not be ready yet: {e}")
 
@@ -181,18 +185,18 @@ if order_details.features:
     result = sdk.cos.download_order_item_to_file(
         contract_id=contract_id,
         order_id=order.id,
-        item_id=first_feature.id,
+        item_id=first_feature.properties.item_id,
         output_path=output_path,
         chunk_size=65536,  # 64KB chunks for faster downloads
         progress_callback=show_progress,
     )
 
     # Handle Result type (Railway-Oriented Programming)
-    if result.is_ok():
+    if is_ok(result):
         saved_path = result.unwrap()
         print(f"   ✓ Downloaded to: {saved_path}")
-    else:
-        error = result.unwrap_or(None)
+    elif is_err(result):
+        error = result.error()
         print(f"   ✗ Download failed: {error}")
         print("   Note: Item may not be ready yet")
 
@@ -209,11 +213,11 @@ result = sdk.cos.download_order_to_file(
     progress_callback=show_progress,
 )
 
-if result.is_ok():
+if is_ok(result):
     saved_path = result.unwrap()
     print(f"   ✓ Downloaded to: {saved_path}")
-else:
-    error = result.unwrap_or(None)
+elif is_err(result):
+    error = result.error()
     print(f"   ✗ Download failed: {error}")
     print("   Note: Order may not be ready yet")
 

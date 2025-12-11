@@ -63,7 +63,7 @@ new_users = [
 ]
 
 try:
-    created_users = sdk.reseller.post_create_users(items=new_users)
+    created_users = sdk.reseller.create_users(items=new_users)
     print(f"   ✓ Created {len(created_users)} users")
     for user in created_users:
         print(f"      - User ID: {user.user_id} | Email: {user.user_email}")

@@ -63,7 +63,12 @@ def add_streaming_methods(
         {
             "pathlib": [("Path", None)],
             "satvu_api_sdk.http.errors": [("HttpError", None)],
-            "satvu_api_sdk.result": [("Result", None), ("Ok", "ResultOk")],
+            "satvu_api_sdk.result": [
+                ("Result", None),
+                ("Ok", "ResultOk"),
+                ("Err", "ResultErr"),
+                ("is_err", None),
+            ],
         },
     )
 

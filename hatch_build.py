@@ -3,8 +3,8 @@
 import sys
 from pathlib import Path
 
-from hatchling.builders.hooks.plugin.interface import (
-    BuildHookInterface,  # type: ignore[import-not-found]
+from hatchling.builders.hooks.plugin.interface import (  # type: ignore[import-not-found]
+    BuildHookInterface,
 )
 
 # Add src to sys.path so we can import builder

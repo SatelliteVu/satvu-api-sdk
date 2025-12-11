@@ -255,12 +255,13 @@ class SDKClient:
         Returns:
             Next pagination token or None if no more pages
         """
-        if not hasattr(response, "links"):
+        links = getattr(response, "links", None)
+        if not links:
             return None
 
         # Find link with rel="next"
         next_link = next(
-            (link for link in response.links if link.rel == "next"),
+            (link for link in links if link.rel == "next"),
             None,
         )
 

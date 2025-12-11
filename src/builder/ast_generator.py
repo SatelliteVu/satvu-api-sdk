@@ -227,21 +227,33 @@ class ASTMethodBuilder:
             )
         )
 
-        # 4. Error check: if result.is_err(): return result
+        # 4. Error check: if is_err(result): return ResultErr(result.error())
+        # We use the is_err() type guard function (not the method) so pyright can
+        # narrow the type and know result.error() is valid
         body.append(
             ast.If(
                 test=ast.Call(
-                    func=ast.Attribute(
-                        value=ast.Name(id="result", ctx=ast.Load()),
-                        attr="is_err",
-                        ctx=ast.Load(),
-                    ),
-                    args=[],
+                    func=ast.Name(id="is_err", ctx=ast.Load()),
+                    args=[ast.Name(id="result", ctx=ast.Load())],
                     keywords=[],
                 ),
                 body=[
                     ast.Return(
-                        value=ast.Name(id="result", ctx=ast.Load()),
+                        value=ast.Call(
+                            func=ast.Name(id="ResultErr", ctx=ast.Load()),
+                            args=[
+                                ast.Call(
+                                    func=ast.Attribute(
+                                        value=ast.Name(id="result", ctx=ast.Load()),
+                                        attr="error",
+                                        ctx=ast.Load(),
+                                    ),
+                                    args=[],
+                                    keywords=[],
+                                )
+                            ],
+                            keywords=[],
+                        )
                     )
                 ],
                 orelse=[],

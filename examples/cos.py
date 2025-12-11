@@ -25,9 +25,10 @@ from pathlib import Path
 from uuid import UUID
 
 from satvu_api_sdk import SatVuSDK
-from satvu_api_sdk.services.cos.models import OrderEditPayload, SearchRequest
 from satvu_api_sdk.services.cos.models import (
-    OrderSubmissionPayloadV3 as OrderSubmissionPayload,
+    OrderEditPayload,
+    OrderSubmissionPayload,
+    SearchRequest,
 )
 
 CLIENT_ID = getenv("SATVU_CLIENT_ID")

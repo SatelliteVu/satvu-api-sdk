@@ -34,8 +34,8 @@ def extract_response_schema(response: Response) -> dict[str, Any] | None:
     """
     # If response has a Property, extract schema from Property.data
     # This contains the resolved oai.Schema that was used to generate the Property
-    if hasattr(response.prop, "data"):
-        schema_obj = response.prop.data
+    schema_obj = getattr(response.prop, "data", None)
+    if schema_obj:
         # Convert oai.Schema Pydantic model to dict with proper aliasing ($ref instead of ref)
         return schema_obj.model_dump(mode="json", by_alias=True, exclude_none=True)
 
@@ -412,10 +412,8 @@ def _render_test_files(
         base_path: API base path
         output_dir: Output directory
     """
-    # Get spec version
-    spec_version = "unknown"
-    if hasattr(project.openapi, "info") and project.openapi.info:
-        spec_version = getattr(project.openapi.info, "version", "unknown")
+    # Get spec version from GeneratorData
+    spec_version = getattr(project.openapi, "version", "unknown")
 
     context = {
         "api_name": api_name,

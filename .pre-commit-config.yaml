@@ -44,15 +44,22 @@ repos:
     - pre-commit
   repo: https://github.com/Yelp/detect-secrets
   rev: v1.5.0
-- hooks:
-  - id: check-undeclared
+- repo: local
+  hooks:
+  - id: fawltydeps-undeclared
+    name: FawltyDeps (undeclared)
+    entry: uv run fawltydeps --check-undeclared
+    language: system
+    pass_filenames: false
     stages:
     - pre-commit
-  - id: check-unused
+  - id: fawltydeps-unused
+    name: FawltyDeps (unused)
+    entry: uv run fawltydeps --check-unused
+    language: system
+    pass_filenames: false
     stages:
     - pre-commit
-  repo: https://github.com/tweag/FawltyDeps
-  rev: v0.20.0
 - hooks:
   - id: commitizen
   - id: commitizen-branch

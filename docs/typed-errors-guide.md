@@ -166,7 +166,7 @@ if status_result.is_ok():
 result = (
     adapter.request("GET", "https://api.example.com/data")
     .and_then(lambda response: response.json())  # Parse JSON
-    .map(lambda data: data.get("items", []))     # Extract items
+    .map(lambda data: data.get("items", []))  # Extract items
 )
 
 if result.is_ok():
@@ -229,6 +229,7 @@ from satvu_api_sdk.http import (
     JsonDecodeError,
 )
 
+
 def fetch_user_data(user_id: str):
     adapter = StdlibAdapter(base_url="https://api.example.com")
 
@@ -273,6 +274,7 @@ def fetch_user_data(user_id: str):
 
     return json_result.unwrap()
 
+
 # Usage
 user = fetch_user_data("12345")
 if user:
@@ -291,6 +293,7 @@ def fetch_user_data_functional(user_id: str):
         .map(lambda data: data.get("user"))
         .unwrap_or(None)
     )
+
 
 # Usage
 user = fetch_user_data_functional("12345")

@@ -1,55 +1,82 @@
-# SatVu Python SDK
+# SatVu API SDK
 
-Lightweight API Client SDK for interacting with SatVu's APIs.
+Python SDK for [SatVu's](https://www.satellitevu.com/) satellite imagery platform.
 
-This SDK is auto-generated from the OpenAPI specifications using the [openapi-python-client]
-library.
+## ✨ Features
 
-## Development Setup
+- **Unified Interface** - Access all SatVu APIs through a single SDK
+- **Type Safety** - Full type hints with Pydantic models for requests and responses
+- **Explicit Error Handling** - Rust-inspired Result types for predictable error handling
+- **Multiple HTTP Backends** - Choose httpx, requests, urllib3, or stdlib
+- **Built-in Pagination** - Iterator methods for seamless pagination through large result sets
+- **Streaming Downloads** - Memory-efficient downloads for large satellite imagery files
 
-### Requirements
-
-- Python >= 3.10 (tested with 3.10 to 3.13)
-- [uv]
-
-### Getting Started
-
-These scripts run things locally:
-
-- `./scripts/bootstrap.sh` to install dependencies
-- `./scripts/test.sh` to run the tests, pytest options and arguments can be passed to the script
-- `./scripts/lint.sh` to run the linters
-
-[Dagger](https://docs.dagger.io) can be used to run portable CI:
-
-- `dagger call -v test`: run pytest suite
-- `dagger call -v lint`: run linter suite
-- `dagger call -v test-all`: run tests on all supported python versions
-
-## Generating the SDK
-
-To regenerate the SDK for an API, run:
+## 📦 Installation
 
 ```bash
-uv run python -m builder <API_NAME>
+pip install satvu-api-sdk
 ```
 
-You can find the available API names in `builder/config.py`.
-
-If you want to generate the SDK for all APIs, run:
+With optional HTTP backends:
 
 ```bash
-uv build
-```
-## Building a release
-
-NOTE: This uses [dagger](https://docs.dagger.io).
-
-Build the release distribution in dagger and export the resulting dist dir:
-
-```sh
-dagger -c "build-release --is-qa --build-number 123 | export './dist' --wipe"
+pip install satvu-api-sdk[http-httpx]
+pip install satvu-api-sdk[http-requests]
+pip install satvu-api-sdk[http-urllib3]
 ```
 
-[openapi-python-client]: https://github.com/openapi-generators/openapi-python-client
-[uv]: https://docs.astral.sh/uv/
+The SDK works out of the box with Python's built-in `urllib`.
+
+## 🚀 Quick Start
+
+```python
+import os
+from uuid import UUID
+from satvu_api_sdk import SatVuSDK
+
+sdk = SatVuSDK(
+    client_id=os.environ["SATVU_CLIENT_ID"],
+    client_secret=os.environ["SATVU_CLIENT_SECRET"],
+)
+
+contract_id = UUID(os.environ["SATVU_CONTRACT_ID"])
+
+# Search the catalog
+results = sdk.catalog.get_search(contract_id=contract_id, limit=10)
+for feature in results.features:
+    print(feature.id)
+```
+
+## Available Services
+
+| Service        | Description                                                                               |
+| -------------- | ----------------------------------------------------------------------------------------- |
+| `sdk.catalog`  | Search and discover SatVu's [STAC](https://github.com/radiantearth/stac-api-spec) catalog |
+| `sdk.cos`      | Order and download imagery available from SatVu's STAC catalog                            |
+| `sdk.id`       | Identity and user management, including webhooks                                          |
+| `sdk.otm`      | Order and manage satellite tasking                                                        |
+| `sdk.policy`   | Check active contracts                                                                    |
+| `sdk.reseller` | Perform reseller operations                                                               |
+| `sdk.wallet`   | Check credit balances                                                                     |
+
+## 📖 Documentation
+
+- [Getting Started](docs/getting-started.md) - Installation, authentication, first API call
+- [Authentication](docs/authentication.md) - OAuth2 flow, token caching, environments
+- [Error Handling](docs/error-handling.md) - Result types and error patterns
+- [Pagination](docs/pagination.md) - Working with paginated endpoints
+- [Streaming Downloads](docs/streaming-downloads.md) - Downloading large imagery files
+- [HTTP Backends](docs/http-backends.md) - Choosing and configuring HTTP clients
+- [Changelog](CHANGELOG.md)
+
+## Requirements
+
+- Python 3.10+
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
+
+## Support
+
+For bugs and feature requests, please [open an issue](https://github.com/satellitevu/satvu-api-sdk/issues).

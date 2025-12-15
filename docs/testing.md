@@ -6,13 +6,14 @@ This document explains how testing works in the SatVu API SDK project, including
 
 The SDK uses a hybrid testing approach:
 
-| Test Category | Approach | Files |
-|--------------|----------|-------|
-| **Service Tests** | Auto-generated property-based tests | `services/{api}/api_test.py` |
-| **Core Tests** | Hand-written unit tests | `auth_test.py`, `core_test.py`, etc. |
-| **HTTP Adapter Tests** | Hand-written unit tests | `http/*_adapter_test.py` |
+| Test Category          | Approach                            | Files                                |
+| ---------------------- | ----------------------------------- | ------------------------------------ |
+| **Service Tests**      | Auto-generated property-based tests | `services/{api}/api_test.py`         |
+| **Core Tests**         | Hand-written unit tests             | `auth_test.py`, `core_test.py`, etc. |
+| **HTTP Adapter Tests** | Hand-written unit tests             | `http/*_adapter_test.py`             |
 
 **Key technologies:**
+
 - **pytest** - Test framework
 - **hypothesis** + **hypothesis-jsonschema** - Property-based testing from JSON schemas
 - **pook** - HTTP mocking
@@ -181,12 +182,12 @@ class TestCatalogService:
 
 ### Test Types Generated
 
-| HTTP Status | Test Type | Assertion |
-|------------|-----------|-----------|
-| 200, 201 | Property-based with schema | Response parses to Pydantic model |
-| 204 | Static (no body) | Returns `None` |
-| 4xx | Property-based or static | Returns `Err(ClientError)` |
-| 5xx | Property-based or static | Returns `Err(ServerError)` |
+| HTTP Status | Test Type                  | Assertion                         |
+| ----------- | -------------------------- | --------------------------------- |
+| 200, 201    | Property-based with schema | Response parses to Pydantic model |
+| 204         | Static (no body)           | Returns `None`                    |
+| 4xx         | Property-based or static   | Returns `Err(ClientError)`        |
+| 5xx         | Property-based or static   | Returns `Err(ServerError)`        |
 
 ## Schema Processing
 
@@ -218,6 +219,7 @@ booleanExpression
 ```
 
 The generator:
+
 1. Detects cycles via DFS (`find_recursive_refs`)
 2. Removes recursive variants from `oneOf`/`anyOf` (`remove_recursive_refs`)
 3. Leaves non-recursive paths for hypothesis to generate
@@ -381,7 +383,7 @@ For hypothesis tests, reset pook between examples:
 @given(response_data=from_schema(...))
 def test_property_based(self, response_data):
     pook.reset()  # Clear previous mocks
-    pook.on()     # Re-enable mocking
+    pook.on()  # Re-enable mocking
     pook.get(url).reply(200).json(response_data)
     # ...
 ```
@@ -392,6 +394,7 @@ Used in authentication tests for JWT expiration:
 
 ```python
 from freezegun import freeze_time
+
 
 @freeze_time("2024-01-15 12:00:00")
 def test_token_not_expired():

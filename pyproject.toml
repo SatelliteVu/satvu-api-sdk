@@ -117,6 +117,7 @@ ignore_unused = [
 ignore_undeclared = [
     "builder",
     "hatchling",
+    "jinja2",
     "satvu", # Allow self-referencing imports in tests
 ]
 

@@ -471,6 +471,131 @@ Comprehensive unit tests in `src/satvu/core_streaming_test.py` cover:
 
 See `examples/cos.py` and `examples/otm.py` for complete working examples.
 
+### Automated Test Generation
+
+The builder includes an extensible test generation system that automatically creates integration tests during SDK generation. This system uses a template-based approach with AST manipulation for reliable, type-safe test generation.
+
+**Architecture Pattern:**
+
+The test generation system follows a consistent pattern that can be extended for different test categories:
+
+1. **Generator Module** (`src/builder/*_test_generator.py`):
+   - Accepts metadata about endpoints that need tests
+   - Uses Jinja2 templates from `src/builder/templates/macros/`
+   - Parses existing test file as AST
+   - Renders test code from templates
+   - Parses rendered code into AST nodes
+   - Appends new test methods to test class
+   - Formats with ruff (auto-fix + format)
+
+2. **Template Macros** (`src/builder/templates/macros/*_tests.jinja`):
+   - Define reusable test patterns as Jinja2 macros
+   - Support type-aware parameter generation
+   - Include proper whitespace control with `{%-` and `-%}`
+   - Generate syntactically correct Python with proper indentation
+
+3. **Integration Hook** (in post-processors or `build.py`):
+   - Called after main code generation
+   - Receives `Project` object for Jinja2 environment access
+   - Graceful error handling with warnings (non-fatal)
+
+**Example: Streaming Test Generator**
+
+Location: `src/builder/streaming_test_generator.py`
+
+Generates three test types for each streaming download method:
+- **Success test**: Validates file writing with mocked content
+- **Progress callback test**: Validates progress callback invocation
+- **Error test**: Validates error propagation (404, etc.)
+
+Key implementation details:
+```python
+def generate_streaming_tests(
+    api_name: str,
+    streaming_configs: list[StreamingEndpointConfig],
+    test_file: Path,
+    jinja_env: Environment,
+) -> None:
+    """Generate and append streaming method tests to existing test file."""
+
+    # Parse existing test file
+    content = test_file.read_text()
+    tree = ast.parse(content)
+
+    # Find test class
+    test_class = _find_test_class(tree)
+
+    # Render tests from templates
+    for config in streaming_configs:
+        context = {"config": config, "api_name": api_name}
+
+        test_code = jinja_env.from_string(
+            "{% from 'macros/streaming_tests.jinja' import streaming_success_test %}"
+            "{{ streaming_success_test(config, api_name) }}"
+        ).render(context)
+
+        # Parse rendered test into AST node
+        test_method = ast.parse(test_code).body[0]
+
+        # Append to test class
+        test_class.body.append(test_method)
+
+    # Write back and format
+    final_code = ast.unparse(tree)
+    test_file.write_text(final_code)
+    _format_with_ruff(test_file)
+```
+
+**Template Example** (`src/builder/templates/macros/streaming_tests.jinja`):
+```jinja
+{%- macro streaming_success_test(config, api_name) -%}
+@pook.on
+def test_{{ config.stream_method }}_success(self, backend, tmp_path):
+    """Test {{ config.stream_method }} writes file correctly."""
+    output_path = tmp_path / "{{ config.example_filename }}"
+    mock_content = b"fake zip content"
+
+    {#- Type-aware parameter generation -#}
+    {% for param_name, param_type in config.path_params %}
+    {{ param_name }} = {% if param_type == "str" %}str(uuid4()){% else %}uuid4(){% endif %}
+
+    {% endfor %}
+    path = "{{ config.url_pattern }}".format(
+    {%- for param_name, param_type in config.path_params %}
+        {{ param_name }}={{ param_name }}{% if not loop.last %},{% endif %}
+    {%- endfor %}
+    )
+
+    # Test implementation...
+{%- endmacro -%}
+```
+
+**Key Design Principles:**
+
+1. **Type-Aware Generation**: Templates use conditional logic to generate correct code based on parameter types (e.g., `str(uuid4())` vs `uuid4()`)
+
+2. **Whitespace Control**: Critical for Jinja2 templates - use `{%-` and `-%}` to prevent unwanted line breaks. Always add explicit blank lines in template loops.
+
+3. **AST-Based Manipulation**: Guarantees syntactically correct Python without string fragility. Use `ast.parse()` and `ast.unparse()` for reliability.
+
+4. **Graceful Degradation**: Test generation failures should warn but not fail the build. Wrap in try/except with traceback printing.
+
+5. **Ruff Formatting**: Always format generated code with `ruff check --fix` then `ruff format` for consistency.
+
+6. **Reusable Pattern**: This architecture can be extended for other test categories (pagination, webhooks, rate limiting, etc.) by following the same structure.
+
+**Extending for New Test Categories:**
+
+To add tests for a new feature category (e.g., pagination):
+
+1. Create `src/builder/pagination_test_generator.py` following the pattern
+2. Create `src/builder/templates/macros/pagination_tests.jinja` with test macros
+3. Call generator from post-processor or build system
+4. Ensure generator receives `Project.env` for Jinja2 access
+5. Follow existing patterns for AST manipulation and formatting
+
+The streaming test generator serves as a reference implementation for this extensible pattern.
+
 ### Generated Code
 
 Generated code lives in `src/satvu/services/{api_name}/`:

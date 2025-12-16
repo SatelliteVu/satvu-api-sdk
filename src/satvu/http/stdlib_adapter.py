@@ -88,7 +88,16 @@ class StdlibResponse:
         # This is the main use case for large file downloads
         self._consumed = True
         while True:
-            chunk = self._response.read(chunk_size)
+            try:
+                chunk = self._response.read(chunk_size)
+            except TypeError:
+                # Some mock libraries (e.g., pook) don't support read(size) argument
+                # Fall back to reading entire body and yielding it in chunks
+                remaining_body = self._response.read()
+                if remaining_body:
+                    for i in range(0, len(remaining_body), chunk_size):
+                        yield remaining_body[i : i + chunk_size]
+                break
             if not chunk:
                 # End of response reached
                 break

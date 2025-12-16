@@ -1,0 +1,134 @@
+{#- Streaming download method tests (*_to_file) -#}
+
+{#- Success test: validates file is written correctly -#}
+{%- macro streaming_success_test(config, api_name) -%}
+@pook.on
+def test_{{ config.stream_method }}_success(self, backend, tmp_path):
+    """Test {{ config.stream_method }} writes file correctly."""
+    output_path = tmp_path / "{{ config.example_filename }}"
+    mock_content = b"fake zip content"
+{% for param_name, param_type in config.path_params %}
+    {{ param_name }} = {% if param_type == "str" %}str(uuid4()){% else %}uuid4(){% endif %}
+
+{% endfor %}
+    path = "{{ config.url_pattern }}".format(
+{%- for param_name, param_type in config.path_params %}
+        {{ param_name }}={{ param_name }}{% if not loop.last %},{% endif %}
+
+{%- endfor %}
+    )
+    url = f"{self.base_url}{path}"
+
+    # Mock streaming HTTP response
+    pook.get(url).reply(200).body(mock_content).header(
+        "Content-Type", "application/zip"
+    ).header(
+        "Content-Length", str(len(mock_content))
+    )
+
+    # Call streaming method
+    result = self.sdk.{{ api_name }}.{{ config.stream_method }}(
+{% for param_name, param_type in config.path_params %}
+        {{ param_name }}={{ param_name }},
+{% endfor %}
+        output_path=output_path,
+    )
+
+    # Assert result is Ok
+    assert result.is_ok()
+
+    # Assert file was written correctly
+    assert output_path.exists()
+    assert output_path.read_bytes() == mock_content
+{%- endmacro -%}
+
+{#- Progress callback test: validates callback invocation -#}
+{%- macro streaming_progress_test(config, api_name) -%}
+@pook.on
+def test_{{ config.stream_method }}_progress_callback(self, backend, tmp_path):
+    """Test {{ config.stream_method }} progress callback invocation."""
+    output_path = tmp_path / "{{ config.example_filename }}"
+    mock_content = b"x" * 1024  # 1KB of data
+    progress_calls = []
+
+    def progress_callback(bytes_downloaded: int, total_bytes: int | None):
+        progress_calls.append((bytes_downloaded, total_bytes))
+{% for param_name, param_type in config.path_params %}
+    {{ param_name }} = {% if param_type == "str" %}str(uuid4()){% else %}uuid4(){% endif %}
+
+{% endfor %}
+    path = "{{ config.url_pattern }}".format(
+{%- for param_name, param_type in config.path_params %}
+        {{ param_name }}={{ param_name }}{% if not loop.last %},{% endif %}
+
+{%- endfor %}
+    )
+    url = f"{self.base_url}{path}"
+
+    # Mock streaming HTTP response with Content-Length
+    pook.get(url).reply(200).body(mock_content).header(
+        "Content-Type", "application/zip"
+    ).header(
+        "Content-Length", str(len(mock_content))
+    )
+
+    # Call streaming method with progress callback
+    result = self.sdk.{{ api_name }}.{{ config.stream_method }}(
+{%- for param_name, param_type in config.path_params %}
+        {{ param_name }}={{ param_name }},
+{%- endfor %}
+        output_path=output_path,
+        progress_callback=progress_callback,
+    )
+
+    # Assert result is Ok
+    assert result.is_ok()
+
+    # Assert progress callback was invoked
+    assert len(progress_calls) > 0
+
+    # Assert callback signature is correct (bytes_downloaded: int, total_bytes: int | None)
+    for bytes_downloaded, total_bytes in progress_calls:
+        assert isinstance(bytes_downloaded, int)
+        assert isinstance(total_bytes, int) or total_bytes is None
+{%- endmacro -%}
+
+{#- Error test: validates error propagation -#}
+{%- macro streaming_error_test(config, api_name) -%}
+@pook.on
+def test_{{ config.stream_method }}_error_404(self, backend, tmp_path):
+    """Test {{ config.stream_method }} error handling (404)."""
+    output_path = tmp_path / "{{ config.example_filename }}"
+{% for param_name, param_type in config.path_params %}
+    {{ param_name }} = {% if param_type == "str" %}str(uuid4()){% else %}uuid4(){% endif %}
+
+{% endfor %}
+    path = "{{ config.url_pattern }}".format(
+{%- for param_name, param_type in config.path_params %}
+        {{ param_name }}={{ param_name }}{% if not loop.last %},{% endif %}
+
+{%- endfor %}
+    )
+    url = f"{self.base_url}{path}"
+
+    # Mock 404 error response
+    pook.get(url).reply(404).json({"error": "Not found"}).header(
+        "Content-Type", "application/json"
+    )
+
+    # Call streaming method
+    result = self.sdk.{{ api_name }}.{{ config.stream_method }}(
+{% for param_name, param_type in config.path_params %}
+        {{ param_name }}={{ param_name }},
+{% endfor %}
+        output_path=output_path,
+    )
+
+    # Assert result is Err
+    assert result.is_err()
+
+    # Assert error is ClientError with status 404
+    error = result.error()
+    assert isinstance(error, ClientError)
+    assert error.status_code == 404
+{%- endmacro -%}

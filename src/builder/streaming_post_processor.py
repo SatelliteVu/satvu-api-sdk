@@ -3,6 +3,7 @@
 import ast
 from pathlib import Path
 
+from openapi_python_client import Project
 from openapi_python_client.parser.openapi import Endpoint
 
 from builder.ast_generator import (
@@ -11,6 +12,7 @@ from builder.ast_generator import (
     insert_method_after_base,
 )
 from builder.streaming_detector import StreamingEndpointDetector
+from builder.streaming_test_generator import generate_streaming_tests
 
 try:
     import subprocess
@@ -32,6 +34,7 @@ def add_streaming_methods(
     api_id: str,
     endpoints: list[Endpoint],
     openapi_dict: dict,
+    project: Project | None = None,
 ) -> None:
     """
     Add streaming methods to generated API service file using AST.
@@ -41,6 +44,7 @@ def add_streaming_methods(
         api_id: API identifier (e.g., 'cos', 'otm')
         endpoints: List of parsed endpoints from OpenAPI spec
         openapi_dict: Raw OpenAPI spec dict for reading x-streaming extensions
+        project: Optional Project object for test generation (provides Jinja2 env)
     """
     # Detect which endpoints need streaming variants
     detector = StreamingEndpointDetector(api_id, openapi_dict)
@@ -116,6 +120,23 @@ def add_streaming_methods(
 
     # Write formatted code
     api_file.write_text(final_code)
+
+    # Generate tests for streaming methods
+    if project is not None:
+        test_file = api_file.parent / "api_test.py"
+        if test_file.exists():
+            try:
+                generate_streaming_tests(
+                    api_name=api_id,
+                    streaming_configs=streaming_configs,
+                    test_file=test_file,
+                    jinja_env=project.env,
+                )
+            except Exception as e:
+                import traceback
+
+                print(f"    ⚠ Warning: Failed to generate streaming tests: {e}")
+                traceback.print_exc()
 
 
 # TODO: Add streaming to BytesIO method as well

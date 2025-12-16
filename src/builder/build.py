@@ -259,16 +259,16 @@ class ServiceCodeGenerator:
         # Run post hooks
         self.project._run_post_hooks()
 
-        # Post-process: Add streaming download methods
+        # Generate standard tests before tests for streaming methods
+        self._generate_tests()
+
+        # Post-process: Add streaming download methods (and their tests)
         try:
             self._add_streaming_methods(self.openapi_dict)
         except Exception as e:
             errors.append(
                 GeneratorError(detail=f"Failed to add streaming methods: {e}")
             )
-
-        # Generate tests (non-fatal if it fails)
-        self._generate_tests()
 
         return errors + list(self.project._get_errors())
 
@@ -331,8 +331,10 @@ class ServiceCodeGenerator:
             for ep in collection.endpoints
         ]
 
-        # Add streaming methods (pass raw OpenAPI dict for extension access)
-        add_streaming_methods(api_file, self.context.api_id, endpoints, openapi_dict)
+        # Add streaming methods and generate tests
+        add_streaming_methods(
+            api_file, self.context.api_id, endpoints, openapi_dict, project=self.project
+        )
 
     def _generate_tests(self):
         """Generate test files for this API service."""

@@ -86,7 +86,7 @@ jobs:
 
   test:
     name: Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-4-cores
     needs: [check-changes]
     # Run if:
     # - Push event AND changes detected
@@ -105,11 +105,6 @@ jobs:
 
       - name: Install uv
         uses: astral-sh/setup-uv@v7
-
-      - name: Install Dagger
-        uses: dagger/dagger-for-github@v8.2.0
-        with:
-          install-only: true
 
       # Cache OpenAPI specs - ensures test uses same specs as release
       - name: Cache OpenAPI specs

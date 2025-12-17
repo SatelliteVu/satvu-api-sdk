@@ -230,6 +230,11 @@ jobs:
           git commit --allow-empty -m "${{ inputs.commit_message }} [skip ci]"
           git push
 
+      # Install Dagger CLI (needed by semantic-release prepareCmd)
+      - name: Install Dagger CLI
+        if: inputs.qa != true
+        run: curl -fsSL https://dl.dagger.io/dagger/install.sh | BIN_DIR=$HOME/.local/bin sh
+
       # Production release via semantic-release
       - name: Run semantic-release
         if: inputs.qa != true

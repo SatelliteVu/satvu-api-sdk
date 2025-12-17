@@ -1,5 +1,10 @@
 # SatVu API SDK
 
+[![pypi](https://img.shields.io/pypi/v/satvu)](https://pypi.org/project/satvu/)
+[![GitHub License](https://img.shields.io/github/license/SatelliteVu/satvu-api-sdk)](https://github.com/SatelliteVu/satvu-api-sdk/blob/main/LICENSE)
+[![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/satellitevu)](https://x.com/intent/follow?screen_name=satellitevu)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-blue?style=flat&logo=linkedin)](https://uk.linkedin.com/company/satvu)
+
 Python SDK for [SatVu's](https://www.satellitevu.com/) satellite imagery platform.
 
 ## ✨ Features
@@ -12,6 +17,8 @@ Python SDK for [SatVu's](https://www.satellitevu.com/) satellite imagery platfor
 - **Streaming Downloads** - Memory-efficient downloads for large satellite imagery files
 
 ## 📦 Installation
+
+The package is published on [PyPI](https://pypi.org/project/satvu/) and can be installed with pip:
 
 ```bash
 pip install satvu-api-sdk

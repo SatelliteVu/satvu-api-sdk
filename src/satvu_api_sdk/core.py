@@ -61,7 +61,13 @@ class SDKClient:
                 get_token=get_token,
             )
 
-    def build_url(self, subdomain: str):
+    def build_url(self, subdomain: str) -> str:
+        """
+        Build base URL for given subdomain and environment.
+
+        :param subdomain: the subdomain to use
+        :return: the constructed base URL
+        """
         env = "" if not self.env else f"{self.env}."
         return f"https://{subdomain}.{env}satellitevu.com/"
 

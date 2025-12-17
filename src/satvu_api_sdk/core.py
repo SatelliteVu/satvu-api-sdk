@@ -16,7 +16,9 @@ logger = logging.getLogger(__name__)
 
 
 class SDKClient:
-    """ """
+    """
+    Base SDK client with HTTP request handling, retry logic, and utilities.
+    """
 
     base_path: str
 
@@ -30,6 +32,17 @@ class SDKClient:
         max_retry_attempts: int = 5,
         max_retry_after_seconds: float = 300.0,
     ):
+        """
+        Initialize SDK client.
+
+        :param env: the environment to use
+        :param get_token: callable that returns the auth token
+        :param subdomain: the subdomain to use
+        :param http_client: optional custom HTTP client, defaults to auto-created client
+        :param timeout: request timeout in seconds, default 30s
+        :param max_retry_attempts: maximum number of retry attempts, default 5
+        :param max_retry_after_seconds: maximum seconds to wait for Retry-After, default 300s
+        """
         self.timeout = timeout
         self.max_retry_attempts = max_retry_attempts
         self.max_retry_after_seconds = max_retry_after_seconds

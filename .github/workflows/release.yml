@@ -123,20 +123,22 @@ jobs:
       # Run targeted tests when API is specified
       - name: Run targeted tests
         if: inputs.api != ''
+        uses: dagger/dagger-for-github@v8.2.0
         env:
           SATVU_TRIGGERED_API: ${{ inputs.api }}
           SATVU_SPEC_ENV: ${{ inputs.qa == true && 'qa' || 'prod' }}
-        run: |
-          dagger call test-api --api=${{ inputs.api }}
+        with:
+          call: test-api --api=${{ inputs.api }}
 
       # Run full tests when no API specified
       - name: Run full tests
         if: inputs.api == ''
+        uses: dagger/dagger-for-github@v8.2.0
         env:
           SATVU_TRIGGERED_API: none
           SATVU_SPEC_ENV: ${{ inputs.qa == true && 'qa' || 'prod' }}
-        run: |
-          dagger call test
+        with:
+          call: test
 
   release:
     name: Release
@@ -194,11 +196,6 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
 
-      - name: Install Dagger
-        uses: dagger/dagger-for-github@v8.2.0
-        with:
-          install-only: true
-
       # Cache OpenAPI specs between runs
       # - Restores most recent cache (restore-keys fallback)
       # - Saves with unique key per run (captures any freshly fetched specs)
@@ -255,11 +252,12 @@ jobs:
       # QA build (skip semantic-release)
       - name: Build QA release
         if: inputs.qa == true
+        uses: dagger/dagger-for-github@v8.2.0
         env:
           SATVU_TRIGGERED_API: ${{ inputs.api || 'none' }}
           SATVU_SPEC_ENV: qa
-        run: |
-          dagger call build-release --is-qa=true export --path=./dist --wipe
+        with:
+          call: build-release --is-qa=true export --path=./dist --wipe
 
       - name: Generate QA version
         if: inputs.qa == true

@@ -3,6 +3,9 @@ name: Release
 on:
   push:
     branches: [main]
+    paths:
+      - 'src/satvu_api_sdk/**'
+      - '!src/**/*_test.py'
   workflow_dispatch:
     inputs:
       api:
@@ -45,7 +48,7 @@ on:
         required: false
 
 concurrency:
-  group: sdk-release
+  group: sdk-release-${{ inputs.qa == true && 'qa' || 'prod' }}
   cancel-in-progress: true
 
 env:
@@ -68,8 +71,8 @@ jobs:
       - name: Check for src changes since last tag
         id: check
         run: |
-          # Find the last release tag
-          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          # Find the last production release tag (exclude .dev QA tags)
+          LAST_TAG=$(git tag -l 'v*' --sort=-v:refname | grep -v '\.dev' | head -1)
           echo "Last tag: $LAST_TAG"
 
           # Get all changed files since the last tag
@@ -171,18 +174,12 @@ jobs:
         run: |
           echo "## 📦 Pending Release" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-          if [ -n "$LAST_TAG" ]; then
-            echo "### Commits since \`$LAST_TAG\`:" >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-            git log ${LAST_TAG}..HEAD --oneline >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-          else
-            echo "### All commits (no previous release):" >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-            git log --oneline -20 >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-          fi
+          # Find the last production release tag (exclude .dev QA tags)
+          LAST_TAG=$(git tag -l 'v*' --sort=-v:refname | grep -v '\.dev' | head -1)
+          echo "### Commits since \`$LAST_TAG\`:" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          git log ${LAST_TAG}..HEAD --oneline >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
 
       - name: Setup Node.js
         uses: actions/setup-node@v6

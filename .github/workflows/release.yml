@@ -164,11 +164,18 @@ jobs:
       id-token: write
       contents: write
     steps:
+      - name: Generate app token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.PUBLIC_RELEASE_MANAGER_ID }}
+          private-key: ${{ secrets.PUBLIC_RELEASE_MANAGER_SECRET }}
+
       - name: Checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Show pending release
         run: |
@@ -240,7 +247,7 @@ jobs:
       - name: Run semantic-release
         if: inputs.qa != true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           SATVU_TRIGGERED_API: ${{ inputs.api || 'none' }}
           SATVU_SPEC_ENV: prod
         run: semantic-release

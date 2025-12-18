@@ -3,9 +3,6 @@ name: Release
 on:
   push:
     branches: [main]
-    paths:
-      - 'src/satvu_api_sdk/**'
-      - '!src/**/*_test.py'
   workflow_dispatch:
     inputs:
       api:

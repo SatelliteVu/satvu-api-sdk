@@ -46,7 +46,7 @@ on:
 
 concurrency:
   group: sdk-release
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 env:
   DAGGER_NO_NAG: "1"
@@ -245,8 +245,9 @@ jobs:
         run: semantic-release
 
       # Publish to PyPI using trusted publishing (OIDC)
+      # Only runs if semantic-release created artifacts
       - name: Publish to PyPI
-        if: inputs.qa != true
+        if: inputs.qa != true && hashFiles('dist/*') != ''
         uses: pypa/gh-action-pypi-publish@release/v1
 
       # QA build (skip semantic-release)

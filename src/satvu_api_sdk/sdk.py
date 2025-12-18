@@ -10,7 +10,7 @@ from satvu_api_sdk.services.wallet.api import WalletService
 
 
 class SatVuSDK:
-    """ """
+    """Unified client for accessing SatVu's API services."""
 
     def __init__(
         self,

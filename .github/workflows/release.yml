@@ -65,11 +65,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check for src changes
+      - name: Check for src changes since last tag
         id: check
         run: |
-          # Get all changed files in this push
-          CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+          # Find the last release tag
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          echo "Last tag: $LAST_TAG"
+
+          # Get all changed files since the last tag
+          CHANGED_FILES=$(git diff --name-only "$LAST_TAG" HEAD)
 
           # Check if any src/**/*.py files changed (excluding *_test.py)
           SHOULD_RELEASE="false"

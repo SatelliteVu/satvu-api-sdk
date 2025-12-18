@@ -230,28 +230,9 @@ See [docs/testing.md](docs/testing.md) for detailed testing documentation.
 
 ## Releases
 
-Releases are automated via [semantic-release](https://github.com/semantic-release/semantic-release). You don't need to manually bump versions or update the changelog.
+Releases are automated via [semantic-release](https://github.com/semantic-release/semantic-release).
 
-### How Releases Are Triggered
-
-1. **PR merges to main**: A release is triggered automatically when changes to `src/**/*.py` (excluding test files) are merged. The version bump is determined by conventional commit prefixes in the merged commits.
-
-2. **Upstream API changes**: When an upstream API detects OpenAPI spec changes during deployment, it automatically triggers an SDK release.
-
-### Version Bump Rules
-
-| Commit Prefix                         | Version Bump | Example                                |
-| ------------------------------------- | ------------ | -------------------------------------- |
-| `fix(scope):`                         | Patch        | `fix(auth): handle token refresh race` |
-| `feat(scope):`                        | Minor        | `feat(http): add retry middleware`     |
-| `feat(scope)!:` or `BREAKING CHANGE:` | Major        | `feat(core)!: change Result API`       |
-
-### Where Releases Go
-
-| Environment | Published To | Version Format      |
-| ----------- | ------------ | ------------------- |
-| Production  | PyPI         | `1.2.3`             |
-| QA          | CodeArtifact | `1.2.3.dev24121642` |
+See [RELEASE.md](RELEASE.md) for details on versioning and the release workflow.
 
 ## Questions?
 

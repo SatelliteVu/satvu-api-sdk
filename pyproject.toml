@@ -1,6 +1,6 @@
 [project]
 name = "satvu-api-sdk"
-version = "0.1.0"
+version = "0.1.1"
 description = "SatVu API SDK"
 readme = "README.md"
 authors = [

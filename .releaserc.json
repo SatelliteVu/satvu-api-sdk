@@ -6,7 +6,7 @@
       "@semantic-release/release-notes-generator",
       {
         "writerOpts": {
-          "commitPartial": "* {{subject}}{{#if body}}\n\n{{body}}{{/if}}\n"
+          "commitPartial": "* {{#if scope}}**{{scope}}:** {{/if}}{{subject}}\n"
         }
       }
     ],

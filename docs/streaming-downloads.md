@@ -8,7 +8,7 @@ Use the `*_to_file` methods for streaming downloads:
 
 ```python
 from pathlib import Path
-from satvu_api_sdk.result import is_ok, is_err
+from satvu.result import is_ok, is_err
 
 # Download an order to disk
 result = sdk.cos.download_order_to_file(
@@ -85,8 +85,8 @@ import tempfile
 from pathlib import Path
 from uuid import UUID
 
-from satvu_api_sdk import SatVuSDK
-from satvu_api_sdk.result import is_ok, is_err
+from satvu import SatVuSDK
+from satvu.result import is_ok, is_err
 
 sdk = SatVuSDK(
     client_id=os.environ["SATVU_CLIENT_ID"],
@@ -131,8 +131,8 @@ else:
 Streaming methods return `Result[Path, HttpError]`:
 
 ```python
-from satvu_api_sdk.result import is_ok, is_err
-from satvu_api_sdk.http import NetworkError, ServerError
+from satvu.result import is_ok, is_err
+from satvu.http import NetworkError, ServerError
 
 result = sdk.cos.download_order_to_file(...)
 

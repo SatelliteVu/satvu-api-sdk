@@ -4,8 +4,8 @@ import pook
 import pytest
 import requests
 
-from satvu_api_sdk.http import is_ok
-from satvu_api_sdk.http.requests_adapter import RequestsAdapter
+from satvu.http import is_ok
+from satvu.http.requests_adapter import RequestsAdapter
 
 
 @pytest.fixture

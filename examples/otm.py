@@ -22,9 +22,9 @@ from pathlib import Path
 from pprint import pprint
 from uuid import UUID
 
-from satvu_api_sdk import SatVuSDK
-from satvu_api_sdk.result import is_err, is_ok
-from satvu_api_sdk.services.otm.models import (
+from satvu import SatVuSDK
+from satvu.result import is_err, is_ok
+from satvu.services.otm.models import (
     AssuredFeasibilityFields,
     AssuredOrderRequest,
     AssuredOrderRequestProperties,

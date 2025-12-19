@@ -1,18 +1,17 @@
-"""Tests for StdlibAdapter."""
+"""Tests for HttpxAdapter."""
 
-import warnings
-
+import httpx
 import pook
 import pytest
 
-from satvu_api_sdk.http import is_ok
-from satvu_api_sdk.http.stdlib_adapter import StdlibAdapter
+from satvu.http import is_ok
+from satvu.http.httpx_adapter import HttpxAdapter
 
 
 @pytest.fixture
 def adapter():
-    """Create a StdlibAdapter instance for testing."""
-    return StdlibAdapter(base_url="https://api.example.com")
+    """Create an HttpxAdapter instance for testing."""
+    return HttpxAdapter(base_url="https://api.example.com")
 
 
 @pook.on
@@ -22,7 +21,7 @@ def test_get_request(adapter):
         {"users": ["alice", "bob"]}
     )
 
-    result = adapter.request("GET", "/users", follow_redirects=True)
+    result = adapter.request("GET", "/users")
     assert is_ok(result), f"Expected Ok but got: {result}"
     response = result.unwrap()
 
@@ -39,9 +38,7 @@ def test_post_request_with_json(adapter):
         {"id": 123, "name": "charlie"}
     )
 
-    result = adapter.request(
-        "POST", "/users", json={"name": "charlie"}, follow_redirects=True
-    )
+    result = adapter.request("POST", "/users", json={"name": "charlie"})
     assert is_ok(result), f"Expected Ok but got: {result}"
     response = result.unwrap()
 
@@ -58,9 +55,7 @@ def test_request_with_query_params(adapter):
         {"count": 2}
     )
 
-    result = adapter.request(
-        "GET", "/users", params={"limit": 10, "offset": 20}, follow_redirects=True
-    )
+    result = adapter.request("GET", "/users", params={"limit": 10, "offset": 20})
     assert is_ok(result), f"Expected Ok but got: {result}"
     response = result.unwrap()
 
@@ -75,9 +70,7 @@ def test_request_with_none_params(adapter):
     """Test that None params are filtered out."""
     pook.get("https://api.example.com/users?limit=10").reply(200).json({})
 
-    result = adapter.request(
-        "GET", "/users", params={"limit": 10, "offset": None}, follow_redirects=True
-    )
+    result = adapter.request("GET", "/users", params={"limit": 10, "offset": None})
     assert is_ok(result), f"Expected Ok but got: {result}"
     response = result.unwrap()
 
@@ -92,16 +85,13 @@ def test_request_with_headers(adapter):
     ).reply(200).json({})
 
     result = adapter.request(
-        "GET",
-        "/users",
-        headers={"Authorization": "Bearer token123"},
-        follow_redirects=True,
+        "GET", "/users", headers={"Authorization": "Bearer token123"}
     )
     assert is_ok(result), f"Expected Ok but got: {result}"
     response = result.unwrap()
 
     assert response.status_code == 200
-    assert pook.isdone()  # Verify all mocks were matched
+    assert pook.isdone()
 
 
 @pook.on
@@ -113,7 +103,6 @@ def test_request_with_form_data(adapter):
         "POST",
         "/login",
         data={"username": "user", "password": "pass"},  # pragma: allowlist secret
-        follow_redirects=True,
     )
     assert is_ok(result), f"Expected Ok but got: {result}"
     response = result.unwrap()
@@ -129,7 +118,7 @@ def test_response_text_property(adapter):
     """Test response text property."""
     pook.get("https://api.example.com/hello").reply(200).body("Hello, World!")
 
-    result = adapter.request("GET", "/hello", follow_redirects=True)
+    result = adapter.request("GET", "/hello")
     assert is_ok(result), f"Expected Ok but got: {result}"
     response = result.unwrap()
 
@@ -143,7 +132,7 @@ def test_response_body_property(adapter):
     """Test response body property."""
     pook.get("https://api.example.com/data").reply(200).body(b"binary data")
 
-    result = adapter.request("GET", "/data", follow_redirects=True)
+    result = adapter.request("GET", "/data")
     assert is_ok(result), f"Expected Ok but got: {result}"
     response = result.unwrap()
 
@@ -157,7 +146,7 @@ def test_response_headers(adapter):
         "X-Custom", "value"
     ).body("test")
 
-    result = adapter.request("GET", "/test", follow_redirects=True)
+    result = adapter.request("GET", "/test")
     assert is_ok(result), f"Expected Ok but got: {result}"
     response = result.unwrap()
 
@@ -166,10 +155,10 @@ def test_response_headers(adapter):
 
 @pook.on
 def test_http_error_response(adapter):
-    """Test handling of HTTP error responses (now returns Err)."""
+    """Test handling of HTTP error responses."""
     pook.get("https://api.example.com/notfound").reply(404).json({"error": "Not found"})
 
-    result = adapter.request("GET", "/notfound", follow_redirects=True)
+    result = adapter.request("GET", "/notfound")
     # 404 should now return Err(ClientError)
     assert result.is_err(), f"Expected Err but got: {result}"
     error = result.error()
@@ -179,30 +168,69 @@ def test_http_error_response(adapter):
 
 
 @pook.on
-def test_follow_redirects_warning(adapter):
-    """Test that warning is emitted when follow_redirects=False."""
-    pook.get("https://api.example.com/test").reply(200).body("ok")
+def test_follow_redirects_false(adapter):
+    """Test that follow_redirects=False is respected."""
+    pook.get("https://api.example.com/redirect").reply(302).header(
+        "Location", "https://api.example.com/target"
+    )
 
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter("always")
-        adapter.request("GET", "/test", follow_redirects=False)
+    result = adapter.request("GET", "/redirect", follow_redirects=False)
+    assert is_ok(result), f"Expected Ok but got: {result}"
+    response = result.unwrap()
 
-        assert len(w) == 1
-        assert "follow_redirects=False" in str(w[0].message)
-        assert issubclass(w[0].category, UserWarning)
+    assert response.status_code == 302
 
 
 @pook.on
 def test_absolute_url_ignores_base_url():
     """Test that absolute URLs ignore the base_url."""
-    adapter = StdlibAdapter(base_url="https://api.example.com")
+    adapter = HttpxAdapter(base_url="https://api.example.com")
 
     pook.get("https://other-api.example.com/data").reply(200).json({"ok": True})
 
-    result = adapter.request(
-        "GET", "https://other-api.example.com/data", follow_redirects=True
-    )
+    result = adapter.request("GET", "https://other-api.example.com/data")
     assert is_ok(result), f"Expected Ok but got: {result}"
     response = result.unwrap()
 
     assert response.status_code == 200
+
+
+def test_custom_client():
+    """Test using a custom httpx.Client instance."""
+    custom_client = httpx.Client(
+        base_url="https://custom.example.com", headers={"X-Custom": "header"}
+    )
+
+    adapter = HttpxAdapter(client=custom_client)
+
+    pook.activate()
+    pook.get("https://custom.example.com/test").header("X-Custom", "header").reply(
+        200
+    ).json({"ok": True})
+
+    result = adapter.request("GET", "/test")
+
+    assert is_ok(result), f"Expected Ok but got: {result}"
+
+    response = result.unwrap()
+
+    assert response.status_code == 200
+    json_result = response.json()
+
+    assert is_ok(json_result), f"Expected Ok but got: {json_result}"
+
+    assert json_result.unwrap() == {"ok": True}
+    pook.off()
+
+
+def test_adapter_cleanup():
+    """Test that adapter closes client when it owns it."""
+    adapter = HttpxAdapter(base_url="https://api.example.com")
+
+    # Manually trigger cleanup
+    assert adapter._owns_client is True
+    adapter.__del__()
+
+    # Client should be closed (attempting to use it will raise an error)
+    with pytest.raises(RuntimeError, match="close"):
+        adapter.client.get("/test")

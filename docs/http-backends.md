@@ -37,15 +37,15 @@ The SDK supports multiple HTTP backends. Choose based on your requirements for f
 
 ```bash
 # Zero dependencies - stdlib works out of the box
-pip install satvu-api-sdk
+pip install satvu
 
 # Install with specific backend
-pip install satvu-api-sdk[http-httpx]
-pip install satvu-api-sdk[http-requests]
-pip install satvu-api-sdk[http-urllib3]
+pip install satvu[http-httpx]
+pip install satvu[http-requests]
+pip install satvu[http-urllib3]
 
 # Install multiple backends
-pip install satvu-api-sdk[http-httpx,http-requests]
+pip install satvu[http-httpx,http-requests]
 ```
 
 ## Automatic Selection
@@ -53,7 +53,7 @@ pip install satvu-api-sdk[http-httpx,http-requests]
 By default, the SDK auto-detects the best available backend:
 
 ```python
-from satvu_api_sdk import SatVuSDK
+from satvu import SatVuSDK
 
 # Uses best available: httpx → requests → urllib3 → stdlib
 sdk = SatVuSDK(
@@ -67,8 +67,8 @@ sdk = SatVuSDK(
 Use `create_http_client()` to specify a backend:
 
 ```python
-from satvu_api_sdk import SatVuSDK
-from satvu_api_sdk.http import create_http_client
+from satvu import SatVuSDK
+from satvu.http import create_http_client
 
 # Use httpx explicitly
 http_client = create_http_client(backend="httpx")
@@ -102,9 +102,9 @@ sdk = SatVuSDK(
 Implement the `HttpClient` protocol for custom HTTP handling:
 
 ```python
-from satvu_api_sdk.http.protocol import HttpClient, HttpResponse
-from satvu_api_sdk.result import Result, Ok, Err
-from satvu_api_sdk.http.errors import HttpError
+from satvu.http.protocol import HttpClient, HttpResponse
+from satvu.result import Result, Ok, Err
+from satvu.http.errors import HttpError
 
 
 class CustomHttpClient(HttpClient):
@@ -130,4 +130,4 @@ sdk = SatVuSDK(
 )
 ```
 
-See the [HttpClient protocol](../src/satvu_api_sdk/http/protocol.py) for the full interface.
+See the [HttpClient protocol](../src/satvu/http/protocol.py) for the full interface.

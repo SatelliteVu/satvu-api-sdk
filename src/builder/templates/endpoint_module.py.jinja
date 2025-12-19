@@ -142,19 +142,19 @@ from collections.abc import Callable, Generator
 from typing import Any, Union, List, Dict
 from uuid import UUID
 
-from satvu_api_sdk.core import SDKClient
-from satvu_api_sdk.http import HttpClient
-from satvu_api_sdk.shared.parsing import normalize_keys, parse_response
+from satvu.core import SDKClient
+from satvu.http import HttpClient
+from satvu.shared.parsing import normalize_keys, parse_response
 
 {% for endpoint in endpoints %}
 {% for relative in endpoint.relative_imports | sort %}
-{{ relative.replace('from ' + api_id + '.models', 'from satvu_api_sdk.services.' + api_id + '.models') }}
+{{ relative.replace('from ' + api_id + '.models', 'from satvu.services.' + api_id + '.models') }}
 {% endfor %}
 {# Also include imports for response models #}
 {% for response in endpoint.responses %}
 {% if response.prop %}
 {% for relative in response.prop.get_imports(prefix=api_id + '.') | sort %}
-{{ relative.replace('from ' + api_id + '.models', 'from satvu_api_sdk.services.' + api_id + '.models') }}
+{{ relative.replace('from ' + api_id + '.models', 'from satvu.services.' + api_id + '.models') }}
 {% endfor %}
 {% endif %}
 {% endfor %}

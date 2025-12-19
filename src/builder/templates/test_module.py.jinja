@@ -15,14 +15,14 @@ from hypothesis_jsonschema import from_schema
 from pydantic import TypeAdapter
 from typing import Union
 
-from satvu_api_sdk import SatVuSDK, create_http_client
-from satvu_api_sdk.http.errors import ClientError, ServerError, HttpError
+from satvu import SatVuSDK, create_http_client
+from satvu.http.errors import ClientError, ServerError, HttpError
 from .test_schemas import get_response_schema, get_request_body_schema, get_parameter_schema, has_request_body, has_parameter
 {%- set all_imports = [] %}
 {%- for endpoint_data in endpoints %}
 {%- for relative in endpoint_data.endpoint.relative_imports %}
 {%- if '.types import' not in relative %}
-{%- set fixed_import = relative.replace('from ' + api_name + '.', 'from satvu_api_sdk.services.' + api_name + '.') %}
+{%- set fixed_import = relative.replace('from ' + api_name + '.', 'from satvu.services.' + api_name + '.') %}
 {%- set _ = all_imports.append(fixed_import) %}
 {%- endif %}
 {%- endfor %}
@@ -30,7 +30,7 @@ from .test_schemas import get_response_schema, get_request_body_schema, get_para
 {%- if response.prop %}
 {%- for relative in response.prop.get_imports(prefix=api_name + '.') %}
 {%- if '.types import' not in relative %}
-{%- set fixed_import = relative.replace('from ' + api_name + '.', 'from satvu_api_sdk.services.' + api_name + '.') %}
+{%- set fixed_import = relative.replace('from ' + api_name + '.', 'from satvu.services.' + api_name + '.') %}
 {%- set _ = all_imports.append(fixed_import) %}
 {%- endif %}
 {%- endfor %}
@@ -41,7 +41,7 @@ from .test_schemas import get_response_schema, get_request_body_schema, get_para
 {%- if body.prop %}
 {%- for relative in body.prop.get_imports(prefix=api_name + '.') %}
 {%- if '.types import' not in relative %}
-{%- set fixed_import = relative.replace('from ' + api_name + '.', 'from satvu_api_sdk.services.' + api_name + '.') %}
+{%- set fixed_import = relative.replace('from ' + api_name + '.', 'from satvu.services.' + api_name + '.') %}
 {%- set _ = all_imports.append(fixed_import) %}
 {%- endif %}
 {%- endfor %}

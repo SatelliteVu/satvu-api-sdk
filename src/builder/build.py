@@ -22,7 +22,7 @@ from builder.test_generator import generate_tests
 
 BASE_DIR = (Path(__file__).parent / ".." / "..").resolve()
 TEMPLATE_DIR = Path(__file__).parent / "templates"
-SRC_DIR = BASE_DIR / "src" / "satvu_api_sdk" / "services"
+SRC_DIR = BASE_DIR / "src" / "satvu" / "services"
 
 
 def set_models_prefix_for_api(api_id: str) -> None:
@@ -33,7 +33,7 @@ def set_models_prefix_for_api(api_id: str) -> None:
     The builder will fix these imports in templates to match our structure:
 
     Generated: from {api_id}.models.foo import Bar
-    Template fixes to: from satvu_api_sdk.services.{api_id}.models.foo import Bar
+    Template fixes to: from satvu.services.{api_id}.models.foo import Bar
 
     Args:
         api_id: The API identifier (e.g., 'catalog', 'wallet')

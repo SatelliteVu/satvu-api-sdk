@@ -4,9 +4,9 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from satvu_api_sdk.core import SDKClient
-from satvu_api_sdk.http.protocol import HttpResponse
-from satvu_api_sdk.result import Ok
+from satvu.core import SDKClient
+from satvu.http.protocol import HttpResponse
+from satvu.result import Ok
 
 
 class MockCatalogClient(SDKClient):
@@ -39,7 +39,7 @@ def create_mock_response(status_code: int, headers: dict[str, str] | None = None
 class TestRetryAfter202:
     """Tests for 202 Accepted responses with Retry-After header."""
 
-    @patch("satvu_api_sdk.core.time.sleep")
+    @patch("satvu.core.time.sleep")
     def test_retry_202_with_retry_after(self, mock_sleep, sdk_client, mock_http_client):
         """Test that 202 Accepted with Retry-After triggers retry."""
         # First call returns 202 with Retry-After: 2
@@ -62,7 +62,7 @@ class TestRetryAfter202:
         assert result.is_ok()
         assert result.unwrap().status_code == 200
 
-    @patch("satvu_api_sdk.core.time.sleep")
+    @patch("satvu.core.time.sleep")
     def test_retry_202_caps_retry_after(self, mock_sleep, sdk_client, mock_http_client):
         """Test that Retry-After is capped at max_retry_after_seconds."""
         # First call returns 202 with Retry-After: 600 (10 minutes)
@@ -81,7 +81,7 @@ class TestRetryAfter202:
         mock_sleep.assert_called_once_with(sdk_client.max_retry_after_seconds)
         assert result.is_ok()
 
-    @patch("satvu_api_sdk.core.time.sleep")
+    @patch("satvu.core.time.sleep")
     def test_retry_202_max_attempts(self, mock_sleep, sdk_client, mock_http_client):
         """Test that retries stop after max attempts (5 total)."""
         # All 5 calls return 202 with Retry-After
@@ -118,7 +118,7 @@ class TestRetryAfter202:
         assert result.is_ok()
         assert result.unwrap().status_code == 202
 
-    @patch("satvu_api_sdk.core.time.sleep")
+    @patch("satvu.core.time.sleep")
     def test_retry_202_case_insensitive_header(
         self, mock_sleep, sdk_client, mock_http_client
     ):
@@ -137,7 +137,7 @@ class TestRetryAfter202:
         mock_sleep.assert_called_once_with(1.0)
         assert result.is_ok()
 
-    @patch("satvu_api_sdk.core.time.sleep")
+    @patch("satvu.core.time.sleep")
     def test_configurable_retry_parameters(self, mock_sleep, mock_http_client):
         """Test that retry parameters can be configured via constructor."""
         # Create client with custom retry config
@@ -167,7 +167,7 @@ class TestRetryAfter202:
         # Should have slept 1 time (not after last attempt)
         assert mock_sleep.call_count == 1
 
-    @patch("satvu_api_sdk.core.time.sleep")
+    @patch("satvu.core.time.sleep")
     def test_configurable_max_retry_after_seconds(self, mock_sleep, mock_http_client):
         """Test that max_retry_after_seconds caps the retry delay."""
         # Create client with custom max retry after seconds

@@ -16,7 +16,7 @@ All HTTP adapters return `Result[HttpResponse, HttpError]` instead of raising ex
 ### Checking for Success or Error
 
 ```python
-from satvu_api_sdk.http.stdlib_adapter import StdlibAdapter
+from satvu.http.stdlib_adapter import StdlibAdapter
 
 adapter = StdlibAdapter()
 result = adapter.request("GET", "https://api.example.com/data")
@@ -54,7 +54,7 @@ response = result.expect("Expected successful API response")
 ### HTTP Status Errors (4xx/5xx)
 
 ```python
-from satvu_api_sdk.http import ClientError, ServerError
+from satvu.http import ClientError, ServerError
 
 result = adapter.request("GET", "https://api.example.com/not-found")
 
@@ -74,7 +74,7 @@ if result.is_err():
 ### Network Errors
 
 ```python
-from satvu_api_sdk.http import NetworkError, ConnectionTimeoutError, ReadTimeoutError
+from satvu.http import NetworkError, ConnectionTimeoutError, ReadTimeoutError
 
 result = adapter.request("GET", "https://unreachable.example.com")
 
@@ -94,7 +94,7 @@ if result.is_err():
 ### SSL/TLS Errors
 
 ```python
-from satvu_api_sdk.http import SSLError
+from satvu.http import SSLError
 
 result = adapter.request("GET", "https://expired-cert.example.com")
 
@@ -106,7 +106,7 @@ if result.is_err() and isinstance(result.error(), SSLError):
 ### Proxy Errors
 
 ```python
-from satvu_api_sdk.http import ProxyError
+from satvu.http import ProxyError
 
 result = adapter.request("GET", "https://api.example.com")
 
@@ -119,7 +119,7 @@ if result.is_err() and isinstance(result.error(), ProxyError):
 ### Parsing Errors
 
 ```python
-from satvu_api_sdk.http import JsonDecodeError, TextDecodeError
+from satvu.http import JsonDecodeError, TextDecodeError
 
 result = adapter.request("GET", "https://api.example.com/data")
 
@@ -218,8 +218,8 @@ elif result.is_err():
 ## Complete Example
 
 ```python
-from satvu_api_sdk.http.stdlib_adapter import StdlibAdapter
-from satvu_api_sdk.http import (
+from satvu.http.stdlib_adapter import StdlibAdapter
+from satvu.http import (
     ClientError,
     ServerError,
     NetworkError,

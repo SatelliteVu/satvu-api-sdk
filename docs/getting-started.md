@@ -7,13 +7,13 @@ This guide walks you through installing the SDK, authenticating, and making your
 Install from PyPI:
 
 ```bash
-pip install satvu-api-sdk
+pip install satvu
 ```
 
 Or with [uv](https://docs.astral.sh/uv/):
 
 ```bash
-uv add satvu-api-sdk
+uv add satvu
 ```
 
 ### Optional Dependencies
@@ -21,9 +21,9 @@ uv add satvu-api-sdk
 The SDK includes a zero-dependency HTTP client using Python's built-in `urllib`. For better performance or additional features, install an optional HTTP backend:
 
 ```bash
-pip install satvu-api-sdk[http-httpx]
-pip install satvu-api-sdk[http-requests]
-pip install satvu-api-sdk[http-urllib3]
+pip install satvu[http-httpx]
+pip install satvu[http-requests]
+pip install satvu[http-urllib3]
 ```
 
 ## 🔐 Authentication
@@ -42,7 +42,7 @@ The SDK uses OAuth2 client credentials.
 
 ```python
 import os
-from satvu_api_sdk import SatVuSDK
+from satvu import SatVuSDK
 
 sdk = SatVuSDK(
     client_id=os.environ["SATVU_CLIENT_ID"],
@@ -59,7 +59,7 @@ Here's a complete example that searches the catalog:
 ```python
 import os
 from uuid import UUID
-from satvu_api_sdk import SatVuSDK
+from satvu import SatVuSDK
 
 # Initialize the SDK
 sdk = SatVuSDK(

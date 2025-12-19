@@ -8,7 +8,7 @@ The SDK uses OAuth2 client credentials flow to authenticate with SatVu APIs.
 
 ```python
 import os
-from satvu_api_sdk import SatVuSDK
+from satvu import SatVuSDK
 
 sdk = SatVuSDK(
     client_id=os.environ["SATVU_CLIENT_ID"],
@@ -30,7 +30,7 @@ By default, tokens are cached in memory for the lifetime of the `SatVuSDK` insta
 
 ```python
 import os
-from satvu_api_sdk import SatVuSDK
+from satvu import SatVuSDK
 
 sdk = SatVuSDK(
     client_id=os.environ["SATVU_CLIENT_ID"],
@@ -45,8 +45,8 @@ For long-running applications or CLI tools, use file-based caching to persist to
 
 ```python
 import os
-from satvu_api_sdk import SatVuSDK
-from satvu_api_sdk.auth import AppDirCache
+from satvu import SatVuSDK
+from satvu.auth import AppDirCache
 
 sdk = SatVuSDK(
     client_id=os.environ["SATVU_CLIENT_ID"],
@@ -59,7 +59,7 @@ sdk = SatVuSDK(
 This requires the `appdirs` package:
 
 ```bash
-pip install satvu-api-sdk[standard]
+pip install satvu[standard]
 ```
 
 ## Custom HTTP Client
@@ -67,8 +67,8 @@ pip install satvu-api-sdk[standard]
 You can provide your own HTTP client for advanced configuration:
 
 ```python
-from satvu_api_sdk import SatVuSDK
-from satvu_api_sdk.http import create_http_client
+from satvu import SatVuSDK
+from satvu.http import create_http_client
 
 # Create a custom HTTP client
 http_client = create_http_client(
@@ -91,7 +91,7 @@ Set request timeout (in seconds):
 
 ```python
 import os
-from satvu_api_sdk import SatVuSDK
+from satvu import SatVuSDK
 
 sdk = SatVuSDK(
     client_id=os.environ["SATVU_CLIENT_ID"],
@@ -106,7 +106,7 @@ The SDK automatically retries failed requests with exponential backoff:
 
 ```python
 import os
-from satvu_api_sdk import SatVuSDK
+from satvu import SatVuSDK
 
 sdk = SatVuSDK(
     client_id=os.environ["SATVU_CLIENT_ID"],

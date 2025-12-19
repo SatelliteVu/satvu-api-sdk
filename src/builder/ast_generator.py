@@ -463,7 +463,7 @@ def add_imports_to_ast(
         tree: Existing module AST
         imports_to_add: Dict mapping module names to list of (name, alias) tuples
                        e.g., {'pathlib': [('Path', None)],
-                              'satvu_api_sdk.result': [('Result', None), ('Ok', 'ResultOk')]}
+                              'satvu.result': [('Result', None), ('Ok', 'ResultOk')]}
 
     Returns:
         Modified AST module with imports added

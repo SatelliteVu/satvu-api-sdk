@@ -24,9 +24,9 @@ from os import getenv
 from pathlib import Path
 from uuid import UUID
 
-from satvu_api_sdk import SatVuSDK
-from satvu_api_sdk.result import is_err, is_ok
-from satvu_api_sdk.services.cos.models import (
+from satvu import SatVuSDK
+from satvu.result import is_err, is_ok
+from satvu.services.cos.models import (
     OrderEditPayload,
     OrderItemDownloadUrl,
     OrderSubmissionPayload,

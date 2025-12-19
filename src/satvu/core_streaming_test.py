@@ -6,7 +6,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from satvu_api_sdk.core import SDKClient
+from satvu.core import SDKClient
 
 
 class ConcreteSDKClient(SDKClient):

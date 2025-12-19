@@ -68,7 +68,7 @@ Available API names: `catalog`, `cos`, `id`, `policy`, `otm`, `reseller`, `walle
 ```
 satvu-api-sdk/
 ├── src/
-│   ├── satvu_api_sdk/          # Main SDK package
+│   ├── satvu/          # Main SDK package
 │   │   ├── sdk.py              # SatVuSDK entry point
 │   │   ├── core.py             # SDKClient base class
 │   │   ├── auth.py             # Authentication

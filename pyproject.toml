@@ -1,5 +1,5 @@
 [project]
-name = "satvu-api-sdk"
+name = "satvu"
 version = "0.1.1"
 description = "SatVu API SDK"
 readme = "README.md"
@@ -54,7 +54,7 @@ dev = [
 path = "hatch_build.py"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/satvu_api_sdk"]
+packages = ["src/satvu"]
 
 [tool.hatch.build.targets.wheel.force-include]
 "src/builder" = "builder"
@@ -117,11 +117,8 @@ ignore_unused = [
 ignore_undeclared = [
     "builder",
     "hatchling",
-    "satvu_api_sdk", # Allow self-referencing imports in tests
+    "satvu", # Allow self-referencing imports in tests
 ]
-
-[tool.fawltydeps.custom_mapping]
-satvu-api-sdk = ["satvu_api_sdk"]
 
 [tool.commitizen]
 name = "cz_customize"

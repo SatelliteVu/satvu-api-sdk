@@ -15,7 +15,7 @@ Set the following environment variables before running:
 from os import getenv
 from uuid import UUID
 
-from satvu_api_sdk import SatVuSDK
+from satvu import SatVuSDK
 
 CLIENT_ID = getenv("SATVU_CLIENT_ID")
 assert CLIENT_ID is not None, "Please set the SATVU_CLIENT_ID environment variable"  # nosec B101

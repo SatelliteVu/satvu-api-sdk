@@ -7,10 +7,10 @@ from urllib.parse import parse_qs, urlparse
 
 from pydantic import BaseModel
 
-from satvu_api_sdk.http import HttpClient, create_http_client
-from satvu_api_sdk.http.errors import HttpError
-from satvu_api_sdk.http.protocol import HttpResponse
-from satvu_api_sdk.result import Result
+from satvu.http import HttpClient, create_http_client
+from satvu.http.errors import HttpError
+from satvu.http.protocol import HttpResponse
+from satvu.result import Result
 
 logger = logging.getLogger(__name__)
 

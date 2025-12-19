@@ -2,7 +2,7 @@
 
 from typing import Any, Literal, cast
 
-from satvu_api_sdk.http.errors import (
+from satvu.http.errors import (
     ClientError,
     ConnectionTimeoutError,
     HttpError,
@@ -16,8 +16,8 @@ from satvu_api_sdk.http.errors import (
     SSLError,
     TextDecodeError,
 )
-from satvu_api_sdk.http.protocol import HttpClient, HttpResponse
-from satvu_api_sdk.result import Err, Ok, Result, is_err, is_ok
+from satvu.http.protocol import HttpClient, HttpResponse
+from satvu.result import Err, Ok, Result, is_err, is_ok
 
 
 def create_http_client(
@@ -80,22 +80,22 @@ def _create_backend(
 ) -> HttpClient:
     """Internal helper to instantiate a specific backend."""
     if backend == "httpx":
-        from satvu_api_sdk.http.httpx_adapter import HttpxAdapter
+        from satvu.http.httpx_adapter import HttpxAdapter
 
         return cast(HttpClient, HttpxAdapter(base_url=base_url, **options))
 
     elif backend == "requests":
-        from satvu_api_sdk.http.requests_adapter import RequestsAdapter
+        from satvu.http.requests_adapter import RequestsAdapter
 
         return cast(HttpClient, RequestsAdapter(base_url=base_url, **options))
 
     elif backend == "urllib3":
-        from satvu_api_sdk.http.urllib3_adapter import Urllib3Adapter
+        from satvu.http.urllib3_adapter import Urllib3Adapter
 
         return cast(HttpClient, Urllib3Adapter(base_url=base_url, **options))
 
     elif backend == "stdlib":
-        from satvu_api_sdk.http.stdlib_adapter import StdlibAdapter
+        from satvu.http.stdlib_adapter import StdlibAdapter
 
         return cast(HttpClient, StdlibAdapter(base_url=base_url, **options))
 

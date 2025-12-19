@@ -23,6 +23,18 @@ class SatVuSDK:
         max_retry_attempts: int = 5,
         max_retry_after_seconds: float = 300.0,
     ):
+        """
+        Initialize the SatVuSDK.
+
+        :param client_id: the client ID for authentication
+        :param client_secret: the client secret for authentication
+        :param env: the environment to use
+        :param token_cache: the token cache to use
+        :param http_client: the HTTP client to use
+        :param timeout: request timeout in seconds, defaults to 30 seconds
+        :param max_retry_attempts: maximum number of retry attempts, default 5
+        :param max_retry_after_seconds: maximum seconds to wait for Retry-After, default 300 seconds
+        """
         self.client_id = client_id
         self.client_secret = client_secret
         self.token_cache = token_cache

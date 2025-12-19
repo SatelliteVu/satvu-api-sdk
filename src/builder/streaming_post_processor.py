@@ -62,8 +62,8 @@ def add_streaming_methods(
         tree,
         {
             "pathlib": [("Path", None)],
-            "satvu_api_sdk.http.errors": [("HttpError", None)],
-            "satvu_api_sdk.result": [
+            "satvu.http.errors": [("HttpError", None)],
+            "satvu.result": [
                 ("Result", None),
                 ("Ok", "ResultOk"),
                 ("Err", "ResultErr"),

@@ -81,7 +81,7 @@ print(f"Total features: {len(all_features)}")
 For POST endpoints that accept a request body:
 
 ```python
-from satvu_api_sdk.services.catalog.models import PostSearchInput
+from satvu.services.catalog.models import PostSearchInput
 
 search_body = PostSearchInput(
     collections=["visual"],
@@ -111,7 +111,7 @@ for page in sdk.cos.query_orders_iter(
         print(f"Order: {order.id} - {order.name}")
 
 # Search orders with POST pagination
-from satvu_api_sdk.services.cos.models import SearchRequest
+from satvu.services.cos.models import SearchRequest
 
 search = SearchRequest(limit=10)
 for page in sdk.cos.search_orders_iter(

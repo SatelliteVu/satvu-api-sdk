@@ -9,10 +9,10 @@ try:
 except ImportError as exc:
     raise ImportError(
         "requests is required to use RequestsAdapter. "
-        'Install it with: pip install "satvu-api-sdk[http-requests]"'
+        'Install it with: pip install "satvu[http-requests]"'
     ) from exc
 
-from satvu_api_sdk.http.errors import (
+from satvu.http.errors import (
     ClientError,
     ConnectionTimeoutError,
     JsonDecodeError,
@@ -23,8 +23,8 @@ from satvu_api_sdk.http.errors import (
     SSLError,
     TextDecodeError,
 )
-from satvu_api_sdk.http.protocol import HttpMethod, HttpResponse
-from satvu_api_sdk.result import Err, Ok, Result, is_err
+from satvu.http.protocol import HttpMethod, HttpResponse
+from satvu.result import Err, Ok, Result, is_err
 
 
 class RequestsResponse:

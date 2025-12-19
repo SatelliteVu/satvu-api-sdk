@@ -21,15 +21,15 @@ Python SDK for [SatVu's](https://www.satellitevu.com/) satellite imagery platfor
 The package is published on [PyPI](https://pypi.org/project/satvu/) and can be installed with pip:
 
 ```bash
-pip install satvu-api-sdk
+pip install satvu
 ```
 
 With optional HTTP backends:
 
 ```bash
-pip install satvu-api-sdk[http-httpx]
-pip install satvu-api-sdk[http-requests]
-pip install satvu-api-sdk[http-urllib3]
+pip install satvu[http-httpx]
+pip install satvu[http-requests]
+pip install satvu[http-urllib3]
 ```
 
 The SDK works out of the box with Python's built-in `urllib`.
@@ -39,7 +39,7 @@ The SDK works out of the box with Python's built-in `urllib`.
 ```python
 import os
 from uuid import UUID
-from satvu_api_sdk import SatVuSDK
+from satvu import SatVuSDK
 
 sdk = SatVuSDK(
     client_id=os.environ["SATVU_CLIENT_ID"],

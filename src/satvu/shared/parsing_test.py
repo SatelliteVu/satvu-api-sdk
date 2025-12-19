@@ -13,7 +13,7 @@ from typing import Union
 import pytest
 from pydantic import BaseModel, Field
 
-from satvu_api_sdk.shared.parsing import (
+from satvu.shared.parsing import (
     _type_adapter_cache,
     parse_response,
 )

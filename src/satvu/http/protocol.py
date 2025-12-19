@@ -4,8 +4,8 @@ from collections.abc import Iterator
 from typing import TYPE_CHECKING, Any, Literal, Protocol
 
 if TYPE_CHECKING:
-    from satvu_api_sdk.http.errors import HttpError, JsonDecodeError, TextDecodeError
-    from satvu_api_sdk.result import Result
+    from satvu.http.errors import HttpError, JsonDecodeError, TextDecodeError
+    from satvu.result import Result
 
 HttpMethod = Literal["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"]
 

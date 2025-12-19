@@ -8,9 +8,9 @@ import pook
 import pytest
 from freezegun import freeze_time
 
-from satvu_api_sdk.auth import AuthError, AuthService, MemoryCache
-from satvu_api_sdk.http import create_http_client
-from satvu_api_sdk.result import is_err, is_ok
+from satvu.auth import AuthError, AuthService, MemoryCache
+from satvu.http import create_http_client
+from satvu.result import is_err, is_ok
 
 # Fixed timestamp for consistent testing
 FIXED_TIMESTAMP = 1640000000  # 2021-12-20 12:13:20 UTC
@@ -400,7 +400,7 @@ def test_invalid_token_response_structure(auth_service):
 @pook.on
 def test_oauth_token_response_model_validation():
     """Test OAuthTokenResponse Pydantic model validation."""
-    from satvu_api_sdk.auth import OAuthTokenResponse
+    from satvu.auth import OAuthTokenResponse
 
     # Valid construction
     token_response = OAuthTokenResponse(

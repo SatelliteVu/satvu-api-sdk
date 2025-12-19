@@ -19,10 +19,10 @@ except ImportError:
 
 import contextlib
 
-from satvu_api_sdk.core import SDKClient
-from satvu_api_sdk.http import HttpClient
-from satvu_api_sdk.http.errors import ClientError, ServerError
-from satvu_api_sdk.result import Err, Ok, Result, is_err
+from satvu.core import SDKClient
+from satvu.http import HttpClient
+from satvu.http.errors import ClientError, ServerError
+from satvu.result import Err, Ok, Result, is_err
 
 logger = getLogger(__name__)
 
@@ -64,7 +64,7 @@ class AppDirCache:
     def __init__(self, cache_dir: str | None = None):
         if user_cache_dir is None:
             raise RuntimeError(
-                'To use the AppDirCache, please install "satvu-api-sdk[standard]": pip install "satvu-api-sdk[standard]"'
+                'To use the AppDirCache, please install "satvu[standard]": pip install "satvu[standard]"'
             )
         self.cache_dir = Path(cache_dir if cache_dir else user_cache_dir("SatelliteVu"))
         self.cache_file = self.cache_dir / "tokencache"

@@ -16,8 +16,8 @@ Set the following environment variables before running:
 
 from os import getenv
 
-from satvu_api_sdk import SatVuSDK
-from satvu_api_sdk.services.id.models import (
+from satvu import SatVuSDK
+from satvu.services.id.models import (
     CoreWebhook,
     EditWebhookPayload,
     NotificationCategory,

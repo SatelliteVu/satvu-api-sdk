@@ -19,7 +19,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "sed -i 's/^version = \".*\"/version = \"${nextRelease.version}\"/' pyproject.toml && uv lock && dagger call build-release --is-qa=false export --path=./dist --wipe && git add -f src/satvu_api_sdk/services/"
+        "prepareCmd": "sed -i 's/^version = \".*\"/version = \"${nextRelease.version}\"/' pyproject.toml && uv lock && dagger call build-release --is-qa=false export --path=./dist --wipe && git add -f src/satvu/services/"
       }
     ],
     [
@@ -29,7 +29,7 @@
           "CHANGELOG.md",
           "pyproject.toml",
           "uv.lock",
-          "src/satvu_api_sdk/services/**"
+          "src/satvu/services/**"
         ],
         "message": "chore(release): ${nextRelease.version} [skip ci]"
       }

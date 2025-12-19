@@ -1271,7 +1271,7 @@ wheels = [
 ]
 
 [[package]]
-name = "satvu-api-sdk"
+name = "satvu"
 version = "0.1.1"
 source = { editable = "." }
 dependencies = [

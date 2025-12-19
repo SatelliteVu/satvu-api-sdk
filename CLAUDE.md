@@ -11,21 +11,27 @@ This is an auto-generated Python SDK for SatVu's APIs. The SDK is generated from
 ## Development Commands
 
 ### Setup
+
 ```bash
 ./scripts/bootstrap.sh
 ```
+
 This installs dependencies and sets up pre-commit hooks.
 
 ### Testing
+
 ```bash
 ./scripts/test.sh
 ```
+
 Run tests with pytest. Pass pytest options directly: `./scripts/test.sh -v -k test_name`
 
 ### Linting
+
 ```bash
 ./scripts/lint.sh
 ```
+
 Runs all pre-commit hooks (Ruff, Bandit, detect-secrets, FawltyDeps).
 
 ### SDK Generation
@@ -33,11 +39,13 @@ Runs all pre-commit hooks (Ruff, Bandit, detect-secrets, FawltyDeps).
 **IMPORTANT:** Always use `uv build` to generate SDK code. This is the canonical build method that ensures templates and source files are correctly processed.
 
 Generate all API SDKs:
+
 ```bash
 uv build
 ```
 
 This command:
+
 - Triggers the Hatch build hook (`hatch_build.py`)
 - Generates all API SDKs (catalog, cos, id, policy, otm, reseller, wallet)
 - Fetches fresh OpenAPI specs
@@ -45,6 +53,7 @@ This command:
 - Packages the distribution
 
 **Alternative (for development only):**
+
 ```bash
 # Generate specific API (bypasses proper template path resolution)
 uv run python -m builder <API_NAME>
@@ -56,6 +65,7 @@ uv run python -m builder <API_NAME> --cached
 Available API names are defined in `src/builder/config.py`: catalog, cos, id, policy, otm, reseller, wallet.
 
 **Dagger CI:**
+
 ```bash
 dagger call -v test    # Run pytest suite
 dagger call -v lint    # Run linter suite
@@ -68,22 +78,24 @@ dagger -c "build-release --is-qa --build-number 123 | export './dist' --wipe"  #
 
 The SDK has three main layers:
 
-1. **SatVuSDK (src/satvu_api_sdk/sdk.py)**: Main entry point that provides access to all API services via properties (catalog, cos, id, etc.). Uses lazy initialization for services.
+1. **SatVuSDK (src/satvu/sdk.py)**: Main entry point that provides access to all API services via properties (catalog, cos, id, etc.). Uses lazy initialization for services.
 
-2. **Service Classes (src/satvu_api_sdk/services/{api_name}/api.py)**: Auto-generated API clients for each SatVu API. These inherit from SDKClient and contain methods corresponding to API endpoints.
+2. **Service Classes (src/satvu/services/{api_name}/api.py)**: Auto-generated API clients for each SatVu API. These inherit from SDKClient and contain methods corresponding to API endpoints.
 
-3. **SDKClient (src/satvu_api_sdk/core.py)**: Base class that handles HTTP communication, authentication, URL construction, and request parameter processing. Automatically converts Pydantic models to JSON and filters out None values.
+3. **SDKClient (src/satvu/core.py)**: Base class that handles HTTP communication, authentication, URL construction, and request parameter processing. Automatically converts Pydantic models to JSON and filters out None values.
 
 ### Result Type System
 
-The SDK uses a Rust-style Result type (src/satvu_api_sdk/result.py) for explicit error handling:
+The SDK uses a Rust-style Result type (src/satvu/result.py) for explicit error handling:
 
 **Core Types:**
+
 - **Result[T, E]**: Union type representing either `Ok[T]` (success) or `Err[E]` (failure)
 - **Ok[T]**: Contains a success value of type T
 - **Err[E]**: Contains an error value of type E
 
 **Key Methods:**
+
 - `.unwrap()`: Extract value (raises on Err)
 - `.unwrap_or(default)`: Extract value or return default
 - `.map(fn)`: Transform success value
@@ -92,14 +104,16 @@ The SDK uses a Rust-style Result type (src/satvu_api_sdk/result.py) for explicit
 - `.or_else(fn)`: Provide alternative on error
 
 **Type Guards:**
+
 - `is_ok(result)`: TypeGuard for Ok variant
 - `is_err(result)`: TypeGuard for Err variant
 
 ### HTTP Adapter System
 
-The SDK uses a pluggable HTTP adapter system (src/satvu_api_sdk/http/) for maximum flexibility:
+The SDK uses a pluggable HTTP adapter system (src/satvu/http/) for maximum flexibility:
 
 **Core Components:**
+
 - **HttpClient Protocol (protocol.py)**: Defines the interface all HTTP adapters must implement
 - **HttpResponse Protocol**: Defines response interface with `.json()`, `.text`, `.body`, `.headers`, `.status_code`
 - **HttpError Hierarchy (errors.py)**: Detailed error types for different failure modes:
@@ -109,15 +123,17 @@ The SDK uses a pluggable HTTP adapter system (src/satvu_api_sdk/http/) for maxim
   - Validation errors: `RequestValidationError`
 
 **Available Adapters:**
+
 - **stdlib_adapter.py**: Zero-dependency adapter using Python's urllib
 - **httpx_adapter.py**: Modern async-capable adapter (requires `httpx`)
 - **urllib3_adapter.py**: High-performance adapter with connection pooling (requires `urllib3`)
 - **requests_adapter.py**: Popular adapter using the requests library (requires `requests`)
 
 **Creating HTTP Clients:**
-Use `create_http_client()` factory function from `satvu_api_sdk.http`:
+Use `create_http_client()` factory function from `satvu.http`:
+
 ```python
-from satvu_api_sdk.http import create_http_client
+from satvu.http import create_http_client
 
 # Auto-detect best available library (httpx → requests → urllib3 → stdlib)
 client = create_http_client()
@@ -131,6 +147,7 @@ client = create_http_client(backend="stdlib")
 
 **Error Handling Pattern:**
 All adapters return `Result[HttpResponse, HttpError]`, allowing callers to handle errors explicitly:
+
 ```python
 result = client.request("GET", url)
 match result:
@@ -147,7 +164,8 @@ match result:
 
 ### Authentication
 
-Authentication is handled by `AuthService` (src/satvu_api_sdk/auth.py):
+Authentication is handled by `AuthService` (src/satvu/auth.py):
+
 - Uses OAuth2 client credentials flow
 - Supports token caching via `TokenCache` protocol
 - Two cache implementations: `MemoryCache` (default) and `AppDirCache` (file-based)
@@ -158,9 +176,11 @@ Authentication is handled by `AuthService` (src/satvu_api_sdk/auth.py):
 The builder system (`src/builder/`) generates SDK code from OpenAPI specifications:
 
 **Key Files:**
+
 1. **load.py**: Fetches OpenAPI specs from SatVu APIs, resolves external $refs, and bundles them into a single schema. Uses caching in `.cache/` directory.
 
 2. **build.py**: Orchestrates SDK generation using a custom `SatVuProject` class that extends openapi-python-client's Project. Key features:
+
    - Strips version prefixes (e.g., `/v2/`) from endpoint paths
    - Generates body docstrings for request bodies including Union types
    - Detects and adds pagination support for STAC-compliant endpoints
@@ -172,6 +192,7 @@ The builder system (`src/builder/`) generates SDK code from OpenAPI specificatio
 
 **Templates:**
 Jinja2 templates in `src/builder/templates/` define the structure of generated code:
+
 - `endpoint_module.py.jinja`: Main template for service classes with endpoint methods
 - `macros/return_annotation.jinja`: Generates return type annotations (handles 204 No Content, Union types, redirects)
 - `model.py.jinja`: Template for Pydantic model classes
@@ -182,9 +203,10 @@ When modifying Jinja2 templates, use `{%-` and `-%}` to strip whitespace. Regula
 
 ### Response Parsing
 
-The SDK uses Pydantic's TypeAdapter for robust, performant response parsing (src/satvu_api_sdk/shared/parsing.py):
+The SDK uses Pydantic's TypeAdapter for robust, performant response parsing (src/satvu/shared/parsing.py):
 
 **Core Parsing Function:**
+
 - `parse_response()`: Wrapper around Pydantic's TypeAdapter
 - Handles Union types, nested models, type coercion, and validation
 - Leverages Pydantic's Rust core for optimal performance
@@ -199,8 +221,9 @@ The SDK uses Pydantic's TypeAdapter for robust, performant response parsing (src
 5. **Zero Custom Logic**: No manual type introspection or try-each loops
 
 **Example:**
+
 ```python
-from satvu_api_sdk.shared.parsing import parse_response
+from satvu.shared.parsing import parse_response
 
 # Parse Union types - Pydantic handles discrimination
 annotation = FeatureCollectionOrder | ResellerFeatureCollectionOrder
@@ -221,28 +244,31 @@ result3 = parse_response(data_with_string_int, Order)
 
 **Error Handling:**
 When validation fails, provides detailed error messages showing:
+
 - Which fields failed validation
 - Why each field failed
 - Data structure that was provided
 - Full Pydantic ValidationError details
 
 **Debug Logging:**
-Enable `logging.DEBUG` for `satvu_api_sdk.shared.parsing` to see TypeAdapter cache hits and parsing details
+Enable `logging.DEBUG` for `satvu.shared.parsing` to see TypeAdapter cache hits and parsing details
 
 **Key Normalization:**
 The parsing module includes a `normalize_keys()` helper function that recursively converts colons in dictionary keys to underscores (e.g., `geo:lat` → `geo_lat`). This is useful for APIs that return keys with colons, which aren't valid Python identifiers.
 
 ### Pagination Support
 
-The SDK provides built-in pagination support for STAC-compliant endpoints through `SDKClient.extract_next_token()` (src/satvu_api_sdk/core.py):
+The SDK provides built-in pagination support for STAC-compliant endpoints through `SDKClient.extract_next_token()` (src/satvu/core.py):
 
 **How it works:**
+
 - Extracts pagination tokens from STAC `links` array with `rel="next"`
 - Handles both GET (token in URL query param) and POST (token in request body) patterns
 - Returns `None` when no more pages are available
 
 **Auto-detection:**
 The builder system automatically detects paginated endpoints during SDK generation based on:
+
 1. Presence of `token` query parameter or token field in request body
 2. Response has `links` array field
 3. Response has an items array field (e.g., `features`, `orders`, `users`)
@@ -255,7 +281,8 @@ The SDK provides memory-efficient streaming download functionality for large bin
 
 **Architecture:**
 
-1. **Core Implementation (src/satvu_api_sdk/core.py)**:
+1. **Core Implementation (src/satvu/core.py)**:
+
    - `SDKClient.stream_to_file()`: Base method that handles chunked streaming to disk
    - Uses `response.iter_bytes(chunk_size)` for memory-efficient downloads
    - Supports progress callbacks for UX integration
@@ -264,12 +291,14 @@ The SDK provides memory-efficient streaming download functionality for large bin
 2. **Auto-Generation System**:
 
    **streaming_detector.py**: Detects which endpoints need streaming variants
+
    - Checks for `x-streaming-download` extension in OpenAPI spec
    - Separates path parameters (used in URL formatting) from query parameters (added to params dict)
    - Builds `StreamingEndpointConfig` with separate `path_params` and `query_params` lists
    - Example: `contract_id`, `order_id` are path params; `collections`, `primary_formats` are query params
 
    **ast_generator.py**: Generates streaming method code using Python's AST module
+
    - `ASTMethodBuilder` class builds syntactically correct function AST nodes
    - Path params become required positional parameters
    - Query params become keyword-only parameters with `None` defaults
@@ -281,6 +310,7 @@ The SDK provides memory-efficient streaming download functionality for large bin
      - `_build_docstring()`: Creates structured docstring with parameter documentation
 
    **streaming_post_processor.py**: Coordinates the generation process
+
    - Parses generated API file as AST
    - Uses `add_imports_to_ast()` for intelligent import handling
    - Uses `generate_streaming_method()` for AST-based code generation
@@ -289,6 +319,7 @@ The SDK provides memory-efficient streaming download functionality for large bin
    - Formats with Black if available (graceful fallback)
 
 **Generated Method Signature:**
+
 ```python
 def download_order_to_file(
     self,
@@ -336,17 +367,20 @@ def download_order_to_file(
 - **Keyword-Only Query Params**: Query parameters are keyword-only with None defaults for better API ergonomics
 
 **Usage Example:**
+
 ```python
 from pathlib import Path
-from satvu_api_sdk import SatVuSDK
+from satvu import SatVuSDK
 
 sdk = SatVuSDK(client_id="...", client_secret="...")
+
 
 # Progress callback for UX
 def show_progress(bytes_downloaded: int, total_bytes: int | None):
     if total_bytes:
         percent = (bytes_downloaded / total_bytes) * 100
         print(f"Progress: {percent:.1f}%")
+
 
 # Download with streaming
 result = sdk.cos.download_order_to_file(
@@ -371,12 +405,14 @@ else:
 The streaming generation system runs after initial SDK code generation:
 
 1. **Detection Phase** (`streaming_detector.py`):
+
    - Scans OpenAPI spec for endpoints with `x-streaming-download: true` extension
    - Extracts endpoint metadata (path, method, parameters)
    - Separates path parameters from query parameters
    - Builds `StreamingEndpointConfig` objects with all necessary information
 
 2. **Generation Phase** (`ast_generator.py`):
+
    - Constructs Python AST nodes for streaming methods
    - Builds function signature with proper type annotations
    - Path params → required positional parameters
@@ -385,6 +421,7 @@ The streaming generation system runs after initial SDK code generation:
    - Creates comprehensive docstrings
 
 3. **Integration Phase** (`streaming_post_processor.py`):
+
    - Parses generated API file as AST
    - Adds missing imports (Path, HttpError, Result, ResultOk)
    - Generates streaming method code using AST builder
@@ -393,6 +430,7 @@ The streaming generation system runs after initial SDK code generation:
    - Formats with Black if available
 
 **Benefits of AST-Based Generation:**
+
 - Eliminates string template fragility and escaping issues
 - Guarantees syntactically correct Python code
 - Automatic handling of complex type annotations
@@ -402,6 +440,7 @@ The streaming generation system runs after initial SDK code generation:
 **For OpenAPI Spec Authors:**
 
 Mark download endpoints with specific response content types:
+
 ```yaml
 responses:
   '200':
@@ -413,13 +452,15 @@ responses:
 ```
 
 Supported content types for auto-detection:
+
 - `application/zip`
 - `application/octet-stream`
 - Any binary format returning large files
 
 **Testing:**
 
-Comprehensive unit tests in `src/satvu_api_sdk/core_streaming_test.py` cover:
+Comprehensive unit tests in `src/satvu/core_streaming_test.py` cover:
+
 - Various chunk patterns and sizes
 - Content-Length header handling (present, missing, invalid)
 - Progress callback invocation
@@ -432,7 +473,8 @@ See `examples/cos.py` and `examples/otm.py` for complete working examples.
 
 ### Generated Code
 
-Generated code lives in `src/satvu_api_sdk/services/{api_name}/`:
+Generated code lives in `src/satvu/services/{api_name}/`:
+
 - `api.py`: Service class with endpoint methods
 - `models/`: Pydantic models for request/response types
 - Models are generated per-API to avoid naming conflicts
@@ -443,12 +485,14 @@ Generated code lives in `src/satvu_api_sdk/services/{api_name}/`:
 
 The SDK provides two error handling approaches:
 
-**1. Legacy Exceptions (src/satvu_api_sdk/exceptions.py):**
+**1. Legacy Exceptions (src/satvu/exceptions.py):**
+
 - `SatVuAPIError`: Base exception with detailed context (status_code, response_body, request_url, request_method)
 - Specific exceptions: `AuthenticationError` (401), `AuthorizationError` (403), `NotFoundError` (404), `ValidationError` (422), `RateLimitError` (429), `ServerError` (5xx)
 - Used by the older `SDKClient` implementation
 
-**2. Result Type System (src/satvu_api_sdk/http/):**
+**2. Result Type System (src/satvu/http/):**
+
 - Modern approach using `Result[Ok[T], Err[E]]` types for explicit error handling
 - No exceptions thrown during normal operation
 - Used by the HTTP adapter system
@@ -470,6 +514,7 @@ The SDK provides two error handling approaches:
 ### Working with API Clients
 
 Service methods:
+
 - Accept Pydantic models or primitives as parameters
 - Return Pydantic models for successful responses (status 200)
 - Return `None` for 204 No Content responses (empty body)
@@ -478,6 +523,7 @@ Service methods:
 
 **Response Code Handling:**
 Generated endpoint methods handle different HTTP status codes:
+
 - **200 OK**: Parse and return response body as Pydantic model
 - **201 Created**: Parse and return response body as Pydantic model
 - **204 No Content**: Return `None` (no body to parse)
@@ -489,9 +535,11 @@ The template system (`endpoint_module.py.jinja` and `macros/return_annotation.ji
 ### Dependencies
 
 **Core Dependencies:**
+
 - `pydantic>=2.11.7`: Data validation and models (required)
 
 **Optional Dependencies:**
+
 - `[standard]`: Includes `appdirs` for file-based token caching
 - `[http-httpx]`: Includes `httpx` for httpx adapter (modern, async-capable)
 - `[http-urllib3]`: Includes `urllib3` for urllib3 adapter (high-performance with connection pooling)
@@ -499,4 +547,4 @@ The template system (`endpoint_module.py.jinja` and `macros/return_annotation.ji
 
 The SDK includes a zero-dependency stdlib adapter that uses Python's built-in `urllib`, so HTTP functionality works without any optional dependencies.
 
-Install with extras: `uv pip install satvu-api-sdk[standard,http-httpx,http-urllib3,http-requests]`
+Install with extras: `uv pip install satvu[standard,http-httpx,http-urllib3,http-requests]`

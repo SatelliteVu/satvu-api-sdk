@@ -226,16 +226,16 @@ class SatvuApiSdkCi:
 
         # Core test paths (always run)
         core_test_paths = [
-            "src/satvu_api_sdk/auth_test.py",
-            "src/satvu_api_sdk/core_test.py",
-            "src/satvu_api_sdk/core_streaming_test.py",
-            "src/satvu_api_sdk/core_retry_test.py",
-            "src/satvu_api_sdk/http/",
-            "src/satvu_api_sdk/shared/",
+            "src/satvu/auth_test.py",
+            "src/satvu/core_test.py",
+            "src/satvu/core_streaming_test.py",
+            "src/satvu/core_retry_test.py",
+            "src/satvu/http/",
+            "src/satvu/shared/",
         ]
 
         # Core tests + specific API tests
-        test_paths = core_test_paths + [f"src/satvu_api_sdk/services/{api}/"]
+        test_paths = core_test_paths + [f"src/satvu/services/{api}/"]
 
         pytest_args = [
             "pytest",

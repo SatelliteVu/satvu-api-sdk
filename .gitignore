@@ -7,8 +7,8 @@ __pycache__/
 .venv
 *.egg-info
 *.py[oc]
-/src/satvu_api_sdk/services/*
-!/src/satvu_api_sdk/services/conftest.py
+/src/satvu/services/*
+!/src/satvu/services/conftest.py
 build/
 dist/
 pytest-coverage.txt

@@ -16,8 +16,8 @@ Set the following environment variables before running:
 
 from os import getenv
 
-from satvu_api_sdk import SatVuSDK
-from satvu_api_sdk.services.reseller.models import (
+from satvu import SatVuSDK
+from satvu.services.reseller.models import (
     CompanyAddress,
     CountryCode,
     CreateUser,

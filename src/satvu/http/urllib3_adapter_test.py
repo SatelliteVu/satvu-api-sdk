@@ -1,17 +1,17 @@
-"""Tests for HttpxAdapter."""
+"""Tests for Urllib3Adapter."""
 
-import httpx
 import pook
 import pytest
+import urllib3
 
-from satvu_api_sdk.http import is_ok
-from satvu_api_sdk.http.httpx_adapter import HttpxAdapter
+from satvu.http import is_ok
+from satvu.http.urllib3_adapter import Urllib3Adapter
 
 
 @pytest.fixture
 def adapter():
-    """Create an HttpxAdapter instance for testing."""
-    return HttpxAdapter(base_url="https://api.example.com")
+    """Create a Urllib3Adapter instance for testing."""
+    return Urllib3Adapter(base_url="https://api.example.com")
 
 
 @pook.on
@@ -22,12 +22,15 @@ def test_get_request(adapter):
     )
 
     result = adapter.request("GET", "/users")
-    assert is_ok(result), f"Expected Ok but got: {result}"
-    response = result.unwrap()
 
+    assert is_ok(result), f"Expected Ok but got: {result}"
+
+    response = result.unwrap()
     assert response.status_code == 200
     json_result = response.json()
+
     assert is_ok(json_result), f"Expected Ok but got: {json_result}"
+
     assert json_result.unwrap() == {"users": ["alice", "bob"]}
 
 
@@ -39,12 +42,15 @@ def test_post_request_with_json(adapter):
     )
 
     result = adapter.request("POST", "/users", json={"name": "charlie"})
-    assert is_ok(result), f"Expected Ok but got: {result}"
-    response = result.unwrap()
 
+    assert is_ok(result), f"Expected Ok but got: {result}"
+
+    response = result.unwrap()
     assert response.status_code == 201
     json_result = response.json()
+
     assert is_ok(json_result), f"Expected Ok but got: {json_result}"
+
     assert json_result.unwrap() == {"id": 123, "name": "charlie"}
 
 
@@ -56,12 +62,15 @@ def test_request_with_query_params(adapter):
     )
 
     result = adapter.request("GET", "/users", params={"limit": 10, "offset": 20})
-    assert is_ok(result), f"Expected Ok but got: {result}"
-    response = result.unwrap()
 
+    assert is_ok(result), f"Expected Ok but got: {result}"
+
+    response = result.unwrap()
     assert response.status_code == 200
     json_result = response.json()
+
     assert is_ok(json_result), f"Expected Ok but got: {json_result}"
+
     assert json_result.unwrap() == {"count": 2}
 
 
@@ -71,9 +80,10 @@ def test_request_with_none_params(adapter):
     pook.get("https://api.example.com/users?limit=10").reply(200).json({})
 
     result = adapter.request("GET", "/users", params={"limit": 10, "offset": None})
-    assert is_ok(result), f"Expected Ok but got: {result}"
-    response = result.unwrap()
 
+    assert is_ok(result), f"Expected Ok but got: {result}"
+
+    response = result.unwrap()
     assert response.status_code == 200
 
 
@@ -87,9 +97,10 @@ def test_request_with_headers(adapter):
     result = adapter.request(
         "GET", "/users", headers={"Authorization": "Bearer token123"}
     )
-    assert is_ok(result), f"Expected Ok but got: {result}"
-    response = result.unwrap()
 
+    assert is_ok(result), f"Expected Ok but got: {result}"
+
+    response = result.unwrap()
     assert response.status_code == 200
     assert pook.isdone()
 
@@ -104,12 +115,15 @@ def test_request_with_form_data(adapter):
         "/login",
         data={"username": "user", "password": "pass"},  # pragma: allowlist secret
     )
-    assert is_ok(result), f"Expected Ok but got: {result}"
-    response = result.unwrap()
 
+    assert is_ok(result), f"Expected Ok but got: {result}"
+
+    response = result.unwrap()
     assert response.status_code == 200
     json_result = response.json()
+
     assert is_ok(json_result), f"Expected Ok but got: {json_result}"
+
     assert json_result.unwrap() == {"token": "abc123"}
 
 
@@ -119,11 +133,14 @@ def test_response_text_property(adapter):
     pook.get("https://api.example.com/hello").reply(200).body("Hello, World!")
 
     result = adapter.request("GET", "/hello")
-    assert is_ok(result), f"Expected Ok but got: {result}"
-    response = result.unwrap()
 
+    assert is_ok(result), f"Expected Ok but got: {result}"
+
+    response = result.unwrap()
     text_result = response.text
+
     assert is_ok(text_result), f"Expected Ok but got: {text_result}"
+
     assert text_result.unwrap() == "Hello, World!"
 
 
@@ -133,9 +150,10 @@ def test_response_body_property(adapter):
     pook.get("https://api.example.com/data").reply(200).body(b"binary data")
 
     result = adapter.request("GET", "/data")
-    assert is_ok(result), f"Expected Ok but got: {result}"
-    response = result.unwrap()
 
+    assert is_ok(result), f"Expected Ok but got: {result}"
+
+    response = result.unwrap()
     assert response.body == b"binary data"
 
 
@@ -147,7 +165,9 @@ def test_response_headers(adapter):
     ).body("test")
 
     result = adapter.request("GET", "/test")
+
     assert is_ok(result), f"Expected Ok but got: {result}"
+
     response = result.unwrap()
 
     assert "X-Custom" in response.headers or "x-custom" in response.headers
@@ -159,6 +179,7 @@ def test_http_error_response(adapter):
     pook.get("https://api.example.com/notfound").reply(404).json({"error": "Not found"})
 
     result = adapter.request("GET", "/notfound")
+
     # 404 should now return Err(ClientError)
     assert result.is_err(), f"Expected Err but got: {result}"
     error = result.error()
@@ -175,38 +196,62 @@ def test_follow_redirects_false(adapter):
     )
 
     result = adapter.request("GET", "/redirect", follow_redirects=False)
-    assert is_ok(result), f"Expected Ok but got: {result}"
-    response = result.unwrap()
 
+    assert is_ok(result), f"Expected Ok but got: {result}"
+
+    response = result.unwrap()
     assert response.status_code == 302
+
+
+@pook.on
+def test_follow_redirects_true(adapter):
+    """Test that follow_redirects=True follows redirects."""
+    pook.get("https://api.example.com/redirect").reply(302).header(
+        "Location", "https://api.example.com/target"
+    )
+    pook.get("https://api.example.com/target").reply(200).json({"final": "destination"})
+
+    result = adapter.request("GET", "/redirect", follow_redirects=True)
+
+    assert is_ok(result), f"Expected Ok but got: {result}"
+
+    response = result.unwrap()
+    assert response.status_code == 200
+    json_result = response.json()
+
+    assert is_ok(json_result), f"Expected Ok but got: {json_result}"
+
+    assert json_result.unwrap() == {"final": "destination"}
 
 
 @pook.on
 def test_absolute_url_ignores_base_url():
     """Test that absolute URLs ignore the base_url."""
-    adapter = HttpxAdapter(base_url="https://api.example.com")
+    adapter = Urllib3Adapter(base_url="https://api.example.com")
 
     pook.get("https://other-api.example.com/data").reply(200).json({"ok": True})
 
     result = adapter.request("GET", "https://other-api.example.com/data")
+
     assert is_ok(result), f"Expected Ok but got: {result}"
+
     response = result.unwrap()
 
     assert response.status_code == 200
 
 
-def test_custom_client():
-    """Test using a custom httpx.Client instance."""
-    custom_client = httpx.Client(
-        base_url="https://custom.example.com", headers={"X-Custom": "header"}
+def test_custom_pool_manager():
+    """Test using a custom urllib3.PoolManager instance."""
+    custom_pool = urllib3.PoolManager(
+        timeout=urllib3.Timeout(connect=5.0, read=10.0), maxsize=20
     )
 
-    adapter = HttpxAdapter(client=custom_client)
+    adapter = Urllib3Adapter(
+        base_url="https://custom.example.com", pool_manager=custom_pool
+    )
 
     pook.activate()
-    pook.get("https://custom.example.com/test").header("X-Custom", "header").reply(
-        200
-    ).json({"ok": True})
+    pook.get("https://custom.example.com/test").reply(200).json({"ok": True})
 
     result = adapter.request("GET", "/test")
 
@@ -220,17 +265,18 @@ def test_custom_client():
     assert is_ok(json_result), f"Expected Ok but got: {json_result}"
 
     assert json_result.unwrap() == {"ok": True}
+    assert adapter._owns_pool is False
     pook.off()
 
 
 def test_adapter_cleanup():
-    """Test that adapter closes client when it owns it."""
-    adapter = HttpxAdapter(base_url="https://api.example.com")
+    """Test that adapter clears pool when it owns it."""
+    adapter = Urllib3Adapter(base_url="https://api.example.com")
 
     # Manually trigger cleanup
-    assert adapter._owns_client is True
+    assert adapter._owns_pool is True
+    pool = adapter.pool_manager
     adapter.__del__()
 
-    # Client should be closed (attempting to use it will raise an error)
-    with pytest.raises(RuntimeError, match="close"):
-        adapter.client.get("/test")
+    # Pool should be cleared (pool.pools will be empty)
+    assert len(pool.pools) == 0

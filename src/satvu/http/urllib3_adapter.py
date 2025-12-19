@@ -10,10 +10,10 @@ try:
 except ImportError as exc:
     raise ImportError(
         "urllib3 is required to use Urllib3Adapter. "
-        'Install it with: pip install "satvu-api-sdk[http-urllib3]"'
+        'Install it with: pip install "satvu[http-urllib3]"'
     ) from exc
 
-from satvu_api_sdk.http.errors import (
+from satvu.http.errors import (
     ClientError,
     ConnectionTimeoutError,
     JsonDecodeError,
@@ -24,8 +24,8 @@ from satvu_api_sdk.http.errors import (
     SSLError,
     TextDecodeError,
 )
-from satvu_api_sdk.http.protocol import HttpMethod, HttpResponse
-from satvu_api_sdk.result import Err, Ok, Result, is_err
+from satvu.http.protocol import HttpMethod, HttpResponse
+from satvu.result import Err, Ok, Result, is_err
 
 
 class Urllib3Response:

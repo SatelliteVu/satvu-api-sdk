@@ -109,7 +109,7 @@ The SDK automatically generates property-based tests for all API service endpoin
 ┌───────────────────────────────────────────────────────────────────────────┐
 │                         OUTPUT FILES                                      │
 │                                                                           │
-│    src/satvu_api_sdk/services/{api_name}/                                │
+│    src/satvu/services/{api_name}/                                │
 │    ├── api_test.py         (~1000+ lines per API)                        │
 │    │   └── TestCatalogService, TestCosService, etc.                     │
 │    └── test_schemas.py     (~2MB+ per API)                               │
@@ -240,7 +240,7 @@ Some schemas like `GeometryCollection` are excluded entirely (`EXCLUDED_SCHEMA_R
 ./scripts/test.sh -v
 
 # Run specific test file
-./scripts/test.sh src/satvu_api_sdk/auth_test.py
+./scripts/test.sh src/satvu/auth_test.py
 
 # Run specific test
 ./scripts/test.sh -k test_get_token_success
@@ -290,7 +290,7 @@ dagger call -v test --add-opts="-k test_auth"
 ### Directory Structure
 
 ```
-src/satvu_api_sdk/
+src/satvu/
 ├── auth_test.py                    # Authentication tests (manual)
 ├── core_test.py                    # SDKClient core tests (manual)
 ├── core_retry_test.py              # Retry logic tests (manual)
@@ -324,7 +324,7 @@ The services `conftest.py` provides:
 3. **CLI option** - `--all-backends` flag for comprehensive testing
 
 ```python
-# src/satvu_api_sdk/services/conftest.py
+# src/satvu/services/conftest.py
 engine.MAX_SHRINKING_SECONDS = 30
 
 ALL_BACKENDS = ["stdlib", "httpx", "urllib3", "requests"]
@@ -431,32 +431,35 @@ When writing manual tests:
 Example:
 
 ```python
-# src/satvu_api_sdk/feature_test.py
+# src/satvu/feature_test.py
 import pook
 import pytest
-from satvu_api_sdk.result import is_ok, is_err
+from satvu.result import is_ok, is_err
+
 
 class TestFeature:
     @pook.on
     def test_feature_success(self):
         pook.get("https://api.satellitevu.com/endpoint")
-            .reply(200)
-            .json({"status": "ok"})
+        .reply(200)
+        .json({"status": "ok"})
 
-        result = feature_function()
+    result = feature_function()
 
-        assert is_ok(result)
-        assert result.unwrap().status == "ok"
+    assert is_ok(result)
+    assert result.unwrap().status == "ok"
 
-    @pook.on
-    def test_feature_error(self):
-        pook.get("https://api.satellitevu.com/endpoint")
-            .reply(500)
-            .json({"error": "Internal Server Error"})
 
-        result = feature_function()
+@pook.on
+def test_feature_error(self):
+    pook.get("https://api.satellitevu.com/endpoint")
+    .reply(500)
+    .json({"error": "Internal Server Error"})
 
-        assert is_err(result)
+
+result = feature_function()
+
+assert is_err(result)
 ```
 
 ## Regenerating Tests

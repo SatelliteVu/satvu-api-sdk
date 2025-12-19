@@ -10,7 +10,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode, urljoin
 from urllib.request import Request, urlopen
 
-from satvu_api_sdk.http.errors import (
+from satvu.http.errors import (
     ClientError,
     ConnectionTimeoutError,
     JsonDecodeError,
@@ -21,8 +21,8 @@ from satvu_api_sdk.http.errors import (
     SSLError,
     TextDecodeError,
 )
-from satvu_api_sdk.http.protocol import HttpMethod, HttpResponse
-from satvu_api_sdk.result import Err, Ok, Result, is_err
+from satvu.http.protocol import HttpMethod, HttpResponse
+from satvu.result import Err, Ok, Result, is_err
 
 
 class StdlibResponse:

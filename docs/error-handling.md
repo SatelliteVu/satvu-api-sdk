@@ -11,7 +11,7 @@ The SDK uses a Rust-inspired `Result` type for explicit error handling. Instead 
 ## Basic Pattern
 
 ```python
-from satvu_api_sdk.result import is_ok, is_err
+from satvu.result import is_ok, is_err
 
 result = sdk.cos.download_order_to_file(
     contract_id=contract_id,
@@ -58,7 +58,7 @@ value = result.expect("Download should have succeeded")
 The SDK provides specific error types for different failure modes:
 
 ```python
-from satvu_api_sdk.http import (
+from satvu.http import (
     ClientError,  # 4xx responses
     ServerError,  # 5xx responses
     NetworkError,  # Connection failures
@@ -147,9 +147,9 @@ if is_err(result):
 ```python
 import os
 from pathlib import Path
-from satvu_api_sdk import SatVuSDK
-from satvu_api_sdk.result import is_ok, is_err
-from satvu_api_sdk.http import ClientError, ServerError, NetworkError
+from satvu import SatVuSDK
+from satvu.result import is_ok, is_err
+from satvu.http import ClientError, ServerError, NetworkError
 
 sdk = SatVuSDK(
     client_id=os.environ["SATVU_CLIENT_ID"],

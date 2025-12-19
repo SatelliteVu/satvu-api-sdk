@@ -208,76 +208,74 @@ jobs:
           restore-keys: |
             openapi-specs-
 
-      # For workflow_call: create commit with subject + changelog body
-      - name: Create spec update commit
-        if: github.event_name == 'workflow_call' && inputs.qa == false
-        env:
-          CHANGELOG: ${{ inputs.changelog }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          # Build commit: subject [skip ci] + optional multiline changelog body
-          if [ -n "$CHANGELOG" ]; then
-            git commit --allow-empty -m "${{ inputs.commit_message }} [skip ci]" -m "$CHANGELOG"
-          else
-            git commit --allow-empty -m "${{ inputs.commit_message }} [skip ci]"
-          fi
-          git push
-
-      # For workflow_dispatch with commit_message: commit it directly
-      - name: Create manual update commit
-        if: github.event_name == 'workflow_dispatch' && inputs.commit_message != '' && inputs.qa == false
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          git commit --allow-empty -m "${{ inputs.commit_message }} [skip ci]"
-          git push
-
       # Install Dagger CLI (needed by semantic-release prepareCmd)
       - name: Install Dagger CLI
-        if: inputs.qa != true
+        if: github.event_name == 'push'
         run: curl -fsSL https://dl.dagger.io/dagger/install.sh | BIN_DIR=$HOME/.local/bin sh
 
-      # Production release via semantic-release
+      # ===========================================
+      # PATH 1: Push events (PR merges) - use semantic-release
+      # ===========================================
+
+      # Production release via semantic-release (push events only)
+      # semantic-release handles: version bump, CHANGELOG, git tag, GitHub release
       - name: Run semantic-release
-        if: inputs.qa != true
+        if: github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-          SATVU_TRIGGERED_API: ${{ inputs.api || 'none' }}
+          SATVU_TRIGGERED_API: none
           SATVU_SPEC_ENV: prod
         run: semantic-release
 
-      # Publish to PyPI using trusted publishing (OIDC)
-      # Only runs if semantic-release created artifacts
-      - name: Publish to PyPI
-        if: inputs.qa != true && hashFiles('dist/*') != ''
+      # Publish to PyPI (push events - semantic-release creates artifacts)
+      - name: Publish to PyPI (push)
+        if: github.event_name == 'push' && hashFiles('dist/*') != ''
         uses: pypa/gh-action-pypi-publish@release/v1
 
-      # QA build (skip semantic-release)
-      - name: Build QA release
-        if: inputs.qa == true
+      # ===========================================
+      # PATH 2: workflow_call/dispatch - timestamp versioning
+      # ===========================================
+
+      # Calculate timestamp version for API triggers
+      - name: Calculate timestamp version
+        if: github.event_name == 'workflow_call' || github.event_name == 'workflow_dispatch'
+        id: version
+        run: |
+          # Get base semver from pyproject.toml
+          BASE_VERSION=$(grep -Po '(?<=version = ")[^"]*' pyproject.toml)
+          echo "Base version: $BASE_VERSION"
+
+          # Calculate timestamp: YYYYMMDD.HHMM
+          TIMESTAMP=$(date -u +%Y%m%d.%H%M)
+          echo "Timestamp: $TIMESTAMP"
+
+          # Build full version
+          if [ "${{ inputs.qa }}" == "true" ]; then
+            FULL_VERSION="${BASE_VERSION}.${TIMESTAMP}rc0"
+          else
+            FULL_VERSION="${BASE_VERSION}.${TIMESTAMP}"
+          fi
+
+          echo "Full version: $FULL_VERSION"
+          echo "full_version=$FULL_VERSION" >> $GITHUB_OUTPUT
+          echo "base_version=$BASE_VERSION" >> $GITHUB_OUTPUT
+
+      # Build with calculated version (workflow_call/dispatch)
+      - name: Build release
+        if: github.event_name == 'workflow_call' || github.event_name == 'workflow_dispatch'
         uses: dagger/dagger-for-github@v8.2.0
         env:
           SATVU_TRIGGERED_API: ${{ inputs.api || 'none' }}
-          SATVU_SPEC_ENV: qa
+          SATVU_SPEC_ENV: ${{ inputs.qa == true && 'qa' || 'prod' }}
         with:
-          call: build-release --is-qa=true export --path=./dist --wipe
+          call: build-release --is-qa=${{ inputs.qa == true }} --version=${{ steps.version.outputs.full_version }} export --path=./dist --wipe
 
-      - name: Generate QA version
-        if: inputs.qa == true
-        id: qa_version
-        run: |
-          # Get current version and bump patch for QA
-          CURRENT_VERSION=$(grep -Po '(?<=version = ")[^"]*' pyproject.toml)
-          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
-          NEXT_PATCH=$((PATCH + 1))
-          DATE=$(date +%y%m%d)
-          QA_VERSION="${MAJOR}.${MINOR}.${NEXT_PATCH}.dev${DATE}${{ github.run_number }}"
-          echo "version=${QA_VERSION}" >> $GITHUB_OUTPUT
-          echo "QA Version: ${QA_VERSION}"
+      # Publish to PyPI (workflow_call/dispatch prod)
+      - name: Publish to PyPI (API trigger)
+        if: (github.event_name == 'workflow_call' || github.event_name == 'workflow_dispatch') && inputs.qa != true
+        uses: pypa/gh-action-pypi-publish@release/v1
 
+      # Publish to CodeArtifact (QA only)
       - name: Publish to CodeArtifact
         if: inputs.qa == true
         env:
@@ -304,10 +302,44 @@ jobs:
           # Upload with uv
           uv publish --publish-url "${REPO_URL}" --username aws --password "${CODEARTIFACT_AUTH_TOKEN}"
 
-      - name: Create QA tag
-        if: inputs.qa == true
+      # Update CHANGELOG for API triggers (prod only)
+      - name: Update CHANGELOG
+        if: github.event_name == 'workflow_call' && inputs.qa != true && inputs.changelog != ''
+        env:
+          CHANGELOG: ${{ inputs.changelog }}
+        run: |
+          VERSION="${{ steps.version.outputs.full_version }}"
+          DATE=$(date -u +%Y-%m-%d)
+
+          # Create new changelog entry
+          NEW_ENTRY="## [$VERSION] - $DATE
+
+          ### API Updates (${{ inputs.api }})
+
+          $CHANGELOG
+          "
+
+          # Prepend to CHANGELOG.md (after the title line)
+          if [ -f CHANGELOG.md ]; then
+            # Insert after first line (title)
+            head -1 CHANGELOG.md > CHANGELOG.tmp
+            echo "" >> CHANGELOG.tmp
+            echo "$NEW_ENTRY" >> CHANGELOG.tmp
+            tail -n +2 CHANGELOG.md >> CHANGELOG.tmp
+            mv CHANGELOG.tmp CHANGELOG.md
+          else
+            echo "# Changelog" > CHANGELOG.md
+            echo "" >> CHANGELOG.md
+            echo "$NEW_ENTRY" >> CHANGELOG.md
+          fi
+
+      # Commit CHANGELOG update (no tag for API triggers)
+      - name: Commit CHANGELOG
+        if: github.event_name == 'workflow_call' && inputs.qa != true && inputs.changelog != ''
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag "v${{ steps.qa_version.outputs.version }}"
-          git push origin "v${{ steps.qa_version.outputs.version }}"
+
+          git add CHANGELOG.md
+          git commit -m "docs(changelog): ${{ steps.version.outputs.full_version }} [skip ci]" || echo "No changes to commit"
+          git push

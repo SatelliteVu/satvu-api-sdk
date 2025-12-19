@@ -1,4 +1,3 @@
-from datetime import datetime, timezone
 from typing import Annotated, TypeAlias
 
 import dagger
@@ -51,28 +50,32 @@ class SatvuApiSdkCi:
     async def build_release(
         self,
         source: SOURCE,
-        is_qa: Annotated[bool, dagger.Doc("build for QA environment")] = True,
-        build_number: Annotated[int, dagger.Doc("release build number")] = 0,
+        is_qa: Annotated[bool, dagger.Doc("build for QA environment")] = False,
+        version: Annotated[
+            str, dagger.Doc("version to build (uses pyproject.toml if not specified)")
+        ] = "",
     ) -> dagger.Directory:
-        """Returns source distribution and package wheel"""
-        # 1. generate pyproject.toml with updated version
-        pyproject_raw = await source.file("pyproject.toml").contents()
-        pyproject_parsed = toml.loads(pyproject_raw)
-        sdk_version: str = pyproject_parsed["project"]["version"]
-        now = datetime.now(timezone.utc)
-        version = f"{sdk_version}.{now:%y%m%d}.{build_number}"
-        if is_qa:
-            version += ".rc0"
-        pyproject_parsed["project"]["version"] = version
+        """Returns source distribution and package wheel.
 
-        # 2. use builder to create distributions and export dist dir
-        return (
-            self.build_container(source)
-            .with_env_variable("SATVU_SDK_USE_QA", "1" if is_qa else "0")
-            .with_new_file("/src/pyproject.toml", toml.dumps(pyproject_parsed))
-            .with_exec(["uv", "build"])
-            .directory("/src/dist")
+        Version is determined by the workflow:
+        - PR merges: clean semver (e.g., 0.1.3)
+        - API triggers: semver.date.time (e.g., 0.1.3.20251219.1553)
+        - QA builds: semver.date.timerc0 (e.g., 0.1.3.20251219.1553rc0)
+        """
+        builder = self.build_container(source).with_env_variable(
+            "SATVU_SDK_USE_QA", "1" if is_qa else "0"
         )
+
+        # If version provided, update pyproject.toml
+        if version:
+            pyproject_raw = await source.file("pyproject.toml").contents()
+            pyproject_parsed = toml.loads(pyproject_raw)
+            pyproject_parsed["project"]["version"] = version
+            builder = builder.with_new_file(
+                "/src/pyproject.toml", toml.dumps(pyproject_parsed)
+            )
+
+        return builder.with_exec(["uv", "build"]).directory("/src/dist")
 
     @function
     async def lint_ruff(self, source: SOURCE):

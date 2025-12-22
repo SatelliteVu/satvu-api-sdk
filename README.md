@@ -68,13 +68,13 @@ for feature in results.features:
 
 ## 📖 Documentation
 
-- [Getting Started](docs/getting-started.md) - Installation, authentication, first API call
-- [Authentication](docs/authentication.md) - OAuth2 flow, token caching, environments
-- [Error Handling](docs/error-handling.md) - Result types and error patterns
-- [Pagination](docs/pagination.md) - Working with paginated endpoints
-- [Streaming Downloads](docs/streaming-downloads.md) - Downloading large imagery files
-- [HTTP Backends](docs/http-backends.md) - Choosing and configuring HTTP clients
-- [Changelog](CHANGELOG.md)
+- [Getting Started](https://github.com/SatelliteVu/satvu-api-sdk/blob/main/docs/getting-started.md) - Installation, authentication, first API call
+- [Authentication](https://github.com/SatelliteVu/satvu-api-sdk/blob/main/docs/authentication.md) - OAuth2 flow, token caching, environments
+- [Error Handling](https://github.com/SatelliteVu/satvu-api-sdk/blob/main/docs/error-handling.md) - Result types and error patterns
+- [Pagination](https://github.com/SatelliteVu/satvu-api-sdk/blob/main/docs/pagination.md) - Working with paginated endpoints
+- [Streaming Downloads](https://github.com/SatelliteVu/satvu-api-sdk/blob/main/docs/streaming-downloads.md) - Downloading large imagery files
+- [HTTP Backends](https://github.com/SatelliteVu/satvu-api-sdk/blob/main/docs/http-backends.md) - Choosing and configuring HTTP clients
+- [Changelog](https://github.com/SatelliteVu/satvu-api-sdk/blob/main/CHANGELOG.md)
 
 ## Requirements
 
@@ -82,7 +82,7 @@ for feature in results.features:
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
+See [CONTRIBUTING.md](https://github.com/SatelliteVu/satvu-api-sdk/blob/main/CONTRIBUTING.MD) for development setup and guidelines.
 
 ## Support
 

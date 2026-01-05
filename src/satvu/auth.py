@@ -122,13 +122,23 @@ class AuthService(SDKClient):
 
     @staticmethod
     def is_expired_token(token: str) -> bool:
-        json = b64decode(token.split(".")[1] + "==")
-        claims = loads(json)
-        if not claims or "exp" not in claims:
-            return False
-        exp = float(claims["exp"])
-        exp_dt = datetime.fromtimestamp(exp)
-        return exp_dt <= datetime.now()
+        """
+        Check if a JWT token is expired based on its exp claim.
+
+        Returns True if the token is expired or malformed (fail-safe).
+        """
+        try:
+            parts = token.split(".")
+            if len(parts) != 3:
+                return True  # Invalid JWT format
+            json_data = b64decode(parts[1] + "==")
+            claims = loads(json_data)
+            if not claims or "exp" not in claims:
+                return True  # No exp claim, treat as expired
+            exp = float(claims["exp"])
+            return datetime.fromtimestamp(exp) <= datetime.now()
+        except (ValueError, IndexError, KeyError, TypeError):
+            return True  # Any parsing error = treat as expired
 
     def token(
         self, client_id: str, client_secret: str, scopes: list[str] | None = None

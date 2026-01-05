@@ -44,7 +44,8 @@ class TokenCache(Protocol):
 
 
 class MemoryCache:
-    _items: dict[str, OAuthTokenResponse] = {}
+    def __init__(self):
+        self._items: dict[str, OAuthTokenResponse] = {}
 
     def save(self, client_id: str, value: OAuthTokenResponse):
         self._items[client_id] = value

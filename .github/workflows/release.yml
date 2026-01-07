@@ -224,7 +224,7 @@ jobs:
         id: version
         run: |
           # Get base semver from pyproject.toml
-          BASE_VERSION=$(grep -Po '(?<=version = ")[^"]*' pyproject.toml)
+          BASE_VERSION=$(grep -Po '^version = "\K[^"]*' pyproject.toml)
           echo "Base version: $BASE_VERSION"
 
           # Calculate timestamp: YYYYMMDD.HHMM

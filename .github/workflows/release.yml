@@ -22,23 +22,9 @@ on:
         type: boolean
         default: false
       commit_message:
-        description: 'Conventional commit message (e.g., feat(catalog): add endpoint)'
+        description: 'Release title (e.g., feat(catalog): add endpoint)'
         type: string
         required: false
-  workflow_call:
-    inputs:
-      api:
-        description: 'Which API schema changed'
-        type: string
-        required: true
-      qa:
-        description: 'Build for QA environment'
-        type: boolean
-        default: false
-      commit_message:
-        description: 'Conventional commit subject (e.g., feat(wallet): add endpoint)'
-        type: string
-        required: true
       changelog:
         description: 'Markdown changelog body from OpenAPI diff'
         type: string
@@ -94,13 +80,11 @@ jobs:
     needs: [check-changes]
     # Run if:
     # - Push event AND changes detected
-    # - workflow_call event (always)
     # - workflow_dispatch event (always)
     if: |
       always() &&
       (
         (github.event_name == 'push' && needs.check-changes.outputs.should_release == 'true') ||
-        github.event_name == 'workflow_call' ||
         github.event_name == 'workflow_dispatch'
       )
     steps:
@@ -145,14 +129,12 @@ jobs:
     needs: [check-changes, test]
     # Run if:
     # - Push event AND changes detected
-    # - workflow_call event (always)
     # - workflow_dispatch event (always)
     if: |
       always() &&
       needs.test.result == 'success' &&
       (
         (github.event_name == 'push' && needs.check-changes.outputs.should_release == 'true') ||
-        github.event_name == 'workflow_call' ||
         github.event_name == 'workflow_dispatch'
       )
     environment: ${{ inputs.qa == true && 'qa' || 'pypi' }}
@@ -233,12 +215,12 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
 
       # ===========================================
-      # PATH 2: workflow_call/dispatch - timestamp versioning
+      # PATH 2: workflow_dispatch - timestamp versioning
       # ===========================================
 
       # Calculate timestamp version for API triggers
       - name: Calculate timestamp version
-        if: github.event_name == 'workflow_call' || github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch'
         id: version
         run: |
           # Get base semver from pyproject.toml
@@ -260,9 +242,9 @@ jobs:
           echo "full_version=$FULL_VERSION" >> $GITHUB_OUTPUT
           echo "base_version=$BASE_VERSION" >> $GITHUB_OUTPUT
 
-      # Build with calculated version (workflow_call/dispatch)
+      # Build with calculated version (workflow_dispatch)
       - name: Build release
-        if: github.event_name == 'workflow_call' || github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch'
         uses: dagger/dagger-for-github@v8.2.0
         env:
           SATVU_TRIGGERED_API: ${{ inputs.api || 'none' }}
@@ -270,9 +252,9 @@ jobs:
         with:
           call: build-release --is-qa=${{ inputs.qa == true }} --version=${{ steps.version.outputs.full_version }} export --path=./dist --wipe
 
-      # Publish to PyPI (workflow_call/dispatch prod)
+      # Publish to PyPI (workflow_dispatch prod)
       - name: Publish to PyPI (API trigger)
-        if: (github.event_name == 'workflow_call' || github.event_name == 'workflow_dispatch') && inputs.qa != true
+        if: github.event_name == 'workflow_dispatch' && inputs.qa != true
         uses: pypa/gh-action-pypi-publish@release/v1
 
       # Publish to CodeArtifact (QA only)
@@ -304,17 +286,22 @@ jobs:
 
       # Update CHANGELOG for API triggers (prod only)
       - name: Update CHANGELOG
-        if: github.event_name == 'workflow_call' && inputs.qa != true && inputs.changelog != ''
+        if: github.event_name == 'workflow_dispatch' && inputs.qa != true && inputs.changelog != ''
         env:
           CHANGELOG: ${{ inputs.changelog }}
+          COMMIT_MESSAGE: ${{ inputs.commit_message }}
+          API_NAME: ${{ inputs.api }}
         run: |
           VERSION="${{ steps.version.outputs.full_version }}"
           DATE=$(date -u +%Y-%m-%d)
 
+          # Use commit_message as header if provided, otherwise default to API Updates
+          HEADER="${COMMIT_MESSAGE:-API Updates (${API_NAME})}"
+
           # Create new changelog entry
           NEW_ENTRY="## [$VERSION] - $DATE
 
-          ### API Updates (${{ inputs.api }})
+          ### ${HEADER}
 
           $CHANGELOG
           "
@@ -333,9 +320,9 @@ jobs:
             echo "$NEW_ENTRY" >> CHANGELOG.md
           fi
 
-      # Commit CHANGELOG update (no tag for API triggers)
+      # Commit CHANGELOG update
       - name: Commit CHANGELOG
-        if: github.event_name == 'workflow_call' && inputs.qa != true && inputs.changelog != ''
+        if: github.event_name == 'workflow_dispatch' && inputs.qa != true && inputs.changelog != ''
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -343,3 +330,35 @@ jobs:
           git add CHANGELOG.md
           git commit -m "docs(changelog): ${{ steps.version.outputs.full_version }} [skip ci]" || echo "No changes to commit"
           git push
+
+      # Create git tag for API triggers (prod only)
+      - name: Create git tag
+        if: github.event_name == 'workflow_dispatch' && inputs.qa != true
+        run: |
+          VERSION="${{ steps.version.outputs.full_version }}"
+          git tag -a "v${VERSION}" -m "Release v${VERSION}"
+          git push origin "v${VERSION}"
+
+      # Create GitHub release for API triggers (prod only)
+      - name: Create GitHub release
+        if: github.event_name == 'workflow_dispatch' && inputs.qa != true
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          RELEASE_TITLE: ${{ inputs.commit_message }}
+          API_NAME: ${{ inputs.api }}
+          CHANGELOG_BODY: ${{ inputs.changelog }}
+        run: |
+          VERSION="${{ steps.version.outputs.full_version }}"
+          TITLE="${RELEASE_TITLE:-${API_NAME} API update}"
+
+          if [ -n "$CHANGELOG_BODY" ]; then
+            gh release create "v${VERSION}" \
+              --title "${TITLE}" \
+              --notes "$CHANGELOG_BODY" \
+              dist/*
+          else
+            gh release create "v${VERSION}" \
+              --title "${TITLE}" \
+              --generate-notes \
+              dist/*
+          fi

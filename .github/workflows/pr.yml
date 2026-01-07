@@ -57,7 +57,7 @@ jobs:
     name: Test (Python ${{ matrix.python-version }})
     needs: changes
     if: ${{ needs.changes.outputs.test == 'true' }}
-    runs-on: ubuntu-latest-4-cores
+    runs-on: ubuntu-latest-4-cores-public
     strategy:
       fail-fast: false
       matrix:

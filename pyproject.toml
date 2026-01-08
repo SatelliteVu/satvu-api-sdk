@@ -3,15 +3,52 @@ name = "satvu"
 version = "0.3.0"
 description = "SatVu API SDK"
 readme = "README.md"
+license = "MIT"
 authors = [
     { name = "Christian Wygoda", email = "christian.wygoda@satellitevu.com" },
     { name = "James Harrison", email = "james.harrison@satellitevu.com" },
     { name = "Zhelini Raveendran", email = "zhelini.raveendran@satellitevu.com" },
 ]
 requires-python = ">=3.10"
+keywords = [
+    "satellite",
+    "imagery",
+    "thermal",
+    "remote-sensing",
+    "earth-observation",
+    "stac",
+    "geospatial",
+    "api-client",
+    "sdk",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: GIS",
+    "Topic :: Scientific/Engineering :: Image Processing",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3 :: Only",
+    "Typing :: Typed",
+    "Operating System :: OS Independent",
+    "Framework :: Pydantic :: 2",
+]
 dependencies = [
     "pydantic>=2.11.7",
 ]
+
+[project.urls]
+Homepage = "https://www.satellitevu.com/"
+Documentation = "https://github.com/SatelliteVu/satvu-api-sdk#readme"
+Repository = "https://github.com/SatelliteVu/satvu-api-sdk"
+Issues = "https://github.com/SatelliteVu/satvu-api-sdk/issues"
+Changelog = "https://github.com/SatelliteVu/satvu-api-sdk/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 standard = ["appdirs>=1.4.4"]

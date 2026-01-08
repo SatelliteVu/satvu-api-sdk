@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is an auto-generated Python SDK for SatVu's APIs. The SDK is generated from OpenAPI specifications using a custom builder that wraps openapi-python-client. The project supports multiple SatVu APIs (catalog, cos, id, policy, otm, reseller, wallet) through a unified SDK interface.
 
-**Requirements:** Python >= 3.13
+**Requirements:** Python >= 3.10
 
 ## Development Commands
 
@@ -480,6 +480,7 @@ The builder includes an extensible test generation system that automatically cre
 The test generation system follows a consistent pattern that can be extended for different test categories:
 
 1. **Generator Module** (`src/builder/*_test_generator.py`):
+
    - Accepts metadata about endpoints that need tests
    - Uses Jinja2 templates from `src/builder/templates/macros/`
    - Parses existing test file as AST
@@ -489,12 +490,14 @@ The test generation system follows a consistent pattern that can be extended for
    - Formats with ruff (auto-fix + format)
 
 2. **Template Macros** (`src/builder/templates/macros/*_tests.jinja`):
+
    - Define reusable test patterns as Jinja2 macros
    - Support type-aware parameter generation
    - Include proper whitespace control with `{%-` and `-%}`
    - Generate syntactically correct Python with proper indentation
 
 3. **Integration Hook** (in post-processors or `build.py`):
+
    - Called after main code generation
    - Receives `Project` object for Jinja2 environment access
    - Graceful error handling with warnings (non-fatal)
@@ -504,11 +507,13 @@ The test generation system follows a consistent pattern that can be extended for
 Location: `src/builder/streaming_test_generator.py`
 
 Generates three test types for each streaming download method:
+
 - **Success test**: Validates file writing with mocked content
 - **Progress callback test**: Validates progress callback invocation
 - **Error test**: Validates error propagation (404, etc.)
 
 Key implementation details:
+
 ```python
 def generate_streaming_tests(
     api_name: str,
@@ -547,6 +552,7 @@ def generate_streaming_tests(
 ```
 
 **Template Example** (`src/builder/templates/macros/streaming_tests.jinja`):
+
 ```jinja
 {%- macro streaming_success_test(config, api_name) -%}
 @pook.on

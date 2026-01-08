@@ -335,6 +335,9 @@ jobs:
       - name: Create git tag
         if: github.event_name == 'workflow_dispatch' && inputs.qa != true
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
           VERSION="${{ steps.version.outputs.full_version }}"
           git tag -a "v${VERSION}" -m "Release v${VERSION}"
           git push origin "v${VERSION}"

@@ -347,21 +347,25 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && inputs.qa != true
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          RELEASE_TITLE: ${{ inputs.commit_message }}
+          COMMIT_MESSAGE: ${{ inputs.commit_message }}
           API_NAME: ${{ inputs.api }}
           CHANGELOG_BODY: ${{ inputs.changelog }}
         run: |
           VERSION="${{ steps.version.outputs.full_version }}"
-          TITLE="${RELEASE_TITLE:-${API_NAME} API update}"
 
+          # Title is always the version (consistent with semantic-release)
+          TITLE="v${VERSION}"
+
+          # Notes priority: changelog > commit_message > minimal fallback
           if [ -n "$CHANGELOG_BODY" ]; then
-            gh release create "v${VERSION}" \
-              --title "${TITLE}" \
-              --notes "$CHANGELOG_BODY" \
-              dist/*
+            NOTES="$CHANGELOG_BODY"
+          elif [ -n "$COMMIT_MESSAGE" ]; then
+            NOTES="$COMMIT_MESSAGE"
           else
-            gh release create "v${VERSION}" \
-              --title "${TITLE}" \
-              --generate-notes \
-              dist/*
+            NOTES="API schema update for ${API_NAME:-all APIs}"
           fi
+
+          gh release create "v${VERSION}" \
+            --title "${TITLE}" \
+            --notes "$NOTES" \
+            dist/*

@@ -1,3 +1,4 @@
+import os
 from typing import Annotated, TypeAlias
 
 import dagger
@@ -65,6 +66,12 @@ class SatvuApiSdkCi:
         builder = self.build_container(source).with_env_variable(
             "SATVU_SDK_USE_QA", "1" if is_qa else "0"
         )
+
+        # Forward selective spec fetching env vars from host
+        if triggered_api := os.environ.get("SATVU_TRIGGERED_API"):
+            builder = builder.with_env_variable("SATVU_TRIGGERED_API", triggered_api)
+        if spec_env := os.environ.get("SATVU_SPEC_ENV"):
+            builder = builder.with_env_variable("SATVU_SPEC_ENV", spec_env)
 
         # If version provided, update pyproject.toml
         if version:
@@ -167,10 +174,18 @@ class SatvuApiSdkCi:
                 ]
             )
 
+        builder = self.build_container(
+            source, python_version=python_version, install_deps=True
+        )
+
+        # Forward selective spec fetching env vars from host
+        if triggered_api := os.environ.get("SATVU_TRIGGERED_API"):
+            builder = builder.with_env_variable("SATVU_TRIGGERED_API", triggered_api)
+        if spec_env := os.environ.get("SATVU_SPEC_ENV"):
+            builder = builder.with_env_variable("SATVU_SPEC_ENV", spec_env)
+
         run = (
-            await self.build_container(
-                source, python_version=python_version, install_deps=True
-            )
+            await builder
             # Verify correct Python version is being used
             .with_exec(["python", "--version"])
             .with_env_variable("PYTEST_ADDOPTS", add_opts)
@@ -244,11 +259,18 @@ class SatvuApiSdkCi:
             "-v",
         ] + test_paths
 
+        builder = self.build_container(
+            source, python_version=python_version, install_deps=True
+        )
+
+        # Forward selective spec fetching env vars from host
+        if triggered_api := os.environ.get("SATVU_TRIGGERED_API"):
+            builder = builder.with_env_variable("SATVU_TRIGGERED_API", triggered_api)
+        if spec_env := os.environ.get("SATVU_SPEC_ENV"):
+            builder = builder.with_env_variable("SATVU_SPEC_ENV", spec_env)
+
         run = (
-            await self.build_container(
-                source, python_version=python_version, install_deps=True
-            )
-            .with_exec(["python", "--version"])
+            await builder.with_exec(["python", "--version"])
             .with_exec(["/bin/uv", "build"])
             .with_exec(
                 pytest_args,

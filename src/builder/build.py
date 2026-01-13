@@ -1,4 +1,5 @@
 import sys
+import traceback
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -17,6 +18,8 @@ from builder.config import APIS
 from builder.jinja_filters import to_pydantic_model_field
 from builder.load import load_openapi
 from builder.openapi_preprocessor import preprocess_for_sdk_generation
+from builder.pagination_detector import PaginationEndpointDetector
+from builder.pagination_test_generator import generate_pagination_tests
 from builder.streaming_post_processor import add_streaming_methods
 from builder.test_generator import generate_tests
 
@@ -251,6 +254,7 @@ class ServiceCodeGenerator:
         self.generate_tests = generate_tests
         self.spec_hash = spec_hash
         self.transformer = EndpointTransformer(context)
+        self.enhanced_endpoints: list[EnhancedEndpoint] = []
 
     def generate(self) -> Sequence[GeneratorError]:
         """Generate service code."""
@@ -268,9 +272,10 @@ class ServiceCodeGenerator:
         # Run post hooks
         self.project._run_post_hooks()
 
-        # Generate standard tests (only when requested)
+        # Generate tests (only when requested)
         if self.generate_tests:
             self._generate_tests()
+            self._generate_pagination_tests()
 
         # Post-process: Add streaming download methods (and optionally their tests)
         try:
@@ -294,11 +299,11 @@ class ServiceCodeGenerator:
         )
 
         # Transform endpoints
-        enhanced_endpoints = []
+        self.enhanced_endpoints = []
         for collection in self.project.openapi.endpoint_collections_by_tag.values():
             for endpoint in collection.endpoints:
                 enhanced = self.transformer.transform(endpoint)
-                enhanced_endpoints.append(enhanced)
+                self.enhanced_endpoints.append(enhanced)
 
         # Generate api.py
         api_class_path = api_dir / "api.py"
@@ -310,14 +315,14 @@ class ServiceCodeGenerator:
 
         # Prepare template context
         template_context = {
-            "endpoints": [e.endpoint for e in enhanced_endpoints],
+            "endpoints": [e.endpoint for e in self.enhanced_endpoints],
             "api_id": self.context.api_id,
             "base_path": self.context.base_path,
         }
 
         # Add body_docstrings and pagination to endpoints
         for enhanced, endpoint in zip(
-            enhanced_endpoints, template_context["endpoints"], strict=False
+            self.enhanced_endpoints, template_context["endpoints"], strict=False
         ):
             endpoint.body_docstrings = enhanced.body_docstrings
             endpoint.pagination = enhanced.pagination
@@ -366,6 +371,41 @@ class ServiceCodeGenerator:
             import traceback
 
             print(f"  [TESTS] Warning: Failed to generate tests: {e}")
+            traceback.print_exc()
+
+    def _generate_pagination_tests(self):
+        """Generate tests for pagination iterator methods."""
+        try:
+            # Build pagination map from enhanced endpoints
+            pagination_map: dict[str, PaginationInfo] = {}
+            for enhanced in self.enhanced_endpoints:
+                if enhanced.pagination:
+                    pagination_map[enhanced.endpoint.name] = enhanced.pagination
+
+            if not pagination_map:
+                return  # No paginated endpoints
+
+            # Get all endpoints
+            endpoints = [e.endpoint for e in self.enhanced_endpoints]
+
+            # Detect pagination configs
+            detector = PaginationEndpointDetector(self.context.api_id)
+            pagination_configs = detector.detect_all(endpoints, pagination_map)
+
+            if not pagination_configs:
+                return
+
+            # Generate tests
+            test_file = self.project.package_dir / "api_test.py"
+            if test_file.exists():
+                generate_pagination_tests(
+                    api_name=self.context.api_id,
+                    pagination_configs=pagination_configs,
+                    test_file=test_file,
+                    jinja_env=self.project.env,
+                )
+        except Exception as e:
+            print(f"  [PAGINATION TESTS] Warning: Failed to generate tests: {e}")
             traceback.print_exc()
 
 

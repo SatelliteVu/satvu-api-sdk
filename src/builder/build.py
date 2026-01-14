@@ -237,10 +237,17 @@ class EndpointTransformer:
 class ServiceCodeGenerator:
     """Generates service code using custom templates."""
 
-    def __init__(self, project: Project, context: BuildContext, openapi_dict: dict):
+    def __init__(
+        self,
+        project: Project,
+        context: BuildContext,
+        openapi_dict: dict,
+        generate_tests: bool = False,
+    ):
         self.project = project
         self.context = context
         self.openapi_dict = openapi_dict
+        self.generate_tests = generate_tests
         self.transformer = EndpointTransformer(context)
 
     def generate(self) -> Sequence[GeneratorError]:
@@ -259,10 +266,11 @@ class ServiceCodeGenerator:
         # Run post hooks
         self.project._run_post_hooks()
 
-        # Generate standard tests before tests for streaming methods
-        self._generate_tests()
+        # Generate standard tests (only when requested)
+        if self.generate_tests:
+            self._generate_tests()
 
-        # Post-process: Add streaming download methods (and their tests)
+        # Post-process: Add streaming download methods (and optionally their tests)
         try:
             self._add_streaming_methods(self.openapi_dict)
         except Exception as e:
@@ -331,9 +339,14 @@ class ServiceCodeGenerator:
             for ep in collection.endpoints
         ]
 
-        # Add streaming methods and generate tests
+        # Add streaming methods (and optionally generate tests)
         add_streaming_methods(
-            api_file, self.context.api_id, endpoints, openapi_dict, project=self.project
+            api_file,
+            self.context.api_id,
+            endpoints,
+            openapi_dict,
+            project=self.project,
+            generate_tests=self.generate_tests,
         )
 
     def _generate_tests(self):
@@ -353,18 +366,21 @@ class ServiceCodeGenerator:
             traceback.print_exc()
 
 
-def build_service(api_id: str, use_cached: bool = False) -> Sequence[GeneratorError]:
+def build_service(
+    api_id: str, use_cached: bool = False, generate_tests: bool = False
+) -> Sequence[GeneratorError]:
     """
     Build an API service.
 
     Args:
         api_id: API identifier
         use_cached: Use cached OpenAPI spec
+        generate_tests: Generate test files (default: False for faster builds)
 
     Returns:
         List of errors (empty on success)
     """
-    print(f"Building {api_id} service...")
+    print(f"Building {api_id} service{' (with tests)' if generate_tests else ''}...")
 
     # Create build context
     context = BuildContext(
@@ -415,7 +431,9 @@ def build_service(api_id: str, use_cached: bool = False) -> Sequence[GeneratorEr
     project.env.filters["to_pydantic_field"] = to_pydantic_model_field
 
     # Generate using our custom generator (pass openapi_dict for extensions)
-    generator = ServiceCodeGenerator(project, context, openapi_dict)
+    generator = ServiceCodeGenerator(
+        project, context, openapi_dict, generate_tests=generate_tests
+    )
     errors = generator.generate()
 
     if errors:
@@ -428,13 +446,15 @@ def build_service(api_id: str, use_cached: bool = False) -> Sequence[GeneratorEr
     return errors
 
 
-def build_all(use_cached: bool = False) -> dict[str, list[GeneratorError]]:
+def build_all(
+    use_cached: bool = False, generate_tests: bool = False
+) -> dict[str, list[GeneratorError]]:
     """Build all API services."""
     results = {}
 
     for api_id in APIS:
         print(f"\n{'=' * 60}")
-        errors = build_service(api_id, use_cached)
+        errors = build_service(api_id, use_cached, generate_tests=generate_tests)
         results[api_id] = errors
 
     print(f"\n{'=' * 60}")
@@ -444,14 +464,14 @@ def build_all(use_cached: bool = False) -> dict[str, list[GeneratorError]]:
     return results
 
 
-def build(api_id: str, use_cached: bool = False) -> None:
+def build(api_id: str, use_cached: bool = False, generate_tests: bool = False) -> None:
     """Main entry point (CLI compatible)."""
     if api_id == "all":
-        results = build_all(use_cached)
+        results = build_all(use_cached, generate_tests=generate_tests)
         if any(results.values()):
             sys.exit(1)
     else:
-        errors = build_service(api_id, use_cached)
+        errors = build_service(api_id, use_cached, generate_tests=generate_tests)
         if errors:
             print("\nErrors:")
             for error in errors:

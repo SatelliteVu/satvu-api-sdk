@@ -35,6 +35,7 @@ def add_streaming_methods(
     endpoints: list[Endpoint],
     openapi_dict: dict,
     project: Project | None = None,
+    generate_tests: bool = False,
 ) -> None:
     """
     Add streaming methods to generated API service file using AST.
@@ -45,6 +46,7 @@ def add_streaming_methods(
         endpoints: List of parsed endpoints from OpenAPI spec
         openapi_dict: Raw OpenAPI spec dict for reading x-streaming extensions
         project: Optional Project object for test generation (provides Jinja2 env)
+        generate_tests: Whether to generate tests for streaming methods
     """
     # Detect which endpoints need streaming variants
     detector = StreamingEndpointDetector(api_id, openapi_dict)
@@ -121,8 +123,8 @@ def add_streaming_methods(
     # Write formatted code
     api_file.write_text(final_code)
 
-    # Generate tests for streaming methods
-    if project is not None:
+    # Generate tests for streaming methods (only when requested)
+    if generate_tests and project is not None:
         test_file = api_file.parent / "api_test.py"
         if test_file.exists():
             try:

@@ -80,6 +80,10 @@ class SatvuApiSdkCi:
         if spec_env := os.environ.get("SATVU_SPEC_ENV"):
             builder = builder.with_env_variable("SATVU_SPEC_ENV", spec_env)
 
+        # Note: SATVU_GENERATE_TESTS is intentionally NOT set here.
+        # Release builds skip test generation since tests are excluded from the wheel.
+        # Test generation is only enabled in test() and test_api() functions.
+
         # If version provided, update pyproject.toml
         if version:
             pyproject_raw = await source.file("pyproject.toml").contents()
@@ -199,6 +203,9 @@ class SatvuApiSdkCi:
         if spec_env := os.environ.get("SATVU_SPEC_ENV"):
             builder = builder.with_env_variable("SATVU_SPEC_ENV", spec_env)
 
+        # Enable test generation for test runs (tests are needed to run pytest)
+        builder = builder.with_env_variable("SATVU_GENERATE_TESTS", "1")
+
         run = (
             await builder
             # Verify correct Python version is being used
@@ -283,6 +290,9 @@ class SatvuApiSdkCi:
             builder = builder.with_env_variable("SATVU_TRIGGERED_API", triggered_api)
         if spec_env := os.environ.get("SATVU_SPEC_ENV"):
             builder = builder.with_env_variable("SATVU_SPEC_ENV", spec_env)
+
+        # Enable test generation for test runs (tests are needed to run pytest)
+        builder = builder.with_env_variable("SATVU_GENERATE_TESTS", "1")
 
         run = (
             await builder.with_exec(["python", "--version"])

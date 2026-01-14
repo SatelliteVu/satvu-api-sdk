@@ -50,7 +50,10 @@ def auth_service():
 def auth_service_with_custom_client():
     """Create an AuthService with a custom HTTP client."""
     cache = MemoryCache()
-    http_client = create_http_client("stdlib", base_url="https://auth.satellitevu.com")
+    # Must include /oauth path since AuthService.base_path is /oauth
+    http_client = create_http_client(
+        "stdlib", base_url="https://auth.satellitevu.com/oauth"
+    )
     return AuthService(env=None, token_cache=cache, http_client=http_client)
 
 

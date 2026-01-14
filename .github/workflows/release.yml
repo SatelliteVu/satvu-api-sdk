@@ -94,6 +94,10 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
 
+      # Ensure cache directory exists for Dagger to mount
+      - name: Ensure cache directory exists
+        run: mkdir -p .cache
+
       # Cache OpenAPI specs - ensures test uses same specs as release
       - name: Cache OpenAPI specs
         uses: actions/cache@v4
@@ -178,6 +182,10 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
 
+      # Ensure cache directory exists for Dagger to mount
+      - name: Ensure cache directory exists
+        run: mkdir -p .cache
+
       # Cache OpenAPI specs between runs
       # - Restores most recent cache (restore-keys fallback)
       # - Saves with unique key per run (captures any freshly fetched specs)
@@ -250,7 +258,16 @@ jobs:
           SATVU_TRIGGERED_API: ${{ inputs.api || 'none' }}
           SATVU_SPEC_ENV: ${{ inputs.qa == true && 'qa' || 'prod' }}
         with:
-          call: build-release --is-qa=${{ inputs.qa == true }} --version=${{ steps.version.outputs.full_version }} export --path=./dist --wipe
+          call: build-release --is-qa=${{ inputs.qa == true }} --version=${{ steps.version.outputs.full_version }} export --path=./build-output --wipe
+
+      # Extract build artifacts from Dagger output
+      # Dagger returns composite directory with dist/ and .cache/
+      - name: Extract build artifacts
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          mv ./build-output/dist ./dist
+          mv ./build-output/.cache ./.cache
+          rm -rf ./build-output
 
       # Publish to PyPI (workflow_dispatch prod)
       - name: Publish to PyPI (API trigger)

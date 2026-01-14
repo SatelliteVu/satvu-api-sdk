@@ -1,3 +1,13 @@
+## [0.3.1](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.3.0...v0.3.1) (2026-01-14)
+
+
+### Bug Fixes
+
+* **auth:** handle malformed JWTs in expiration check
+* **auth:** make MemoryCache instance-level to prevent token leakage
+* **misc:** export OpenAPI spec cache from Dagger container
+* **release:** set git identity before creating annotated tag
+
 # [0.3.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.2.0...v0.3.0) (2026-01-07)
 
 ## [0.3.0.20260113.1752] - 2026-01-13

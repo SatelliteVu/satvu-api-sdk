@@ -32,6 +32,9 @@ class SatvuApiSdkCi:
             .with_file("/bin/uvx", uv_image.file("/uvx"))
             .with_workdir("/src")
             .with_directory("/src", source, gitignore=True, exclude=[".dagger"])
+            # Explicitly include .cache for cached OpenAPI specs (excluded by gitignore)
+            # If .cache doesn't exist, this mounts an empty directory (safe fallback)
+            .with_directory("/src/.cache", source.directory(".cache"))
         )
 
         if install_deps:
@@ -56,7 +59,11 @@ class SatvuApiSdkCi:
             str, dagger.Doc("version to build (uses pyproject.toml if not specified)")
         ] = "",
     ) -> dagger.Directory:
-        """Returns source distribution and package wheel.
+        """Returns build artifacts including dist and cached OpenAPI specs.
+
+        The returned directory contains:
+        - dist/: Source distribution and wheel
+        - .cache/: Cached OpenAPI specs (for GitHub Actions caching)
 
         Version is determined by the workflow:
         - PR merges: clean semver (e.g., 0.1.3)
@@ -82,7 +89,15 @@ class SatvuApiSdkCi:
                 "/src/pyproject.toml", toml.dumps(pyproject_parsed)
             )
 
-        return builder.with_exec(["uv", "build"]).directory("/src/dist")
+        built = builder.with_exec(["uv", "build"])
+
+        # Return composite directory with both dist and cache
+        # This allows GitHub Actions to cache the OpenAPI specs for future runs
+        return (
+            dag.directory()
+            .with_directory("dist", built.directory("/src/dist"))
+            .with_directory(".cache", built.directory("/src/.cache"))
+        )
 
     @function
     async def lint_ruff(self, source: SOURCE):

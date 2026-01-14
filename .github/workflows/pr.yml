@@ -37,6 +37,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+      - name: Ensure cache directory exists
+        run: mkdir -p .cache
       - name: Test
         uses: dagger/dagger-for-github@v8.2.0
         with:
@@ -48,6 +50,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+      - name: Ensure cache directory exists
+        run: mkdir -p .cache
       - name: Test
         uses: dagger/dagger-for-github@v8.2.0
         with:
@@ -65,6 +69,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+      - name: Ensure cache directory exists
+        run: mkdir -p .cache
       - name: Run tests in dagger
         uses: dagger/dagger-for-github@v8.2.0
         with:

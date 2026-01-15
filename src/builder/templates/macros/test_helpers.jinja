@@ -63,16 +63,17 @@
 {%- endmacro %}
 
 {#- Hypothesis @given decorator parameters for response and body -#}
+{#- Uses strategy functions that load from example cache with fallback to from_schema() -#}
 {%- macro given_params(endpoint, status_code, include_response=true) %}
 {%- if include_response %}
-        response_data=from_schema(get_response_schema("{{ endpoint.path }}", "{{ endpoint.method }}", "{{ status_code }}")),
+        response_data=get_response_strategy("{{ endpoint.path }}", "{{ endpoint.method }}", "{{ status_code }}"),
 {%- endif %}
 {%- if endpoint.bodies %}
-        body_data=from_schema(get_request_body_schema("{{ endpoint.path }}", "{{ endpoint.method }}")),
+        body_data=get_request_body_strategy("{{ endpoint.path }}", "{{ endpoint.method }}"),
 {%- endif %}
 {%- for param in endpoint.query_parameters %}
 {%- if param.required %}
-        {{ param.python_name }}=from_schema(get_parameter_schema("{{ endpoint.path }}", "{{ endpoint.method }}", "{{ param.name }}")),
+        {{ param.python_name }}=get_parameter_strategy("{{ endpoint.path }}", "{{ endpoint.method }}", "{{ param.name }}"),
 {%- endif %}
 {%- endfor %}
 {%- endmacro %}

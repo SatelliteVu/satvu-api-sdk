@@ -243,11 +243,13 @@ class ServiceCodeGenerator:
         context: BuildContext,
         openapi_dict: dict,
         generate_tests: bool = False,
+        spec_hash: str = "",
     ):
         self.project = project
         self.context = context
         self.openapi_dict = openapi_dict
         self.generate_tests = generate_tests
+        self.spec_hash = spec_hash
         self.transformer = EndpointTransformer(context)
 
     def generate(self) -> Sequence[GeneratorError]:
@@ -358,6 +360,7 @@ class ServiceCodeGenerator:
                 openapi_dict=self.openapi_dict,
                 base_path=self.context.base_path,
                 output_dir=self.project.package_dir,
+                spec_hash=self.spec_hash,
             )
         except Exception as e:
             import traceback
@@ -399,6 +402,9 @@ def build_service(
         openapi_dict, openapi_src = load_openapi(api_id, use_cached)
         # Preprocess the spec to fix issues that would require patching
         openapi_dict = preprocess_for_sdk_generation(openapi_dict)
+        # Extract spec hash from cache filename for example caching
+        # Cache filename format: {api_id}-{hash}.json
+        spec_hash = openapi_src.stem.split("-", 1)[1] if "-" in openapi_src.stem else ""
     except Exception as e:
         return [GeneratorError(detail=f"Failed to load OpenAPI spec: {e}")]
 
@@ -432,7 +438,11 @@ def build_service(
 
     # Generate using our custom generator (pass openapi_dict for extensions)
     generator = ServiceCodeGenerator(
-        project, context, openapi_dict, generate_tests=generate_tests
+        project,
+        context,
+        openapi_dict,
+        generate_tests=generate_tests,
+        spec_hash=spec_hash,
     )
     errors = generator.generate()
 

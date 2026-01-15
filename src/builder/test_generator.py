@@ -6,6 +6,7 @@ Tests validate both SDK methods and Pydantic model parsing.
 """
 
 import subprocess
+import traceback
 from pathlib import Path
 from typing import Any
 
@@ -151,6 +152,7 @@ def generate_tests(
     openapi_dict: dict,
     base_path: str,
     output_dir: Path,
+    spec_hash: str = "",
 ) -> None:
     """
     Generate test file for a service API.
@@ -161,6 +163,7 @@ def generate_tests(
         openapi_dict: Raw OpenAPI dict with components/schemas
         base_path: Base path for the API (e.g., '/catalog/v1')
         output_dir: Directory to write test files to
+        spec_hash: Hash of OpenAPI spec for example caching (extracted from cache filename)
 
     Generated files:
         - api_test.py: Test class with test methods
@@ -199,9 +202,14 @@ def generate_tests(
         endpoints_data=endpoints_data,
         base_path=base_path,
         output_dir=output_dir,
+        spec_hash=spec_hash,
     )
 
     print(f"  [TESTS] Generated {len(endpoints_data)} test cases")
+
+    # Generate example cache for faster test execution
+    if spec_hash:
+        _generate_example_cache(api_name, operations, spec_hash)
 
 
 def _prepare_components(openapi_dict: dict) -> dict[str, Any]:
@@ -399,6 +407,7 @@ def _render_test_files(
     endpoints_data: list,
     base_path: str,
     output_dir: Path,
+    spec_hash: str = "",
 ) -> None:
     """
     Render and write test files from templates.
@@ -411,6 +420,7 @@ def _render_test_files(
         endpoints_data: Endpoint metadata list
         base_path: API base path
         output_dir: Output directory
+        spec_hash: Hash of OpenAPI spec for example caching
     """
     # Get spec version from GeneratorData
     spec_version = getattr(project.openapi, "version", "unknown")
@@ -420,6 +430,7 @@ def _render_test_files(
         "service_class_name": f"{api_name.capitalize()}Service",
         "endpoints": endpoints_data,
         "spec_version": spec_version,
+        "spec_hash": spec_hash,
         "components": components,
         "operations": operations,
         "base_path": base_path,
@@ -463,3 +474,31 @@ def _format_with_ruff(test_file: Path, schemas_file: Path) -> None:
         check=False,
         capture_output=True,
     )
+
+
+def _generate_example_cache(api_name: str, operations: dict, spec_hash: str) -> None:
+    """
+    Generate cached examples for hypothesis tests.
+
+    This is called after test files are rendered to pre-generate examples
+    that will be loaded at test time, avoiding expensive from_schema() calls.
+
+    Args:
+        api_name: API identifier (e.g., 'catalog', 'otm')
+        operations: Operations dict with schemas
+        spec_hash: Hash of OpenAPI spec for cache key
+    """
+    # Import lazily because hypothesis is not a build dependency
+    from builder.example_cache import generate_examples_cache
+
+    try:
+        generate_examples_cache(
+            api_name=api_name,
+            operations=operations,
+            spec_hash=spec_hash,
+            num_examples=10,
+        )
+    except Exception as e:
+        # Non-fatal: tests will fall back to from_schema() if cache is missing
+        print(f"  [EXAMPLES] Warning: Failed to generate example cache: {e}")
+        traceback.print_exc()

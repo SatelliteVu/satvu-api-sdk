@@ -96,16 +96,26 @@ jobs:
 
       # Ensure cache directory exists for Dagger to mount
       - name: Ensure cache directory exists
-        run: mkdir -p .cache
+        run: mkdir -p .cache/hypothesis-examples
 
       # Cache OpenAPI specs - ensures test uses same specs as release
       - name: Cache OpenAPI specs
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
-          path: .cache
+          path: .cache/*.json
           key: openapi-specs-${{ github.run_id }}
           restore-keys: |
             openapi-specs-
+
+      # Cache hypothesis examples - speeds up property-based tests
+      - name: Restore hypothesis examples cache
+        uses: actions/cache/restore@v5
+        with:
+          path: .cache/hypothesis-examples
+          key: hypothesis-examples-${{ hashFiles('src/builder/config.py') }}-${{ github.run_id }}
+          restore-keys: |
+            hypothesis-examples-${{ hashFiles('src/builder/config.py') }}-
+            hypothesis-examples-
 
       # Run targeted tests when API is specified
       - name: Run targeted tests
@@ -115,7 +125,7 @@ jobs:
           SATVU_TRIGGERED_API: ${{ inputs.api }}
           SATVU_SPEC_ENV: ${{ inputs.qa == true && 'qa' || 'prod' }}
         with:
-          call: test-api --api=${{ inputs.api }}
+          call: test-api --api=${{ inputs.api }} export --path=.
 
       # Run full tests when no API specified
       - name: Run full tests
@@ -125,7 +135,15 @@ jobs:
           SATVU_TRIGGERED_API: none
           SATVU_SPEC_ENV: ${{ inputs.qa == true && 'qa' || 'prod' }}
         with:
-          call: test
+          call: test export --path=.
+
+      # Save hypothesis examples cache (always save to ensure main branch has cache for PRs)
+      - name: Save hypothesis examples cache
+        uses: actions/cache/save@v5
+        if: always()
+        with:
+          path: .cache/hypothesis-examples
+          key: hypothesis-examples-${{ hashFiles('src/builder/config.py') }}-${{ github.run_id }}
 
   release:
     name: Release
@@ -184,19 +202,29 @@ jobs:
 
       # Ensure cache directory exists for Dagger to mount
       - name: Ensure cache directory exists
-        run: mkdir -p .cache
+        run: mkdir -p .cache/hypothesis-examples
 
       # Cache OpenAPI specs between runs
       # - Restores most recent cache (restore-keys fallback)
       # - Saves with unique key per run (captures any freshly fetched specs)
       # - SATVU_TRIGGERED_API controls which API fetches fresh vs uses cache
       - name: Cache OpenAPI specs
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
-          path: .cache
+          path: .cache/*.json
           key: openapi-specs-${{ github.run_id }}
           restore-keys: |
             openapi-specs-
+
+      # Cache hypothesis examples - restore only (build-release doesn't generate tests)
+      - name: Restore hypothesis examples cache
+        uses: actions/cache/restore@v5
+        with:
+          path: .cache/hypothesis-examples
+          key: hypothesis-examples-${{ hashFiles('src/builder/config.py') }}-${{ github.run_id }}
+          restore-keys: |
+            hypothesis-examples-${{ hashFiles('src/builder/config.py') }}-
+            hypothesis-examples-
 
       # Install Dagger CLI (needed by semantic-release prepareCmd)
       - name: Install Dagger CLI

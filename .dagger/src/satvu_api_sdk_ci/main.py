@@ -211,19 +211,30 @@ class SatvuApiSdkCi:
             # Verify correct Python version is being used
             .with_exec(["python", "--version"])
             .with_env_variable("PYTEST_ADDOPTS", add_opts)
-            .with_exec(["/bin/uv", "build"])
+            # Build wheel only (skip sdist) to avoid running hatch hook twice
+            .with_exec(["/bin/uv", "build", "--wheel"])
             .with_exec(
                 pytest_args,
                 redirect_stdout="/tmp/pytest-coverage.txt",  # nosec: B108
             )
         )
 
-        return dag.directory().with_files(
-            ".",
-            sources=[
-                run.file("/tmp/pytest.xml"),  # nosec: B108
-                run.file("/tmp/pytest-coverage.txt"),  # nosec: B108
-            ],
+        # Export test results and hypothesis examples cache
+        # The hypothesis-examples cache is generated during uv build and speeds up
+        # property-based tests by avoiding expensive schema parsing
+        return (
+            dag.directory()
+            .with_files(
+                ".",
+                sources=[
+                    run.file("/tmp/pytest.xml"),  # nosec: B108
+                    run.file("/tmp/pytest-coverage.txt"),  # nosec: B108
+                ],
+            )
+            .with_directory(
+                ".cache/hypothesis-examples",
+                run.directory("/src/.cache/hypothesis-examples"),
+            )
         )
 
     @function
@@ -296,19 +307,28 @@ class SatvuApiSdkCi:
 
         run = (
             await builder.with_exec(["python", "--version"])
-            .with_exec(["/bin/uv", "build"])
+            # Build wheel only (skip sdist) to avoid running hatch hook twice
+            .with_exec(["/bin/uv", "build", "--wheel"])
             .with_exec(
                 pytest_args,
                 redirect_stdout="/tmp/pytest-coverage.txt",  # nosec: B108
             )
         )
 
-        return dag.directory().with_files(
-            ".",
-            sources=[
-                run.file("/tmp/pytest.xml"),  # nosec: B108
-                run.file("/tmp/pytest-coverage.txt"),  # nosec: B108
-            ],
+        # Export test results and hypothesis examples cache
+        return (
+            dag.directory()
+            .with_files(
+                ".",
+                sources=[
+                    run.file("/tmp/pytest.xml"),  # nosec: B108
+                    run.file("/tmp/pytest-coverage.txt"),  # nosec: B108
+                ],
+            )
+            .with_directory(
+                ".cache/hypothesis-examples",
+                run.directory("/src/.cache/hypothesis-examples"),
+            )
         )
 
     @function

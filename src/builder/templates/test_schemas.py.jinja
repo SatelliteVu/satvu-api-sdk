@@ -7,6 +7,11 @@ These schemas are used with hypothesis-jsonschema to generate test data.
 Stores entire OpenAPI spec as operations with helper functions for access.
 """
 
+from satvu.services.example_cache import get_cached_example_strategy
+
+# Spec hash for example cache invalidation
+_SPEC_HASH = "{{ spec_hash }}"
+
 # Component schemas for $ref resolution (cleaned for JSON Schema draft-07)
 _COMPONENTS = {{ components | pprint }}
 
@@ -30,6 +35,24 @@ def get_response_schema(path: str, method: str, status: str) -> dict:
     return _OPERATIONS[(path, method)]["responses"][status]["schema"]
 
 
+def get_response_strategy(path: str, method: str, status: str):
+    """
+    Get hypothesis strategy for response examples (cached or generated).
+
+    This function provides transparent access to pre-generated examples
+    with automatic fallback to on-demand generation via from_schema().
+    """
+    return get_cached_example_strategy(
+        api_name="{{ api_name }}",
+        spec_hash=_SPEC_HASH,
+        path=path,
+        method=method,
+        example_type="response",
+        key=status,
+        schema_getter=lambda: get_response_schema(path, method, status),
+    )
+
+
 def get_request_body_schema(path: str, method: str) -> dict:
     """
     Get request body schema for given operation.
@@ -42,6 +65,19 @@ def get_request_body_schema(path: str, method: str) -> dict:
         JSON Schema dict with definitions for $ref resolution
     """
     return _OPERATIONS[(path, method)]["requestBody"]["schema"]
+
+
+def get_request_body_strategy(path: str, method: str):
+    """Get hypothesis strategy for request body examples (cached or generated)."""
+    return get_cached_example_strategy(
+        api_name="{{ api_name }}",
+        spec_hash=_SPEC_HASH,
+        path=path,
+        method=method,
+        example_type="body",
+        key="requestBody",
+        schema_getter=lambda: get_request_body_schema(path, method),
+    )
 
 
 def get_parameter_schema(path: str, method: str, param_name: str) -> dict:
@@ -57,6 +93,19 @@ def get_parameter_schema(path: str, method: str, param_name: str) -> dict:
         JSON Schema dict
     """
     return _OPERATIONS[(path, method)]["parameters"][param_name]["schema"]
+
+
+def get_parameter_strategy(path: str, method: str, param_name: str):
+    """Get hypothesis strategy for parameter examples (cached or generated)."""
+    return get_cached_example_strategy(
+        api_name="{{ api_name }}",
+        spec_hash=_SPEC_HASH,
+        path=path,
+        method=method,
+        example_type="param",
+        key=param_name,
+        schema_getter=lambda: get_parameter_schema(path, method, param_name),
+    )
 
 
 def has_request_body(path: str, method: str) -> bool:

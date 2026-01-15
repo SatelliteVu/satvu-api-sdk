@@ -38,7 +38,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
       - name: Ensure cache directory exists
-        run: mkdir -p .cache
+        run: mkdir -p .cache/hypothesis-examples
       - name: Test
         uses: dagger/dagger-for-github@v8.2.0
         with:
@@ -51,7 +51,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
       - name: Ensure cache directory exists
-        run: mkdir -p .cache
+        run: mkdir -p .cache/hypothesis-examples
       - name: Test
         uses: dagger/dagger-for-github@v8.2.0
         with:
@@ -70,11 +70,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
       - name: Ensure cache directory exists
-        run: mkdir -p .cache
+        run: mkdir -p .cache/hypothesis-examples
+      - name: Restore hypothesis examples cache
+        uses: actions/cache/restore@v5
+        with:
+          path: .cache/hypothesis-examples
+          key: hypothesis-examples-${{ hashFiles('src/builder/config.py') }}-${{ github.run_id }}
+          restore-keys: |
+            hypothesis-examples-${{ hashFiles('src/builder/config.py') }}-
+            hypothesis-examples-
       - name: Run tests in dagger
         uses: dagger/dagger-for-github@v8.2.0
         with:
           call: test --python-version=${{ matrix.python-version }} --with-coverage=${{ matrix.python-version == '3.13' }} export --path=.
+      - name: Save hypothesis examples cache
+        uses: actions/cache/save@v5
+        if: always()
+        with:
+          path: .cache/hypothesis-examples
+          key: hypothesis-examples-${{ hashFiles('src/builder/config.py') }}-${{ github.run_id }}
       - name: Coverage comment
         if: matrix.python-version == '3.13'
         uses: MishaKav/pytest-coverage-comment@v1.1.57

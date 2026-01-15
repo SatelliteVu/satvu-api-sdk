@@ -1,3 +1,11 @@
+# [0.4.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.3.1...v0.4.0) (2026-01-15)
+
+
+### Features
+
+* **builder:** add conditional test generation via SATVU_GENERATE_TESTS
+* **build:** exclude tests and builder from wheel distribution
+
 ## [0.3.1](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.3.0...v0.3.1) (2026-01-14)
 
 

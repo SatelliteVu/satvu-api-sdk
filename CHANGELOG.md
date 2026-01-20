@@ -1,3 +1,10 @@
+# [0.5.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.4.0...v0.5.0) (2026-01-20)
+
+
+### Features
+
+* **builder:** add hypothesis example caching for faster tests
+
 # [0.4.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.3.1...v0.4.0) (2026-01-15)
 
 

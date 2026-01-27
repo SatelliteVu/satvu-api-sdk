@@ -16,15 +16,15 @@ This is an auto-generated Python SDK for SatVu's APIs. The SDK is generated from
 ./scripts/bootstrap.sh
 ```
 
-This installs dependencies and sets up pre-commit hooks.
+Installs dependencies and sets up pre-commit hooks.
 
 ### Testing
 
 ```bash
-./scripts/test.sh
+./scripts/test.sh                       # Run tests
+./scripts/test.sh -v -k test_name       # Run specific test
+./scripts/test.sh --all-backends        # Test all HTTP backends
 ```
-
-Run tests with pytest. Pass pytest options directly: `./scripts/test.sh -v -k test_name`
 
 ### Linting
 
@@ -38,39 +38,53 @@ Runs all pre-commit hooks (Ruff, Bandit, detect-secrets, FawltyDeps).
 
 **IMPORTANT:** Always use `uv build` to generate SDK code. This is the canonical build method that ensures templates and source files are correctly processed.
 
-Generate all API SDKs:
-
 ```bash
-uv build
+uv build                                    # Generate all APIs (canonical)
+uv run python -m builder <API_NAME>         # Generate specific API (dev only)
+uv run python -m builder <API_NAME> --cached  # Use cached specs
 ```
 
-This command:
+Available API names: catalog, cos, id, policy, otm, reseller, wallet
 
-- Triggers the Hatch build hook (`hatch_build.py`)
-- Generates all API SDKs (catalog, cos, id, policy, otm, reseller, wallet)
-- Fetches fresh OpenAPI specs
-- Correctly processes Jinja2 templates from `src/builder/templates/`
-- Packages the distribution
-
-**Alternative (for development only):**
+**Generating tests:** By default, only SDK code is generated. To include test generation:
 
 ```bash
-# Generate specific API (bypasses proper template path resolution)
-uv run python -m builder <API_NAME>
-
-# Use cached specs instead of fetching fresh ones
-uv run python -m builder <API_NAME> --cached
+SATVU_GENERATE_TESTS=1 uv build                         # Via uv build
+uv run python -m builder <API_NAME> --generate-tests    # Via CLI
 ```
 
-Available API names are defined in `src/builder/config.py`: catalog, cos, id, policy, otm, reseller, wallet.
-
-**Dagger CI:**
+### Dagger CI
 
 ```bash
 dagger call -v test    # Run pytest suite
 dagger call -v lint    # Run linter suite
-dagger -c "build-release --is-qa --build-number 123 | export './dist' --wipe"  # Build release
+dagger -c "build-release --is-qa --build-number 123 | export './dist' --wipe"
 ```
+
+## Commit Convention
+
+This project uses Conventional Commits with strict validation. Format: `<type>(<scope>): <subject>`
+
+**Types:** feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
+
+**Scopes:** core, auth, http, builder, deps, docs, test, misc (plus service scopes for automated commits: catalog, cos, id, otm, policy, reseller, wallet)
+
+```bash
+uv run cz commit    # Interactive commit prompt
+```
+
+Examples:
+
+- `feat(core): add retry logic for transient errors`
+- `fix(auth): handle token refresh race condition`
+- `docs(docs): update API usage examples`
+
+## Testing Patterns
+
+- Unit tests go alongside code: `auth.py` → `auth_test.py`
+- Generated service tests: `services/{api}/api_test.py`
+- Use `pook` for HTTP mocking
+- Use `is_ok(result)` / `is_err(result)` type guards for Result assertions
 
 ## Architecture
 
@@ -277,330 +291,53 @@ When detected, generated service methods include pagination support with `items_
 
 ### Streaming Downloads
 
-The SDK provides memory-efficient streaming download functionality for large binary files (1GB+) through auto-generated `*_to_file()` methods.
+Memory-efficient streaming for large binary files (1GB+) via auto-generated `*_to_file()` methods.
 
-**Architecture:**
+**Core:** `SDKClient.stream_to_file()` in src/satvu/core.py handles chunked streaming to disk with progress callbacks.
 
-1. **Core Implementation (src/satvu/core.py)**:
+**Auto-Generation Pipeline:**
 
-   - `SDKClient.stream_to_file()`: Base method that handles chunked streaming to disk
-   - Uses `response.iter_bytes(chunk_size)` for memory-efficient downloads
-   - Supports progress callbacks for UX integration
-   - Returns `Path` object pointing to downloaded file
+1. `streaming_detector.py` - Scans OpenAPI spec for `x-streaming-download: true` endpoints, separates path params from query params
+2. `ast_generator.py` - Builds Python AST for streaming methods (path params → positional, query params → keyword-only with defaults)
+3. `streaming_post_processor.py` - Parses API file as AST, inserts new methods, formats with Black
 
-2. **Auto-Generation System**:
-
-   **streaming_detector.py**: Detects which endpoints need streaming variants
-
-   - Checks for `x-streaming-download` extension in OpenAPI spec
-   - Separates path parameters (used in URL formatting) from query parameters (added to params dict)
-   - Builds `StreamingEndpointConfig` with separate `path_params` and `query_params` lists
-   - Example: `contract_id`, `order_id` are path params; `collections`, `primary_formats` are query params
-
-   **ast_generator.py**: Generates streaming method code using Python's AST module
-
-   - `ASTMethodBuilder` class builds syntactically correct function AST nodes
-   - Path params become required positional parameters
-   - Query params become keyword-only parameters with `None` defaults
-   - Guarantees type-safe code generation without string template fragility
-   - Key methods:
-     - `build_method()`: Orchestrates complete function generation
-     - `_build_arguments()`: Creates proper function signature with type annotations
-     - `_build_body()`: Generates method body (URL formatting uses only path params, params dict includes query params)
-     - `_build_docstring()`: Creates structured docstring with parameter documentation
-
-   **streaming_post_processor.py**: Coordinates the generation process
-
-   - Parses generated API file as AST
-   - Uses `add_imports_to_ast()` for intelligent import handling
-   - Uses `generate_streaming_method()` for AST-based code generation
-   - Uses `insert_method_after_base()` for AST manipulation
-   - Converts AST back to code with `ast.unparse()`
-   - Formats with Black if available (graceful fallback)
-
-**Generated Method Signature:**
+**Key Pattern:** Path params go in URL format string, query params go in params dict:
 
 ```python
 def download_order_to_file(
     self,
-    contract_id: UUID,           # Path param (required positional)
-    order_id: UUID,              # Path param (required positional)
-    output_path: Path | str,     # Required positional
-    *,                           # Keyword-only separator
-    collections: list[...] | None = None,        # Query param (keyword-only)
-    primary_formats: list[...] | None = None,   # Query param (keyword-only)
+    contract_id: UUID,
+    order_id: UUID,
+    output_path: Path | str,
+    *,
+    collections: list[...] | None = None,  # Query param (keyword-only)
     chunk_size: int = 8192,
     progress_callback: Callable[[int, int | None], None] | None = None,
-    timeout: int | None = None,
-) -> Result[Path, HttpError]:
-    """
-    Order download - save to disk (memory-efficient for large files).
-
-    Downloads directly to disk using streaming, avoiding loading
-    the entire file into memory. Ideal for large files (1GB+).
-    """
-    params = {
-        "redirect": True,
-        "collections": collections,          # Query params in params dict
-        "primary_formats": primary_formats,  # Query params in params dict
-    }
-    result = self.make_request(
-        method="get",
-        url="/{contract_id}/orders/{order_id}/download".format(
-            contract_id=contract_id,  # Only path params in URL format
-            order_id=order_id,        # Only path params in URL format
-        ),
-        params=params,
-        ...
-    )
+) -> Result[Path, HttpError]: ...
 ```
 
-**Key Features:**
+**OpenAPI marking:** Use `application/zip` or `application/octet-stream` content types for binary endpoints.
 
-- **Memory Efficient**: Streams chunks to disk without loading entire file into memory
-- **Progress Tracking**: Optional callback receives `(bytes_downloaded, total_bytes)`
-- **Configurable Chunk Size**: Default 8KB, recommend 64KB+ for large files
-- **Result Type**: Returns `Result[Path, HttpError]` for explicit error handling
-- **Automatic Detection**: Builder auto-generates methods for binary download endpoints
-- **Type Safety**: AST-based generation guarantees syntactically correct code
-- **Proper Parameter Handling**: Path params in URL format, query params in params dict
-- **Keyword-Only Query Params**: Query parameters are keyword-only with None defaults for better API ergonomics
-
-**Usage Example:**
-
-```python
-from pathlib import Path
-from satvu import SatVuSDK
-
-sdk = SatVuSDK(client_id="...", client_secret="...")
-
-
-# Progress callback for UX
-def show_progress(bytes_downloaded: int, total_bytes: int | None):
-    if total_bytes:
-        percent = (bytes_downloaded / total_bytes) * 100
-        print(f"Progress: {percent:.1f}%")
-
-
-# Download with streaming
-result = sdk.cos.download_order_to_file(
-    contract_id=contract_id,
-    order_id=order_id,
-    output_path=Path("/tmp/order.zip"),
-    chunk_size=65536,  # 64KB chunks
-    progress_callback=show_progress,
-)
-
-# Handle Result type
-if result.is_ok():
-    path = result.unwrap()
-    print(f"Downloaded to: {path}")
-else:
-    error = result.unwrap_or(None)
-    print(f"Download failed: {error}")
-```
-
-**Builder Integration:**
-
-The streaming generation system runs after initial SDK code generation:
-
-1. **Detection Phase** (`streaming_detector.py`):
-
-   - Scans OpenAPI spec for endpoints with `x-streaming-download: true` extension
-   - Extracts endpoint metadata (path, method, parameters)
-   - Separates path parameters from query parameters
-   - Builds `StreamingEndpointConfig` objects with all necessary information
-
-2. **Generation Phase** (`ast_generator.py`):
-
-   - Constructs Python AST nodes for streaming methods
-   - Builds function signature with proper type annotations
-   - Path params → required positional parameters
-   - Query params → keyword-only parameters with defaults
-   - Generates method body with correct parameter usage
-   - Creates comprehensive docstrings
-
-3. **Integration Phase** (`streaming_post_processor.py`):
-
-   - Parses generated API file as AST
-   - Adds missing imports (Path, HttpError, Result, ResultOk)
-   - Generates streaming method code using AST builder
-   - Inserts new method into class AST after base method
-   - Converts AST back to Python code
-   - Formats with Black if available
-
-**Benefits of AST-Based Generation:**
-
-- Eliminates string template fragility and escaping issues
-- Guarantees syntactically correct Python code
-- Automatic handling of complex type annotations
-- Proper line number and column offset tracking
-- No manual string manipulation or formatting
-
-**For OpenAPI Spec Authors:**
-
-Mark download endpoints with specific response content types:
-
-```yaml
-responses:
-  '200':
-    content:
-      application/zip:  # Auto-detected for streaming
-        schema:
-          type: string
-          format: binary
-```
-
-Supported content types for auto-detection:
-
-- `application/zip`
-- `application/octet-stream`
-- Any binary format returning large files
-
-**Testing:**
-
-Comprehensive unit tests in `src/satvu/core_streaming_test.py` cover:
-
-- Various chunk patterns and sizes
-- Content-Length header handling (present, missing, invalid)
-- Progress callback invocation
-- Binary data streaming
-- Error propagation
-- Parent directory requirements
-- File overwriting behavior
-
-See `examples/cos.py` and `examples/otm.py` for complete working examples.
+Tests in `src/satvu/core_streaming_test.py`. Examples in `examples/cos.py` and `examples/otm.py`.
 
 ### Automated Test Generation
 
-The builder includes an extensible test generation system that automatically creates integration tests during SDK generation. This system uses a template-based approach with AST manipulation for reliable, type-safe test generation.
+The builder auto-generates integration tests during SDK generation using a template + AST approach.
 
-**Architecture Pattern:**
+**Pattern:**
 
-The test generation system follows a consistent pattern that can be extended for different test categories:
+1. Generator module (`src/builder/*_test_generator.py`) - Uses Jinja2 templates, parses test file as AST, appends tests, formats with ruff
+2. Template macros (`src/builder/templates/macros/*_tests.jinja`) - Reusable test patterns with type-aware parameter generation
+3. Integration hook in build.py - Called after main generation, receives `Project.env` for Jinja2 access
 
-1. **Generator Module** (`src/builder/*_test_generator.py`):
+**Key Principles:**
 
-   - Accepts metadata about endpoints that need tests
-   - Uses Jinja2 templates from `src/builder/templates/macros/`
-   - Parses existing test file as AST
-   - Renders test code from templates
-   - Parses rendered code into AST nodes
-   - Appends new test methods to test class
-   - Formats with ruff (auto-fix + format)
+- Use `{%-` and `-%}` for whitespace control in templates
+- AST-based manipulation via `ast.parse()` / `ast.unparse()` for reliability
+- Test generation failures warn but don't fail the build
+- Always format with `ruff check --fix` then `ruff format`
 
-2. **Template Macros** (`src/builder/templates/macros/*_tests.jinja`):
-
-   - Define reusable test patterns as Jinja2 macros
-   - Support type-aware parameter generation
-   - Include proper whitespace control with `{%-` and `-%}`
-   - Generate syntactically correct Python with proper indentation
-
-3. **Integration Hook** (in post-processors or `build.py`):
-
-   - Called after main code generation
-   - Receives `Project` object for Jinja2 environment access
-   - Graceful error handling with warnings (non-fatal)
-
-**Example: Streaming Test Generator**
-
-Location: `src/builder/streaming_test_generator.py`
-
-Generates three test types for each streaming download method:
-
-- **Success test**: Validates file writing with mocked content
-- **Progress callback test**: Validates progress callback invocation
-- **Error test**: Validates error propagation (404, etc.)
-
-Key implementation details:
-
-```python
-def generate_streaming_tests(
-    api_name: str,
-    streaming_configs: list[StreamingEndpointConfig],
-    test_file: Path,
-    jinja_env: Environment,
-) -> None:
-    """Generate and append streaming method tests to existing test file."""
-
-    # Parse existing test file
-    content = test_file.read_text()
-    tree = ast.parse(content)
-
-    # Find test class
-    test_class = _find_test_class(tree)
-
-    # Render tests from templates
-    for config in streaming_configs:
-        context = {"config": config, "api_name": api_name}
-
-        test_code = jinja_env.from_string(
-            "{% from 'macros/streaming_tests.jinja' import streaming_success_test %}"
-            "{{ streaming_success_test(config, api_name) }}"
-        ).render(context)
-
-        # Parse rendered test into AST node
-        test_method = ast.parse(test_code).body[0]
-
-        # Append to test class
-        test_class.body.append(test_method)
-
-    # Write back and format
-    final_code = ast.unparse(tree)
-    test_file.write_text(final_code)
-    _format_with_ruff(test_file)
-```
-
-**Template Example** (`src/builder/templates/macros/streaming_tests.jinja`):
-
-```jinja
-{%- macro streaming_success_test(config, api_name) -%}
-@pook.on
-def test_{{ config.stream_method }}_success(self, backend, tmp_path):
-    """Test {{ config.stream_method }} writes file correctly."""
-    output_path = tmp_path / "{{ config.example_filename }}"
-    mock_content = b"fake zip content"
-
-    {#- Type-aware parameter generation -#}
-    {% for param_name, param_type in config.path_params %}
-    {{ param_name }} = {% if param_type == "str" %}str(uuid4()){% else %}uuid4(){% endif %}
-
-    {% endfor %}
-    path = "{{ config.url_pattern }}".format(
-    {%- for param_name, param_type in config.path_params %}
-        {{ param_name }}={{ param_name }}{% if not loop.last %},{% endif %}
-    {%- endfor %}
-    )
-
-    # Test implementation...
-{%- endmacro -%}
-```
-
-**Key Design Principles:**
-
-1. **Type-Aware Generation**: Templates use conditional logic to generate correct code based on parameter types (e.g., `str(uuid4())` vs `uuid4()`)
-
-2. **Whitespace Control**: Critical for Jinja2 templates - use `{%-` and `-%}` to prevent unwanted line breaks. Always add explicit blank lines in template loops.
-
-3. **AST-Based Manipulation**: Guarantees syntactically correct Python without string fragility. Use `ast.parse()` and `ast.unparse()` for reliability.
-
-4. **Graceful Degradation**: Test generation failures should warn but not fail the build. Wrap in try/except with traceback printing.
-
-5. **Ruff Formatting**: Always format generated code with `ruff check --fix` then `ruff format` for consistency.
-
-6. **Reusable Pattern**: This architecture can be extended for other test categories (pagination, webhooks, rate limiting, etc.) by following the same structure.
-
-**Extending for New Test Categories:**
-
-To add tests for a new feature category (e.g., pagination):
-
-1. Create `src/builder/pagination_test_generator.py` following the pattern
-2. Create `src/builder/templates/macros/pagination_tests.jinja` with test macros
-3. Call generator from post-processor or build system
-4. Ensure generator receives `Project.env` for Jinja2 access
-5. Follow existing patterns for AST manipulation and formatting
-
-The streaming test generator serves as a reference implementation for this extensible pattern.
+**Extending:** See `streaming_test_generator.py` as reference implementation for adding new test categories.
 
 ### Generated Code
 

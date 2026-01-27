@@ -290,17 +290,22 @@ class SDKClient:
         if not next_link:
             return None
 
+        # Get method safely - not all Link models have method attribute
+        method = getattr(next_link, "method", None)
+
         # Method 1: GET request - token in URL query parameter
-        if next_link.method == "GET":
+        # Default to GET-style if method is not specified
+        if method is None or str(method) == "GET":
             parsed = urlparse(next_link.href)
             params = parse_qs(parsed.query)
             return params.get("token", [None])[0]
 
         # Method 2: POST request - token in body
-        if next_link.method == "POST" and next_link.body:
-            if isinstance(next_link.body, dict):
-                return next_link.body.get("token")
-            if hasattr(next_link.body, "token"):
-                return next_link.body.token
+        body = getattr(next_link, "body", None)
+        if str(method) == "POST" and body:
+            if isinstance(body, dict):
+                return body.get("token")
+            if hasattr(body, "token"):
+                return body.token
 
         return None

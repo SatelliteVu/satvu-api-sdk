@@ -1,0 +1,176 @@
+{#- Pagination iterator method tests (*_iter) -#}
+
+{#- Multi-page pagination test: validates token extraction and page iteration -#}
+{%- macro pagination_multi_page_test(config, api_name) -%}
+@settings(
+    max_examples=3,
+    deadline=None,
+    suppress_health_check=[HealthCheck.filter_too_much, HealthCheck.too_slow, HealthCheck.data_too_large],
+)
+@given(
+    page1_data=from_schema(get_response_schema("{{ config.url_pattern }}", "{{ config.http_method }}", "200")),
+    page2_data=from_schema(get_response_schema("{{ config.url_pattern }}", "{{ config.http_method }}", "200")),
+)
+def test_{{ config.iter_method }}_pagination(self, backend, page1_data, page2_data):
+    """Test {{ config.iter_method }} follows next links correctly."""
+{% for param_name, param_type in config.path_params %}
+    {{ param_name }} = {% if 'UUID' in param_type %}uuid4(){% elif param_type == "str" %}str(uuid4()){% else %}uuid4(){% endif %}
+
+{% endfor %}
+    path = "{{ config.url_pattern }}".format(
+{%- for param_name, param_type in config.path_params %}
+        {{ param_name }}={{ param_name }}{% if not loop.last %},{% endif %}
+
+{%- endfor %}
+    )
+    url = f"{self.base_url}{path}"
+
+    # Inject pagination links into generated data
+    # Always use GET-style links (token in URL) as it's universally supported
+    # Include all common required fields across different Link models (title, type)
+    page1_data["links"] = [{"rel": "next", "href": f"{url}?token=abc123", "method": "GET", "title": "next", "type": "application/json"}]
+    page2_data["links"] = []
+
+    # Reset and activate pook for each hypothesis iteration
+    pook.reset()
+    pook.on()
+
+    pook.{{ config.http_method }}(url).times(1).reply(200).json(page1_data).header("Content-Type", "application/json")
+    pook.{{ config.http_method }}(url).times(1).reply(200).json(page2_data).header("Content-Type", "application/json")
+
+{% if config.has_body %}
+    body = {{ config.body_type }}()
+    pages = list(self.sdk.{{ api_name }}.{{ config.iter_method }}(
+        body=body,
+{% for param_name, param_type in config.path_params %}
+        {{ param_name }}={{ param_name }},
+{% endfor %}
+    ))
+{% else %}
+    pages = list(self.sdk.{{ api_name }}.{{ config.iter_method }}(
+{% for param_name, param_type in config.path_params %}
+        {{ param_name }}={{ param_name }},
+{% endfor %}
+    ))
+{% endif %}
+
+    # Assert we got both pages
+    assert len(pages) == 2
+{%- endmacro -%}
+
+{#- Max pages limit test: validates max_pages parameter is respected -#}
+{%- macro pagination_max_pages_test(config, api_name) -%}
+@settings(
+    max_examples=3,
+    deadline=None,
+    suppress_health_check=[HealthCheck.filter_too_much, HealthCheck.too_slow, HealthCheck.data_too_large],
+)
+@given(
+    page1_data=from_schema(get_response_schema("{{ config.url_pattern }}", "{{ config.http_method }}", "200")),
+    page2_data=from_schema(get_response_schema("{{ config.url_pattern }}", "{{ config.http_method }}", "200")),
+    page3_data=from_schema(get_response_schema("{{ config.url_pattern }}", "{{ config.http_method }}", "200")),
+)
+def test_{{ config.iter_method }}_max_pages(self, backend, page1_data, page2_data, page3_data):
+    """Test {{ config.iter_method }} respects max_pages limit."""
+{% for param_name, param_type in config.path_params %}
+    {{ param_name }} = {% if 'UUID' in param_type %}uuid4(){% elif param_type == "str" %}str(uuid4()){% else %}uuid4(){% endif %}
+
+{% endfor %}
+    path = "{{ config.url_pattern }}".format(
+{%- for param_name, param_type in config.path_params %}
+        {{ param_name }}={{ param_name }}{% if not loop.last %},{% endif %}
+
+{%- endfor %}
+    )
+    url = f"{self.base_url}{path}"
+
+    # Inject continuous pagination links
+    # Always use GET-style links (token in URL) as it's universally supported
+    # Include all common required fields across different Link models (title, type)
+    page1_data["links"] = [{"rel": "next", "href": f"{url}?token=token1", "method": "GET", "title": "next", "type": "application/json"}]
+    page2_data["links"] = [{"rel": "next", "href": f"{url}?token=token2", "method": "GET", "title": "next", "type": "application/json"}]
+    page3_data["links"] = []
+
+    # Reset and activate pook
+    pook.reset()
+    pook.on()
+
+    pook.{{ config.http_method }}(url).times(1).reply(200).json(page1_data).header("Content-Type", "application/json")
+    pook.{{ config.http_method }}(url).times(1).reply(200).json(page2_data).header("Content-Type", "application/json")
+    pook.{{ config.http_method }}(url).times(1).reply(200).json(page3_data).header("Content-Type", "application/json")
+
+{% if config.has_body %}
+    body = {{ config.body_type }}()
+    pages = list(self.sdk.{{ api_name }}.{{ config.iter_method }}(
+        body=body,
+{% for param_name, param_type in config.path_params %}
+        {{ param_name }}={{ param_name }},
+{% endfor %}
+        max_pages=2,
+    ))
+{% else %}
+    pages = list(self.sdk.{{ api_name }}.{{ config.iter_method }}(
+{% for param_name, param_type in config.path_params %}
+        {{ param_name }}={{ param_name }},
+{% endfor %}
+        max_pages=2,
+    ))
+{% endif %}
+
+    # Assert only 2 pages returned despite more being available
+    assert len(pages) == 2
+{%- endmacro -%}
+
+{#- Empty/last page test: validates iteration terminates with no next link -#}
+{%- macro pagination_empty_page_test(config, api_name) -%}
+@settings(
+    max_examples=3,
+    deadline=None,
+    suppress_health_check=[HealthCheck.filter_too_much, HealthCheck.too_slow, HealthCheck.data_too_large],
+)
+@given(
+    page_data=from_schema(get_response_schema("{{ config.url_pattern }}", "{{ config.http_method }}", "200")),
+)
+def test_{{ config.iter_method }}_no_next_link(self, backend, page_data):
+    """Test {{ config.iter_method }} terminates when no next link present."""
+{% for param_name, param_type in config.path_params %}
+    {{ param_name }} = {% if 'UUID' in param_type %}uuid4(){% elif param_type == "str" %}str(uuid4()){% else %}uuid4(){% endif %}
+
+{% endfor %}
+    path = "{{ config.url_pattern }}".format(
+{%- for param_name, param_type in config.path_params %}
+        {{ param_name }}={{ param_name }}{% if not loop.last %},{% endif %}
+
+{%- endfor %}
+    )
+    url = f"{self.base_url}{path}"
+
+    # Set links with no next link (only self) - always use GET for self link
+    # Include all common required fields across different Link models (title, type)
+    page_data["links"] = [{"rel": "self", "href": url, "method": "GET", "title": "self", "type": "application/json"}]
+
+    # Reset and activate pook
+    pook.reset()
+    pook.on()
+
+    pook.{{ config.http_method }}(url).times(1).reply(200).json(page_data).header("Content-Type", "application/json")
+
+{% if config.has_body %}
+    body = {{ config.body_type }}()
+    pages = list(self.sdk.{{ api_name }}.{{ config.iter_method }}(
+        body=body,
+{% for param_name, param_type in config.path_params %}
+        {{ param_name }}={{ param_name }},
+{% endfor %}
+    ))
+{% else %}
+    pages = list(self.sdk.{{ api_name }}.{{ config.iter_method }}(
+{% for param_name, param_type in config.path_params %}
+        {{ param_name }}={{ param_name }},
+{% endfor %}
+    ))
+{% endif %}
+
+    # Assert only one page returned and iteration stopped
+    assert len(pages) == 1
+{%- endmacro -%}

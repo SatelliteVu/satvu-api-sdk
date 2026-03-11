@@ -243,7 +243,6 @@ class StdlibAdapter:
             if 400 <= response_wrapper.status_code < 500:
                 return Err(
                     ClientError(
-                        message=f"Client error: {response_wrapper.status_code}",
                         status_code=response_wrapper.status_code,
                         url=full_url,
                         response_body=response_wrapper.body,
@@ -253,7 +252,6 @@ class StdlibAdapter:
             elif 500 <= response_wrapper.status_code < 600:
                 return Err(
                     ServerError(
-                        message=f"Server error: {response_wrapper.status_code}",
                         status_code=response_wrapper.status_code,
                         url=full_url,
                         response_body=response_wrapper.body,
@@ -271,7 +269,6 @@ class StdlibAdapter:
             if 400 <= status_code < 500:
                 return Err(
                     ClientError(
-                        message=f"Client error: {status_code}",
                         status_code=status_code,
                         url=full_url,
                         response_body=response_wrapper.body,
@@ -281,7 +278,6 @@ class StdlibAdapter:
             elif 500 <= status_code < 600:
                 return Err(
                     ServerError(
-                        message=f"Server error: {status_code}",
                         status_code=status_code,
                         url=full_url,
                         response_body=response_wrapper.body,

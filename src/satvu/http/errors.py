@@ -286,7 +286,7 @@ class HttpStatusError(HttpError):
                 except json.JSONDecodeError:
                     detail = body
                     
-                response_str = " " + detail
+                response_str = " " + str(detail)
             except UnicodeDecodeError:
                 response_str = ""
         else:

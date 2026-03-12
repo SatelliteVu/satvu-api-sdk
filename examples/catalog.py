@@ -16,7 +16,6 @@ Set the following environment variables before running:
 """
 
 from os import getenv
-from uuid import UUID
 
 from satvu import SatVuSDK
 from satvu.services.catalog.models.post_search_input import PostSearchInput
@@ -34,7 +33,7 @@ sdk = SatVuSDK(
     env=getenv("SATVU_ENV", None),
 )
 
-contract_id = UUID(CONTRACT_ID)
+contract_id = CONTRACT_ID
 
 print("=" * 80)
 print("Example 1: Simple GET search (single page)")

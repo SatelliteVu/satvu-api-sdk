@@ -19,53 +19,88 @@ SATVU_TRIGGERED_API_ENV_VAR = "SATVU_TRIGGERED_API"
 
 FETCHED = {}
 NEW_COMPONENTS = {}
+# Track which source URL each component came from (for relative ref resolution)
+COMPONENT_SOURCES: dict[str, str] = {}  # component_name → source_url
 
 
-def resolve_external_refs(schema: Any) -> Any:
+def _fetch_and_merge_components(url: str) -> None:
+    """Fetch an external OpenAPI doc and merge its components into NEW_COMPONENTS."""
+    if url in FETCHED:
+        return
+    response = get(url)
+    response.raise_for_status()
+    ext_schema = response.json()
+    ext_components = ext_schema.get("components", {})
+
+    for comp_type, comp_dict in ext_components.items():
+        if comp_type not in NEW_COMPONENTS:
+            NEW_COMPONENTS[comp_type] = {}
+        for comp_name, comp_val in comp_dict.items():
+            if comp_name not in NEW_COMPONENTS[comp_type]:
+                NEW_COMPONENTS[comp_type][comp_name] = comp_val
+                COMPONENT_SOURCES[comp_name] = url
+
+    FETCHED[url] = True
+
+
+def _resolve_to_absolute_url(ref_path: str, source_url: str = "") -> str:
+    """Convert a relative path ref to an absolute URL.
+
+    Resolves relative to the source document's directory if available,
+    otherwise falls back to BASE_URL.
+    """
+    base_dir = source_url.rsplit("/", 1)[0] if source_url else BASE_URL.rstrip("/")
+    path = ref_path.lstrip("/")
+    return f"{base_dir}/{path}"
+
+
+def resolve_external_refs(schema: Any, source_url: str = "") -> Any:
     """
     Recursively resolve all external $ref references in an OpenAPI schema,
     merge their components, and rewrite $ref to local components.
 
+    Handles:
+    - Absolute URL refs: https://example.com/spec.json#/components/schemas/Foo
+    - Relative path refs with fragment: /api/v1/spec.json#/components/schemas/Foo
+    - Bare relative path refs: /api/v1/spec.json (no fragment — treated as dict type)
+
     :param schema: The OpenAPI schema to process.
+    :param source_url: URL of the document containing these refs (for relative resolution).
     :return: The OpenAPI schema with all external references resolved and merged.
     """
     if isinstance(schema, dict):
         if "$ref" in schema:
             ref_path = schema["$ref"]
-            if ref_path.startswith("http://") or ref_path.startswith("https://"):
-                url, fragment = ref_path.split("#")
-                section, name = fragment.split("/", 1)
 
-                # Check if the external URL has already been fetched
-                if url not in FETCHED:
-                    response = get(url)
-                    response.raise_for_status()
-                    ext_schema = response.json()
-                    ext_components = ext_schema.get("components", {})
-
-                    # Merge external components
-                    for comp_type, comp_dict in ext_components.items():
-                        if comp_type not in NEW_COMPONENTS:
-                            NEW_COMPONENTS[comp_type] = {}
-                        for comp_name, comp_val in comp_dict.items():
-                            if comp_name not in NEW_COMPONENTS[comp_type]:
-                                NEW_COMPONENTS[comp_type][comp_name] = comp_val
-
-                    FETCHED[url] = True
-
-                # Rewrite $ref to local component
-                return {"$ref": f"#/components/schemas/{name.split('/')[-1]}"}
-            else:
+            # Local refs — pass through
+            if ref_path.startswith("#"):
                 return schema
+
+            # Convert relative paths to absolute URLs
+            if not ref_path.startswith("http://") and not ref_path.startswith(
+                "https://"
+            ):
+                ref_path = _resolve_to_absolute_url(ref_path, source_url)
+
+            # Bare ref (no fragment) — fetch components but use free-form dict
+            if "#" not in ref_path:
+                _fetch_and_merge_components(ref_path)
+                return {"type": "object"}
+
+            # Ref with fragment — fetch, merge, and rewrite to local ref
+            url, fragment = ref_path.split("#", 1)
+            _section, name = fragment.split("/", 1)
+            _fetch_and_merge_components(url)
+            return {"$ref": f"#/components/schemas/{name.split('/')[-1]}"}
         else:
-            return {k: resolve_external_refs(v) for k, v in list(schema.items())}
+            return {
+                k: resolve_external_refs(v, source_url) for k, v in list(schema.items())
+            }
 
     elif isinstance(schema, list):
-        # Recursively resolve refs in list items
-        return [resolve_external_refs(item) for item in schema]
+        return [resolve_external_refs(item, source_url) for item in schema]
 
     else:
-        # Base case: return the value as is
         return schema
 
 
@@ -75,15 +110,42 @@ def bundle_openapi_schema(schema: dict) -> dict:
     This function processes the OpenAPI schema, resolves all external references,
     and merges any new components into the schema.
 
+    Iterates resolution until no new external components are discovered,
+    handling transitive external refs (e.g., cql2.json → geometry.json).
+
     :param schema: The OpenAPI schema to process.
     :return: The processed OpenAPI schema with resolved references and merged components.
     """
     NEW_COMPONENTS.clear()
+    COMPONENT_SOURCES.clear()
     bundled = copy.deepcopy(schema)
     bundled = resolve_external_refs(bundled)
-    if NEW_COMPONENTS:
-        for comp_type in NEW_COMPONENTS:
-            bundled["components"][comp_type].update(NEW_COMPONENTS["schemas"])
+
+    # Iteratively resolve refs in newly merged components until stable.
+    # Components from external docs may have their own relative refs
+    # that need resolution relative to their source document's URL.
+    while NEW_COMPONENTS:
+        resolved_components: dict[str, dict] = {}
+        for comp_type, comp_dict in NEW_COMPONENTS.items():
+            resolved_components[comp_type] = {
+                name: resolve_external_refs(val, COMPONENT_SOURCES.get(name, ""))
+                for name, val in comp_dict.items()
+            }
+            if comp_type not in bundled.setdefault("components", {}):
+                bundled["components"][comp_type] = {}
+            bundled["components"][comp_type].update(resolved_components[comp_type])
+
+        # Check if resolving introduced more new components
+        remaining = {}
+        for comp_type, comp_dict in NEW_COMPONENTS.items():
+            new_names = set(comp_dict.keys()) - set(
+                resolved_components.get(comp_type, {}).keys()
+            )
+            if new_names:
+                remaining[comp_type] = {n: comp_dict[n] for n in new_names}
+
+        NEW_COMPONENTS.clear()
+        NEW_COMPONENTS.update(remaining)
     return bundled
 
 
@@ -122,7 +184,7 @@ def load_openapi(api_id: str, use_cached: bool = False) -> tuple[dict, Path]:
     :return: The inlined OpenAPI specification as a dictionary.
     """
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    openapi_url = f"{BASE_URL.rstrip('/')}/{APIS[api_id]}/openapi.json"
+    openapi_url = f"{BASE_URL.rstrip('/')}/{APIS[api_id].lstrip('/')}/openapi.json"
     cache_file = (
         CACHE_DIR
         / f"{api_id}-{sha1(openapi_url.encode(), usedforsecurity=False).hexdigest()}.json"

@@ -1,3 +1,10 @@
+## [0.5.1](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.5.0...v0.5.1) (2026-03-12)
+
+
+### Bug Fixes
+
+* **builder:** resolve relative $ref paths in OpenAPI specs
+
 # [0.5.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.4.0...v0.5.0) (2026-01-20)
 
 ## [0.5.0.20260127.1235] - 2026-01-27

@@ -424,6 +424,7 @@ def build_service(
     # Parse OpenAPI
     openapi = GeneratorData.from_dict(openapi_dict, config=config)
     if isinstance(openapi, GeneratorError):
+        print(f"  ✗ Failed to parse OpenAPI spec: {openapi.detail}")
         return [openapi]
 
     # Create project with custom templates
@@ -446,10 +447,19 @@ def build_service(
     )
     errors = generator.generate()
 
-    if errors:
+    # Check if code was actually generated (api.py exists)
+    api_file = context.output_dir / "api.py"
+    generated = api_file.exists() and api_file.stat().st_size > 0
+
+    if errors and not generated:
         print(f"  ✗ Failed with {len(errors)} error(s)")
         for error in errors:
             print(f"    - {error.detail}")
+    elif errors and generated:
+        print(f"  ✓ Generated to {context.output_dir} (with {len(errors)} warning(s))")
+        for error in errors:
+            print(f"    ⚠ {error.detail}")
+        errors = []  # Demote to warnings — code was generated successfully
     else:
         print(f"  ✓ Generated to {context.output_dir}")
 

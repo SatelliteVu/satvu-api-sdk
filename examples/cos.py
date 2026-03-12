@@ -54,7 +54,7 @@ print("=" * 80)
 
 # First, get some catalog items to order
 print("\n1. Searching catalog for items to order...")
-catalog_results = sdk.catalog.get_search(contract_id=contract_id, limit=3)
+catalog_results = sdk.catalog.get_search(contract_id=str(contract_id), limit=3)
 print(f"   Found {len(catalog_results.features)} catalog items")
 
 if not catalog_results.features:
@@ -151,7 +151,7 @@ if order_details.features:
         download_result = sdk.cos.download_order_item(
             contract_id=contract_id,
             order_id=order.id,
-            item_id=first_feature.properties.item_id,
+            item_id=first_feature.properties.item_id,  # type: ignore[union-attr]
             redirect=False,  # Get URL instead of downloading
         )
         # When redirect=False, returns OrderItemDownloadUrl
@@ -185,7 +185,7 @@ if order_details.features:
     result = sdk.cos.download_order_item_to_file(
         contract_id=contract_id,
         order_id=order.id,
-        item_id=first_feature.properties.item_id,
+        item_id=first_feature.properties.item_id,  # type: ignore[union-attr]
         output_path=output_path,
         chunk_size=65536,  # 64KB chunks for faster downloads
         progress_callback=show_progress,

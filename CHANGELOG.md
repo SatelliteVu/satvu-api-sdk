@@ -1,5 +1,146 @@
 ## [0.5.1](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.5.0...v0.5.1) (2026-03-12)
 
+## [0.5.1.20260317.1156] - 2026-03-17
+
+### feat(cos): update 7 endpoints
+
+#### GET /{contract_id}/
+* added the optional property 'detail/items/ctx' to the response with the '422' status
+* added the optional property 'detail/items/input' to the response with the '422' status
+* removed the optional property 'orders/items/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/stac_metadata' from the response with the '200' status
+* removed the optional property 'orders/items/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/stac_metadata' from the response with the '200' status
+* added '#/components/schemas/Order, subschema #2' to the 'orders/items/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties' response property 'anyOf' list for the response status '200'
+* added '#/components/schemas/Order, subschema #2' to the 'orders/items/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties' response property 'anyOf' list for the response status '200'
+* the response property 'orders/items/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties' became optional for the status '200'
+* the response property 'orders/items/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties' became optional for the status '200'
+* the response property 'orders/items/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/geometry/anyOf[subschema #2: PolygonGeometry]/coordinates' became required for the status '200'
+* the response property 'orders/items/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/geometry/anyOf[subschema #2: PolygonGeometry]/coordinates' became required for the status '200'
+* the 'coordinates' response's property default value '[]' was removed for the status '200'
+* the 'coordinates' response's property default value '[]' was removed for the status '200'
+* the 'orders/items/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties' response's property type/format changed from 'object'/'' to ''/'' for status '200'
+* the 'orders/items/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties' response's property type/format changed from 'object'/'' to ''/'' for status '200'
+* removed the required property 'orders/items/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/created_at' from the response with the '200' status
+* removed the required property 'orders/items/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/item_id' from the response with the '200' status
+* removed the required property 'orders/items/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/order_id' from the response with the '200' status
+* removed the required property 'orders/items/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/price' from the response with the '200' status
+* removed the required property 'orders/items/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/created_at' from the response with the '200' status
+* removed the required property 'orders/items/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/item_id' from the response with the '200' status
+* removed the required property 'orders/items/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/order_id' from the response with the '200' status
+* removed the required property 'orders/items/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/price' from the response with the '200' status
+
+
+#### POST /{contract_id}/
+* added the optional property 'detail/items/ctx' to the response with the '422' status
+* added the optional property 'detail/items/input' to the response with the '422' status
+* removed the optional property '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/stac_metadata' from the response with the '201' status
+* removed the optional property '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/stac_metadata' from the response with the '201' status
+* added '#/components/schemas/Order, subschema #2' to the '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties' response property 'anyOf' list for the response status '201'
+* added '#/components/schemas/Order, subschema #2' to the '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties' response property 'anyOf' list for the response status '201'
+* the response property '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties' became optional for the status '201'
+* the response property '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties' became optional for the status '201'
+* the response property '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/geometry/anyOf[subschema #2: PolygonGeometry]/coordinates' became required for the status '201'
+* the response property '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/geometry/anyOf[subschema #2: PolygonGeometry]/coordinates' became required for the status '201'
+* the 'coordinates' response's property default value '[]' was removed for the status '201'
+* the 'coordinates' response's property default value '[]' was removed for the status '201'
+* the '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties' response's property type/format changed from 'object'/'' to ''/'' for status '201'
+* the '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties' response's property type/format changed from 'object'/'' to ''/'' for status '201'
+* removed the required property '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/created_at' from the response with the '201' status
+* removed the required property '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/item_id' from the response with the '201' status
+* removed the required property '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/order_id' from the response with the '201' status
+* removed the required property '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/price' from the response with the '201' status
+* removed the required property '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/created_at' from the response with the '201' status
+* removed the required property '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/item_id' from the response with the '201' status
+* removed the required property '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/order_id' from the response with the '201' status
+* removed the required property '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/price' from the response with the '201' status
+
+
+#### POST /{contract_id}/price
+* added the optional property 'detail/items/ctx' to the response with the '422' status
+* added the optional property 'detail/items/input' to the response with the '422' status
+
+
+#### POST /{contract_id}/search/
+* added the optional property 'detail/items/ctx' to the response with the '422' status
+* added the optional property 'detail/items/input' to the response with the '422' status
+* removed the optional property 'orders/items/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/stac_metadata' from the response with the '200' status
+* removed the optional property 'orders/items/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/stac_metadata' from the response with the '200' status
+* added '#/components/schemas/Order, subschema #2' to the 'orders/items/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties' response property 'anyOf' list for the response status '200'
+* added '#/components/schemas/Order, subschema #2' to the 'orders/items/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties' response property 'anyOf' list for the response status '200'
+* the response property 'orders/items/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties' became optional for the status '200'
+* the response property 'orders/items/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties' became optional for the status '200'
+* the response property 'orders/items/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/geometry/anyOf[subschema #2: PolygonGeometry]/coordinates' became required for the status '200'
+* the response property 'orders/items/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/geometry/anyOf[subschema #2: PolygonGeometry]/coordinates' became required for the status '200'
+* the 'coordinates' response's property default value '[]' was removed for the status '200'
+* the 'coordinates' response's property default value '[]' was removed for the status '200'
+* the 'orders/items/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties' response's property type/format changed from 'object'/'' to ''/'' for status '200'
+* the 'orders/items/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties' response's property type/format changed from 'object'/'' to ''/'' for status '200'
+* removed the required property 'orders/items/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/created_at' from the response with the '200' status
+* removed the required property 'orders/items/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/item_id' from the response with the '200' status
+* removed the required property 'orders/items/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/order_id' from the response with the '200' status
+* removed the required property 'orders/items/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/price' from the response with the '200' status
+* removed the required property 'orders/items/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/created_at' from the response with the '200' status
+* removed the required property 'orders/items/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/item_id' from the response with the '200' status
+* removed the required property 'orders/items/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/order_id' from the response with the '200' status
+* removed the required property 'orders/items/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/price' from the response with the '200' status
+
+
+#### GET /{contract_id}/{order_id}
+* added the optional property 'detail/items/ctx' to the response with the '422' status
+* added the optional property 'detail/items/input' to the response with the '422' status
+* removed the optional property '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/stac_metadata' from the response with the '200' status
+* removed the optional property '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/stac_metadata' from the response with the '200' status
+* added '#/components/schemas/Order, subschema #2' to the '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties' response property 'anyOf' list for the response status '200'
+* added '#/components/schemas/Order, subschema #2' to the '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties' response property 'anyOf' list for the response status '200'
+* the response property '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties' became optional for the status '200'
+* the response property '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties' became optional for the status '200'
+* the response property '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/geometry/anyOf[subschema #2: PolygonGeometry]/coordinates' became required for the status '200'
+* the response property '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/geometry/anyOf[subschema #2: PolygonGeometry]/coordinates' became required for the status '200'
+* the 'coordinates' response's property default value '[]' was removed for the status '200'
+* the 'coordinates' response's property default value '[]' was removed for the status '200'
+* the '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties' response's property type/format changed from 'object'/'' to ''/'' for status '200'
+* the '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties' response's property type/format changed from 'object'/'' to ''/'' for status '200'
+* removed the required property '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/created_at' from the response with the '200' status
+* removed the required property '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/item_id' from the response with the '200' status
+* removed the required property '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/order_id' from the response with the '200' status
+* removed the required property '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/price' from the response with the '200' status
+* removed the required property '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/created_at' from the response with the '200' status
+* removed the required property '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/item_id' from the response with the '200' status
+* removed the required property '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/order_id' from the response with the '200' status
+* removed the required property '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/price' from the response with the '200' status
+
+
+#### PATCH /{contract_id}/{order_id}
+* added the optional property 'detail/items/ctx' to the response with the '422' status
+* added the optional property 'detail/items/input' to the response with the '422' status
+* removed the optional property '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/stac_metadata' from the response with the '200' status
+* removed the optional property '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/stac_metadata' from the response with the '200' status
+* added '#/components/schemas/Order, subschema #2' to the '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties' response property 'anyOf' list for the response status '200'
+* added '#/components/schemas/Order, subschema #2' to the '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties' response property 'anyOf' list for the response status '200'
+* the response property '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties' became optional for the status '200'
+* the response property '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties' became optional for the status '200'
+* the response property '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/geometry/anyOf[subschema #2: PolygonGeometry]/coordinates' became required for the status '200'
+* the response property '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/geometry/anyOf[subschema #2: PolygonGeometry]/coordinates' became required for the status '200'
+* the 'coordinates' response's property default value '[]' was removed for the status '200'
+* the 'coordinates' response's property default value '[]' was removed for the status '200'
+* the '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties' response's property type/format changed from 'object'/'' to ''/'' for status '200'
+* the '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties' response's property type/format changed from 'object'/'' to ''/'' for status '200'
+* removed the required property '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/created_at' from the response with the '200' status
+* removed the required property '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/item_id' from the response with the '200' status
+* removed the required property '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/order_id' from the response with the '200' status
+* removed the required property '/anyOf[subschema #1: FeatureCollection_Order_ -> subschema #1: FeatureCollection[Order]]/features/items/properties/price' from the response with the '200' status
+* removed the required property '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/created_at' from the response with the '200' status
+* removed the required property '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/item_id' from the response with the '200' status
+* removed the required property '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/order_id' from the response with the '200' status
+* removed the required property '/anyOf[subschema #2: ResellerFeatureCollection_Order_ -> subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/price' from the response with the '200' status
+
+
+#### GET /{contract_id}/{order_id}/{item_id}/download
+* for the 'path' request parameter 'item_id', the maxLength was set to '256'
+
+#### Description Updates
+* 167 description(s) modified
+
+
 ## [0.5.1.20260317.1057] - 2026-03-17
 
 ### feat(otm): update API descriptions

@@ -120,7 +120,7 @@ jobs:
       # Run targeted tests when API is specified
       - name: Run targeted tests
         if: inputs.api != ''
-        uses: dagger/dagger-for-github@v8.2.0
+        uses: dagger/dagger-for-github@v8.4.1
         env:
           SATVU_TRIGGERED_API: ${{ inputs.api }}
           SATVU_SPEC_ENV: ${{ inputs.qa == true && 'qa' || 'prod' }}
@@ -130,7 +130,7 @@ jobs:
       # Run full tests when no API specified
       - name: Run full tests
         if: inputs.api == ''
-        uses: dagger/dagger-for-github@v8.2.0
+        uses: dagger/dagger-for-github@v8.4.1
         env:
           SATVU_TRIGGERED_API: none
           SATVU_SPEC_ENV: ${{ inputs.qa == true && 'qa' || 'prod' }}
@@ -281,7 +281,7 @@ jobs:
       # Build with calculated version (workflow_dispatch)
       - name: Build release
         if: github.event_name == 'workflow_dispatch'
-        uses: dagger/dagger-for-github@v8.2.0
+        uses: dagger/dagger-for-github@v8.4.1
         env:
           SATVU_TRIGGERED_API: ${{ inputs.api || 'none' }}
           SATVU_SPEC_ENV: ${{ inputs.qa == true && 'qa' || 'prod' }}

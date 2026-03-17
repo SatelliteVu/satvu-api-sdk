@@ -1,0 +1,35 @@
+name: Pre-commit autoupdate
+
+on:
+  schedule:
+    - cron: "0 7 * * 1" # Monday at 07:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  autoupdate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - run: pip install pre-commit
+
+      - run: pre-commit autoupdate
+
+      - uses: peter-evans/create-pull-request@v8
+        with:
+          branch: chore/pre-commit-autoupdate
+          title: "build(deps): update pre-commit hooks"
+          commit-message: "build(deps): update pre-commit hooks"
+          body: |
+            Automated update of pre-commit hook revisions.
+
+            Run `pre-commit autoupdate` to verify locally.
+          labels: dependencies

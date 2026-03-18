@@ -1,5 +1,17 @@
 ## [0.5.1](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.5.0...v0.5.1) (2026-03-12)
 
+## [0.5.1.20260318.1607] - 2026-03-18
+
+### feat(reseller): update GET /companies, POST /search/companies
+
+#### GET /companies
+* added the required property 'companies/items/country_code' to the response with the '200' status
+
+
+#### POST /search/companies
+* added the required property 'companies/items/country_code' to the response with the '200' status
+
+
 ## [0.5.1.20260317.1156] - 2026-03-17
 
 ### feat(cos): update 7 endpoints

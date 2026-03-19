@@ -121,21 +121,24 @@ jobs:
       - name: Run targeted tests
         if: inputs.api != ''
         uses: dagger/dagger-for-github@v8.4.1
-        env:
-          SATVU_TRIGGERED_API: ${{ inputs.api }}
-          SATVU_SPEC_ENV: ${{ inputs.qa == true && 'qa' || 'prod' }}
         with:
-          call: test-api --api=${{ inputs.api }} export --path=.
+          call: >-
+            test-api
+            --api=${{ inputs.api }}
+            --triggered-api=${{ inputs.api }}
+            --spec-env=${{ inputs.qa == true && 'qa' || 'prod' }}
+            export --path=.
 
       # Run full tests when no API specified
       - name: Run full tests
         if: inputs.api == ''
         uses: dagger/dagger-for-github@v8.4.1
-        env:
-          SATVU_TRIGGERED_API: none
-          SATVU_SPEC_ENV: ${{ inputs.qa == true && 'qa' || 'prod' }}
         with:
-          call: test export --path=.
+          call: >-
+            test
+            --triggered-api=none
+            --spec-env=${{ inputs.qa == true && 'qa' || 'prod' }}
+            export --path=.
 
       # Save hypothesis examples cache (always save to ensure main branch has cache for PRs)
       - name: Save hypothesis examples cache
@@ -241,8 +244,6 @@ jobs:
         if: github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-          SATVU_TRIGGERED_API: none
-          SATVU_SPEC_ENV: prod
         run: semantic-release
 
       # Publish to PyPI (push events - semantic-release creates artifacts)
@@ -282,11 +283,14 @@ jobs:
       - name: Build release
         if: github.event_name == 'workflow_dispatch'
         uses: dagger/dagger-for-github@v8.4.1
-        env:
-          SATVU_TRIGGERED_API: ${{ inputs.api || 'none' }}
-          SATVU_SPEC_ENV: ${{ inputs.qa == true && 'qa' || 'prod' }}
         with:
-          call: build-release --is-qa=${{ inputs.qa == true }} --version=${{ steps.version.outputs.full_version }} export --path=./build-output --wipe
+          call: >-
+            build-release
+            --is-qa=${{ inputs.qa == true }}
+            --version=${{ steps.version.outputs.full_version }}
+            --triggered-api=${{ inputs.api || 'none' }}
+            --spec-env=${{ inputs.qa == true && 'qa' || 'prod' }}
+            export --path=./build-output --wipe
 
       # Extract build artifacts from Dagger output
       # Dagger returns composite directory with dist/ and .cache/

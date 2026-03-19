@@ -1,4 +1,3 @@
-import os
 from typing import Annotated, TypeAlias
 
 import dagger
@@ -58,6 +57,14 @@ class SatvuApiSdkCi:
         version: Annotated[
             str, dagger.Doc("version to build (uses pyproject.toml if not specified)")
         ] = "",
+        triggered_api: Annotated[
+            str,
+            dagger.Doc(
+                "which API triggered this build (controls spec caching: "
+                "'none' = use cached for all, '<api_name>' = fetch fresh for that API)"
+            ),
+        ] = "",
+        spec_env: Annotated[str, dagger.Doc("spec environment: 'prod' or 'qa'")] = "",
     ) -> dagger.Directory:
         """Returns build artifacts including dist and cached OpenAPI specs.
 
@@ -74,10 +81,10 @@ class SatvuApiSdkCi:
             "SATVU_SDK_USE_QA", "1" if is_qa else "0"
         )
 
-        # Forward selective spec fetching env vars from host
-        if triggered_api := os.environ.get("SATVU_TRIGGERED_API"):
+        # Forward selective spec fetching config to the build container
+        if triggered_api:
             builder = builder.with_env_variable("SATVU_TRIGGERED_API", triggered_api)
-        if spec_env := os.environ.get("SATVU_SPEC_ENV"):
+        if spec_env:
             builder = builder.with_env_variable("SATVU_SPEC_ENV", spec_env)
 
         # Note: SATVU_GENERATE_TESTS is intentionally NOT set here.
@@ -174,6 +181,14 @@ class SatvuApiSdkCi:
         with_coverage: Annotated[
             bool, dagger.Doc("Enable coverage reporting (disable for faster runs)")
         ] = True,
+        triggered_api: Annotated[
+            str,
+            dagger.Doc(
+                "which API triggered this build (controls spec caching: "
+                "'none' = use cached for all, '<api_name>' = fetch fresh for that API)"
+            ),
+        ] = "",
+        spec_env: Annotated[str, dagger.Doc("spec environment: 'prod' or 'qa'")] = "",
     ) -> dagger.Directory:
         """Runs test suite for a specific Python version"""
 
@@ -197,10 +212,10 @@ class SatvuApiSdkCi:
             source, python_version=python_version, install_deps=True
         )
 
-        # Forward selective spec fetching env vars from host
-        if triggered_api := os.environ.get("SATVU_TRIGGERED_API"):
+        # Forward selective spec fetching config to the build container
+        if triggered_api:
             builder = builder.with_env_variable("SATVU_TRIGGERED_API", triggered_api)
-        if spec_env := os.environ.get("SATVU_SPEC_ENV"):
+        if spec_env:
             builder = builder.with_env_variable("SATVU_SPEC_ENV", spec_env)
 
         # Enable test generation for test runs (tests are needed to run pytest)
@@ -219,9 +234,8 @@ class SatvuApiSdkCi:
             )
         )
 
-        # Export test results and hypothesis examples cache
-        # The hypothesis-examples cache is generated during uv build and speeds up
-        # property-based tests by avoiding expensive schema parsing
+        # Export test results and full .cache (OpenAPI specs + hypothesis examples)
+        # OpenAPI specs are cached to avoid fetching fresh on every CI run
         return (
             dag.directory()
             .with_files(
@@ -231,10 +245,7 @@ class SatvuApiSdkCi:
                     run.file("/tmp/pytest-coverage.txt"),  # nosec: B108
                 ],
             )
-            .with_directory(
-                ".cache/hypothesis-examples",
-                run.directory("/src/.cache/hypothesis-examples"),
-            )
+            .with_directory(".cache", run.directory("/src/.cache"))
         )
 
     @function
@@ -250,6 +261,14 @@ class SatvuApiSdkCi:
         python_version: Annotated[
             str, dagger.Doc("Python version to test against")
         ] = DEFAULT_PYTHON_VERSION,
+        triggered_api: Annotated[
+            str,
+            dagger.Doc(
+                "which API triggered this build (controls spec caching: "
+                "'none' = use cached for all, '<api_name>' = fetch fresh for that API)"
+            ),
+        ] = "",
+        spec_env: Annotated[str, dagger.Doc("spec environment: 'prod' or 'qa'")] = "",
     ) -> dagger.Directory:
         """Runs core tests plus tests for a specific API service.
 
@@ -296,10 +315,10 @@ class SatvuApiSdkCi:
             source, python_version=python_version, install_deps=True
         )
 
-        # Forward selective spec fetching env vars from host
-        if triggered_api := os.environ.get("SATVU_TRIGGERED_API"):
+        # Forward selective spec fetching config to the build container
+        if triggered_api:
             builder = builder.with_env_variable("SATVU_TRIGGERED_API", triggered_api)
-        if spec_env := os.environ.get("SATVU_SPEC_ENV"):
+        if spec_env:
             builder = builder.with_env_variable("SATVU_SPEC_ENV", spec_env)
 
         # Enable test generation for test runs (tests are needed to run pytest)
@@ -315,7 +334,7 @@ class SatvuApiSdkCi:
             )
         )
 
-        # Export test results and hypothesis examples cache
+        # Export test results and full .cache (OpenAPI specs + hypothesis examples)
         return (
             dag.directory()
             .with_files(
@@ -325,10 +344,7 @@ class SatvuApiSdkCi:
                     run.file("/tmp/pytest-coverage.txt"),  # nosec: B108
                 ],
             )
-            .with_directory(
-                ".cache/hypothesis-examples",
-                run.directory("/src/.cache/hypothesis-examples"),
-            )
+            .with_directory(".cache", run.directory("/src/.cache"))
         )
 
     @function

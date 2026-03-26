@@ -1,3 +1,16 @@
+# [0.6.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.5.1...v0.6.0) (2026-03-26)
+
+
+### Bug Fixes
+
+* **ci:** pass spec caching config as Dagger function params
+* **core:** handle Link models without method attribute in pagination
+
+
+### Features
+
+* **builder:** auto-generate tests for pagination iterator methods
+
 ## [0.5.1](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.5.0...v0.5.1) (2026-03-12)
 
 ## [0.5.1.20260324.0957] - 2026-03-24

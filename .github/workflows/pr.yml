@@ -75,10 +75,9 @@ jobs:
         uses: actions/cache/restore@v5
         with:
           path: .cache/hypothesis-examples
-          key: hypothesis-examples-${{ hashFiles('src/builder/config.py') }}-${{ github.run_id }}
+          key: hypothesis-examples-${{ hashFiles('src/builder/config.py', 'src/builder/schema_utils.py') }}-${{ github.run_id }}
           restore-keys: |
-            hypothesis-examples-${{ hashFiles('src/builder/config.py') }}-
-            hypothesis-examples-
+            hypothesis-examples-${{ hashFiles('src/builder/config.py', 'src/builder/schema_utils.py') }}-
       - name: Run tests in dagger
         uses: dagger/dagger-for-github@v8.4.1
         with:
@@ -88,7 +87,7 @@ jobs:
         if: always()
         with:
           path: .cache/hypothesis-examples
-          key: hypothesis-examples-${{ hashFiles('src/builder/config.py') }}-${{ github.run_id }}
+          key: hypothesis-examples-${{ hashFiles('src/builder/config.py', 'src/builder/schema_utils.py') }}-${{ github.run_id }}
       - name: Coverage comment
         if: matrix.python-version == '3.13'
         uses: MishaKav/pytest-coverage-comment@v1.7.1

@@ -74,7 +74,15 @@ def clean_schema(obj: Any) -> Any:
             # JSON Schema:  {"type": ["string", "null"]}
             if key == "nullable":
                 if value is True and "type" in obj:
-                    result["type"] = [obj["type"], "null"]
+                    obj_type = obj["type"]
+                    # Avoid double-wrapping if type is already a list (e.g. from 2020-12)
+                    if isinstance(obj_type, list):
+                        if "null" not in obj_type:
+                            result["type"] = [*obj_type, "null"]
+                        else:
+                            result["type"] = obj_type
+                    else:
+                        result["type"] = [obj_type, "null"]
                 continue
 
             # Skip type if nullable already converted it to an array

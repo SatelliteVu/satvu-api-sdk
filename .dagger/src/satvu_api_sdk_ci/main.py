@@ -66,11 +66,12 @@ class SatvuApiSdkCi:
         ] = "",
         spec_env: Annotated[str, dagger.Doc("spec environment: 'prod' or 'qa'")] = "",
     ) -> dagger.Directory:
-        """Returns build artifacts including dist and cached OpenAPI specs.
+        """Returns build artifacts including dist, cached specs, and generated services.
 
         The returned directory contains:
         - dist/: Source distribution and wheel
         - .cache/: Cached OpenAPI specs (for GitHub Actions caching)
+        - src/satvu/services/: Generated SDK service code (for committing to repo)
 
         Version is determined by the workflow:
         - PR merges: clean semver (e.g., 0.1.3)
@@ -87,9 +88,9 @@ class SatvuApiSdkCi:
         if spec_env:
             builder = builder.with_env_variable("SATVU_SPEC_ENV", spec_env)
 
-        # Note: SATVU_GENERATE_TESTS is intentionally NOT set here.
-        # Release builds skip test generation since tests are excluded from the wheel.
-        # Test generation is only enabled in test() and test_api() functions.
+        # Enable test generation so generated test files are included in the
+        # exported services directory (committed to repo for visibility).
+        builder = builder.with_env_variable("SATVU_GENERATE_TESTS", "1")
 
         # If version provided, update pyproject.toml
         if version:
@@ -102,12 +103,15 @@ class SatvuApiSdkCi:
 
         built = builder.with_exec(["uv", "build"])
 
-        # Return composite directory with both dist and cache
-        # This allows GitHub Actions to cache the OpenAPI specs for future runs
+        # Return composite directory with dist, cache, and generated services
+        # Services are exported so semantic-release can commit them to the repo
         return (
             dag.directory()
             .with_directory("dist", built.directory("/src/dist"))
             .with_directory(".cache", built.directory("/src/.cache"))
+            .with_directory(
+                "src/satvu/services", built.directory("/src/src/satvu/services")
+            )
         )
 
     @function

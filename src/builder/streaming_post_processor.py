@@ -29,6 +29,17 @@ except (ImportError, FileNotFoundError):
     HAS_RUFF = False
 
 
+def _extract_leading_comments(content: str) -> str:
+    """Extract leading comment lines from source code (stripped by ast.unparse)."""
+    lines = []
+    for line in content.splitlines():
+        if line.startswith("#"):
+            lines.append(line)
+        else:
+            break
+    return "\n".join(lines) + "\n" if lines else ""
+
+
 def add_streaming_methods(
     api_file: Path,
     api_id: str,
@@ -59,8 +70,9 @@ def add_streaming_methods(
         f"  [STREAMING] Adding {len(streaming_configs)} streaming method(s) to {api_id}"
     )
 
-    # Read and parse file as AST
+    # Read and parse file as AST (preserving leading comments that ast.unparse strips)
     content = api_file.read_text()
+    leading_comments = _extract_leading_comments(content)
     tree = ast.parse(content)
 
     # Add required imports
@@ -98,12 +110,21 @@ def add_streaming_methods(
 
         print(f"    ✓ Generated {config.stream_method}")
 
-    # Convert AST back to code
-    final_code = ast.unparse(tree)
+    # Convert AST back to code (re-prepend leading comments stripped by ast.unparse)
+    final_code = leading_comments + ast.unparse(tree)
 
-    # Format with Ruff if available
+    # Format with Ruff if available (check --fix for import sorting + lint, then format)
     if HAS_RUFF:
         try:
+            result = subprocess.run(
+                ["ruff", "check", "--fix", "-"],  # nosec B607
+                input=final_code,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            if result.returncode == 0:
+                final_code = result.stdout
             result = subprocess.run(
                 ["ruff", "format", "-"],  # nosec B607
                 input=final_code,

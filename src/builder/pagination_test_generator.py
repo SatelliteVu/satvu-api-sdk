@@ -14,6 +14,17 @@ PAGINATION_TEST_IMPORTS = [
 ]
 
 
+def _extract_leading_comments(content: str) -> str:
+    """Extract leading comment lines from source code (stripped by ast.unparse)."""
+    lines = []
+    for line in content.splitlines():
+        if line.startswith("#"):
+            lines.append(line)
+        else:
+            break
+    return "\n".join(lines) + "\n" if lines else ""
+
+
 def generate_pagination_tests(
     api_name: str,
     pagination_configs: list[PaginationEndpointConfig],
@@ -40,8 +51,9 @@ def generate_pagination_tests(
         f"  [PAGINATION TESTS] Generating {len(pagination_configs)} pagination test(s) for {api_name}"
     )
 
-    # Read existing test file
+    # Read existing test file (preserving leading comments that ast.unparse strips)
     content = test_file.read_text()
+    leading_comments = _extract_leading_comments(content)
     tree = ast.parse(content)
 
     # Add required imports for pagination tests
@@ -89,8 +101,8 @@ def generate_pagination_tests(
             f"    [PAGINATION TESTS] Generated {added_count} tests for {config.iter_method}"
         )
 
-    # Convert AST back to code
-    final_code = ast.unparse(tree)
+    # Convert AST back to code (re-prepend leading comments stripped by ast.unparse)
+    final_code = leading_comments + ast.unparse(tree)
 
     # Write back to file
     test_file.write_text(final_code)

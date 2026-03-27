@@ -20,10 +20,18 @@ Additionally, this module handles JSON Schema dialect conversion:
 
 from typing import Any
 
-# Standard UUID regex pattern (lowercase hex with hyphens)
-# hypothesis-jsonschema treats "format": "uuid" as a hint, not a constraint,
-# so we add an explicit pattern to ensure valid UUIDs are generated
+# hypothesis-jsonschema treats "format" as a hint, not a constraint,
+# so we add explicit patterns to ensure valid values are generated
 UUID_PATTERN = "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+DATE_PATTERN = "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+DATE_TIME_PATTERN = "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}"
+
+# Map of string formats to their pattern constraints
+FORMAT_PATTERNS: dict[str, str] = {
+    "uuid": UUID_PATTERN,
+    "date": DATE_PATTERN,
+    "date-time": DATE_TIME_PATTERN,
+}
 
 # Schema names to exclude from oneOf/anyOf variants.
 # These are rarely-used types that cause hypothesis to hang or timeout.
@@ -61,8 +69,16 @@ def clean_schema(obj: Any) -> Any:
             ):
                 continue
 
-            # Skip nullable: false (default, not needed)
-            if key == "nullable" and value is False:
+            # Convert nullable to JSON Schema draft-07 type array
+            # OpenAPI 3.0: {"type": "string", "nullable": true}
+            # JSON Schema:  {"type": ["string", "null"]}
+            if key == "nullable":
+                if value is True and "type" in obj:
+                    result["type"] = [obj["type"], "null"]
+                continue
+
+            # Skip type if nullable already converted it to an array
+            if key == "type" and isinstance(result.get("type"), list):
                 continue
 
             # Skip exclusiveMinimum/Maximum - incompatible representations
@@ -84,14 +100,15 @@ def clean_schema(obj: Any) -> Any:
             else:
                 result[key] = clean_schema(value)
 
-        # Add UUID pattern constraint
-        # hypothesis-jsonschema treats format as a hint, so we need explicit pattern
-        if (
-            result.get("type") == "string"
-            and result.get("format") == "uuid"
-            and "pattern" not in result
-        ):
-            result["pattern"] = UUID_PATTERN
+        # Add pattern constraints for string formats
+        # hypothesis-jsonschema treats format as a hint, so we need explicit patterns
+        fmt = result.get("format")
+        result_type = result.get("type")
+        is_string = result_type == "string" or (
+            isinstance(result_type, list) and "string" in result_type
+        )
+        if is_string and fmt in FORMAT_PATTERNS and "pattern" not in result:
+            result["pattern"] = FORMAT_PATTERNS[fmt]
 
         return result
 

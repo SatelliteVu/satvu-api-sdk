@@ -9,6 +9,17 @@ from jinja2 import Environment
 from builder.streaming_detector import StreamingEndpointConfig
 
 
+def _extract_leading_comments(content: str) -> str:
+    """Extract leading comment lines from source code (stripped by ast.unparse)."""
+    lines = []
+    for line in content.splitlines():
+        if line.startswith("#"):
+            lines.append(line)
+        else:
+            break
+    return "\n".join(lines) + "\n" if lines else ""
+
+
 def generate_streaming_tests(
     api_name: str,
     streaming_configs: list[StreamingEndpointConfig],
@@ -35,8 +46,9 @@ def generate_streaming_tests(
         f"  [TESTS] Generating {len(streaming_configs)} streaming test(s) for {api_name}"
     )
 
-    # Read existing test file
+    # Read existing test file (preserving leading comments that ast.unparse strips)
     content = test_file.read_text()
+    leading_comments = _extract_leading_comments(content)
     tree = ast.parse(content)
 
     # Find the test class (should be named Test{ApiName}Service)
@@ -77,8 +89,8 @@ def generate_streaming_tests(
 
         print(f"    ✓ Generated {added_count} tests for {config.stream_method}")
 
-    # Convert AST back to code
-    final_code = ast.unparse(tree)
+    # Convert AST back to code (re-prepend leading comments stripped by ast.unparse)
+    final_code = leading_comments + ast.unparse(tree)
 
     # Write back to file
     test_file.write_text(final_code)

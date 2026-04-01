@@ -1,0 +1,80 @@
+# Auto-generated from OpenAPI spec by the SatVu SDK builder — do not edit.
+# Source: src/builder/templates/model.py.jinja
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Literal, Union
+
+from pydantic import BaseModel, ConfigDict, Field
+
+if TYPE_CHECKING:
+    from ..models.link import Link
+    from ..models.reseller_search_response_feature_assured_order_request import (
+        ResellerSearchResponseFeatureAssuredOrderRequest,
+    )
+    from ..models.reseller_search_response_feature_standard_order_request import (
+        ResellerSearchResponseFeatureStandardOrderRequest,
+    )
+    from ..models.response_context import ResponseContext
+    from ..models.search_response_feature_assured_feasibility_request import (
+        SearchResponseFeatureAssuredFeasibilityRequest,
+    )
+    from ..models.search_response_feature_assured_feasibility_response import (
+        SearchResponseFeatureAssuredFeasibilityResponse,
+    )
+    from ..models.search_response_feature_assured_order_request import (
+        SearchResponseFeatureAssuredOrderRequest,
+    )
+    from ..models.search_response_feature_standard_feasibility_request import (
+        SearchResponseFeatureStandardFeasibilityRequest,
+    )
+    from ..models.search_response_feature_standard_feasibility_response import (
+        SearchResponseFeatureStandardFeasibilityResponse,
+    )
+    from ..models.search_response_feature_standard_order_request import (
+        SearchResponseFeatureStandardOrderRequest,
+    )
+
+
+class SearchResponse(BaseModel):
+    """
+    Attributes:
+        type_ (Literal['FeatureCollection']):
+        features (list[Union['ResellerSearchResponseFeatureAssuredOrderRequest',
+            'ResellerSearchResponseFeatureStandardOrderRequest', 'SearchResponseFeatureAssuredFeasibilityRequest',
+            'SearchResponseFeatureAssuredFeasibilityResponse', 'SearchResponseFeatureAssuredOrderRequest',
+            'SearchResponseFeatureStandardFeasibilityRequest', 'SearchResponseFeatureStandardFeasibilityResponse',
+            'SearchResponseFeatureStandardOrderRequest']]): A list of features that match the search filters.
+        context (ResponseContext): Context about the response.
+        links (list[Link]): A list of links to next and/or previous pages of the search.
+    """
+
+    type_: Literal["FeatureCollection"] = Field(
+        default="FeatureCollection", description=None, alias="type"
+    )
+    features: list[
+        Union[
+            ResellerSearchResponseFeatureAssuredOrderRequest,
+            ResellerSearchResponseFeatureStandardOrderRequest,
+            SearchResponseFeatureAssuredFeasibilityRequest,
+            SearchResponseFeatureAssuredFeasibilityResponse,
+            SearchResponseFeatureAssuredOrderRequest,
+            SearchResponseFeatureStandardFeasibilityRequest,
+            SearchResponseFeatureStandardFeasibilityResponse,
+            SearchResponseFeatureStandardOrderRequest,
+        ]
+    ] = Field(
+        ...,
+        description="""A list of features that match the search filters.""",
+        alias="features",
+    )
+    context: ResponseContext = Field(
+        ..., description="""Context about the response.""", alias="context"
+    )
+    links: list[Link] = Field(
+        ...,
+        description="""A list of links to next and/or previous pages of the search.""",
+        alias="links",
+    )
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

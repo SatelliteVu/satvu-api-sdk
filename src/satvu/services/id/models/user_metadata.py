@@ -1,0 +1,30 @@
+# Auto-generated from OpenAPI spec by the SatVu SDK builder — do not edit.
+# Source: src/builder/templates/model.py.jinja
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+from pydantic import BaseModel, ConfigDict, Field
+
+if TYPE_CHECKING:
+    from ..models.verbose_notification import VerboseNotification
+
+
+class UserMetadata(BaseModel):
+    """
+    Attributes:
+        client_id (None | str): The client ID of the user
+        notifications (list[VerboseNotification] | None): The notifications configured for the user.
+    """
+
+    client_id: None | str = Field(
+        default=None, description="""The client ID of the user""", alias="client_id"
+    )
+    notifications: list[VerboseNotification] | None = Field(
+        default=None,
+        description="""The notifications configured for the user.""",
+        alias="notifications",
+    )
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

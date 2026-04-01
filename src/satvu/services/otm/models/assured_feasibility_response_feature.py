@@ -1,0 +1,41 @@
+# Auto-generated from OpenAPI spec by the SatVu SDK builder — do not edit.
+# Source: src/builder/templates/model.py.jinja
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Literal
+from uuid import UUID
+
+from pydantic import BaseModel, ConfigDict, Field
+
+if TYPE_CHECKING:
+    from ..models.assured_feasibility_response_properties import (
+        AssuredFeasibilityResponseProperties,
+    )
+    from ..models.point import Point
+
+
+class AssuredFeasibilityResponseFeature(BaseModel):
+    """Object representing an assured feasibility response.
+
+    Attributes:
+        type_ (Literal['Feature']):
+        geometry (Point): Point Model
+        properties (AssuredFeasibilityResponseProperties): Properties of the assured priority feasibility response.
+        id (UUID): The ID of the feasibility request.
+        signature (str): Signature token.
+    """
+
+    type_: Literal["Feature"] = Field(default="Feature", description=None, alias="type")
+    geometry: Point = Field(..., description="""Point Model""", alias="geometry")
+    properties: AssuredFeasibilityResponseProperties = Field(
+        ...,
+        description="""Properties of the assured priority feasibility response.""",
+        alias="properties",
+    )
+    id: UUID = Field(
+        ..., description="""The ID of the feasibility request.""", alias="id"
+    )
+    signature: str = Field(..., description="""Signature token.""", alias="signature")
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

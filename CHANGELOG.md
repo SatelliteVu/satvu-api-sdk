@@ -1,3 +1,16 @@
+# [0.7.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.6.0...v0.7.0) (2026-04-01)
+
+
+### Bug Fixes
+
+* **builder:** handle nullable and date format patterns in test schema cleaning
+* **ci:** invalidate hypothesis cache when schema cleaning changes
+
+
+### Features
+
+* **builder:** commit auto-generated SDK code to repo
+
 # [0.6.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.5.1...v0.6.0) (2026-03-26)
 
 ## [0.6.0.20260401.0948] - 2026-04-01

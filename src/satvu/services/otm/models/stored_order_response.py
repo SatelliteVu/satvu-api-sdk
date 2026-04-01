@@ -1,0 +1,53 @@
+# Auto-generated from OpenAPI spec by the SatVu SDK builder — do not edit.
+# Source: src/builder/templates/model.py.jinja
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Literal, Union
+from uuid import UUID
+
+from pydantic import BaseModel, ConfigDict, Field
+
+if TYPE_CHECKING:
+    from ..models.link import Link
+    from ..models.point import Point
+    from ..models.price import Price
+    from ..models.stored_assured_order_request_properties import (
+        StoredAssuredOrderRequestProperties,
+    )
+    from ..models.stored_standard_order_request_properties import (
+        StoredStandardOrderRequestProperties,
+    )
+
+
+class StoredOrderResponse(BaseModel):
+    """Payload for stored order response.
+
+    Attributes:
+        type_ (Literal['Feature']):
+        geometry (Point): Point Model
+        properties (Union['StoredAssuredOrderRequestProperties', 'StoredStandardOrderRequestProperties']): A map of
+            additional metadata about the requested image.
+        id (UUID): Order ID.
+        links (list[Link]): A list of related links for the order.
+        contract_id (UUID): Contract ID.
+        price (Price):
+    """
+
+    type_: Literal["Feature"] = Field(default="Feature", description=None, alias="type")
+    geometry: Point = Field(..., description="""Point Model""", alias="geometry")
+    properties: Union[
+        StoredAssuredOrderRequestProperties, StoredStandardOrderRequestProperties
+    ] = Field(
+        ...,
+        description="""A map of additional metadata about the requested image.""",
+        alias="properties",
+    )
+    id: UUID = Field(..., description="""Order ID.""", alias="id")
+    links: list[Link] = Field(
+        ..., description="""A list of related links for the order.""", alias="links"
+    )
+    contract_id: UUID = Field(..., description="""Contract ID.""", alias="contract_id")
+    price: Price = Field(..., description=None, alias="price")
+
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

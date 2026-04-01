@@ -1,5 +1,22 @@
 # [0.6.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.5.1...v0.6.0) (2026-03-26)
 
+## [0.6.0.20260401.0948] - 2026-04-01
+
+### fix(reseller): update GET /users, POST /search/users, POST /user
+
+#### POST /search/users
+* the 'users/items/user_email' response's property type/format changed from 'string'/'email' to 'string'/'' for status '200'
+
+
+#### POST /user
+* the '/items/user_email' request property type/format changed from 'string'/'email' to 'string'/''
+* the '/items/user_email' response's property type/format changed from 'string'/'email' to 'string'/'' for status '201'
+
+
+#### GET /users
+* the 'users/items/user_email' response's property type/format changed from 'string'/'email' to 'string'/'' for status '200'
+
+
 
 ### Bug Fixes
 

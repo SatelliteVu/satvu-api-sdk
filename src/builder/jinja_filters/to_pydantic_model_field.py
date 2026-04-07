@@ -10,14 +10,20 @@ def to_pydantic_model_field(prop: PropertyProtocol) -> str:
     Returns:
         A string like: `field_name: FieldType = Field(..., description="...", alias="...")`
     """
+    # Append underscore to field names that shadow BaseModel attributes
+    # to avoid Pydantic warnings (e.g., "schema" -> "schema_")
+    python_name = prop.python_name
+    if python_name == "schema":
+        python_name = "schema_"
+
     if isinstance(prop, ModelProperty):
         type_string = prop.get_type_string()
         # If it's just the class name, quote it for forward reference
         if type_string == prop.class_info.name:
             type_string = f"'{type_string}'"
-        field_start = f"{prop.python_name}: {type_string}"
+        field_start = f"{python_name}: {type_string}"
     else:
-        field_start = f"{prop.python_name}: {prop.get_type_string()}"
+        field_start = f"{python_name}: {prop.get_type_string()}"
 
     description = f'"""{prop.description}"""' if prop.description else "None"
 

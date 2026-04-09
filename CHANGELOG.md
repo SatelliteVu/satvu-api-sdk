@@ -1,5 +1,13 @@
 # [0.7.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.6.0...v0.7.0) (2026-04-01)
 
+## [0.7.0.20260409.1312] - 2026-04-09
+
+### feat(cos): update API descriptions
+
+#### Description Updates
+* 1 description(s) modified
+
+
 ## [0.7.0.20260409.0911] - 2026-04-09
 
 ### feat(otm): added the non-success response with the status '400' (POST /{contract_id}/search/)

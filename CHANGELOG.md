@@ -1,5 +1,17 @@
 # [0.7.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.6.0...v0.7.0) (2026-04-01)
 
+## [0.7.0.20260415.0826] - 2026-04-15
+
+### fix(cos): update GET /{contract_id}/{order_id}/download, GET /{contract_id}/{order_id}/{item_id}/download
+
+#### GET /{contract_id}/{order_id}/download
+* response property `detail` list-of-types was widened by adding types `array` to media type `application/json` of response `422`
+
+
+#### GET /{contract_id}/{order_id}/{item_id}/download
+* response property `detail` list-of-types was widened by adding types `array` to media type `application/json` of response `422`
+
+
 ## [0.7.0.20260409.1312] - 2026-04-09
 
 ### feat(cos): update API descriptions

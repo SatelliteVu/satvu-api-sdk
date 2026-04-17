@@ -3,7 +3,7 @@
 """
 Tests for id service.
 
-Generated from OpenAPI spec version 2.1.0.
+Generated from OpenAPI spec version 2.1.2.
 Uses property-based testing with hypothesis-jsonschema.
 """
 
@@ -409,6 +409,38 @@ class TestIdService:
         result = self.sdk.id.edit_webhook(id=id, body=body)
         assert result is not None
         assert isinstance(result, WebhookResponse)
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy("/webhooks/{id}", "patch", "400"),
+        body_data=get_request_body_strategy("/webhooks/{id}", "patch"),
+    )
+    def test_edit_webhook_400_error(self, backend, response_data, body_data):
+        """
+        Test edit_webhook with 400 error response.
+
+        HTTP 400 errors raise ClientError.
+        """
+        id = uuid4()
+        path = f"/webhooks/{id}"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.patch(url).reply(400).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        body = EditWebhookPayload.model_validate(body_data)
+        with pytest.raises(ClientError) as exc_info:
+            self.sdk.id.edit_webhook(id=id, body=body)
+        assert exc_info.value.status_code == 400
 
     @settings(
         max_examples=10,

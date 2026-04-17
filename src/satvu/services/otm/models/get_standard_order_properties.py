@@ -4,12 +4,15 @@
 from __future__ import annotations
 
 import datetime
-from typing import Literal, Union
+from typing import TYPE_CHECKING, Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from ..models.day_night_mode import DayNightMode
 from ..models.order_status import OrderStatus
+
+if TYPE_CHECKING:
+    from ..models.status_history_entry import StatusHistoryEntry
 
 
 class GetStandardOrderProperties(BaseModel):
@@ -41,6 +44,8 @@ class GetStandardOrderProperties(BaseModel):
             in decimal degrees. Default: 0.
         max_off_nadir (Union[None, int]): The maximum angle from the sensor between nadir and the scene center. Measured
             in decimal degrees. Must be larger than `min_off_nadir`. Default: 30.
+        status_history (Union[None, list[StatusHistoryEntry]]): Chronological history of status changes for this order,
+            from oldest to newest.
     """
 
     datetime_: str = Field(
@@ -107,6 +112,11 @@ class GetStandardOrderProperties(BaseModel):
         default=30,
         description="""The maximum angle from the sensor between nadir and the scene center. Measured in decimal degrees. Must be larger than `min_off_nadir`.""",
         alias="max_off_nadir",
+    )
+    status_history: Union[None, list[StatusHistoryEntry]] = Field(
+        default=None,
+        description="""Chronological history of status changes for this order, from oldest to newest.""",
+        alias="status_history",
     )
 
     model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

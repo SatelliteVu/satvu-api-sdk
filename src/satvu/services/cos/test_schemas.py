@@ -295,7 +295,7 @@ _COMPONENTS = {
             },
             "order_id": {
                 "description": "The order ID.",
-                "examples": ["47b720bf-00f2-4dc6-b1d6-d68c0df68610"],
+                "examples": ["9fcf2f95-c08e-4fa3-829a-af830a4f92c4"],
                 "format": "uuid",
                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
                 "title": "Order Id",
@@ -2086,6 +2086,23 @@ _COMPONENTS = {
         "title": "StacPropertiesV7",
         "type": "object",
     },
+    "UnprocessableResponse": {
+        "properties": {
+            "detail": {
+                "anyOf": [
+                    {"type": "string"},
+                    {
+                        "items": {"$ref": "#/definitions/ValidationErrorDetail"},
+                        "type": "array",
+                    },
+                ],
+                "title": "Detail",
+            }
+        },
+        "required": ["detail"],
+        "title": "UnprocessableResponse",
+        "type": "object",
+    },
     "ValidationError": {
         "properties": {
             "ctx": {"title": "Context", "type": "object"},
@@ -2100,6 +2117,20 @@ _COMPONENTS = {
         },
         "required": ["loc", "msg", "type"],
         "title": "ValidationError",
+        "type": "object",
+    },
+    "ValidationErrorDetail": {
+        "properties": {
+            "loc": {
+                "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]},
+                "title": "Loc",
+                "type": "array",
+            },
+            "msg": {"title": "Msg", "type": "string"},
+            "type": {"title": "Type", "type": "string"},
+        },
+        "required": ["loc", "msg", "type"],
+        "title": "ValidationErrorDetail",
         "type": "object",
     },
     "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -2547,7 +2578,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -4936,6 +4967,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -4955,6 +5005,25 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
+                            "type": "object",
+                        },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -5442,7 +5511,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -7831,6 +7900,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -7850,6 +7938,25 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
+                            "type": "object",
+                        },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -8288,7 +8395,7 @@ _OPERATIONS = {
                             },
                             "order_id": {
                                 "description": "The order ID.",
-                                "examples": ["47b720bf-00f2-4dc6-b1d6-d68c0df68610"],
+                                "examples": ["9fcf2f95-c08e-4fa3-829a-af830a4f92c4"],
                                 "format": "uuid",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
                                 "title": "Order Id",
@@ -10650,6 +10757,25 @@ _OPERATIONS = {
                         "title": "StacPropertiesV7",
                         "type": "object",
                     },
+                    "UnprocessableResponse": {
+                        "properties": {
+                            "detail": {
+                                "anyOf": [
+                                    {"type": "string"},
+                                    {
+                                        "items": {
+                                            "$ref": "#/definitions/ValidationErrorDetail"
+                                        },
+                                        "type": "array",
+                                    },
+                                ],
+                                "title": "Detail",
+                            }
+                        },
+                        "required": ["detail"],
+                        "title": "UnprocessableResponse",
+                        "type": "object",
+                    },
                     "ValidationError": {
                         "properties": {
                             "ctx": {"title": "Context", "type": "object"},
@@ -10666,6 +10792,22 @@ _OPERATIONS = {
                         },
                         "required": ["loc", "msg", "type"],
                         "title": "ValidationError",
+                        "type": "object",
+                    },
+                    "ValidationErrorDetail": {
+                        "properties": {
+                            "loc": {
+                                "items": {
+                                    "anyOf": [{"type": "string"}, {"type": "integer"}]
+                                },
+                                "title": "Loc",
+                                "type": "array",
+                            },
+                            "msg": {"title": "Msg", "type": "string"},
+                            "type": {"title": "Type", "type": "string"},
+                        },
+                        "required": ["loc", "msg", "type"],
+                        "title": "ValidationErrorDetail",
                         "type": "object",
                     },
                     "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -11288,7 +11430,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -13677,6 +13819,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -13696,6 +13857,25 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
+                            "type": "object",
+                        },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -14139,7 +14319,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -16528,6 +16708,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -16547,6 +16746,25 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
+                            "type": "object",
+                        },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -16993,7 +17211,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -19382,6 +19600,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -19401,6 +19638,25 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
+                            "type": "object",
+                        },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -19847,7 +20103,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -22236,6 +22492,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -22255,6 +22530,25 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
+                            "type": "object",
+                        },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -22701,7 +22995,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -25090,6 +25384,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -25109,6 +25422,25 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
+                            "type": "object",
+                        },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -25547,7 +25879,7 @@ _OPERATIONS = {
                             },
                             "order_id": {
                                 "description": "The order ID.",
-                                "examples": ["47b720bf-00f2-4dc6-b1d6-d68c0df68610"],
+                                "examples": ["9fcf2f95-c08e-4fa3-829a-af830a4f92c4"],
                                 "format": "uuid",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
                                 "title": "Order Id",
@@ -27909,6 +28241,25 @@ _OPERATIONS = {
                         "title": "StacPropertiesV7",
                         "type": "object",
                     },
+                    "UnprocessableResponse": {
+                        "properties": {
+                            "detail": {
+                                "anyOf": [
+                                    {"type": "string"},
+                                    {
+                                        "items": {
+                                            "$ref": "#/definitions/ValidationErrorDetail"
+                                        },
+                                        "type": "array",
+                                    },
+                                ],
+                                "title": "Detail",
+                            }
+                        },
+                        "required": ["detail"],
+                        "title": "UnprocessableResponse",
+                        "type": "object",
+                    },
                     "ValidationError": {
                         "properties": {
                             "ctx": {"title": "Context", "type": "object"},
@@ -27925,6 +28276,22 @@ _OPERATIONS = {
                         },
                         "required": ["loc", "msg", "type"],
                         "title": "ValidationError",
+                        "type": "object",
+                    },
+                    "ValidationErrorDetail": {
+                        "properties": {
+                            "loc": {
+                                "items": {
+                                    "anyOf": [{"type": "string"}, {"type": "integer"}]
+                                },
+                                "title": "Loc",
+                                "type": "array",
+                            },
+                            "msg": {"title": "Msg", "type": "string"},
+                            "type": {"title": "Type", "type": "string"},
+                        },
+                        "required": ["loc", "msg", "type"],
+                        "title": "ValidationErrorDetail",
                         "type": "object",
                     },
                     "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -28573,7 +28940,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -30962,6 +31329,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -30981,6 +31367,25 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
+                            "type": "object",
+                        },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -31424,7 +31829,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -33813,6 +34218,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -33832,6 +34256,25 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
+                            "type": "object",
+                        },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -34271,7 +34714,7 @@ _OPERATIONS = {
                             },
                             "order_id": {
                                 "description": "The order ID.",
-                                "examples": ["47b720bf-00f2-4dc6-b1d6-d68c0df68610"],
+                                "examples": ["9fcf2f95-c08e-4fa3-829a-af830a4f92c4"],
                                 "format": "uuid",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
                                 "title": "Order Id",
@@ -36633,6 +37076,25 @@ _OPERATIONS = {
                         "title": "StacPropertiesV7",
                         "type": "object",
                     },
+                    "UnprocessableResponse": {
+                        "properties": {
+                            "detail": {
+                                "anyOf": [
+                                    {"type": "string"},
+                                    {
+                                        "items": {
+                                            "$ref": "#/definitions/ValidationErrorDetail"
+                                        },
+                                        "type": "array",
+                                    },
+                                ],
+                                "title": "Detail",
+                            }
+                        },
+                        "required": ["detail"],
+                        "title": "UnprocessableResponse",
+                        "type": "object",
+                    },
                     "ValidationError": {
                         "properties": {
                             "ctx": {"title": "Context", "type": "object"},
@@ -36649,6 +37111,22 @@ _OPERATIONS = {
                         },
                         "required": ["loc", "msg", "type"],
                         "title": "ValidationError",
+                        "type": "object",
+                    },
+                    "ValidationErrorDetail": {
+                        "properties": {
+                            "loc": {
+                                "items": {
+                                    "anyOf": [{"type": "string"}, {"type": "integer"}]
+                                },
+                                "title": "Loc",
+                                "type": "array",
+                            },
+                            "msg": {"title": "Msg", "type": "string"},
+                            "type": {"title": "Type", "type": "string"},
+                        },
+                        "required": ["loc", "msg", "type"],
+                        "title": "ValidationErrorDetail",
                         "type": "object",
                     },
                     "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -37127,7 +37605,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -39516,6 +39994,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -39535,6 +40032,25 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
+                            "type": "object",
+                        },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -40022,7 +40538,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -42411,6 +42927,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -42430,6 +42965,25 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
+                            "type": "object",
+                        },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -42890,7 +43444,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -45279,6 +45833,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -45298,6 +45871,25 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
+                            "type": "object",
+                        },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -45741,7 +46333,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -48130,6 +48722,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -48149,6 +48760,25 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
+                            "type": "object",
+                        },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -48595,7 +49225,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -50984,6 +51614,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -51003,6 +51652,25 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
+                            "type": "object",
+                        },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -51441,7 +52109,7 @@ _OPERATIONS = {
                             },
                             "order_id": {
                                 "description": "The order ID.",
-                                "examples": ["47b720bf-00f2-4dc6-b1d6-d68c0df68610"],
+                                "examples": ["9fcf2f95-c08e-4fa3-829a-af830a4f92c4"],
                                 "format": "uuid",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
                                 "title": "Order Id",
@@ -53803,6 +54471,25 @@ _OPERATIONS = {
                         "title": "StacPropertiesV7",
                         "type": "object",
                     },
+                    "UnprocessableResponse": {
+                        "properties": {
+                            "detail": {
+                                "anyOf": [
+                                    {"type": "string"},
+                                    {
+                                        "items": {
+                                            "$ref": "#/definitions/ValidationErrorDetail"
+                                        },
+                                        "type": "array",
+                                    },
+                                ],
+                                "title": "Detail",
+                            }
+                        },
+                        "required": ["detail"],
+                        "title": "UnprocessableResponse",
+                        "type": "object",
+                    },
                     "ValidationError": {
                         "properties": {
                             "ctx": {"title": "Context", "type": "object"},
@@ -53819,6 +54506,22 @@ _OPERATIONS = {
                         },
                         "required": ["loc", "msg", "type"],
                         "title": "ValidationError",
+                        "type": "object",
+                    },
+                    "ValidationErrorDetail": {
+                        "properties": {
+                            "loc": {
+                                "items": {
+                                    "anyOf": [{"type": "string"}, {"type": "integer"}]
+                                },
+                                "title": "Loc",
+                                "type": "array",
+                            },
+                            "msg": {"title": "Msg", "type": "string"},
+                            "type": {"title": "Type", "type": "string"},
+                        },
+                        "required": ["loc", "msg", "type"],
+                        "title": "ValidationErrorDetail",
                         "type": "object",
                     },
                     "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -54279,7 +54982,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -56668,6 +57371,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -56687,6 +57409,25 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
+                            "type": "object",
+                        },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -57130,7 +57871,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -59519,6 +60260,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -59538,6 +60298,25 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
+                            "type": "object",
+                        },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -59984,7 +60763,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -62373,6 +63152,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -62392,6 +63190,25 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
+                            "type": "object",
+                        },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -62848,7 +63665,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -65237,6 +66054,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -65256,6 +66092,25 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
+                            "type": "object",
+                        },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -65725,7 +66580,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -68114,6 +68969,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -68133,6 +69007,25 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
+                            "type": "object",
+                        },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -68579,7 +69472,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -70968,6 +71861,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -70989,6 +71901,25 @@ _OPERATIONS = {
                             "title": "ValidationError",
                             "type": "object",
                         },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
+                            "type": "object",
+                        },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
                             "items": {"$ref": "#/definitions/LinearRingCoordinates"},
                             "title": "PolygonCoordinates",
@@ -71000,9 +71931,22 @@ _OPERATIONS = {
                             "type": "array",
                         },
                     },
-                    "properties": {"detail": {"title": "Detail", "type": "string"}},
+                    "properties": {
+                        "detail": {
+                            "anyOf": [
+                                {"type": "string"},
+                                {
+                                    "items": {
+                                        "$ref": "#/definitions/ValidationErrorDetail"
+                                    },
+                                    "type": "array",
+                                },
+                            ],
+                            "title": "Detail",
+                        }
+                    },
                     "required": ["detail"],
-                    "title": "HttpExceptionResponse",
+                    "title": "UnprocessableResponse",
                     "type": "object",
                 },
             },
@@ -71438,7 +72382,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -73827,6 +74771,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -73846,6 +74809,25 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
+                            "type": "object",
+                        },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -74315,7 +75297,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -76704,6 +77686,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -76723,6 +77724,25 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
+                            "type": "object",
+                        },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -77169,7 +78189,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "47b720bf-00f2-4dc6-b1d6-d68c0df68610"
+                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -79558,6 +80578,25 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
+                        "UnprocessableResponse": {
+                            "properties": {
+                                "detail": {
+                                    "anyOf": [
+                                        {"type": "string"},
+                                        {
+                                            "items": {
+                                                "$ref": "#/definitions/ValidationErrorDetail"
+                                            },
+                                            "type": "array",
+                                        },
+                                    ],
+                                    "title": "Detail",
+                                }
+                            },
+                            "required": ["detail"],
+                            "title": "UnprocessableResponse",
+                            "type": "object",
+                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -79579,6 +80618,25 @@ _OPERATIONS = {
                             "title": "ValidationError",
                             "type": "object",
                         },
+                        "ValidationErrorDetail": {
+                            "properties": {
+                                "loc": {
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "string"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
+                                    "title": "Loc",
+                                    "type": "array",
+                                },
+                                "msg": {"title": "Msg", "type": "string"},
+                                "type": {"title": "Type", "type": "string"},
+                            },
+                            "required": ["loc", "msg", "type"],
+                            "title": "ValidationErrorDetail",
+                            "type": "object",
+                        },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
                             "items": {"$ref": "#/definitions/LinearRingCoordinates"},
                             "title": "PolygonCoordinates",
@@ -79590,9 +80648,22 @@ _OPERATIONS = {
                             "type": "array",
                         },
                     },
-                    "properties": {"detail": {"title": "Detail", "type": "string"}},
+                    "properties": {
+                        "detail": {
+                            "anyOf": [
+                                {"type": "string"},
+                                {
+                                    "items": {
+                                        "$ref": "#/definitions/ValidationErrorDetail"
+                                    },
+                                    "type": "array",
+                                },
+                            ],
+                            "title": "Detail",
+                        }
+                    },
                     "required": ["detail"],
-                    "title": "HttpExceptionResponse",
+                    "title": "UnprocessableResponse",
                     "type": "object",
                 },
             },

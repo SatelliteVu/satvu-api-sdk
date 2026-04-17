@@ -3,7 +3,7 @@
 """
 Tests for otm service.
 
-Generated from OpenAPI spec version 2.343.9.
+Generated from OpenAPI spec version 2.355.3.
 Uses property-based testing with hypothesis-jsonschema.
 """
 
@@ -1566,6 +1566,40 @@ class TestOtmService:
     )
     @given(
         response_data=get_response_strategy(
+            "/{contract_id}/tasking/price/", "post", "400"
+        ),
+        body_data=get_request_body_strategy("/{contract_id}/tasking/price/", "post"),
+    )
+    def test_get_price_400_error(self, backend, response_data, body_data):
+        """
+        Test get_price with 400 error response.
+
+        HTTP 400 errors raise ClientError.
+        """
+        contract_id = uuid4()
+        path = f"/{contract_id}/tasking/price/"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.post(url).reply(400).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        body = PriceRequest.model_validate(body_data)
+        with pytest.raises(ClientError) as exc_info:
+            self.sdk.otm.get_price(contract_id=contract_id, body=body)
+        assert exc_info.value.status_code == 400
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
             "/{contract_id}/tasking/price/", "post", "403"
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/price/", "post"),
@@ -1661,6 +1695,47 @@ class TestOtmService:
         )
         assert result is not None
         assert isinstance(result, OrderModificationPrice)
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
+            "/{contract_id}/tasking/price/{order_id}", "post", "400"
+        ),
+        body_data=get_request_body_strategy(
+            "/{contract_id}/tasking/price/{order_id}", "post"
+        ),
+    )
+    def test_calculate_modified_order_price_400_error(
+        self, backend, response_data, body_data
+    ):
+        """
+        Test calculate_modified_order_price with 400 error response.
+
+        HTTP 400 errors raise ClientError.
+        """
+        contract_id = uuid4()
+        order_id = uuid4()
+        path = f"/{contract_id}/tasking/price/{order_id}"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.post(url).reply(400).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        body = EditOrderPayload.model_validate(body_data)
+        with pytest.raises(ClientError) as exc_info:
+            self.sdk.otm.calculate_modified_order_price(
+                contract_id=contract_id, order_id=order_id, body=body
+            )
+        assert exc_info.value.status_code == 400
 
     @settings(
         max_examples=10,
@@ -1876,6 +1951,38 @@ class TestOtmService:
         result = self.sdk.otm.search(contract_id=contract_id, body=body)
         assert result is not None
         assert isinstance(result, SearchResponse)
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy("/{contract_id}/search/", "post", "400"),
+        body_data=get_request_body_strategy("/{contract_id}/search/", "post"),
+    )
+    def test_search_400_error(self, backend, response_data, body_data):
+        """
+        Test search with 400 error response.
+
+        HTTP 400 errors raise ClientError.
+        """
+        contract_id = uuid4()
+        path = f"/{contract_id}/search/"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.post(url).reply(400).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        body = SearchRequest.model_validate(body_data)
+        with pytest.raises(ClientError) as exc_info:
+            self.sdk.otm.search(contract_id=contract_id, body=body)
+        assert exc_info.value.status_code == 400
 
     @settings(
         max_examples=10,

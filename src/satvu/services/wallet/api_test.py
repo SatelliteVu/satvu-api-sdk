@@ -50,7 +50,7 @@ class TestWalletService:
 
         self.sdk = SatVuSDK(
             client_id="test_client_id",
-            client_secret="test_client_secret",  # pragma: allowlist secret
+            client_secret="test_client_secret",  # pragma: allowlist secret # nosec B106
             http_client=http_client,
             env="qa",
         )

@@ -38,7 +38,9 @@ from .stac_metadata import StacMetadata
 from .stac_properties_acquisition import StacPropertiesAcquisition
 from .stac_properties_v4 import StacPropertiesV4
 from .stac_properties_v7 import StacPropertiesV7
+from .unprocessable_response import UnprocessableResponse
 from .validation_error import ValidationError
+from .validation_error_detail import ValidationErrorDetail
 
 __all__ = (
     "Collection",
@@ -77,7 +79,9 @@ __all__ = (
     "StacPropertiesAcquisition",
     "StacPropertiesV4",
     "StacPropertiesV7",
+    "UnprocessableResponse",
     "ValidationError",
+    "ValidationErrorDetail",
 )
 
 # Ensure all Pydantic models have forward refs rebuilt

@@ -1,3 +1,10 @@
+# [0.8.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.7.0...v0.8.0) (2026-04-17)
+
+
+### Features
+
+* **builder:** rename generated `schema` field to `schema_`
+
 # [0.7.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.6.0...v0.7.0) (2026-04-01)
 
 ## [0.7.0.20260415.0826] - 2026-04-15

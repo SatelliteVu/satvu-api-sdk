@@ -107,6 +107,7 @@ from .standard_request_properties import StandardRequestProperties
 from .standard_stored_feasibility_request_properties import (
     StandardStoredFeasibilityRequestProperties,
 )
+from .status_history_entry import StatusHistoryEntry
 from .stored_assured_order_request_properties import StoredAssuredOrderRequestProperties
 from .stored_feasibility_feature_collection import StoredFeasibilityFeatureCollection
 from .stored_feasibility_request import StoredFeasibilityRequest
@@ -198,6 +199,7 @@ __all__ = (
     "StandardPriceRequestProperties",
     "StandardRequestProperties",
     "StandardStoredFeasibilityRequestProperties",
+    "StatusHistoryEntry",
     "StoredAssuredOrderRequestProperties",
     "StoredFeasibilityFeatureCollection",
     "StoredFeasibilityRequest",

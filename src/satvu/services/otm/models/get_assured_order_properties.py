@@ -4,12 +4,15 @@
 from __future__ import annotations
 
 import datetime
-from typing import Literal, Union
+from typing import TYPE_CHECKING, Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from ..models.day_night_mode import DayNightMode
 from ..models.order_status import OrderStatus
+
+if TYPE_CHECKING:
+    from ..models.status_history_entry import StatusHistoryEntry
 
 
 class GetAssuredOrderProperties(BaseModel):
@@ -42,6 +45,8 @@ class GetAssuredOrderProperties(BaseModel):
             from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set
             to the default specified in the relevant contract.
         name (None | str): The name of the order.
+        status_history (Union[None, list[StatusHistoryEntry]]): Chronological history of status changes for this order,
+            from oldest to newest.
     """
 
     product: Literal["assured"] = Field(
@@ -109,6 +114,11 @@ class GetAssuredOrderProperties(BaseModel):
     )
     name: None | str = Field(
         default=None, description="""The name of the order.""", alias="name"
+    )
+    status_history: Union[None, list[StatusHistoryEntry]] = Field(
+        default=None,
+        description="""Chronological history of status changes for this order, from oldest to newest.""",
+        alias="status_history",
     )
 
     model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)

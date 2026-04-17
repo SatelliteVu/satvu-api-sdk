@@ -19,7 +19,7 @@ class Queryables(BaseModel):
     """
 
     id: str = Field(..., description="""The URL of the endpoint.""", alias="$id")
-    schema: str = Field(
+    schema_: str = Field(
         ..., description="""The schema of the response.""", alias="$schema"
     )
     type_: str = Field(..., description="""The type of the resource.""", alias="type")

@@ -19,7 +19,7 @@ class AcquisitionQueryables(BaseModel):
     """
 
     id: Union[None, str] = Field(default=None, description=None, alias="$id")
-    schema: Union[None, str] = Field(default=None, description=None, alias="$schema")
+    schema_: Union[None, str] = Field(default=None, description=None, alias="$schema")
     properties: Union[None, dict] = Field(
         default=None, description=None, alias="properties"
     )

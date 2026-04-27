@@ -1,5 +1,17 @@
 # [0.8.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.7.0...v0.8.0) (2026-04-17)
 
+## [0.8.0.20260427.1612] - 2026-04-27
+
+### feat(otm): update GET /{contract_id}/tasking/orders/{order_id}/tasks, POST /{contract_id}/tasking/orders/
+
+#### POST /{contract_id}/tasking/orders/
+* added the non-success response with the status `503`
+
+
+#### GET /{contract_id}/tasking/orders/{order_id}/tasks
+* endpoint added
+
+
 
 ### Features
 

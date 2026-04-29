@@ -1,5 +1,53 @@
 # [0.8.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.7.0...v0.8.0) (2026-04-17)
 
+## [0.8.0.20260429.1023] - 2026-04-29
+
+### feat(cos): update 4 endpoints
+
+####  
+* removed the schema `UnprocessableResponse`
+* removed the schema `ValidationErrorDetail`
+
+
+#### POST /{contract_id}/
+* added `subschema #1, subschema #2` to the `anyOf[subschema #1: OrderSubmissionPayload]/item_id` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `anyOf[subschema #2: ResellerSubmissionOrderPayload]/item_id` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `anyOf[subschema #1: OrderSubmissionPayload]/item_id` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `anyOf[subschema #2: ResellerSubmissionOrderPayload]/item_id` request property `anyOf` list
+
+
+#### POST /{contract_id}/price
+* added `subschema #1, subschema #2` to the `anyOf[subschema #1: PriceRequest]/item_id` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `anyOf[subschema #2: ResellerPriceRequest]/item_id` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `anyOf[subschema #1: PriceRequest]/item_id` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `anyOf[subschema #2: ResellerPriceRequest]/item_id` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `anyOf[subschema #1: OrderPrice]/item_id` response property `anyOf` list for the response status `200`
+* added `subschema #1, subschema #2` to the `anyOf[subschema #2: ResellerOrderPrice]/item_id` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `anyOf[subschema #1: OrderPrice]/item_id` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `anyOf[subschema #2: ResellerOrderPrice]/item_id` response property `anyOf` list for the response status `200`
+
+
+#### GET /{contract_id}/{order_id}/download
+* for the `query` request parameter `primary_formats`, default value `[geotiff]` was added
+* `query` request parameter `collections` list-of-types was narrowed by removing types `null`
+* `query` request parameter `primary_formats` list-of-types was narrowed by removing types `null`
+* for the `query` request parameter `collections`, the type/format was changed from ``/`` to `array`/``
+* for the `query` request parameter `primary_formats`, the type/format was changed from ``/`` to `array`/``
+* the response property `detail` became optional for the status `422`
+* response property `detail` list-of-types was narrowed by removing types `string` from media type `application/json` of response `422`
+
+
+#### GET /{contract_id}/{order_id}/{item_id}/download
+* for the `query` request parameter `primary_formats`, default value `[geotiff]` was added
+* `query` request parameter `primary_formats` list-of-types was narrowed by removing types `null`
+* for the `query` request parameter `primary_formats`, the type/format was changed from ``/`` to `array`/``
+* the response property `detail` became optional for the status `422`
+* response property `detail` list-of-types was narrowed by removing types `string` from media type `application/json` of response `422`
+
+#### Description Updates
+* 4 description(s) modified
+
+
 ## [0.8.0.20260427.1612] - 2026-04-27
 
 ### feat(otm): update GET /{contract_id}/tasking/orders/{order_id}/tasks, POST /{contract_id}/tasking/orders/

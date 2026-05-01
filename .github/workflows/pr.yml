@@ -90,7 +90,7 @@ jobs:
           key: hypothesis-examples-${{ hashFiles('src/builder/config.py', 'src/builder/schema_utils.py') }}-${{ github.run_id }}
       - name: Coverage comment
         if: matrix.python-version == '3.13'
-        uses: MishaKav/pytest-coverage-comment@v1.7.1
+        uses: MishaKav/pytest-coverage-comment@v1.7.2
         with:
           pytest-coverage-path: ./pytest-coverage.txt
           junitxml-path: ./pytest.xml

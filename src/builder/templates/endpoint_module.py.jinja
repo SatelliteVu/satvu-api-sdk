@@ -19,6 +19,9 @@ body: {% for body in endpoint.bodies %}{{ body.prop.get_type_string() }}{% if no
 {%- for parameter in endpoint.query_parameters -%}
 {{ parameter.to_string() }},
 {%- endfor -%}
+{%- if endpoint.bodies | length and not (endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[")) -%}
+extra_body: dict[str, Any] | None = None,
+{% endif -%}
 timeout: int | None = None,
 {% endmacro %}
 
@@ -54,11 +57,13 @@ params = {
 {%- if endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[") %}
 json_body = [item.model_dump(mode="json") for item in items]
 {%- elif endpoint.bodies | length %}
-{%- if not endpoint.bodies[0].prop.required %}
+{% if not endpoint.bodies[0].prop.required %}
 json_body = body.model_dump(by_alias=True, mode="json") if body else None
-{%- else %}
+{% else %}
 json_body = body.model_dump(by_alias=True, mode="json")
-{%- endif %}
+{% endif %}
+if extra_body:
+    json_body = _deep_merge(json_body or {}, extra_body)
 {% endif %}
 {%- endmacro %}
 
@@ -108,6 +113,12 @@ Args:
     {% for string in endpoint.body_docstrings %}
     {{ string | wordwrap(90) | indent(8) }}
     {% endfor %}
+    {% if endpoint.bodies | length and not (endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[")) %}
+    extra_body: Optional dict deep-merged into the request body after
+        serialisation. Use this to pass fields added to the API after this
+        SDK version shipped. Nested dicts merge recursively; lists and
+        scalars in extra_body replace the original value.
+    {% endif %}
     timeout: Optional request timeout in seconds. Overrides the instance timeout if
         provided.
 
@@ -144,7 +155,7 @@ from collections.abc import Callable, Generator
 from typing import Any, Union, List, Dict
 from uuid import UUID
 
-from satvu.core import SDKClient
+from satvu.core import SDKClient, _deep_merge
 from satvu.http import HttpClient
 from satvu.shared.parsing import normalize_keys, parse_response
 
@@ -189,7 +200,7 @@ class {{ api_id | title }}Service(SDKClient):
         {{ docstring(endpoint, return_annotation(success_responses, redirect_response), is_detailed=true) }}
 
         {% if endpoint.bodies | length %}
-        {{ build_json(endpoint) }}
+        {{ build_json(endpoint) | indent(8) }}
         {% endif %}
 
         {% if redirect_response | length > 0 %}
@@ -238,6 +249,9 @@ class {{ api_id | title }}Service(SDKClient):
         {{ param.to_string() }},
         {% endif %}
         {% endfor %}
+        {% if endpoint.bodies and not (endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[")) %}
+        extra_body: dict[str, Any] | None = None,
+        {% endif %}
         max_pages: int | None = None,
     ) -> Generator[{{ success_responses[0].prop.get_type_string(quoted=False) }}, None, None]:
         """
@@ -312,6 +326,9 @@ class {{ api_id | title }}Service(SDKClient):
                 {{ param.python_name }}={{ param.python_name }},
                 {% endif %}
                 {% endfor %}
+                {% if endpoint.bodies and not (endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[")) %}
+                extra_body=extra_body,
+                {% endif %}
                 {% if not endpoint.bodies %}
                 token=token,
                 {% endif %}

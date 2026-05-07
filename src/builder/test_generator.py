@@ -18,6 +18,7 @@ from openapi_python_client.schema.openapi_schema_pydantic import Reference
 from builder.schema_utils import (
     clean_schema,
     find_recursive_refs,
+    inline_discriminator_tags,
     remove_excluded_refs,
     remove_recursive_refs,
 )
@@ -227,7 +228,7 @@ def _prepare_components(openapi_dict: dict) -> dict[str, Any]:
 
     raw_schemas = openapi_dict["components"]["schemas"]
     return {
-        name: remove_excluded_refs(clean_schema(schema))
+        name: inline_discriminator_tags(remove_excluded_refs(clean_schema(schema)))
         for name, schema in raw_schemas.items()
     }
 
@@ -256,6 +257,7 @@ def _prepare_schema_for_hypothesis(
     """
     cleaned = remove_excluded_refs(clean_schema(schema))
     cleaned = remove_recursive_refs(cleaned, recursive_refs)
+    cleaned = inline_discriminator_tags(cleaned, components)
     return {**cleaned, "definitions": components}
 
 

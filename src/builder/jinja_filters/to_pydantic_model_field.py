@@ -1,6 +1,26 @@
 from openapi_python_client.parser.properties.const import ConstProperty
+from openapi_python_client.parser.properties.list_property import ListProperty
 from openapi_python_client.parser.properties.model_property import ModelProperty
 from openapi_python_client.parser.properties.protocol import PropertyProtocol
+from openapi_python_client.parser.properties.union import UnionProperty
+
+from builder.patches import _UNION_DISCRIMINATORS
+
+
+def _discriminator_for(
+    prop: PropertyProtocol,
+) -> tuple[str | None, UnionProperty | None]:
+    """Return (property_name, union_prop) if the type is a discriminated Union.
+
+    Handles both bare `Union[...]` fields and `list[Union[...]]` fields.
+    """
+    if isinstance(prop, UnionProperty):
+        return _UNION_DISCRIMINATORS.get(id(prop)), prop
+    if isinstance(prop, ListProperty) and isinstance(
+        prop.inner_property, UnionProperty
+    ):
+        return _UNION_DISCRIMINATORS.get(id(prop.inner_property)), prop.inner_property
+    return None, None
 
 
 def to_pydantic_model_field(prop: PropertyProtocol) -> str:
@@ -23,7 +43,21 @@ def to_pydantic_model_field(prop: PropertyProtocol) -> str:
             type_string = f"'{type_string}'"
         field_start = f"{python_name}: {type_string}"
     else:
-        field_start = f"{python_name}: {prop.get_type_string()}"
+        type_string = prop.get_type_string()
+
+        # Wrap discriminated unions so Pydantic dispatches in O(1) instead of
+        # scoring every variant. Spec-level `discriminator:` is captured in
+        # patches.py and reapplied here because openapi-python-client drops it.
+        discriminator_name, union_prop = _discriminator_for(prop)
+        if discriminator_name and union_prop is not None:
+            union_type_string = union_prop.get_type_string(no_optional=True)
+            annotated = f'Annotated[{union_type_string}, Field(discriminator="{discriminator_name}")]'
+            if isinstance(prop, ListProperty):
+                type_string = f"list[{annotated}]"
+            else:
+                type_string = annotated
+
+        field_start = f"{python_name}: {type_string}"
 
     description = f'"""{prop.description}"""' if prop.description else "None"
 

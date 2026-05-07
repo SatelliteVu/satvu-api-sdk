@@ -141,6 +141,12 @@ def const_get_type_string(
 ) -> str:
     """Generate Literal type for const properties."""
     lit = f"Literal[{self.value.python_code}]"
+    # A const with a default always round-trips as Literal — wrapping in
+    # Union[..., None] is semantically useless (default guarantees non-None)
+    # and breaks Pydantic's field-based discriminator which requires a plain
+    # Literal on every variant.
+    if self.default is not None:
+        return lit
     if not no_optional and not self.required:
         return f"Union[{lit}, None]"
     return lit
@@ -656,19 +662,30 @@ EnumProperty.build = enum_build_with_title_support
 
 
 # ============================================================================
-# PATCH 21: UnionProperty.build - Propagate parent title to array enum items
+# PATCH 21: UnionProperty.build - Title propagation + discriminator stashing
 # ============================================================================
-# When a schema like this is encountered:
-#   anyOf: [{type: array, items: {enum: [...]}}, {type: null}]
-#   title: "Primary Formats"
+# Two responsibilities, both layered on top of the original UnionProperty.build:
 #
-# The title is on the parent (anyOf), not on the array or enum items inside.
-# This patch propagates the title from the anyOf schema down to array children
-# that contain enum items, so the enum gets a proper name (e.g., "PrimaryFormat"
-# instead of "DownloadOrderPrimaryFormatsType0Item").
+# 1. Propagate parent title to array enum items.
+#    When a schema looks like:
+#      anyOf: [{type: array, items: {enum: [...]}}, {type: null}]
+#      title: "Primary Formats"
+#    The title is on the parent (anyOf), not on the array or enum items
+#    inside. We push the title (singularised) down to array children that
+#    contain enum items, so the enum gets a proper name (e.g.,
+#    "PrimaryFormat" instead of "DownloadOrderPrimaryFormatsType0Item").
 #
-# The title is singularized (e.g., "Primary Formats" → "PrimaryFormat") since
-# the enum represents individual items, not the collection.
+# 2. Stash `discriminator` from the spec.
+#    OpenAPI `discriminator:` blocks are dropped by the upstream generator
+#    before reaching the render path. We capture `data.discriminator
+#    .propertyName` after the original build runs and store it keyed by the
+#    `UnionProperty` instance so the Jinja filter can emit
+#    `Annotated[..., Field(discriminator="<name>")]`.
+#    Keyed by id(prop) — UnionProperty instances are not cloned between
+#    build and render in current upstream. If that ever changes, switch to
+#    a structural key (python_name + inner class names).
+
+_UNION_DISCRIMINATORS: dict[int, str] = {}
 
 _original_union_build = union_module.UnionProperty.build
 
@@ -699,10 +716,14 @@ def union_build_with_title_propagation(
     config: Config,
 ) -> tuple:
     """
-    Patched UnionProperty.build that propagates title to array enum items.
+    Patched UnionProperty.build with two behaviours layered on the original:
 
-    If the union schema has a title and contains an array with enum items,
-    propagate the title (singularized) to the enum items so they get proper names.
+    1. If the union schema has a title and contains an array with enum items,
+       propagate the title (singularised) to the enum items so they get proper
+       names.
+    2. If the spec declares a `discriminator`, stash its propertyName (sanitised
+       to a Python identifier) against the built `UnionProperty` so the Jinja
+       filter can emit `Annotated[..., Field(discriminator=...)]`.
     """
     # Check if we should propagate title
     if data.title and data.anyOf:
@@ -731,7 +752,7 @@ def union_build_with_title_propagation(
         # Create modified data with propagated titles
         data = data.model_copy(update={"anyOf": modified_any_of})
 
-    return _original_union_build(
+    prop, schemas = _original_union_build(
         data=data,
         name=name,
         required=required,
@@ -739,6 +760,25 @@ def union_build_with_title_propagation(
         parent_name=parent_name,
         config=config,
     )
+
+    # Stash discriminator so the jinja filter can emit
+    # Annotated[Union[...], Field(discriminator=...)] at render time.
+    # Pydantic's field discriminator looks up by Python attribute name, not
+    # alias — so sanitise (e.g. "type" → "type_") to match the generated
+    # variant field declarations.
+    if (
+        isinstance(prop, UnionProperty)
+        and data.discriminator
+        and data.discriminator.propertyName
+    ):
+        python_name = str(
+            utils.PythonIdentifier(
+                value=data.discriminator.propertyName, prefix=config.field_prefix
+            )
+        )
+        _UNION_DISCRIMINATORS[id(prop)] = python_name
+
+    return prop, schemas
 
 
 union_module.UnionProperty.build = union_build_with_title_propagation
@@ -755,7 +795,9 @@ print(
 print(
     "      • PropertyProtocol: 2 patches (get_type_string with quoted parameter, to_string with None)"
 )
-print("      • ConstProperty: 2 patches (Literal type handling)")
+print(
+    "      • ConstProperty: 2 patches (Literal type handling; no Union[..., None] when default present)"
+)
 print("      • UnionProperty: 6 patches (quoted forward references, Union[...] syntax)")
 print("      • ModelProperty: 1 patch (get_type_string with quoted parameter)")
 print("      • EnumProperty: 1 patch (always quote enum names)")
@@ -763,7 +805,9 @@ print("   🏗️  Model Building (4 patches):")
 print("      • property_from_data: Free-form objects → DictProperty (not empty models)")
 print("      • ModelProperty.build: Handle duplicate model names with numeric suffixes")
 print("      • EnumProperty.build: Use title directly without parent prefix")
-print("      • UnionProperty.build: Propagate parent title to array enum items")
+print(
+    "      • UnionProperty.build: Propagate parent title to array enum items; stash discriminator for Field(discriminator=...) emission"
+)
 print("   🔧 Utilities (2 patches):")
 print("      • RESERVED_WORDS: Allow 'id' as field name")
 print("      • utils.sanitize: Replace colons in field names (geo:lat → geo_lat)")

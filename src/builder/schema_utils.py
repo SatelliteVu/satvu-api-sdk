@@ -127,6 +127,81 @@ def clean_schema(obj: Any) -> Any:
         return obj
 
 
+def inline_discriminator_tags(
+    obj: Any, definitions: dict[str, Any] | None = None
+) -> Any:
+    """Pin each variant's discriminator property to its mapped value.
+
+    OpenAPI `discriminator:` blocks carry a property-name → variant-ref mapping
+    that narrows a `oneOf` union. hypothesis-jsonschema doesn't honour them, so
+    generated examples often omit the tag and fail Pydantic's strict field-
+    discriminator on the SDK side. We compensate by rewriting each `oneOf`
+    variant to require `{propertyName: {const: <tag-value>}}`, which hypothesis
+    *does* honour.
+
+    Args:
+        obj: JSON schema (dict, list, or primitive)
+        definitions: Root-level components map for resolving variant $refs
+
+    Returns:
+        Schema with discriminator tags inlined into variants
+    """
+    if isinstance(obj, dict):
+        result: dict[str, Any] = {}
+
+        for key, value in obj.items():
+            result[key] = inline_discriminator_tags(value, definitions)
+
+        disc = result.get("discriminator")
+        one_of = result.get("oneOf") or result.get("anyOf")
+        if (
+            isinstance(disc, dict)
+            and isinstance(disc.get("propertyName"), str)
+            and isinstance(disc.get("mapping"), dict)
+            and isinstance(one_of, list)
+        ):
+            property_name = disc["propertyName"]
+            # Build variant-ref → tag-value index (mapping is tag → ref).
+            ref_to_tag = {ref: tag for tag, ref in disc["mapping"].items()}
+
+            patched_variants = []
+            for variant in one_of:
+                if isinstance(variant, dict) and "$ref" in variant:
+                    ref = variant["$ref"]
+                    # Tolerate both component and definition refs
+                    tag = ref_to_tag.get(ref) or ref_to_tag.get(
+                        ref.replace("#/definitions/", "#/components/schemas/")
+                    )
+                    if tag is not None:
+                        patched_variants.append(
+                            {
+                                "allOf": [
+                                    variant,
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            property_name: {"const": tag},
+                                        },
+                                        "required": [property_name],
+                                    },
+                                ]
+                            }
+                        )
+                        continue
+                patched_variants.append(variant)
+
+            key = "oneOf" if "oneOf" in result else "anyOf"
+            result[key] = patched_variants
+
+        return result
+
+    elif isinstance(obj, list):
+        return [inline_discriminator_tags(item, definitions) for item in obj]
+
+    else:
+        return obj
+
+
 def remove_excluded_refs(obj: Any) -> Any:
     """
     Remove excluded schema refs from oneOf/anyOf variants.

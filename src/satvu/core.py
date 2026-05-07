@@ -15,6 +15,23 @@ from satvu.result import Result
 logger = logging.getLogger(__name__)
 
 
+def _deep_merge(base: dict[str, Any], overrides: dict[str, Any]) -> dict[str, Any]:
+    """
+    Deep-merge ``overrides`` into ``base``, returning a new dict.
+
+    Recurses into nested dicts. Non-dict values (including lists) in
+    ``overrides`` replace values in ``base``. The inputs are not mutated.
+    """
+    result = dict(base)
+    for key, value in overrides.items():
+        existing = result.get(key)
+        if isinstance(value, dict) and isinstance(existing, dict):
+            result[key] = _deep_merge(existing, value)
+        else:
+            result[key] = value
+    return result
+
+
 class SDKClient:
     """
     Base SDK client with HTTP request handling, retry logic, and utilities.

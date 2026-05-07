@@ -1,3 +1,4 @@
+import fnmatch
 from typing import Annotated, TypeAlias
 
 import dagger
@@ -146,12 +147,28 @@ class SatvuApiSdkCi:
         self,
         source: SOURCE,
         paths: list[str] = ["src"],  # noqa: B006
+        exclude_globs: list[str] = [  # noqa: B006
+            "src/satvu/services/*/api_test.py",
+            "src/satvu/services/*/test_schemas.py",
+        ],
     ):
-        """Run detect-secrets linter"""
+        """Run detect-secrets linter.
+
+        Generated test files (``api_test.py``, ``test_schemas.py``) are
+        excluded — they contain fixture strings emitted by the SDK builder,
+        not real secrets, and the AST-based test post-processors strip
+        inline pragma comments so per-line suppressions can't survive
+        regeneration.
+        """
         runner = self.build_container(source)
         command = ["uvx", "--from=detect-secrets", "detect-secrets-hook"]
         for path in paths:
             files = await runner.directory("/src").glob(f"{path.rstrip('/')}/**/*.py")
+            files = [
+                f
+                for f in files
+                if not any(fnmatch.fnmatch(f, pattern) for pattern in exclude_globs)
+            ]
             command += files
         await runner.with_exec(command)
         return command

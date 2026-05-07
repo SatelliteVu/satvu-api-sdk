@@ -32,7 +32,7 @@ from __future__ import annotations
 
 import datetime
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TYPE_CHECKING, TypedDict, Any, Union, Literal
+from typing import Annotated, Any, Literal, TYPE_CHECKING, TypedDict, Union
 from uuid import UUID
 
 {% for relative in model.relative_imports | sort %}
@@ -53,4 +53,4 @@ class {{ class_name }}(BaseModel):
     {{ property | to_pydantic_field }}
     {% endfor %}
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True, extra="allow")

@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from typing import Literal, Union
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -15,7 +15,7 @@ class PointGeometry(BaseModel):
 
         Attributes:
             coordinates (list[float | int]): The coordinates of the point as [longitude, latitude].
-            type_ (Union[Literal['Point'], None]):  Default: 'Point'.
+            type_ (Literal['Point']):  Default: 'Point'.
     """
 
     coordinates: list[float | int] = Field(
@@ -23,8 +23,8 @@ class PointGeometry(BaseModel):
         description="""The coordinates of the point as [longitude, latitude].""",
         alias="coordinates",
     )
-    type_: Union[Literal["Point"], None] = Field(
-        default="Point", description=None, alias="type"
-    )
+    type_: Literal["Point"] = Field(default="Point", description=None, alias="type")
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

@@ -2,10 +2,10 @@
 # Source: src/builder/templates/endpoint_module.py.jinja
 
 from collections.abc import Callable, Generator
-from typing import Union
+from typing import Any, Union
 from uuid import UUID
 
-from satvu.core import SDKClient
+from satvu.core import SDKClient, _deep_merge
 from satvu.http import HttpClient
 from satvu.services.id.models.client_credentials import ClientCredentials
 from satvu.services.id.models.client_id import ClientID
@@ -134,6 +134,7 @@ class IdService(SDKClient):
     def create_webhook(
         self,
         body: CoreWebhook,
+        extra_body: dict[str, Any] | None = None,
         timeout: int | None = None,
     ) -> CreateWebhookResponse:
         """
@@ -143,6 +144,10 @@ class IdService(SDKClient):
 
         Args:
             body (CoreWebhook):
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -151,6 +156,8 @@ class IdService(SDKClient):
         """
 
         json_body = body.model_dump(by_alias=True, mode="json")
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
 
         result = self.make_request(
             method="post",
@@ -243,6 +250,7 @@ class IdService(SDKClient):
         self,
         body: EditWebhookPayload,
         id: UUID,
+        extra_body: dict[str, Any] | None = None,
         timeout: int | None = None,
     ) -> WebhookResponse:
         """
@@ -253,6 +261,10 @@ class IdService(SDKClient):
         Args:
             id (UUID): The webhook ID.
             body (EditWebhookPayload):
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -261,6 +273,8 @@ class IdService(SDKClient):
         """
 
         json_body = body.model_dump(by_alias=True, mode="json")
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
 
         result = self.make_request(
             method="patch",
@@ -521,6 +535,7 @@ class IdService(SDKClient):
     def edit_user_settings(
         self,
         body: UserSettings,
+        extra_body: dict[str, Any] | None = None,
         timeout: int | None = None,
     ) -> UserInfo:
         """
@@ -530,6 +545,10 @@ class IdService(SDKClient):
 
         Args:
             body (UserSettings):
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -538,6 +557,8 @@ class IdService(SDKClient):
         """
 
         json_body = body.model_dump(by_alias=True, mode="json")
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
 
         result = self.make_request(
             method="put",

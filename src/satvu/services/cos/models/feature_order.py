@@ -18,7 +18,7 @@ class FeatureOrder(BaseModel):
     """
     Attributes:
         id (str | UUID): The unique identifier of the feature.
-        type_ (Union[Literal['Feature'], None]):  Default: 'Feature'.
+        type_ (Literal['Feature']):  Default: 'Feature'.
         geometry (Union['PointGeometry', 'PolygonGeometry', None]): Defines the full footprint of the asset represented
             by this feature.
         properties (Union['Order', None]): A map of additional metadata for the feature.
@@ -27,9 +27,7 @@ class FeatureOrder(BaseModel):
     id: str | UUID = Field(
         ..., description="""The unique identifier of the feature.""", alias="id"
     )
-    type_: Union[Literal["Feature"], None] = Field(
-        default="Feature", description=None, alias="type"
-    )
+    type_: Literal["Feature"] = Field(default="Feature", description=None, alias="type")
     geometry: Union[PointGeometry, PolygonGeometry, None] = Field(
         default=None,
         description="""Defines the full footprint of the asset represented by this feature.""",
@@ -41,4 +39,6 @@ class FeatureOrder(BaseModel):
         alias="properties",
     )
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

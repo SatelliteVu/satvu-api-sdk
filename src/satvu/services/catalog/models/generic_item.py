@@ -65,4 +65,6 @@ class GenericItem(BaseModel):
         default=None, description=None, alias="stac_extensions"
     )
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

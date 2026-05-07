@@ -21,4 +21,6 @@ class CivilDate(BaseModel):
     month: Union[None, int] = Field(default=None, description=None, alias="Month")
     year: Union[None, int] = Field(default=None, description=None, alias="Year")
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

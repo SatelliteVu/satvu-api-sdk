@@ -23,4 +23,6 @@ class ValidationErrorResponse(BaseModel):
 
     detail: list[ValidationErrorDetail] = Field(..., description=None, alias="detail")
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

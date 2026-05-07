@@ -30,4 +30,6 @@ class QueryableProperty(BaseModel):
         default=None, description="""The type of the property.""", alias="type"
     )
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

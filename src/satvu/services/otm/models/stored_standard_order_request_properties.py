@@ -30,7 +30,7 @@ class StoredStandardOrderRequestProperties(BaseModel):
             from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set
             to the default specified in the relevant contract.
         name (None | str): The name of the order.
-        product (Union[Literal['standard'], None]): Standard Priority. Default: 'standard'.
+        product (Literal['standard']): Standard Priority. Default: 'standard'.
         satvu_day_night_mode (Union[None, 'DayNightMode']):
         max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage. Measured in percent.
             Default: 15.
@@ -71,7 +71,7 @@ class StoredStandardOrderRequestProperties(BaseModel):
     name: None | str = Field(
         default=None, description="""The name of the order.""", alias="name"
     )
-    product: Union[Literal["standard"], None] = Field(
+    product: Literal["standard"] = Field(
         default="standard", description="""Standard Priority.""", alias="product"
     )
     satvu_day_night_mode: Union[None, DayNightMode] = Field(
@@ -98,4 +98,6 @@ class StoredStandardOrderRequestProperties(BaseModel):
         alias="status_history",
     )
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

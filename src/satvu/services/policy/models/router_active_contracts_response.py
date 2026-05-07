@@ -27,4 +27,6 @@ class RouterActiveContractsResponse(BaseModel):
         alias="terms_accepted",
     )
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

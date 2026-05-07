@@ -32,4 +32,6 @@ class GeojsonGeometry(BaseModel):
     )
     type_: Union[None, str] = Field(default=None, description=None, alias="type")
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

@@ -68,4 +68,6 @@ class CreateUserResponse(BaseModel):
         alias="user_kyc_completed_on",
     )
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

@@ -2,9 +2,9 @@
 # Source: src/builder/templates/endpoint_module.py.jinja
 
 from collections.abc import Callable, Generator
-from typing import Union
+from typing import Any, Union
 
-from satvu.core import SDKClient
+from satvu.core import SDKClient, _deep_merge
 from satvu.http import HttpClient
 from satvu.services.catalog.models.acquisition_feature_collection import (
     AcquisitionFeatureCollection,
@@ -519,6 +519,7 @@ class CatalogService(SDKClient):
         self,
         body: Union[None, PostSearchInput],
         contract_id: str,
+        extra_body: dict[str, Any] | None = None,
         timeout: int | None = None,
     ) -> FeatureCollection:
         """
@@ -530,6 +531,10 @@ class CatalogService(SDKClient):
         Args:
             contract_id (str): Contract identifier for scoped access
             body (Union[None, PostSearchInput]):
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -538,6 +543,8 @@ class CatalogService(SDKClient):
         """
 
         json_body = body.model_dump(by_alias=True, mode="json") if body else None
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
 
         result = self.make_request(
             method="post",
@@ -560,6 +567,7 @@ class CatalogService(SDKClient):
         self,
         body: Union[None, PostSearchInput],
         contract_id: str,
+        extra_body: dict[str, Any] | None = None,
         max_pages: int | None = None,
     ) -> Generator[FeatureCollection, None, None]:
         """
@@ -597,6 +605,7 @@ class CatalogService(SDKClient):
             response = self.post_search(
                 body=body_with_token,
                 contract_id=contract_id,
+                extra_body=extra_body,
             )
             page_count += 1
 
@@ -1644,6 +1653,7 @@ class CatalogService(SDKClient):
         body: Union[None, PostCollectionSearchInput],
         contract_id: str,
         collection_id: str,
+        extra_body: dict[str, Any] | None = None,
         timeout: int | None = None,
     ) -> SearchResponse:
         """
@@ -1656,6 +1666,10 @@ class CatalogService(SDKClient):
             contract_id (str): Contract ID for access control
             collection_id (str): Collection ID to search within
             body (Union[None, PostCollectionSearchInput]):
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -1664,6 +1678,8 @@ class CatalogService(SDKClient):
         """
 
         json_body = body.model_dump(by_alias=True, mode="json") if body else None
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
 
         result = self.make_request(
             method="post",
@@ -1687,6 +1703,7 @@ class CatalogService(SDKClient):
         body: Union[None, PostCollectionSearchInput],
         contract_id: str,
         collection_id: str,
+        extra_body: dict[str, Any] | None = None,
         max_pages: int | None = None,
     ) -> Generator[SearchResponse, None, None]:
         """
@@ -1727,6 +1744,7 @@ class CatalogService(SDKClient):
                 body=body_with_token,
                 contract_id=contract_id,
                 collection_id=collection_id,
+                extra_body=extra_body,
             )
             page_count += 1
 

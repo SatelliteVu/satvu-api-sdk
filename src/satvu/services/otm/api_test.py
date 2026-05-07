@@ -3,7 +3,7 @@
 """
 Tests for otm service.
 
-Generated from OpenAPI spec version 2.355.3.
+Generated from OpenAPI spec version 2.367.4.
 Uses property-based testing with hypothesis-jsonschema.
 """
 
@@ -23,6 +23,10 @@ from satvu.services.otm.models.edit_order_payload import EditOrderPayload
 from satvu.services.otm.models.feasibility_request import FeasibilityRequest
 from satvu.services.otm.models.feasibility_response import FeasibilityResponse
 from satvu.services.otm.models.get_order_response import GetOrderResponse
+from satvu.services.otm.models.list_order_tasks_response import ListOrderTasksResponse
+from satvu.services.otm.models.list_order_tasks_unavailable_response import (
+    ListOrderTasksUnavailableResponse,
+)
 from satvu.services.otm.models.list_stored_orders_response import (
     ListStoredOrdersResponse,
 )
@@ -436,6 +440,48 @@ class TestOtmService:
         with pytest.raises(ServerError) as exc_info:
             self.sdk.otm.post_tasking_orders(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 500
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
+            "/{contract_id}/tasking/orders/", "post", "503"
+        ),
+        body_data=get_request_body_strategy("/{contract_id}/tasking/orders/", "post"),
+    )
+    def test_post_tasking_orders_503_error(self, backend, response_data, body_data):
+        """
+        Test post_tasking_orders with 503 error response.
+
+        HTTP 503 errors raise ServerError.
+        """
+        contract_id = uuid4()
+        path = f"/{contract_id}/tasking/orders/"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.post(url).reply(503).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        body_adapter = TypeAdapter(
+            Union[
+                AssuredOrderRequest,
+                ResellerAssuredOrderRequest,
+                ResellerStandardOrderRequest,
+                StandardOrderRequest,
+            ]
+        )
+        body = body_adapter.validate_python(body_data)
+        with pytest.raises(ServerError) as exc_info:
+            self.sdk.otm.post_tasking_orders(contract_id=contract_id, body=body)
+        assert exc_info.value.status_code == 503
 
     @settings(
         max_examples=10,
@@ -940,6 +986,111 @@ class TestOtmService:
         )
         with pytest.raises(ClientError) as exc_info:
             self.sdk.otm.get_order_task_details(
+                contract_id=contract_id, order_id=order_id
+            )
+        assert exc_info.value.status_code == 422
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
+            "/{contract_id}/tasking/orders/{order_id}/tasks", "get", "200"
+        )
+    )
+    def test_get_tasking_order_tasks_200(self, backend, response_data):
+        """
+        Test get_tasking_order_tasks with 200 response.
+        """
+        contract_id = uuid4()
+        order_id = uuid4()
+        path = f"/{contract_id}/tasking/orders/{order_id}/tasks"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.get(url).reply(200).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        result = self.sdk.otm.get_tasking_order_tasks(
+            contract_id=contract_id, order_id=order_id
+        )
+        assert result is not None
+        assert isinstance(
+            result, (ListOrderTasksResponse, ListOrderTasksUnavailableResponse)
+        )
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
+            "/{contract_id}/tasking/orders/{order_id}/tasks", "get", "404"
+        )
+    )
+    def test_get_tasking_order_tasks_404_error(self, backend, response_data):
+        """
+        Test get_tasking_order_tasks with 404 error response.
+
+        HTTP 404 errors raise ClientError.
+        """
+        contract_id = uuid4()
+        order_id = uuid4()
+        path = f"/{contract_id}/tasking/orders/{order_id}/tasks"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.get(url).reply(404).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        with pytest.raises(ClientError) as exc_info:
+            self.sdk.otm.get_tasking_order_tasks(
+                contract_id=contract_id, order_id=order_id
+            )
+        assert exc_info.value.status_code == 404
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
+            "/{contract_id}/tasking/orders/{order_id}/tasks", "get", "422"
+        )
+    )
+    def test_get_tasking_order_tasks_422_error(self, backend, response_data):
+        """
+        Test get_tasking_order_tasks with 422 error response.
+
+        HTTP 422 errors raise ClientError.
+        """
+        contract_id = uuid4()
+        order_id = uuid4()
+        path = f"/{contract_id}/tasking/orders/{order_id}/tasks"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.get(url).reply(422).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        with pytest.raises(ClientError) as exc_info:
+            self.sdk.otm.get_tasking_order_tasks(
                 contract_id=contract_id, order_id=order_id
             )
         assert exc_info.value.status_code == 422

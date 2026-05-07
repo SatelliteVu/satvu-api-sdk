@@ -14,4 +14,6 @@ class DateInstant(BaseModel):
 
     date: str = Field(..., description=None, alias="date")
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

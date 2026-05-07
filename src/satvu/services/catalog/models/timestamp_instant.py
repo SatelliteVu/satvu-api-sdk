@@ -14,4 +14,6 @@ class TimestampInstant(BaseModel):
 
     timestamp: str = Field(..., description=None, alias="timestamp")
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

@@ -64,4 +64,6 @@ class Collection(BaseModel):
         default=None, description="""The title of the Collection.""", alias="title"
     )
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

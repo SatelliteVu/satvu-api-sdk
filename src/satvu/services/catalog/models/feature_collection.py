@@ -40,4 +40,6 @@ class FeatureCollection(BaseModel):
     )
     type_: str = Field(..., description="""FeatureCollection.""", alias="type")
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

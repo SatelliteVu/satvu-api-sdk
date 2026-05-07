@@ -40,4 +40,6 @@ class Order(BaseModel):
         default=None, description="""Metadata about the item.""", alias="stac_metadata"
     )
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

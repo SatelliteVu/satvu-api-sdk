@@ -295,7 +295,7 @@ _COMPONENTS = {
             },
             "order_id": {
                 "description": "The order ID.",
-                "examples": ["9fcf2f95-c08e-4fa3-829a-af830a4f92c4"],
+                "examples": ["1a51ebb9-d457-49dc-a34a-d6d6b99d6233"],
                 "format": "uuid",
                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
                 "title": "Order Id",
@@ -444,9 +444,9 @@ _COMPONENTS = {
             },
             "item_id": {
                 "anyOf": [
-                    {"type": "string"},
+                    {"minLength": 1, "type": "string"},
                     {
-                        "items": {"type": "string"},
+                        "items": {"minLength": 1, "type": "string"},
                         "maxItems": 100,
                         "minItems": 1,
                         "type": "array",
@@ -573,9 +573,9 @@ _COMPONENTS = {
         "properties": {
             "item_id": {
                 "anyOf": [
-                    {"type": "string"},
+                    {"minLength": 1, "type": "string"},
                     {
-                        "items": {"type": "string"},
+                        "items": {"minLength": 1, "type": "string"},
                         "maxItems": 100,
                         "minItems": 1,
                         "type": "array",
@@ -832,9 +832,9 @@ _COMPONENTS = {
         "properties": {
             "item_id": {
                 "anyOf": [
-                    {"type": "string"},
+                    {"minLength": 1, "type": "string"},
                     {
-                        "items": {"type": "string"},
+                        "items": {"minLength": 1, "type": "string"},
                         "maxItems": 100,
                         "minItems": 1,
                         "type": "array",
@@ -1016,9 +1016,9 @@ _COMPONENTS = {
             },
             "item_id": {
                 "anyOf": [
-                    {"type": "string"},
+                    {"minLength": 1, "type": "string"},
                     {
-                        "items": {"type": "string"},
+                        "items": {"minLength": 1, "type": "string"},
                         "maxItems": 100,
                         "minItems": 1,
                         "type": "array",
@@ -1115,9 +1115,9 @@ _COMPONENTS = {
         "properties": {
             "item_id": {
                 "anyOf": [
-                    {"type": "string"},
+                    {"minLength": 1, "type": "string"},
                     {
-                        "items": {"type": "string"},
+                        "items": {"minLength": 1, "type": "string"},
                         "maxItems": 100,
                         "minItems": 1,
                         "type": "array",
@@ -1213,9 +1213,9 @@ _COMPONENTS = {
         "properties": {
             "item_id": {
                 "anyOf": [
-                    {"type": "string"},
+                    {"minLength": 1, "type": "string"},
                     {
-                        "items": {"type": "string"},
+                        "items": {"minLength": 1, "type": "string"},
                         "maxItems": 100,
                         "minItems": 1,
                         "type": "array",
@@ -2086,23 +2086,6 @@ _COMPONENTS = {
         "title": "StacPropertiesV7",
         "type": "object",
     },
-    "UnprocessableResponse": {
-        "properties": {
-            "detail": {
-                "anyOf": [
-                    {"type": "string"},
-                    {
-                        "items": {"$ref": "#/definitions/ValidationErrorDetail"},
-                        "type": "array",
-                    },
-                ],
-                "title": "Detail",
-            }
-        },
-        "required": ["detail"],
-        "title": "UnprocessableResponse",
-        "type": "object",
-    },
     "ValidationError": {
         "properties": {
             "ctx": {"title": "Context", "type": "object"},
@@ -2117,20 +2100,6 @@ _COMPONENTS = {
         },
         "required": ["loc", "msg", "type"],
         "title": "ValidationError",
-        "type": "object",
-    },
-    "ValidationErrorDetail": {
-        "properties": {
-            "loc": {
-                "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]},
-                "title": "Loc",
-                "type": "array",
-            },
-            "msg": {"title": "Msg", "type": "string"},
-            "type": {"title": "Type", "type": "string"},
-        },
-        "required": ["loc", "msg", "type"],
-        "title": "ValidationErrorDetail",
         "type": "object",
     },
     "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -2578,7 +2547,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -2806,9 +2775,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -3026,9 +2995,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -3413,9 +3382,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -3652,9 +3621,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -3774,9 +3743,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -3879,9 +3848,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -4967,25 +4936,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -5005,25 +4955,6 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
-                            "type": "object",
-                        },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -5511,7 +5442,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -5739,9 +5670,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -5959,9 +5890,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -6346,9 +6277,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -6585,9 +6516,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -6707,9 +6638,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -6812,9 +6743,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -7900,25 +7831,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -7938,25 +7850,6 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
-                            "type": "object",
-                        },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -8395,7 +8288,7 @@ _OPERATIONS = {
                             },
                             "order_id": {
                                 "description": "The order ID.",
-                                "examples": ["9fcf2f95-c08e-4fa3-829a-af830a4f92c4"],
+                                "examples": ["1a51ebb9-d457-49dc-a34a-d6d6b99d6233"],
                                 "format": "uuid",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
                                 "title": "Order Id",
@@ -8616,9 +8509,9 @@ _OPERATIONS = {
                             },
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -8836,9 +8729,9 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -9223,9 +9116,9 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -9462,9 +9355,9 @@ _OPERATIONS = {
                             },
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -9584,9 +9477,9 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -9689,9 +9582,9 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -10757,25 +10650,6 @@ _OPERATIONS = {
                         "title": "StacPropertiesV7",
                         "type": "object",
                     },
-                    "UnprocessableResponse": {
-                        "properties": {
-                            "detail": {
-                                "anyOf": [
-                                    {"type": "string"},
-                                    {
-                                        "items": {
-                                            "$ref": "#/definitions/ValidationErrorDetail"
-                                        },
-                                        "type": "array",
-                                    },
-                                ],
-                                "title": "Detail",
-                            }
-                        },
-                        "required": ["detail"],
-                        "title": "UnprocessableResponse",
-                        "type": "object",
-                    },
                     "ValidationError": {
                         "properties": {
                             "ctx": {"title": "Context", "type": "object"},
@@ -10792,22 +10666,6 @@ _OPERATIONS = {
                         },
                         "required": ["loc", "msg", "type"],
                         "title": "ValidationError",
-                        "type": "object",
-                    },
-                    "ValidationErrorDetail": {
-                        "properties": {
-                            "loc": {
-                                "items": {
-                                    "anyOf": [{"type": "string"}, {"type": "integer"}]
-                                },
-                                "title": "Loc",
-                                "type": "array",
-                            },
-                            "msg": {"title": "Msg", "type": "string"},
-                            "type": {"title": "Type", "type": "string"},
-                        },
-                        "required": ["loc", "msg", "type"],
-                        "title": "ValidationErrorDetail",
                         "type": "object",
                     },
                     "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -10827,9 +10685,9 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -10902,9 +10760,9 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -11430,7 +11288,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -11658,9 +11516,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -11878,9 +11736,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -12265,9 +12123,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -12504,9 +12362,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -12626,9 +12484,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -12731,9 +12589,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -13819,25 +13677,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -13857,25 +13696,6 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
-                            "type": "object",
-                        },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -14319,7 +14139,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -14547,9 +14367,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -14767,9 +14587,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -15154,9 +14974,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -15393,9 +15213,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -15515,9 +15335,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -15620,9 +15440,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -16708,25 +16528,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -16746,25 +16547,6 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
-                            "type": "object",
-                        },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -17211,7 +16993,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -17439,9 +17221,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -17659,9 +17441,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -18046,9 +17828,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -18285,9 +18067,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -18407,9 +18189,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -18512,9 +18294,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -19600,25 +19382,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -19638,25 +19401,6 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
-                            "type": "object",
-                        },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -20103,7 +19847,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -20331,9 +20075,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -20551,9 +20295,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -20938,9 +20682,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -21177,9 +20921,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -21299,9 +21043,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -21404,9 +21148,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -22492,25 +22236,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -22530,25 +22255,6 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
-                            "type": "object",
-                        },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -22995,7 +22701,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -23223,9 +22929,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -23443,9 +23149,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -23830,9 +23536,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -24069,9 +23775,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -24191,9 +23897,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -24296,9 +24002,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -25384,25 +25090,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -25422,25 +25109,6 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
-                            "type": "object",
-                        },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -25879,7 +25547,7 @@ _OPERATIONS = {
                             },
                             "order_id": {
                                 "description": "The order ID.",
-                                "examples": ["9fcf2f95-c08e-4fa3-829a-af830a4f92c4"],
+                                "examples": ["1a51ebb9-d457-49dc-a34a-d6d6b99d6233"],
                                 "format": "uuid",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
                                 "title": "Order Id",
@@ -26100,9 +25768,9 @@ _OPERATIONS = {
                             },
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -26320,9 +25988,9 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -26707,9 +26375,9 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -26946,9 +26614,9 @@ _OPERATIONS = {
                             },
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -27068,9 +26736,9 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -27173,9 +26841,9 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -28241,25 +27909,6 @@ _OPERATIONS = {
                         "title": "StacPropertiesV7",
                         "type": "object",
                     },
-                    "UnprocessableResponse": {
-                        "properties": {
-                            "detail": {
-                                "anyOf": [
-                                    {"type": "string"},
-                                    {
-                                        "items": {
-                                            "$ref": "#/definitions/ValidationErrorDetail"
-                                        },
-                                        "type": "array",
-                                    },
-                                ],
-                                "title": "Detail",
-                            }
-                        },
-                        "required": ["detail"],
-                        "title": "UnprocessableResponse",
-                        "type": "object",
-                    },
                     "ValidationError": {
                         "properties": {
                             "ctx": {"title": "Context", "type": "object"},
@@ -28276,22 +27925,6 @@ _OPERATIONS = {
                         },
                         "required": ["loc", "msg", "type"],
                         "title": "ValidationError",
-                        "type": "object",
-                    },
-                    "ValidationErrorDetail": {
-                        "properties": {
-                            "loc": {
-                                "items": {
-                                    "anyOf": [{"type": "string"}, {"type": "integer"}]
-                                },
-                                "title": "Loc",
-                                "type": "array",
-                            },
-                            "msg": {"title": "Msg", "type": "string"},
-                            "type": {"title": "Type", "type": "string"},
-                        },
-                        "required": ["loc", "msg", "type"],
-                        "title": "ValidationErrorDetail",
                         "type": "object",
                     },
                     "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -28311,9 +27944,9 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -28405,9 +28038,9 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -28940,7 +28573,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -29168,9 +28801,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -29388,9 +29021,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -29775,9 +29408,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -30014,9 +29647,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -30136,9 +29769,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -30241,9 +29874,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -31329,25 +30962,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -31367,25 +30981,6 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
-                            "type": "object",
-                        },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -31829,7 +31424,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -32057,9 +31652,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -32277,9 +31872,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -32664,9 +32259,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -32903,9 +32498,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -33025,9 +32620,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -33130,9 +32725,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -34218,25 +33813,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -34256,25 +33832,6 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
-                            "type": "object",
-                        },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -34714,7 +34271,7 @@ _OPERATIONS = {
                             },
                             "order_id": {
                                 "description": "The order ID.",
-                                "examples": ["9fcf2f95-c08e-4fa3-829a-af830a4f92c4"],
+                                "examples": ["1a51ebb9-d457-49dc-a34a-d6d6b99d6233"],
                                 "format": "uuid",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
                                 "title": "Order Id",
@@ -34935,9 +34492,9 @@ _OPERATIONS = {
                             },
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -35155,9 +34712,9 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -35542,9 +35099,9 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -35781,9 +35338,9 @@ _OPERATIONS = {
                             },
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -35903,9 +35460,9 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -36008,9 +35565,9 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -37076,25 +36633,6 @@ _OPERATIONS = {
                         "title": "StacPropertiesV7",
                         "type": "object",
                     },
-                    "UnprocessableResponse": {
-                        "properties": {
-                            "detail": {
-                                "anyOf": [
-                                    {"type": "string"},
-                                    {
-                                        "items": {
-                                            "$ref": "#/definitions/ValidationErrorDetail"
-                                        },
-                                        "type": "array",
-                                    },
-                                ],
-                                "title": "Detail",
-                            }
-                        },
-                        "required": ["detail"],
-                        "title": "UnprocessableResponse",
-                        "type": "object",
-                    },
                     "ValidationError": {
                         "properties": {
                             "ctx": {"title": "Context", "type": "object"},
@@ -37111,22 +36649,6 @@ _OPERATIONS = {
                         },
                         "required": ["loc", "msg", "type"],
                         "title": "ValidationError",
-                        "type": "object",
-                    },
-                    "ValidationErrorDetail": {
-                        "properties": {
-                            "loc": {
-                                "items": {
-                                    "anyOf": [{"type": "string"}, {"type": "integer"}]
-                                },
-                                "title": "Loc",
-                                "type": "array",
-                            },
-                            "msg": {"title": "Msg", "type": "string"},
-                            "type": {"title": "Type", "type": "string"},
-                        },
-                        "required": ["loc", "msg", "type"],
-                        "title": "ValidationErrorDetail",
                         "type": "object",
                     },
                     "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -37605,7 +37127,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -37833,9 +37355,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -38053,9 +37575,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -38440,9 +37962,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -38679,9 +38201,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -38801,9 +38323,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -38906,9 +38428,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -39994,25 +39516,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -40032,25 +39535,6 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
-                            "type": "object",
-                        },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -40538,7 +40022,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -40766,9 +40250,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -40986,9 +40470,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -41373,9 +40857,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -41612,9 +41096,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -41734,9 +41218,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -41839,9 +41323,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -42927,25 +42411,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -42965,25 +42430,6 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
-                            "type": "object",
-                        },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -43444,7 +42890,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -43672,9 +43118,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -43892,9 +43338,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -44279,9 +43725,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -44518,9 +43964,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -44640,9 +44086,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -44745,9 +44191,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -45833,25 +45279,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -45871,25 +45298,6 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
-                            "type": "object",
-                        },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -46333,7 +45741,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -46561,9 +45969,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -46781,9 +46189,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -47168,9 +46576,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -47407,9 +46815,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -47529,9 +46937,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -47634,9 +47042,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -48722,25 +48130,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -48760,25 +48149,6 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
-                            "type": "object",
-                        },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -49225,7 +48595,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -49453,9 +48823,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -49673,9 +49043,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -50060,9 +49430,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -50299,9 +49669,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -50421,9 +49791,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -50526,9 +49896,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -51614,25 +50984,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -51652,25 +51003,6 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
-                            "type": "object",
-                        },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -52109,7 +51441,7 @@ _OPERATIONS = {
                             },
                             "order_id": {
                                 "description": "The order ID.",
-                                "examples": ["9fcf2f95-c08e-4fa3-829a-af830a4f92c4"],
+                                "examples": ["1a51ebb9-d457-49dc-a34a-d6d6b99d6233"],
                                 "format": "uuid",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
                                 "title": "Order Id",
@@ -52330,9 +51662,9 @@ _OPERATIONS = {
                             },
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -52550,9 +51882,9 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -52937,9 +52269,9 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -53176,9 +52508,9 @@ _OPERATIONS = {
                             },
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -53298,9 +52630,9 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -53403,9 +52735,9 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"type": "string"},
+                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"type": "string"},
+                                        "items": {"minLength": 1, "type": "string"},
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -54471,25 +53803,6 @@ _OPERATIONS = {
                         "title": "StacPropertiesV7",
                         "type": "object",
                     },
-                    "UnprocessableResponse": {
-                        "properties": {
-                            "detail": {
-                                "anyOf": [
-                                    {"type": "string"},
-                                    {
-                                        "items": {
-                                            "$ref": "#/definitions/ValidationErrorDetail"
-                                        },
-                                        "type": "array",
-                                    },
-                                ],
-                                "title": "Detail",
-                            }
-                        },
-                        "required": ["detail"],
-                        "title": "UnprocessableResponse",
-                        "type": "object",
-                    },
                     "ValidationError": {
                         "properties": {
                             "ctx": {"title": "Context", "type": "object"},
@@ -54506,22 +53819,6 @@ _OPERATIONS = {
                         },
                         "required": ["loc", "msg", "type"],
                         "title": "ValidationError",
-                        "type": "object",
-                    },
-                    "ValidationErrorDetail": {
-                        "properties": {
-                            "loc": {
-                                "items": {
-                                    "anyOf": [{"type": "string"}, {"type": "integer"}]
-                                },
-                                "title": "Loc",
-                                "type": "array",
-                            },
-                            "msg": {"title": "Msg", "type": "string"},
-                            "type": {"title": "Type", "type": "string"},
-                        },
-                        "required": ["loc", "msg", "type"],
-                        "title": "ValidationErrorDetail",
                         "type": "object",
                     },
                     "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -54982,7 +54279,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -55210,9 +54507,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -55430,9 +54727,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -55817,9 +55114,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -56056,9 +55353,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -56178,9 +55475,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -56283,9 +55580,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -57371,25 +56668,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -57409,25 +56687,6 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
-                            "type": "object",
-                        },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -57871,7 +57130,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -58099,9 +57358,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -58319,9 +57578,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -58706,9 +57965,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -58945,9 +58204,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -59067,9 +58326,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -59172,9 +58431,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -60260,25 +59519,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -60298,25 +59538,6 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
-                            "type": "object",
-                        },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -60763,7 +59984,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -60991,9 +60212,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -61211,9 +60432,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -61598,9 +60819,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -61837,9 +61058,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -61959,9 +61180,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -62064,9 +61285,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -63152,25 +62373,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -63190,25 +62392,6 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
-                            "type": "object",
-                        },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -63665,7 +62848,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -63893,9 +63076,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -64113,9 +63296,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -64500,9 +63683,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -64739,9 +63922,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -64861,9 +64044,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -64966,9 +64149,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -66054,25 +65237,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -66092,25 +65256,6 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
-                            "type": "object",
-                        },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -66580,7 +65725,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -66808,9 +65953,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -67028,9 +66173,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -67415,9 +66560,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -67654,9 +66799,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -67776,9 +66921,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -67881,9 +67026,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -68969,25 +68114,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -69007,25 +68133,6 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
-                            "type": "object",
-                        },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -69472,7 +68579,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -69700,9 +68807,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -69920,9 +69027,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -70307,9 +69414,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -70546,9 +69653,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -70668,9 +69775,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -70773,9 +69880,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -71861,25 +70968,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -71901,25 +70989,6 @@ _OPERATIONS = {
                             "title": "ValidationError",
                             "type": "object",
                         },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
-                            "type": "object",
-                        },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
                             "items": {"$ref": "#/definitions/LinearRingCoordinates"},
                             "title": "PolygonCoordinates",
@@ -71933,20 +71002,12 @@ _OPERATIONS = {
                     },
                     "properties": {
                         "detail": {
-                            "anyOf": [
-                                {"type": "string"},
-                                {
-                                    "items": {
-                                        "$ref": "#/definitions/ValidationErrorDetail"
-                                    },
-                                    "type": "array",
-                                },
-                            ],
+                            "items": {"$ref": "#/definitions/ValidationError"},
                             "title": "Detail",
+                            "type": "array",
                         }
                     },
-                    "required": ["detail"],
-                    "title": "UnprocessableResponse",
+                    "title": "HTTPValidationError",
                     "type": "object",
                 },
             },
@@ -72382,7 +71443,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -72610,9 +71671,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -72830,9 +71891,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -73217,9 +72278,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -73456,9 +72517,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -73578,9 +72639,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -73683,9 +72744,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -74771,25 +73832,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -74809,25 +73851,6 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
-                            "type": "object",
-                        },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -75297,7 +74320,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -75525,9 +74548,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -75745,9 +74768,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -76132,9 +75155,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -76371,9 +75394,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -76493,9 +75516,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -76598,9 +75621,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -77686,25 +76709,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -77724,25 +76728,6 @@ _OPERATIONS = {
                             },
                             "required": ["loc", "msg", "type"],
                             "title": "ValidationError",
-                            "type": "object",
-                        },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
                             "type": "object",
                         },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
@@ -78189,7 +77174,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "9fcf2f95-c08e-4fa3-829a-af830a4f92c4"
+                                        "1a51ebb9-d457-49dc-a34a-d6d6b99d6233"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -78417,9 +77402,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -78637,9 +77622,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -79024,9 +78009,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -79263,9 +78248,9 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -79385,9 +78370,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -79490,9 +78475,9 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"type": "string"},
+                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"type": "string"},
+                                            "items": {"minLength": 1, "type": "string"},
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -80578,25 +79563,6 @@ _OPERATIONS = {
                             "title": "StacPropertiesV7",
                             "type": "object",
                         },
-                        "UnprocessableResponse": {
-                            "properties": {
-                                "detail": {
-                                    "anyOf": [
-                                        {"type": "string"},
-                                        {
-                                            "items": {
-                                                "$ref": "#/definitions/ValidationErrorDetail"
-                                            },
-                                            "type": "array",
-                                        },
-                                    ],
-                                    "title": "Detail",
-                                }
-                            },
-                            "required": ["detail"],
-                            "title": "UnprocessableResponse",
-                            "type": "object",
-                        },
                         "ValidationError": {
                             "properties": {
                                 "ctx": {"title": "Context", "type": "object"},
@@ -80618,25 +79584,6 @@ _OPERATIONS = {
                             "title": "ValidationError",
                             "type": "object",
                         },
-                        "ValidationErrorDetail": {
-                            "properties": {
-                                "loc": {
-                                    "items": {
-                                        "anyOf": [
-                                            {"type": "string"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    "title": "Loc",
-                                    "type": "array",
-                                },
-                                "msg": {"title": "Msg", "type": "string"},
-                                "type": {"title": "Type", "type": "string"},
-                            },
-                            "required": ["loc", "msg", "type"],
-                            "title": "ValidationErrorDetail",
-                            "type": "object",
-                        },
                         "event_schema_registry__models__geojson__polygon_coordinates__PolygonCoordinates": {
                             "items": {"$ref": "#/definitions/LinearRingCoordinates"},
                             "title": "PolygonCoordinates",
@@ -80650,20 +79597,12 @@ _OPERATIONS = {
                     },
                     "properties": {
                         "detail": {
-                            "anyOf": [
-                                {"type": "string"},
-                                {
-                                    "items": {
-                                        "$ref": "#/definitions/ValidationErrorDetail"
-                                    },
-                                    "type": "array",
-                                },
-                            ],
+                            "items": {"$ref": "#/definitions/ValidationError"},
                             "title": "Detail",
+                            "type": "array",
                         }
                     },
-                    "required": ["detail"],
-                    "title": "UnprocessableResponse",
+                    "title": "HTTPValidationError",
                     "type": "object",
                 },
             },

@@ -25,7 +25,7 @@ class StacFeature(BaseModel):
             collection (str): The ID of the STAC Collection this item belongs to.
             bbox (list[float | int]): The bounding box of the asset represented by this item.
             properties (dict): A map of additional metadata for the item.
-            type_ (Union[Literal['Feature'], None]):  Default: 'Feature'.
+            type_ (Literal['Feature']):  Default: 'Feature'.
             stac_version (Union[None, str]): The STAC version the Item implements. Default: '1.0.0'.
             geometry (Union['PointGeometry', 'PolygonGeometry', None]): Defines the full footprint of the asset represented
                 by this item.
@@ -52,9 +52,7 @@ class StacFeature(BaseModel):
         description="""A map of additional metadata for the item.""",
         alias="properties",
     )
-    type_: Union[Literal["Feature"], None] = Field(
-        default="Feature", description=None, alias="type"
-    )
+    type_: Literal["Feature"] = Field(default="Feature", description=None, alias="type")
     stac_version: Union[None, str] = Field(
         default="1.0.0",
         description="""The STAC version the Item implements.""",
@@ -81,4 +79,6 @@ class StacFeature(BaseModel):
         alias="stac_extensions",
     )
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

@@ -38,6 +38,8 @@ from .http_validation_error import HTTPValidationError
 from .line_string import LineString
 from .link import Link
 from .link_1 import Link1
+from .list_order_tasks_response import ListOrderTasksResponse
+from .list_order_tasks_unavailable_response import ListOrderTasksUnavailableResponse
 from .list_stored_orders_response import ListStoredOrdersResponse
 from .modify_feasibility_request import ModifyFeasibilityRequest
 from .modify_feasibility_request_properties import ModifyFeasibilityRequestProperties
@@ -115,6 +117,10 @@ from .stored_order_response import StoredOrderResponse
 from .stored_standard_order_request_properties import (
     StoredStandardOrderRequestProperties,
 )
+from .task_acquisition import TaskAcquisition
+from .task_response import TaskResponse
+from .task_status_history_entry import TaskStatusHistoryEntry
+from .user_facing_task_status import UserFacingTaskStatus
 from .validation_error import ValidationError
 from .validation_error_detail import ValidationErrorDetail
 from .validation_error_response import ValidationErrorResponse
@@ -150,6 +156,8 @@ __all__ = (
     "LineString",
     "Link",
     "Link1",
+    "ListOrderTasksResponse",
+    "ListOrderTasksUnavailableResponse",
     "ListStoredOrdersResponse",
     "ModifyFeasibilityRequest",
     "ModifyFeasibilityRequestProperties",
@@ -205,6 +213,10 @@ __all__ = (
     "StoredFeasibilityRequest",
     "StoredOrderResponse",
     "StoredStandardOrderRequestProperties",
+    "TaskAcquisition",
+    "TaskResponse",
+    "TaskStatusHistoryEntry",
+    "UserFacingTaskStatus",
     "ValidationError",
     "ValidationErrorDetail",
     "ValidationErrorResponse",

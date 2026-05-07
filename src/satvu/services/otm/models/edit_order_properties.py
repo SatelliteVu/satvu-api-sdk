@@ -84,4 +84,6 @@ class EditOrderProperties(BaseModel):
         alias="max_off_nadir",
     )
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

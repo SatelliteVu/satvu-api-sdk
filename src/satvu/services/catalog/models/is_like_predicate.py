@@ -23,4 +23,6 @@ class IsLikePredicate(BaseModel):
     op: IsLikePredicateOp = Field(..., description=None, alias="op")
     args: list[Union[PropertyRef, str]] = Field(..., description=None, alias="args")
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

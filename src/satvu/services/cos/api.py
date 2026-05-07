@@ -6,13 +6,21 @@ from pathlib import Path
 from typing import Any, Union
 from uuid import UUID
 
-from satvu.core import SDKClient
+from satvu.core import SDKClient, _deep_merge
 from satvu.http import HttpClient
 from satvu.http.errors import HttpError
 from satvu.result import Err as ResultErr
 from satvu.result import Ok as ResultOk
 from satvu.result import Result, is_err
-from satvu.services.cos.models.collection import Collection
+from satvu.services.cos.models.download_order_collections_item import (
+    DownloadOrderCollectionsItem,
+)
+from satvu.services.cos.models.download_order_item_primary_formats_item import (
+    DownloadOrderItemPrimaryFormatsItem,
+)
+from satvu.services.cos.models.download_order_primary_formats_item import (
+    DownloadOrderPrimaryFormatsItem,
+)
 from satvu.services.cos.models.feature_collection_order import FeatureCollectionOrder
 from satvu.services.cos.models.order_download_url import OrderDownloadUrl
 from satvu.services.cos.models.order_edit_payload import OrderEditPayload
@@ -21,7 +29,6 @@ from satvu.services.cos.models.order_page import OrderPage
 from satvu.services.cos.models.order_price import OrderPrice
 from satvu.services.cos.models.order_submission_payload import OrderSubmissionPayload
 from satvu.services.cos.models.price_request import PriceRequest
-from satvu.services.cos.models.primary_format import PrimaryFormat
 from satvu.services.cos.models.reseller_feature_collection_order import (
     ResellerFeatureCollectionOrder,
 )
@@ -90,6 +97,7 @@ class CosService(SDKClient):
         body: OrderEditPayload,
         contract_id: UUID,
         order_id: UUID,
+        extra_body: dict[str, Any] | None = None,
         timeout: int | None = None,
     ) -> Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"]:
         """
@@ -101,6 +109,10 @@ class CosService(SDKClient):
             contract_id (UUID): The contract ID.
             order_id (UUID): The order ID.
             body (OrderEditPayload): Request payload for editing an order.
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -108,6 +120,8 @@ class CosService(SDKClient):
             Union['FeatureCollectionOrder', 'ResellerFeatureCollectionOrder']
         """
         json_body = body.model_dump(by_alias=True, mode="json")
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
         result = self.make_request(
             method="patch",
             url=f"/{contract_id}/{order_id}",
@@ -204,6 +218,7 @@ class CosService(SDKClient):
         self,
         body: Union["OrderSubmissionPayload", "ResellerSubmissionOrderPayload"],
         contract_id: UUID,
+        extra_body: dict[str, Any] | None = None,
         timeout: int | None = None,
     ) -> Union["FeatureCollectionOrder", "ResellerFeatureCollectionOrder"]:
         """
@@ -219,6 +234,10 @@ class CosService(SDKClient):
                 One of:
                 - OrderSubmissionPayload: Request payload for submitting an order.
                 - ResellerSubmissionOrderPayload: Order payload for resellers
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -226,6 +245,8 @@ class CosService(SDKClient):
             Union['FeatureCollectionOrder', 'ResellerFeatureCollectionOrder']
         """
         json_body = body.model_dump(by_alias=True, mode="json")
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
         result = self.make_request(
             method="post", url=f"/{contract_id}/", json=json_body, timeout=timeout
         )
@@ -240,7 +261,11 @@ class CosService(SDKClient):
         return response.json().unwrap()
 
     def search_orders(
-        self, body: SearchRequest, contract_id: UUID, timeout: int | None = None
+        self,
+        body: SearchRequest,
+        contract_id: UUID,
+        extra_body: dict[str, Any] | None = None,
+        timeout: int | None = None,
     ) -> OrderPage:
         """
         Search orders
@@ -248,6 +273,10 @@ class CosService(SDKClient):
         Args:
             contract_id (UUID): The contract ID.
             body (SearchRequest):
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -255,6 +284,8 @@ class CosService(SDKClient):
             OrderPage
         """
         json_body = body.model_dump(by_alias=True, mode="json")
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
         result = self.make_request(
             method="post",
             url=f"/{contract_id}/search/",
@@ -269,7 +300,11 @@ class CosService(SDKClient):
         return response.json().unwrap()
 
     def search_orders_iter(
-        self, body: SearchRequest, contract_id: UUID, max_pages: int | None = None
+        self,
+        body: SearchRequest,
+        contract_id: UUID,
+        extra_body: dict[str, Any] | None = None,
+        max_pages: int | None = None,
     ) -> Generator[OrderPage, None, None]:
         """
         Search orders (Paginated Iterator)
@@ -301,7 +336,9 @@ class CosService(SDKClient):
             if max_pages and page_count >= max_pages:
                 break
             body_with_token = body.model_copy(update={"token": token})
-            response = self.search_orders(body=body_with_token, contract_id=contract_id)
+            response = self.search_orders(
+                body=body_with_token, contract_id=contract_id, extra_body=extra_body
+            )
             page_count += 1
             yield response
             token = self.extract_next_token(response)
@@ -313,7 +350,9 @@ class CosService(SDKClient):
         contract_id: UUID,
         order_id: UUID,
         item_id: str,
-        primary_formats: list["PrimaryFormat"] | None = None,
+        primary_formats: Union[
+            None, list["DownloadOrderItemPrimaryFormatsItem"]
+        ] = None,
         redirect: Union[None, bool] = True,
         timeout: int | None = None,
     ) -> Union[OrderItemDownloadUrl, Any, io.BytesIO]:
@@ -331,7 +370,8 @@ class CosService(SDKClient):
             contract_id (UUID): The contract ID.
             order_id (UUID): The order ID.
             item_id (str): The item ID.
-            primary_formats (list['PrimaryFormat'] | None): Specify a file format to download.
+            primary_formats (Union[None, list['DownloadOrderItemPrimaryFormatsItem']]): Specify a file
+                format to download.
                             Defaults to geotiff, which will download without nitf.
                             To specify multiple formats, repeat the query parameter.
                             If NITF is specified but not available for an item, GeoTIFF will be provided
@@ -372,7 +412,9 @@ class CosService(SDKClient):
         item_id: str,
         output_path: Path | str,
         *,
-        primary_formats: list["PrimaryFormat"] | None = None,
+        primary_formats: Union[
+            None, list["DownloadOrderItemPrimaryFormatsItem"]
+        ] = None,
         chunk_size: int = 8192,
         progress_callback: Callable[[int, int | None], None] | None = None,
         timeout: int | None = None,
@@ -387,7 +429,7 @@ class CosService(SDKClient):
             order_id (UUID): The order ID
             item_id (str): The item ID
             output_path (Path | str): Where to save the downloaded file.
-            primary_formats (list['PrimaryFormat'] | None): Optional file format(s) to download
+            primary_formats (Union[None, list['DownloadOrderItemPrimaryFormatsItem']]): Optional file format(s) to download
             chunk_size (int): Bytes per chunk (default: 8192). Use 64KB+ for faster downloads.
             progress_callback: Optional callback for download progress tracking.
                              Signature: callback(bytes_downloaded: int, total_bytes: int | None)
@@ -418,8 +460,8 @@ class CosService(SDKClient):
         self,
         contract_id: UUID,
         order_id: UUID,
-        collections: list["Collection"] | None = None,
-        primary_formats: list["PrimaryFormat"] | None = None,
+        collections: Union[None, list["DownloadOrderCollectionsItem"]] = None,
+        primary_formats: Union[None, list["DownloadOrderPrimaryFormatsItem"]] = None,
         redirect: Union[None, bool] = True,
         timeout: int | None = None,
     ) -> Union[OrderDownloadUrl, Any, io.BytesIO]:
@@ -438,11 +480,13 @@ class CosService(SDKClient):
         Args:
             contract_id (UUID): The contract ID.
             order_id (UUID): The order ID.
-            collections (list['Collection'] | None): Specify a subset of collections to download.
-                            Defaults to None, which will download only the ordered product.
+            collections (Union[None, list['DownloadOrderCollectionsItem']]): Specify a subset of
+                collections to download.
+                            Defaults to an empty list, which will download only the ordered product.
                             To specify multiple collections, repeat the query parameter.
 
-            primary_formats (list['PrimaryFormat'] | None): Specify a file format to download.
+            primary_formats (Union[None, list['DownloadOrderPrimaryFormatsItem']]): Specify a file
+                format to download.
                             Defaults to geotiff, which will download without nitf.
                             To specify multiple formats, repeat the query parameter.
                             If NITF is specified but not available for an item, GeoTIFF will be provided
@@ -486,8 +530,8 @@ class CosService(SDKClient):
         order_id: UUID,
         output_path: Path | str,
         *,
-        collections: list["Collection"] | None = None,
-        primary_formats: list["PrimaryFormat"] | None = None,
+        collections: Union[None, list["DownloadOrderCollectionsItem"]] = None,
+        primary_formats: Union[None, list["DownloadOrderPrimaryFormatsItem"]] = None,
         chunk_size: int = 8192,
         progress_callback: Callable[[int, int | None], None] | None = None,
         timeout: int | None = None,
@@ -501,8 +545,8 @@ class CosService(SDKClient):
             contract_id (UUID): The contract ID
             order_id (UUID): The order ID
             output_path (Path | str): Where to save the downloaded file.
-            collections (list['Collection'] | None): Optional subset of collections to download
-            primary_formats (list['PrimaryFormat'] | None): Optional file format(s) to download
+            collections (Union[None, list['DownloadOrderCollectionsItem']]): Optional subset of collections to download
+            primary_formats (Union[None, list['DownloadOrderPrimaryFormatsItem']]): Optional file format(s) to download
             chunk_size (int): Bytes per chunk (default: 8192). Use 64KB+ for faster downloads.
             progress_callback: Optional callback for download progress tracking.
                              Signature: callback(bytes_downloaded: int, total_bytes: int | None)
@@ -538,6 +582,7 @@ class CosService(SDKClient):
         body: Union["PriceRequest", "ResellerPriceRequest"],
         contract_id: UUID,
         baseprice: Union[None, bool] = False,
+        extra_body: dict[str, Any] | None = None,
         timeout: int | None = None,
     ) -> Union["OrderPrice", "ResellerOrderPrice"]:
         """
@@ -560,6 +605,10 @@ class CosService(SDKClient):
                 One of:
                 - PriceRequest: Request payload for submitting an order.
                 - ResellerPriceRequest: Request payload for calculating order price as a reseller
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -567,6 +616,8 @@ class CosService(SDKClient):
             Union['OrderPrice', 'ResellerOrderPrice']
         """
         json_body = body.model_dump(by_alias=True, mode="json")
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
         params = {"baseprice": baseprice}
         result = self.make_request(
             method="post",

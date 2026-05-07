@@ -36,4 +36,6 @@ class OrderModificationPrice(BaseModel):
         ..., description="""Payload for get order response.""", alias="updated_order"
     )
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

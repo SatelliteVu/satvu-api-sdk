@@ -47,4 +47,6 @@ class TestWebhookResponse(BaseModel):
     )
     webhook_result: WebhookResult = Field(..., description=None, alias="webhook_result")
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

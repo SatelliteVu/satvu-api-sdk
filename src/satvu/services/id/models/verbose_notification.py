@@ -33,4 +33,6 @@ class VerboseNotification(BaseModel):
         alias="settings",
     )
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

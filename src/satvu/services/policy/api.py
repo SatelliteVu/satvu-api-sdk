@@ -2,8 +2,9 @@
 # Source: src/builder/templates/endpoint_module.py.jinja
 
 from collections.abc import Callable
+from typing import Any
 
-from satvu.core import SDKClient
+from satvu.core import SDKClient, _deep_merge
 from satvu.http import HttpClient
 from satvu.services.policy.models.list_active_contracts_input import (
     ListActiveContractsInput,
@@ -44,6 +45,7 @@ class PolicyService(SDKClient):
     def list_active_contracts(
         self,
         body: ListActiveContractsInput,
+        extra_body: dict[str, Any] | None = None,
         timeout: int | None = None,
     ) -> RouterActiveContractsResponse:
         """
@@ -53,6 +55,10 @@ class PolicyService(SDKClient):
 
         Args:
             body (ListActiveContractsInput):
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -61,6 +67,8 @@ class PolicyService(SDKClient):
         """
 
         json_body = body.model_dump(by_alias=True, mode="json")
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
 
         result = self.make_request(
             method="post",
@@ -84,6 +92,7 @@ class PolicyService(SDKClient):
     def user_acceptance_terms(
         self,
         body: UserAcceptanceTermsInput,
+        extra_body: dict[str, Any] | None = None,
         timeout: int | None = None,
     ) -> TermsUserTermsAccepted:
         """
@@ -93,6 +102,10 @@ class PolicyService(SDKClient):
 
         Args:
             body (UserAcceptanceTermsInput):
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -101,6 +114,8 @@ class PolicyService(SDKClient):
         """
 
         json_body = body.model_dump(by_alias=True, mode="json")
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
 
         result = self.make_request(
             method="post",

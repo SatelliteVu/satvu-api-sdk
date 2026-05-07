@@ -42,4 +42,6 @@ class Asset(BaseModel):
         default=None, description="""Media type of the asset.""", alias="type"
     )
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Literal, Union
+from typing import TYPE_CHECKING, Literal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -25,7 +25,7 @@ class ResellerFeatureCollectionOrder(BaseModel):
         contract_id (UUID): The contract ID.
         price (OrderPricing): Detailed pricing breakdown for a satellite imagery order, including base price and license
             uplifts.
-        type_ (Union[Literal['FeatureCollection'], None]):  Default: 'FeatureCollection'.
+        type_ (Literal['FeatureCollection']):  Default: 'FeatureCollection'.
         name (None | str): The name of the order.
         updated_at (datetime.datetime | None): The datetime at which the order was updated.
         licence_level (None | str): Licence level applied to the order. Licences are contract-specific. Nullable for
@@ -57,7 +57,7 @@ class ResellerFeatureCollectionOrder(BaseModel):
         description="""Detailed pricing breakdown for a satellite imagery order, including base price and license uplifts.""",
         alias="price",
     )
-    type_: Union[Literal["FeatureCollection"], None] = Field(
+    type_: Literal["FeatureCollection"] = Field(
         default="FeatureCollection", description=None, alias="type"
     )
     name: None | str = Field(
@@ -74,4 +74,6 @@ class ResellerFeatureCollectionOrder(BaseModel):
         alias="licence_level",
     )
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

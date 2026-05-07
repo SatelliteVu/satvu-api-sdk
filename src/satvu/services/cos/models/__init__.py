@@ -2,7 +2,11 @@
 # Source: src/builder/templates/models_init.py.jinja
 """Contains all the data models used in inputs/outputs"""
 
-from .collection import Collection
+from .download_order_collections_item import DownloadOrderCollectionsItem
+from .download_order_item_primary_formats_item import (
+    DownloadOrderItemPrimaryFormatsItem,
+)
+from .download_order_primary_formats_item import DownloadOrderPrimaryFormatsItem
 from .feature_collection_order import FeatureCollectionOrder
 from .feature_order import FeatureOrder
 from .geojson_polygon import GeojsonPolygon
@@ -25,7 +29,6 @@ from .polygon import Polygon
 from .polygon_geometry import PolygonGeometry
 from .price_information import PriceInformation
 from .price_request import PriceRequest
-from .primary_format import PrimaryFormat
 from .reseller_feature_collection_order import ResellerFeatureCollectionOrder
 from .reseller_order_price import ResellerOrderPrice
 from .reseller_price_request import ResellerPriceRequest
@@ -38,12 +41,12 @@ from .stac_metadata import StacMetadata
 from .stac_properties_acquisition import StacPropertiesAcquisition
 from .stac_properties_v4 import StacPropertiesV4
 from .stac_properties_v7 import StacPropertiesV7
-from .unprocessable_response import UnprocessableResponse
 from .validation_error import ValidationError
-from .validation_error_detail import ValidationErrorDetail
 
 __all__ = (
-    "Collection",
+    "DownloadOrderCollectionsItem",
+    "DownloadOrderItemPrimaryFormatsItem",
+    "DownloadOrderPrimaryFormatsItem",
     "FeatureCollectionOrder",
     "FeatureOrder",
     "GeojsonPolygon",
@@ -66,7 +69,6 @@ __all__ = (
     "PolygonGeometry",
     "PriceInformation",
     "PriceRequest",
-    "PrimaryFormat",
     "ResellerFeatureCollectionOrder",
     "ResellerOrderPrice",
     "ResellerPriceRequest",
@@ -79,9 +81,7 @@ __all__ = (
     "StacPropertiesAcquisition",
     "StacPropertiesV4",
     "StacPropertiesV7",
-    "UnprocessableResponse",
     "ValidationError",
-    "ValidationErrorDetail",
 )
 
 # Ensure all Pydantic models have forward refs rebuilt

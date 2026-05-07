@@ -21,7 +21,7 @@ class StandardFeasibilityResponseProperties(BaseModel):
         datetime_ (str): The closed date-time interval of the tasking order request.
         created_at (datetime.datetime): The datetime at which the feasibility response was created.
         updated_at (datetime.datetime): The datetime at which the feasibility response was last updated.
-        product (Union[Literal['standard'], None]): Standard Priority. Default: 'standard'.
+        product (Literal['standard']): Standard Priority. Default: 'standard'.
         satvu_day_night_mode (Union[None, 'DayNightMode']):
         max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage. Measured in percent.
             Default: 15.
@@ -55,7 +55,7 @@ class StandardFeasibilityResponseProperties(BaseModel):
         description="""The datetime at which the feasibility response was last updated.""",
         alias="updated_at",
     )
-    product: Union[Literal["standard"], None] = Field(
+    product: Literal["standard"] = Field(
         default="standard", description="""Standard Priority.""", alias="product"
     )
     satvu_day_night_mode: Union[None, DayNightMode] = Field(
@@ -100,4 +100,6 @@ class StandardFeasibilityResponseProperties(BaseModel):
         alias="max_gsd",
     )
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

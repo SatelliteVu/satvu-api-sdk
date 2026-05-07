@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Union
 from uuid import UUID
 
-from satvu.core import SDKClient
+from satvu.core import SDKClient, _deep_merge
 from satvu.http import HttpClient
 from satvu.http.errors import HttpError
 from satvu.result import Err as ResultErr
@@ -18,6 +18,10 @@ from satvu.services.otm.models.edit_order_payload import EditOrderPayload
 from satvu.services.otm.models.feasibility_request import FeasibilityRequest
 from satvu.services.otm.models.feasibility_response import FeasibilityResponse
 from satvu.services.otm.models.get_order_response import GetOrderResponse
+from satvu.services.otm.models.list_order_tasks_response import ListOrderTasksResponse
+from satvu.services.otm.models.list_order_tasks_unavailable_response import (
+    ListOrderTasksUnavailableResponse,
+)
 from satvu.services.otm.models.list_stored_orders_response import (
     ListStoredOrdersResponse,
 )
@@ -166,6 +170,7 @@ class OtmService(SDKClient):
             "StandardOrderRequest",
         ],
         contract_id: UUID,
+        extra_body: dict[str, Any] | None = None,
         timeout: int | None = None,
     ) -> Union["ResellerStoredOrderResponse", "StoredOrderResponse"]:
         """
@@ -182,6 +187,10 @@ class OtmService(SDKClient):
                 - AssuredOrderRequest:
                 - ResellerStandardOrderRequest: Payload for reseller standard order request.
                 - ResellerAssuredOrderRequest: Payload for reseller assured order request.
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -189,6 +198,8 @@ class OtmService(SDKClient):
             Union['ResellerStoredOrderResponse', 'StoredOrderResponse']
         """
         json_body = body.model_dump(by_alias=True, mode="json")
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
         result = self.make_request(
             method="post",
             url=f"/{contract_id}/tasking/orders/",
@@ -241,6 +252,7 @@ class OtmService(SDKClient):
         body: EditOrderPayload,
         contract_id: UUID,
         order_id: UUID,
+        extra_body: dict[str, Any] | None = None,
         timeout: int | None = None,
     ) -> Union["GetOrderResponse", "ResellerGetOrderResponse"]:
         """
@@ -278,6 +290,10 @@ class OtmService(SDKClient):
 
                 Geometry can be edited for Standard orders in Created/Staged states.
                 All property fields are optional - only provided fields will be updated.
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -285,6 +301,8 @@ class OtmService(SDKClient):
             Union['GetOrderResponse', 'ResellerGetOrderResponse']
         """
         json_body = body.model_dump(by_alias=True, mode="json")
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
         result = self.make_request(
             method="patch",
             url=f"/{contract_id}/tasking/orders/{order_id}",
@@ -481,6 +499,40 @@ class OtmService(SDKClient):
             return parse_response(response.json().unwrap(), StacFeature)
         return response.json().unwrap()
 
+    def get_tasking_order_tasks(
+        self, contract_id: UUID, order_id: UUID, timeout: int | None = None
+    ) -> Union["ListOrderTasksResponse", "ListOrderTasksUnavailableResponse"]:
+        """
+        List all tasks for a tasking order.
+
+        Returns a list of tasks for an order, sorted by creation date (newest first).
+
+        Includes status history and acquisition metadata for each task.
+
+        Args:
+            contract_id (UUID): Contract ID
+            order_id (UUID): Order ID
+            timeout: Optional request timeout in seconds. Overrides the instance timeout if
+                provided.
+
+        Returns:
+            Union['ListOrderTasksResponse', 'ListOrderTasksUnavailableResponse']
+        """
+        result = self.make_request(
+            method="get",
+            url=f"/{contract_id}/tasking/orders/{order_id}/tasks",
+            timeout=timeout,
+        )
+        if result.is_err():
+            raise result.error()
+        response = result.unwrap()
+        if response.status_code == 200:
+            return parse_response(
+                response.json().unwrap(),
+                ListOrderTasksResponse | ListOrderTasksUnavailableResponse,
+            )
+        return response.json().unwrap()
+
     def get_tasking_feasibility_requests(
         self,
         contract_id: UUID,
@@ -563,7 +615,11 @@ class OtmService(SDKClient):
                 break
 
     def post_tasking_feasibility(
-        self, body: FeasibilityRequest, contract_id: UUID, timeout: int | None = None
+        self,
+        body: FeasibilityRequest,
+        contract_id: UUID,
+        extra_body: dict[str, Any] | None = None,
+        timeout: int | None = None,
     ) -> StoredFeasibilityRequest:
         """
         Create feasibility request.
@@ -573,6 +629,10 @@ class OtmService(SDKClient):
         Args:
             contract_id (UUID): Contract ID
             body (FeasibilityRequest): Payload for feasibility request.
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -580,6 +640,8 @@ class OtmService(SDKClient):
             StoredFeasibilityRequest
         """
         json_body = body.model_dump(by_alias=True, mode="json")
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
         result = self.make_request(
             method="post",
             url=f"/{contract_id}/tasking/feasibilities/",
@@ -657,6 +719,7 @@ class OtmService(SDKClient):
         body: ModifyFeasibilityRequest,
         contract_id: UUID,
         order_id: UUID,
+        extra_body: dict[str, Any] | None = None,
         timeout: int | None = None,
     ) -> StoredFeasibilityRequest:
         """
@@ -675,6 +738,10 @@ class OtmService(SDKClient):
             body (ModifyFeasibilityRequest): Payload for modify feasibility request.
                 Only supports Standard orders. Assured orders cannot be modified.
                 All fields are optional - unspecified fields will be sourced from the existing order.
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -682,6 +749,8 @@ class OtmService(SDKClient):
             StoredFeasibilityRequest
         """
         json_body = body.model_dump(by_alias=True, mode="json")
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
         result = self.make_request(
             method="post",
             url=f"/{contract_id}/tasking/feasibilities/orders/{order_id}",
@@ -700,6 +769,7 @@ class OtmService(SDKClient):
         body: PriceRequest,
         contract_id: UUID,
         baseprice: Union[None, bool] = False,
+        extra_body: dict[str, Any] | None = None,
         timeout: int | None = None,
     ) -> OrderPrice:
         """
@@ -712,6 +782,10 @@ class OtmService(SDKClient):
             baseprice (Union[None, bool]): Whether to return the base price only, ignoring any addons
                 or the licence level. Default: False.
             body (PriceRequest): Payload for price request.
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -719,6 +793,8 @@ class OtmService(SDKClient):
             OrderPrice
         """
         json_body = body.model_dump(by_alias=True, mode="json")
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
         params = {"baseprice": baseprice}
         result = self.make_request(
             method="post",
@@ -739,6 +815,7 @@ class OtmService(SDKClient):
         body: EditOrderPayload,
         contract_id: UUID,
         order_id: UUID,
+        extra_body: dict[str, Any] | None = None,
         timeout: int | None = None,
     ) -> OrderModificationPrice:
         """
@@ -759,6 +836,10 @@ class OtmService(SDKClient):
 
                 Geometry can be edited for Standard orders in Created/Staged states.
                 All property fields are optional - only provided fields will be updated.
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -766,6 +847,8 @@ class OtmService(SDKClient):
             OrderModificationPrice
         """
         json_body = body.model_dump(by_alias=True, mode="json")
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
         result = self.make_request(
             method="post",
             url=f"/{contract_id}/tasking/price/{order_id}",
@@ -804,7 +887,11 @@ class OtmService(SDKClient):
         return response.json().unwrap()
 
     def search(
-        self, body: SearchRequest, contract_id: UUID, timeout: int | None = None
+        self,
+        body: SearchRequest,
+        contract_id: UUID,
+        extra_body: dict[str, Any] | None = None,
+        timeout: int | None = None,
     ) -> SearchResponse:
         """
         Search
@@ -814,6 +901,10 @@ class OtmService(SDKClient):
         Args:
             contract_id (UUID): Contract ID
             body (SearchRequest):
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -821,6 +912,8 @@ class OtmService(SDKClient):
             SearchResponse
         """
         json_body = body.model_dump(by_alias=True, mode="json")
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
         result = self.make_request(
             method="post",
             url=f"/{contract_id}/search/",
@@ -835,7 +928,11 @@ class OtmService(SDKClient):
         return response.json().unwrap()
 
     def search_iter(
-        self, body: SearchRequest, contract_id: UUID, max_pages: int | None = None
+        self,
+        body: SearchRequest,
+        contract_id: UUID,
+        extra_body: dict[str, Any] | None = None,
+        max_pages: int | None = None,
     ) -> Generator[SearchResponse, None, None]:
         """
         Search (Paginated Iterator)
@@ -867,7 +964,9 @@ class OtmService(SDKClient):
             if max_pages and page_count >= max_pages:
                 break
             body_with_token = body.model_copy(update={"token": token})
-            response = self.search(body=body_with_token, contract_id=contract_id)
+            response = self.search(
+                body=body_with_token, contract_id=contract_id, extra_body=extra_body
+            )
             page_count += 1
             yield response
             token = self.extract_next_token(response)

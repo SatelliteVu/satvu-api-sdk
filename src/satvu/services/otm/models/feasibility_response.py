@@ -52,4 +52,6 @@ class FeasibilityResponse(BaseModel):
     )
     contract_id: UUID = Field(..., description="""Contract ID.""", alias="contract_id")
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

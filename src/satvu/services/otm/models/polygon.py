@@ -23,4 +23,6 @@ class Polygon(BaseModel):
     )
     bbox: list[float] | None = Field(default=None, description=None, alias="bbox")
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, Union
+from typing import TYPE_CHECKING, Annotated, Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -30,16 +30,21 @@ class GeometryCollection(BaseModel):
         default="GeometryCollection", description=None, alias="type"
     )
     geometries: list[
-        Union[
-            GeometryCollection,
-            LineString,
-            MultiLineString,
-            MultiPoint,
-            MultiPolygon,
-            Point,
-            Polygon,
+        Annotated[
+            Union[
+                GeometryCollection,
+                LineString,
+                MultiLineString,
+                MultiPoint,
+                MultiPolygon,
+                Point,
+                Polygon,
+            ],
+            Field(discriminator="type_"),
         ]
     ] = Field(..., description=None, alias="geometries")
     bbox: list[float] | None = Field(default=None, description=None, alias="bbox")
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

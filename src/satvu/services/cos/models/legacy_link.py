@@ -21,4 +21,6 @@ class LegacyLink(BaseModel):
     type_: None | str = Field(default=None, description=None, alias="type")
     title: None | str = Field(default=None, description=None, alias="title")
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

@@ -14,4 +14,6 @@ class ClientID(BaseModel):
 
     client_id: str = Field(..., description=None, alias="client_id")
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

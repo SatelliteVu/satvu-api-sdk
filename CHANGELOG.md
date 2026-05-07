@@ -1,3 +1,11 @@
+# [0.9.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.8.0...v0.9.0) (2026-05-07)
+
+
+### Features
+
+* **builder:** add extra_body kwarg for forward-compat body fields
+* **builder:** propagate OpenAPI discriminators to generated models
+
 # [0.8.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.7.0...v0.8.0) (2026-04-17)
 
 ## [0.8.0.20260429.1023] - 2026-04-29

@@ -18,4 +18,6 @@ class UserAcceptanceTermsInput(BaseModel):
     )
     token: str = Field(..., description="""User access token""", alias="token")
 
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(
+        validate_by_name=True, validate_by_alias=True, extra="allow"
+    )

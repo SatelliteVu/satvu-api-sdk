@@ -2,9 +2,9 @@
 # Source: src/builder/templates/endpoint_module.py.jinja
 
 from collections.abc import Callable, Generator
-from typing import Union
+from typing import Any, Union
 
-from satvu.core import SDKClient
+from satvu.core import SDKClient, _deep_merge
 from satvu.http import HttpClient
 from satvu.services.reseller.models.create_user import CreateUser
 from satvu.services.reseller.models.create_user_response import CreateUserResponse
@@ -255,6 +255,7 @@ class ResellerService(SDKClient):
     def search_users(
         self,
         body: SearchUsers,
+        extra_body: dict[str, Any] | None = None,
         timeout: int | None = None,
     ) -> GetUsers:
         """
@@ -264,6 +265,10 @@ class ResellerService(SDKClient):
 
         Args:
             body (SearchUsers):
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -272,6 +277,8 @@ class ResellerService(SDKClient):
         """
 
         json_body = body.model_dump(by_alias=True, mode="json")
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
 
         result = self.make_request(
             method="post",
@@ -293,6 +300,7 @@ class ResellerService(SDKClient):
     def search_users_iter(
         self,
         body: SearchUsers,
+        extra_body: dict[str, Any] | None = None,
         max_pages: int | None = None,
     ) -> Generator[GetUsers, None, None]:
         """
@@ -327,6 +335,7 @@ class ResellerService(SDKClient):
             body_with_token = body.model_copy(update={"token": token})
             response = self.search_users(
                 body=body_with_token,
+                extra_body=extra_body,
             )
             page_count += 1
 
@@ -339,6 +348,7 @@ class ResellerService(SDKClient):
     def search_companies(
         self,
         body: SearchCompanies,
+        extra_body: dict[str, Any] | None = None,
         timeout: int | None = None,
     ) -> GetCompanies:
         """
@@ -348,6 +358,10 @@ class ResellerService(SDKClient):
 
         Args:
             body (SearchCompanies):
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -356,6 +370,8 @@ class ResellerService(SDKClient):
         """
 
         json_body = body.model_dump(by_alias=True, mode="json")
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
 
         result = self.make_request(
             method="post",
@@ -377,6 +393,7 @@ class ResellerService(SDKClient):
     def search_companies_iter(
         self,
         body: SearchCompanies,
+        extra_body: dict[str, Any] | None = None,
         max_pages: int | None = None,
     ) -> Generator[GetCompanies, None, None]:
         """
@@ -411,6 +428,7 @@ class ResellerService(SDKClient):
             body_with_token = body.model_copy(update={"token": token})
             response = self.search_companies(
                 body=body_with_token,
+                extra_body=extra_body,
             )
             page_count += 1
 

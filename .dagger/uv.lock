@@ -158,7 +158,7 @@ wheels = [
 
 [[package]]
 name = "dagger-io"
-version = "0.19.4"
+version = "0.20.8"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
@@ -166,6 +166,7 @@ dependencies = [
     { name = "cattrs" },
     { name = "exceptiongroup" },
     { name = "gql", extra = ["httpx"] },
+    { name = "httpcore" },
     { name = "opentelemetry-exporter-otlp-proto-http" },
     { name = "opentelemetry-instrumentation-logging" },
     { name = "opentelemetry-sdk" },
@@ -173,9 +174,9 @@ dependencies = [
     { name = "rich" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1c/18/05f1a0333388d83c31275d41a641a1e4cd7d4c9e9712532bc2efb55274bb/dagger_io-0.19.4.tar.gz", hash = "sha256:5b574cc4152ce97ff0604eefb88c9b3f258581d4c9a06676b7d669aba4762f8c", size = 105400, upload-time = "2025-10-30T18:51:59.383Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/3e/90/f6f03a75a1b892f1022a7a07e209f364f54bfc2a49a3389b2289fbb80d5e/dagger_io-0.20.8.tar.gz", hash = "sha256:4df07892bba285176d6fb47fb27f53b3e187198f416a0436567024d11336ce49", size = 120623, upload-time = "2026-05-06T22:51:35.741Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/6b/4b/850d30f7494c6f87d7d49dfc259b3ad016b3e0b5909ae2aa063993543ed8/dagger_io-0.19.4-py3-none-any.whl", hash = "sha256:e38990aa07f0d1ff2c193bc2f75b5096499b27696f33213ee4a627a34fc2fc61", size = 96463, upload-time = "2025-10-30T18:51:58.365Z" },
+    { url = "https://files.pythonhosted.org/packages/e1/ea/a7aedfcf675b920bf3179573fa6c09023dd0ad432d011b22c7a10a5a336b/dagger_io-0.20.8-py3-none-any.whl", hash = "sha256:17b7dfcd804eba489f4250b48bf58c5771cb08a94dcf5881c567614b8df9d470", size = 109434, upload-time = "2026-05-06T22:51:36.783Z" },
 ]
 
 [[package]]
@@ -753,7 +754,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "dagger-io", specifier = ">=0.19.4" },
+    { name = "dagger-io", specifier = ">=0.20.7" },
     { name = "toml", specifier = ">=0.10.2" },
 ]
 
@@ -786,11 +787,11 @@ wheels = [
 
 [[package]]
 name = "urllib3"
-version = "2.6.3"
+version = "2.7.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/c7/24/5f1b3bdffd70275f6661c76461e25f024d5a38a46f04aaca912426a2b1d3/urllib3-2.6.3.tar.gz", hash = "sha256:1b62b6884944a57dbe321509ab94fd4d3b307075e0c2eae991ac71ee15ad38ed", size = 435556, upload-time = "2026-01-07T16:24:43.925Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/53/0c/06f8b233b8fd13b9e5ee11424ef85419ba0d8ba0b3138bf360be2ff56953/urllib3-2.7.0.tar.gz", hash = "sha256:231e0ec3b63ceb14667c67be60f2f2c40a518cb38b03af60abc813da26505f4c", size = 433602, upload-time = "2026-05-07T16:13:18.596Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/39/08/aaaad47bc4e9dc8c725e68f9d04865dbcb2052843ff09c97b08904852d84/urllib3-2.6.3-py3-none-any.whl", hash = "sha256:bf272323e553dfb2e87d9bfd225ca7b0f467b919d7bbd355436d3fd37cb0acd4", size = 131584, upload-time = "2026-01-07T16:24:42.685Z" },
+    { url = "https://files.pythonhosted.org/packages/7f/3e/5db95bcf282c52709639744ca2a8b149baccf648e39c8cc87553df9eae0c/urllib3-2.7.0-py3-none-any.whl", hash = "sha256:9fb4c81ebbb1ce9531cce37674bbc6f1360472bc18ca9a553ede278ef7276897", size = 131087, upload-time = "2026-05-07T16:13:17.151Z" },
 ]
 
 [[package]]

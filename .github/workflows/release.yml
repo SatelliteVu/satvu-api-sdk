@@ -100,7 +100,7 @@ jobs:
 
       # Cache OpenAPI specs - ensures test uses same specs as release
       - name: Cache OpenAPI specs
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: .cache/*.json
           key: openapi-specs-${{ github.run_id }}
@@ -109,7 +109,7 @@ jobs:
 
       # Cache hypothesis examples - speeds up property-based tests
       - name: Restore hypothesis examples cache
-        uses: actions/cache/restore@v5
+        uses: actions/cache/restore@v6
         with:
           path: .cache/hypothesis-examples
           key: hypothesis-examples-${{ hashFiles('src/builder/config.py') }}-${{ github.run_id }}
@@ -142,7 +142,7 @@ jobs:
 
       # Save hypothesis examples cache (always save to ensure main branch has cache for PRs)
       - name: Save hypothesis examples cache
-        uses: actions/cache/save@v5
+        uses: actions/cache/save@v6
         if: always()
         with:
           path: .cache/hypothesis-examples
@@ -212,7 +212,7 @@ jobs:
       # - Saves with unique key per run (captures any freshly fetched specs)
       # - SATVU_TRIGGERED_API controls which API fetches fresh vs uses cache
       - name: Cache OpenAPI specs
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: .cache/*.json
           key: openapi-specs-${{ github.run_id }}
@@ -221,7 +221,7 @@ jobs:
 
       # Cache hypothesis examples - restore only (build-release doesn't generate tests)
       - name: Restore hypothesis examples cache
-        uses: actions/cache/restore@v5
+        uses: actions/cache/restore@v6
         with:
           path: .cache/hypothesis-examples
           key: hypothesis-examples-${{ hashFiles('src/builder/config.py') }}-${{ github.run_id }}

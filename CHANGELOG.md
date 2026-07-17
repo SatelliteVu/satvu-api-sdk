@@ -1,5 +1,49 @@
 # [0.9.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.8.0...v0.9.0) (2026-05-07)
 
+## [0.9.0.20260717.1101] - 2026-07-17
+
+### feat(otm): update 4 endpoints
+
+#### GET /{contract_id}/tasking/series/
+* added the optional property `features/items/properties/order_parameters/addon:withhold` to the response with the `200` status
+* added the optional property `features/items/properties/order_parameters/licence_level` to the response with the `200` status
+* added the optional property `features/items/properties/order_parameters/max_cloud_cover` to the response with the `200` status
+* added the optional property `features/items/properties/order_parameters/max_off_nadir` to the response with the `200` status
+* added the optional property `features/items/properties/order_parameters/min_off_nadir` to the response with the `200` status
+* added the optional property `features/items/properties/order_parameters/product` to the response with the `200` status
+* added the optional property `features/items/properties/order_parameters/satvu:day_night_mode` to the response with the `200` status
+
+
+#### POST /{contract_id}/tasking/series/
+* added the optional property `properties/order_parameters/addon:withhold` to the response with the `201` status
+* added the optional property `properties/order_parameters/licence_level` to the response with the `201` status
+* added the optional property `properties/order_parameters/max_cloud_cover` to the response with the `201` status
+* added the optional property `properties/order_parameters/max_off_nadir` to the response with the `201` status
+* added the optional property `properties/order_parameters/min_off_nadir` to the response with the `201` status
+* added the optional property `properties/order_parameters/product` to the response with the `201` status
+* added the optional property `properties/order_parameters/satvu:day_night_mode` to the response with the `201` status
+
+
+#### GET /{contract_id}/tasking/series/{series_id}
+* added the optional property `properties/order_parameters/addon:withhold` to the response with the `200` status
+* added the optional property `properties/order_parameters/licence_level` to the response with the `200` status
+* added the optional property `properties/order_parameters/max_cloud_cover` to the response with the `200` status
+* added the optional property `properties/order_parameters/max_off_nadir` to the response with the `200` status
+* added the optional property `properties/order_parameters/min_off_nadir` to the response with the `200` status
+* added the optional property `properties/order_parameters/product` to the response with the `200` status
+* added the optional property `properties/order_parameters/satvu:day_night_mode` to the response with the `200` status
+
+
+#### PATCH /{contract_id}/tasking/series/{series_id}
+* added the optional property `properties/order_parameters/addon:withhold` to the response with the `200` status
+* added the optional property `properties/order_parameters/licence_level` to the response with the `200` status
+* added the optional property `properties/order_parameters/max_cloud_cover` to the response with the `200` status
+* added the optional property `properties/order_parameters/max_off_nadir` to the response with the `200` status
+* added the optional property `properties/order_parameters/min_off_nadir` to the response with the `200` status
+* added the optional property `properties/order_parameters/product` to the response with the `200` status
+* added the optional property `properties/order_parameters/satvu:day_night_mode` to the response with the `200` status
+
+
 
 ### Features
 

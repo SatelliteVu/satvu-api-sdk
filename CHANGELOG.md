@@ -1,5 +1,13 @@
 # [0.9.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.8.0...v0.9.0) (2026-05-07)
 
+## [0.9.0.20260724.1338] - 2026-07-24
+
+### feat(otm): endpoint added (GET /{contract_id}/tasking/series/{series_id}/download)
+
+#### GET /{contract_id}/tasking/series/{series_id}/download
+* endpoint added
+
+
 ## [0.9.0.20260717.1101] - 2026-07-17
 
 ### feat(otm): update 4 endpoints

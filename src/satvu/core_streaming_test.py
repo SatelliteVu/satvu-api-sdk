@@ -2,11 +2,13 @@
 
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 
-from satvu.core import SDKClient
+from satvu.core import REQUEST_ID_HEADER, DownloadResult, SDKClient
+from satvu.http.errors import NetworkError, ReadTimeoutError
+from satvu.result import Err, Ok
 
 
 class ConcreteSDKClient(SDKClient):
@@ -266,3 +268,223 @@ class TestStreamToFileErrorHandling:
                 output_path=temp_file,
                 progress_callback=failing_callback,
             )
+
+
+def _ready_response(chunks=(b"zipdata",)):
+    """Build a mock 'download ready' response that streams the given chunks."""
+    response = MagicMock()
+    response.status_code = 200
+    response.headers = {"Content-Length": str(sum(len(c) for c in chunks))}
+    response.iter_bytes.return_value = list(chunks)
+    return response
+
+
+def _accepted_response(retry_after: str | None = "1"):
+    """Build a mock 202 Accepted response with an optional Retry-After header."""
+    response = MagicMock()
+    response.status_code = 202
+    response.headers = {"Retry-After": retry_after} if retry_after is not None else {}
+    return response
+
+
+class TestStreamWhenReady:
+    """Tests for SDKClient.stream_when_ready() polling + request-id tracking."""
+
+    def test_ready_immediately_streams_file(self, sdk_client, temp_file):
+        """A response that is ready right away is streamed without polling."""
+        with (
+            patch.object(
+                sdk_client, "_execute_request", return_value=Ok(_ready_response())
+            ) as mock_exec,
+            patch("satvu.core.time.sleep") as mock_sleep,
+        ):
+            result = sdk_client.stream_when_ready("get", "/dl", temp_file)
+
+        assert result.is_ok()
+        outcome = result.unwrap()
+        assert isinstance(outcome, DownloadResult)
+        assert outcome.path == temp_file
+        assert outcome.attempts == 1
+        assert temp_file.read_bytes() == b"zipdata"
+        mock_sleep.assert_not_called()
+        assert mock_exec.call_count == 1
+
+    def test_polls_202_then_succeeds(self, sdk_client, temp_file):
+        """202 responses are polled until a ready response arrives."""
+        responses = [
+            Ok(_accepted_response("1")),
+            Ok(_accepted_response("1")),
+            Ok(_ready_response()),
+        ]
+        with (
+            patch.object(
+                sdk_client, "_execute_request", side_effect=responses
+            ) as mock_exec,
+            patch("satvu.core.time.sleep") as mock_sleep,
+        ):
+            result = sdk_client.stream_when_ready("get", "/dl", temp_file)
+
+        assert result.is_ok()
+        assert result.unwrap().attempts == 3
+        assert mock_exec.call_count == 3
+        assert mock_sleep.call_count == 2
+
+    def test_same_request_id_on_every_attempt(self, sdk_client, temp_file):
+        """The same X-Request-Id header is sent on the initial call and retries."""
+        responses = [Ok(_accepted_response("1")), Ok(_ready_response())]
+        with (
+            patch.object(
+                sdk_client, "_execute_request", side_effect=responses
+            ) as mock_exec,
+            patch("satvu.core.time.sleep"),
+        ):
+            result = sdk_client.stream_when_ready("get", "/dl", temp_file)
+
+        sent_ids = [
+            call.kwargs["headers"][REQUEST_ID_HEADER]
+            for call in mock_exec.call_args_list
+        ]
+        assert len(sent_ids) == 2
+        assert sent_ids[0] == sent_ids[1]
+        assert sent_ids[0] == result.unwrap().request_id
+
+    def test_caller_supplied_request_id_is_used(self, sdk_client, temp_file):
+        """A caller-supplied request_id is propagated and returned unchanged."""
+        with (
+            patch.object(
+                sdk_client, "_execute_request", return_value=Ok(_ready_response())
+            ) as mock_exec,
+            patch("satvu.core.time.sleep"),
+        ):
+            result = sdk_client.stream_when_ready(
+                "get", "/dl", temp_file, request_id="my-bi-id"
+            )
+
+        assert result.unwrap().request_id == "my-bi-id"
+        header = mock_exec.call_args_list[0].kwargs["headers"][REQUEST_ID_HEADER]
+        assert header == "my-bi-id"
+
+    def test_caller_headers_not_mutated(self, sdk_client, temp_file):
+        """The caller's headers dict is never mutated by request-id injection."""
+        caller_headers = {"X-Custom": "value"}
+        with (
+            patch.object(
+                sdk_client, "_execute_request", return_value=Ok(_ready_response())
+            ),
+            patch("satvu.core.time.sleep"),
+        ):
+            sdk_client.stream_when_ready(
+                "get", "/dl", temp_file, headers=caller_headers
+            )
+
+        assert caller_headers == {"X-Custom": "value"}
+
+    def test_on_event_fires_expected_phases(self, sdk_client, temp_file):
+        """on_event receives started -> polling -> completed with the same id."""
+        responses = [Ok(_accepted_response("1")), Ok(_ready_response())]
+        events = []
+        with (
+            patch.object(sdk_client, "_execute_request", side_effect=responses),
+            patch("satvu.core.time.sleep"),
+        ):
+            result = sdk_client.stream_when_ready(
+                "get", "/dl", temp_file, on_event=events.append
+            )
+
+        phases = [e.phase for e in events]
+        assert phases == ["started", "polling", "completed"]
+        request_id = result.unwrap().request_id
+        assert all(e.request_id == request_id for e in events)
+
+    def test_budget_exhausted_returns_err_and_writes_no_file(self, sdk_client):
+        """A perpetually-202 download errors out without writing a file."""
+        with NamedTemporaryFile(delete=True) as f:
+            output_path = Path(f.name)
+        # File is now deleted; assert stream_when_ready does not recreate it.
+        assert not output_path.exists()
+
+        events = []
+        with (
+            patch.object(
+                sdk_client,
+                "_execute_request",
+                return_value=Ok(_accepted_response("10")),
+            ),
+            patch("satvu.core.time.sleep") as mock_sleep,
+        ):
+            result = sdk_client.stream_when_ready(
+                "get",
+                "/dl",
+                output_path,
+                max_wait_seconds=5.0,
+                on_event=events.append,
+            )
+
+        assert result.is_err()
+        assert isinstance(result.error(), ReadTimeoutError)
+        assert not output_path.exists()
+        # Never slept because the first 10s poll already exceeds the 5s budget.
+        mock_sleep.assert_not_called()
+        assert events[-1].phase == "failed"
+
+    def test_transport_error_propagates(self, sdk_client, temp_file):
+        """A transport error is returned as Err and emits a failed event."""
+        error = NetworkError("connection refused", url="/dl")
+        events = []
+        with (
+            patch.object(sdk_client, "_execute_request", return_value=Err(error)),
+            patch("satvu.core.time.sleep"),
+        ):
+            result = sdk_client.stream_when_ready(
+                "get", "/dl", temp_file, on_event=events.append
+            )
+
+        assert result.is_err()
+        assert result.error() is error
+        assert events[-1].phase == "failed"
+
+    def test_retry_after_header_is_honored(self, sdk_client, temp_file):
+        """The server's Retry-After value drives the sleep duration."""
+        responses = [Ok(_accepted_response("7")), Ok(_ready_response())]
+        with (
+            patch.object(sdk_client, "_execute_request", side_effect=responses),
+            patch("satvu.core.time.sleep") as mock_sleep,
+        ):
+            sdk_client.stream_when_ready("get", "/dl", temp_file)
+
+        mock_sleep.assert_called_once_with(7.0)
+
+    def test_poll_interval_overrides_retry_after(self, sdk_client, temp_file):
+        """An explicit poll_interval takes precedence over Retry-After."""
+        responses = [Ok(_accepted_response("30")), Ok(_ready_response())]
+        with (
+            patch.object(sdk_client, "_execute_request", side_effect=responses),
+            patch("satvu.core.time.sleep") as mock_sleep,
+        ):
+            sdk_client.stream_when_ready("get", "/dl", temp_file, poll_interval=2.0)
+
+        mock_sleep.assert_called_once_with(2.0)
+
+    def test_missing_retry_after_falls_back_to_default(self, sdk_client, temp_file):
+        """A 202 without Retry-After polls using the default interval."""
+        responses = [Ok(_accepted_response(retry_after=None)), Ok(_ready_response())]
+        with (
+            patch.object(sdk_client, "_execute_request", side_effect=responses),
+            patch("satvu.core.time.sleep") as mock_sleep,
+        ):
+            sdk_client.stream_when_ready("get", "/dl", temp_file)
+
+        # DEFAULT_POLL_INTERVAL_SECONDS == 5.0
+        mock_sleep.assert_called_once_with(5.0)
+
+    def test_follow_redirects_always_enabled(self, sdk_client, temp_file):
+        """Requests are issued with follow_redirects so 307 -> content resolves."""
+        with (
+            patch.object(
+                sdk_client, "_execute_request", return_value=Ok(_ready_response())
+            ) as mock_exec,
+            patch("satvu.core.time.sleep"),
+        ):
+            sdk_client.stream_when_ready("get", "/dl", temp_file)
+
+        assert mock_exec.call_args_list[0].kwargs["follow_redirects"] is True

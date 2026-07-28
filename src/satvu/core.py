@@ -1,18 +1,67 @@
 import logging
 import time
+import uuid
 from collections.abc import Callable
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 from urllib.parse import parse_qs, urlparse
 
 from pydantic import BaseModel
 
 from satvu.http import HttpClient, create_http_client
-from satvu.http.errors import HttpError
+from satvu.http.errors import HttpError, ReadTimeoutError
 from satvu.http.protocol import HttpResponse
-from satvu.result import Result
+from satvu.result import Err, Ok, Result, is_err
 
 logger = logging.getLogger(__name__)
+
+# Header used to correlate a logical download operation across its initial
+# request and all subsequent poll retries. Injected client-side (like the
+# Authorization header) rather than modeled per-endpoint in the OpenAPI spec.
+REQUEST_ID_HEADER = "X-Download-Request-Id"
+
+# Fallback poll interval (seconds) used when a 202 response omits a
+# Retry-After header. Keeps polling bounded even for non-conforming servers.
+DEFAULT_POLL_INTERVAL_SECONDS = 5.0
+
+# Default total budget (seconds) to wait for an asynchronously-prepared
+# download before giving up. Large downloads (imagery, archives) can take
+# several minutes to stage server-side.
+DEFAULT_MAX_WAIT_SECONDS = 900.0
+
+DownloadPhase = Literal["started", "polling", "completed", "failed"]
+
+
+@dataclass(frozen=True)
+class DownloadEvent:
+    """A point-in-time event emitted during a polled download.
+
+    Passed to the ``on_event`` callback of :meth:`SDKClient.stream_when_ready`
+    so callers can emit BI/analytics events. Every event for a single logical
+    download shares the same ``request_id``.
+    """
+
+    phase: DownloadPhase
+    request_id: str
+    attempt: int
+    elapsed_s: float
+    status_code: int | None = None
+    error: HttpError | None = None
+
+
+@dataclass(frozen=True)
+class DownloadResult:
+    """Outcome of a successful polled download.
+
+    ``request_id`` is the id sent to the server on every request for this
+    operation, suitable for correlating client-side BI events with server logs.
+    """
+
+    path: Path
+    request_id: str
+    attempts: int
+    elapsed_s: float
 
 
 def _deep_merge(base: dict[str, Any], overrides: dict[str, Any]) -> dict[str, Any]:
@@ -96,6 +145,7 @@ class SDKClient:
         params: dict[str, Any] | None = None,
         follow_redirects: bool = False,
         timeout: int | None = None,
+        headers: dict[str, str] | None = None,
     ) -> Result[HttpResponse, HttpError]:
         """
         Make an HTTP request with automatic Retry-After handling.
@@ -112,6 +162,7 @@ class SDKClient:
             params: Optional query parameters
             follow_redirects: Whether to follow redirects
             timeout: Request timeout in seconds (uses instance timeout if None)
+            headers: Optional HTTP headers to send with the request
 
         Returns:
             Result containing either:
@@ -120,7 +171,7 @@ class SDKClient:
         """
         for attempt in range(1, self.max_retry_attempts + 1):
             result = self._execute_request(
-                method, url, json, params, follow_redirects, timeout
+                method, url, json, params, follow_redirects, timeout, headers
             )
 
             if result.is_err():
@@ -148,6 +199,170 @@ class SDKClient:
 
         return result
 
+    def stream_when_ready(
+        self,
+        method: str,
+        url: str,
+        output_path: Path | str,
+        *,
+        params: dict[str, Any] | None = None,
+        json: list | dict[str, Any] | None = None,
+        headers: dict[str, str] | None = None,
+        chunk_size: int = 8192,
+        progress_callback: Callable[[int, int | None], None] | None = None,
+        timeout: int | None = None,
+        max_wait_seconds: float = DEFAULT_MAX_WAIT_SECONDS,
+        poll_interval: float | None = None,
+        request_id: str | None = None,
+        on_event: Callable[["DownloadEvent"], None] | None = None,
+    ) -> Result[DownloadResult, HttpError]:
+        """
+        Poll an asynchronously-prepared download until ready, then stream to disk.
+
+        Download endpoints respond ``202 Accepted`` with a ``Retry-After`` header
+        while the file is being staged server-side, then ``307`` redirect to the
+        content once ready. This method polls the ``202`` until the download is
+        available (following the redirect), streams it to ``output_path``, and
+        correlates every request in the operation under a single request id.
+
+        A single ``X-Request-Id`` is sent on the initial request and every poll
+        retry so the whole logical download can be tracked as one operation (e.g.
+        for BI/analytics via ``on_event``). The id is returned in the
+        :class:`DownloadResult` so callers can attach it to their own events.
+
+        Unlike :meth:`make_request`, the poll budget here is controlled by
+        ``max_wait_seconds`` (wall-clock) rather than a fixed retry count, a
+        still-``202`` response after the budget is exhausted returns an
+        ``Err`` rather than a truncated file, and a ``202`` without a
+        ``Retry-After`` header falls back to ``poll_interval`` /
+        ``DEFAULT_POLL_INTERVAL_SECONDS`` instead of giving up.
+
+        Args:
+            method: HTTP method (typically "get").
+            url: URL to request.
+            output_path: Where to save the downloaded file.
+            params: Optional query parameters.
+            json: Optional JSON body.
+            headers: Optional HTTP headers; the request id header is added to a
+                copy of this dict (the caller's dict is never mutated).
+            chunk_size: Bytes per chunk when streaming (default 8192).
+            progress_callback: Optional callback ``(bytes_downloaded, total_bytes)``.
+            timeout: Per-request timeout in seconds (uses instance timeout if None).
+            max_wait_seconds: Total wall-clock budget to wait for readiness.
+            poll_interval: If set, overrides the server's Retry-After delay.
+            request_id: Correlation id to use; a uuid4 is generated if omitted.
+            on_event: Optional callback invoked with a :class:`DownloadEvent` at
+                the ``started``, ``polling``, ``completed`` and ``failed`` phases.
+
+        Returns:
+            Result containing either:
+            - ``Ok(DownloadResult)`` once the file is streamed to disk.
+            - ``Err(HttpError)`` on transport failure or if the download was not
+              ready within ``max_wait_seconds`` (no file is written in this case).
+        """
+        request_id = request_id or str(uuid.uuid4())
+        request_headers = {**(headers or {}), REQUEST_ID_HEADER: request_id}
+
+        start = time.monotonic()
+
+        def elapsed() -> float:
+            return time.monotonic() - start
+
+        def emit(
+            phase: DownloadPhase,
+            attempt: int,
+            *,
+            status_code: int | None = None,
+            error: HttpError | None = None,
+        ) -> None:
+            if on_event is None:
+                return
+            on_event(
+                DownloadEvent(
+                    phase=phase,
+                    request_id=request_id,
+                    attempt=attempt,
+                    elapsed_s=elapsed(),
+                    status_code=status_code,
+                    error=error,
+                )
+            )
+
+        emit("started", attempt=0)
+
+        attempt = 0
+        while True:
+            attempt += 1
+            result = self._execute_request(
+                method,
+                url,
+                json,
+                params,
+                follow_redirects=True,
+                timeout=timeout,
+                headers=request_headers,
+            )
+
+            if is_err(result):
+                error = result.error()
+                emit("failed", attempt=attempt, error=error)
+                return Err(error)
+
+            response = result.unwrap()
+
+            if response.status_code != 202:
+                # Ready: follow_redirects already resolved any 307 to content.
+                downloaded_path = self.stream_to_file(
+                    response=response,
+                    output_path=output_path,
+                    chunk_size=chunk_size,
+                    progress_callback=progress_callback,
+                )
+                emit(
+                    "completed",
+                    attempt=attempt,
+                    status_code=response.status_code,
+                )
+                return Ok(
+                    DownloadResult(
+                        path=downloaded_path,
+                        request_id=request_id,
+                        attempts=attempt,
+                        elapsed_s=elapsed(),
+                    )
+                )
+
+            # 202 Accepted - not ready yet. Determine how long to wait.
+            if poll_interval is not None:
+                delay = poll_interval
+            else:
+                parsed = self._parse_retry_after_from_headers(
+                    response.headers, self.max_retry_after_seconds
+                )
+                delay = parsed if parsed is not None else DEFAULT_POLL_INTERVAL_SECONDS
+
+            # Give up if we cannot afford to wait for the next poll.
+            if elapsed() + delay > max_wait_seconds:
+                error = ReadTimeoutError(
+                    "Download not ready within max_wait_seconds",
+                    url=url,
+                    timeout=max_wait_seconds,
+                )
+                emit(
+                    "failed",
+                    attempt=attempt,
+                    status_code=response.status_code,
+                    error=error,
+                )
+                return Err(error)
+
+            emit("polling", attempt=attempt, status_code=response.status_code)
+            logger.info(
+                f"Download {request_id} not ready (202) - polling again in "
+                f"{delay:.0f}s (attempt {attempt}, elapsed {elapsed():.0f}s)"
+            )
+            time.sleep(delay)
+
     def _execute_request(
         self,
         method: str,
@@ -156,6 +371,7 @@ class SDKClient:
         params: dict[str, Any] | None = None,
         follow_redirects: bool = False,
         timeout: int | None = None,
+        headers: dict[str, str] | None = None,
     ) -> Result[HttpResponse, HttpError]:
         """
         Execute HTTP request.
@@ -167,6 +383,7 @@ class SDKClient:
             params: Optional query parameters
             follow_redirects: Whether to follow redirects
             timeout: Request timeout in seconds (uses instance timeout if None)
+            headers: Optional HTTP headers to send with the request
 
         Returns:
             Result containing either:
@@ -176,9 +393,11 @@ class SDKClient:
         """
         if params:
             # Convert any pydantic model objects in params to json-serializable dicts
-            for key, val in params.items():
-                if isinstance(val, BaseModel):
-                    params[key] = val.model_dump()
+            # into a new dict so the caller's params are never mutated.
+            params = {
+                key: (val.model_dump() if isinstance(val, BaseModel) else val)
+                for key, val in params.items()
+            }
 
             # Drop any params that are None
             params = {k: v for k, v in params.items() if v}
@@ -189,6 +408,7 @@ class SDKClient:
         return self.client.request(
             method=method,  # type: ignore
             url=url,
+            headers=headers,
             json=json,
             params=params,
             follow_redirects=follow_redirects,

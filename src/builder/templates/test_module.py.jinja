@@ -18,6 +18,7 @@ from typing import Union
 
 from satvu import SatVuSDK, create_http_client
 from satvu.http.errors import ClientError, ServerError, HttpError
+from satvu.result import is_err
 from .test_schemas import (
     get_response_schema,
     get_request_body_schema,
@@ -98,9 +99,6 @@ class Test{{ service_class_name }}:
             http_client=http_client,
             env="qa",
         )
-
-        # Override the token getter with our mock
-        self.sdk.{{ api_name }}._get_token = mock_get_token
 
 {% for endpoint_data in endpoints %}
 {%- set endpoint = endpoint_data.endpoint %}

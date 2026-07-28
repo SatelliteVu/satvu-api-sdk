@@ -99,6 +99,7 @@ class ASTMethodBuilder:
             kw_defaults.append(ast.Constant(value=None))
 
         # Add standard streaming params (chunk_size, progress_callback, timeout)
+        # plus the poll/tracking params forwarded to stream_when_ready.
         kw_args.extend(
             [
                 ast.arg(
@@ -140,6 +141,51 @@ class ASTMethodBuilder:
                         right=ast.Constant(value=None),
                     ),
                 ),
+                ast.arg(
+                    arg="max_wait_seconds",
+                    annotation=ast.Name(id="float", ctx=ast.Load()),
+                ),
+                ast.arg(
+                    arg="poll_interval",
+                    annotation=ast.BinOp(
+                        left=ast.Name(id="float", ctx=ast.Load()),
+                        op=ast.BitOr(),
+                        right=ast.Constant(value=None),
+                    ),
+                ),
+                ast.arg(
+                    arg="request_id",
+                    annotation=ast.BinOp(
+                        left=ast.Name(id="str", ctx=ast.Load()),
+                        op=ast.BitOr(),
+                        right=ast.Constant(value=None),
+                    ),
+                ),
+                ast.arg(
+                    arg="on_event",
+                    annotation=ast.BinOp(
+                        left=ast.Subscript(
+                            value=ast.Name(id="Callable", ctx=ast.Load()),
+                            slice=ast.Tuple(
+                                elts=[
+                                    ast.List(
+                                        elts=[
+                                            ast.Name(
+                                                id="DownloadEvent", ctx=ast.Load()
+                                            ),
+                                        ],
+                                        ctx=ast.Load(),
+                                    ),
+                                    ast.Constant(value=None),
+                                ],
+                                ctx=ast.Load(),
+                            ),
+                            ctx=ast.Load(),
+                        ),
+                        op=ast.BitOr(),
+                        right=ast.Constant(value=None),
+                    ),
+                ),
             ]
         )
         kw_defaults.extend(
@@ -147,6 +193,12 @@ class ASTMethodBuilder:
                 ast.Constant(value=self.config.default_chunk_size),
                 ast.Constant(value=None),  # progress_callback default
                 ast.Constant(value=None),  # timeout default
+                # max_wait_seconds default references the core constant so the
+                # generated code stays in sync with SDKClient.stream_when_ready.
+                ast.Name(id="DEFAULT_MAX_WAIT_SECONDS", ctx=ast.Load()),
+                ast.Constant(value=None),  # poll_interval default
+                ast.Constant(value=None),  # request_id default
+                ast.Constant(value=None),  # on_event default
             ]
         )
 
@@ -188,113 +240,35 @@ class ASTMethodBuilder:
             for name, _ in path_params
         ]
 
-        # 3. Call self.make_request()
+        # 3. Delegate to self.stream_when_ready(), which polls the 202 to
+        #    readiness, follows the redirect, and streams the content to disk
+        #    under a single request id (emitting BI events via on_event). It
+        #    returns Result[DownloadResult, HttpError].
         body.append(
             ast.Assign(
                 targets=[ast.Name(id="result", ctx=ast.Store())],
                 value=ast.Call(
                     func=ast.Attribute(
                         value=ast.Name(id="self", ctx=ast.Load()),
-                        attr="make_request",
+                        attr="stream_when_ready",
                         ctx=ast.Load(),
                     ),
-                    args=[],
-                    keywords=[
-                        ast.keyword(arg="method", value=ast.Constant(value="get")),
-                        ast.keyword(
-                            arg="url",
-                            value=ast.Call(
-                                func=ast.Attribute(
-                                    value=ast.Constant(value=self.config.url_pattern),
-                                    attr="format",
-                                    ctx=ast.Load(),
-                                ),
-                                args=[],
-                                keywords=url_format_keywords,
+                    args=[
+                        ast.Constant(value="get"),
+                        ast.Call(
+                            func=ast.Attribute(
+                                value=ast.Constant(value=self.config.url_pattern),
+                                attr="format",
+                                ctx=ast.Load(),
                             ),
+                            args=[],
+                            keywords=url_format_keywords,
                         ),
+                        ast.Name(id="output_path", ctx=ast.Load()),
+                    ],
+                    keywords=[
                         ast.keyword(
                             arg="params", value=ast.Name(id="params", ctx=ast.Load())
-                        ),
-                        ast.keyword(
-                            arg="follow_redirects", value=ast.Constant(value=True)
-                        ),
-                        ast.keyword(
-                            arg="timeout", value=ast.Name(id="timeout", ctx=ast.Load())
-                        ),
-                    ],
-                ),
-            )
-        )
-
-        # 4. Error check: if is_err(result): return ResultErr(result.error())
-        # We use the is_err() type guard function (not the method) so pyright can
-        # narrow the type and know result.error() is valid
-        body.append(
-            ast.If(
-                test=ast.Call(
-                    func=ast.Name(id="is_err", ctx=ast.Load()),
-                    args=[ast.Name(id="result", ctx=ast.Load())],
-                    keywords=[],
-                ),
-                body=[
-                    ast.Return(
-                        value=ast.Call(
-                            func=ast.Name(id="ResultErr", ctx=ast.Load()),
-                            args=[
-                                ast.Call(
-                                    func=ast.Attribute(
-                                        value=ast.Name(id="result", ctx=ast.Load()),
-                                        attr="error",
-                                        ctx=ast.Load(),
-                                    ),
-                                    args=[],
-                                    keywords=[],
-                                )
-                            ],
-                            keywords=[],
-                        )
-                    )
-                ],
-                orelse=[],
-            )
-        )
-
-        # 5. Unwrap response
-        body.append(
-            ast.Assign(
-                targets=[ast.Name(id="response", ctx=ast.Store())],
-                value=ast.Call(
-                    func=ast.Attribute(
-                        value=ast.Name(id="result", ctx=ast.Load()),
-                        attr="unwrap",
-                        ctx=ast.Load(),
-                    ),
-                    args=[],
-                    keywords=[],
-                ),
-            )
-        )
-
-        # 6. Call self.stream_to_file()
-        body.append(
-            ast.Assign(
-                targets=[ast.Name(id="downloaded_path", ctx=ast.Store())],
-                value=ast.Call(
-                    func=ast.Attribute(
-                        value=ast.Name(id="self", ctx=ast.Load()),
-                        attr="stream_to_file",
-                        ctx=ast.Load(),
-                    ),
-                    args=[],
-                    keywords=[
-                        ast.keyword(
-                            arg="response",
-                            value=ast.Name(id="response", ctx=ast.Load()),
-                        ),
-                        ast.keyword(
-                            arg="output_path",
-                            value=ast.Name(id="output_path", ctx=ast.Load()),
                         ),
                         ast.keyword(
                             arg="chunk_size",
@@ -304,17 +278,66 @@ class ASTMethodBuilder:
                             arg="progress_callback",
                             value=ast.Name(id="progress_callback", ctx=ast.Load()),
                         ),
+                        ast.keyword(
+                            arg="timeout", value=ast.Name(id="timeout", ctx=ast.Load())
+                        ),
+                        ast.keyword(
+                            arg="max_wait_seconds",
+                            value=ast.Name(id="max_wait_seconds", ctx=ast.Load()),
+                        ),
+                        ast.keyword(
+                            arg="poll_interval",
+                            value=ast.Name(id="poll_interval", ctx=ast.Load()),
+                        ),
+                        ast.keyword(
+                            arg="request_id",
+                            value=ast.Name(id="request_id", ctx=ast.Load()),
+                        ),
+                        ast.keyword(
+                            arg="on_event",
+                            value=ast.Name(id="on_event", ctx=ast.Load()),
+                        ),
                     ],
                 ),
             )
         )
 
-        # 7. Return ResultOk(downloaded_path)
+        # 4. Error check: if is_err(result): return result
+        #    The is_err() type guard lets pyright narrow result to the Err
+        #    variant here and to Ok[DownloadResult] afterwards.
+        body.append(
+            ast.If(
+                test=ast.Call(
+                    func=ast.Name(id="is_err", ctx=ast.Load()),
+                    args=[ast.Name(id="result", ctx=ast.Load())],
+                    keywords=[],
+                ),
+                body=[ast.Return(value=ast.Name(id="result", ctx=ast.Load()))],
+                orelse=[],
+            )
+        )
+
+        # 5. Return ResultOk(result.unwrap().path) so the public method keeps
+        #    its non-breaking Result[Path, HttpError] signature.
         body.append(
             ast.Return(
                 value=ast.Call(
                     func=ast.Name(id="ResultOk", ctx=ast.Load()),
-                    args=[ast.Name(id="downloaded_path", ctx=ast.Load())],
+                    args=[
+                        ast.Attribute(
+                            value=ast.Call(
+                                func=ast.Attribute(
+                                    value=ast.Name(id="result", ctx=ast.Load()),
+                                    attr="unwrap",
+                                    ctx=ast.Load(),
+                                ),
+                                args=[],
+                                keywords=[],
+                            ),
+                            attr="path",
+                            ctx=ast.Load(),
+                        )
+                    ],
                     keywords=[],
                 )
             )
@@ -354,6 +377,13 @@ class ASTMethodBuilder:
                 "    progress_callback: Optional callback for download progress tracking.",
                 "                     Signature: callback(bytes_downloaded: int, total_bytes: int | None)",
                 "    timeout: Optional request timeout in seconds. Overrides the instance timeout.",
+                "    max_wait_seconds (float): Total wall-clock budget to wait for the",
+                "                     download to be prepared server-side (202 polling).",
+                "    poll_interval (float | None): If set, overrides the server's Retry-After delay.",
+                "    request_id (str | None): Correlation id for the operation; a uuid4 is",
+                "                     generated if omitted. Sent on every request and reported in events.",
+                "    on_event: Optional callback receiving a DownloadEvent at the started,",
+                "                     polling, completed and failed phases (for BI/analytics).",
             ],
             # Returns
             [

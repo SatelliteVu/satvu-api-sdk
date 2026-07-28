@@ -86,7 +86,7 @@ timeout=timeout,
 )
 
 # Raise HttpError for failed requests (network errors, 4xx, 5xx, etc.)
-if result.is_err():
+if is_err(result):
     raise result.error()
 
 response = result.unwrap()

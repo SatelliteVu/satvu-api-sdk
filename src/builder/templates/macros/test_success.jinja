@@ -43,7 +43,7 @@
         # Assert response type matches expected type
 {% if response_info.type_string.startswith('Union[') %}
 {% set union_classes = response_info.type_string.replace('Union[', '').replace(']', '').replace("'", "").split(', ') %}
-        assert isinstance(result, ({{ union_classes | join(', ') }}))
+        assert isinstance(result, {{ union_classes | join(' | ') }})
 {% else %}
         assert isinstance(result, {{ response_info.type_string.split('[')[0] }})
 {% endif %}

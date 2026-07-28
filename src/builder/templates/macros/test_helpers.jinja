@@ -4,7 +4,8 @@
 {%- macro generate_path(endpoint) %}
 {% if endpoint.path_parameters %}
 {% for param in endpoint.path_parameters %}
-        {{ param.python_name }} = uuid4()
+        {{ param.python_name }} = {% if param.get_type_string() == "str" %}str(uuid4()){% else %}uuid4(){% endif %}
+
 {% endfor %}
         path = "{{ endpoint.path }}".format(
 {% for param in endpoint.path_parameters %}

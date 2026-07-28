@@ -18,6 +18,7 @@ from pydantic import TypeAdapter
 
 from satvu import SatVuSDK, create_http_client
 from satvu.http.errors import ClientError, ServerError
+from satvu.result import is_err
 from satvu.services.otm.models.assured_order_request import AssuredOrderRequest
 from satvu.services.otm.models.edit_order_payload import EditOrderPayload
 from satvu.services.otm.models.feasibility_request import FeasibilityRequest
@@ -81,11 +82,10 @@ class TestOtmService:
         )
         self.sdk = SatVuSDK(
             client_id="test_client_id",
-            client_secret="test_client_secret",
+            client_secret="test_client_secret",  # pragma: allowlist secret # nosec B106
             http_client=http_client,
             env="qa",
         )
-        self.sdk.otm._get_token = mock_get_token
 
     @settings(
         max_examples=10,
@@ -187,7 +187,7 @@ class TestOtmService:
         body = body_adapter.validate_python(body_data)
         result = self.sdk.otm.post_tasking_orders(contract_id=contract_id, body=body)
         assert result is not None
-        assert isinstance(result, (ResellerStoredOrderResponse, StoredOrderResponse))
+        assert isinstance(result, ResellerStoredOrderResponse | StoredOrderResponse)
 
     @settings(
         max_examples=10,
@@ -514,7 +514,7 @@ class TestOtmService:
             contract_id=contract_id, order_id=order_id
         )
         assert result is not None
-        assert isinstance(result, (GetOrderResponse, ResellerGetOrderResponse))
+        assert isinstance(result, GetOrderResponse | ResellerGetOrderResponse)
 
     @settings(
         max_examples=10,
@@ -617,7 +617,7 @@ class TestOtmService:
             contract_id=contract_id, order_id=order_id, body=body
         )
         assert result is not None
-        assert isinstance(result, (GetOrderResponse, ResellerGetOrderResponse))
+        assert isinstance(result, GetOrderResponse | ResellerGetOrderResponse)
 
     @settings(
         max_examples=10,
@@ -1022,7 +1022,7 @@ class TestOtmService:
         )
         assert result is not None
         assert isinstance(
-            result, (ListOrderTasksResponse, ListOrderTasksUnavailableResponse)
+            result, ListOrderTasksResponse | ListOrderTasksUnavailableResponse
         )
 
     @settings(
@@ -2665,7 +2665,36 @@ class TestOtmService:
         result = self.sdk.otm.download_tasking_order_to_file(
             contract_id=contract_id, order_id=order_id, output_path=output_path
         )
-        assert result.is_err()
+        assert is_err(result)
         error = result.error()
         assert isinstance(error, ClientError)
         assert error.status_code == 404
+
+    @pook.on
+    def test_download_tasking_order_to_file_emits_download_events(
+        self, backend, tmp_path
+    ):
+        """Test download_tasking_order_to_file forwards request_id and on_event."""
+        output_path = tmp_path / "download.zip"
+        mock_content = b"fake zip content"
+        events = []
+        contract_id = uuid4()
+        order_id = uuid4()
+        path = f"/{contract_id}/tasking/orders/{order_id}/download"
+        url = f"{self.base_url}{path}"
+        pook.get(url).reply(200).body(mock_content).header(
+            "Content-Type", "application/zip"
+        ).header("Content-Length", str(len(mock_content)))
+        result = self.sdk.otm.download_tasking_order_to_file(
+            contract_id=contract_id,
+            order_id=order_id,
+            output_path=output_path,
+            request_id="test-request-id",
+            on_event=events.append,
+        )
+        assert result.is_ok()
+        assert output_path.read_bytes() == mock_content
+        phases = [event.phase for event in events]
+        assert "started" in phases
+        assert "completed" in phases
+        assert all(event.request_id == "test-request-id" for event in events)

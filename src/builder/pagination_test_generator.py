@@ -25,6 +25,19 @@ def _extract_leading_comments(content: str) -> str:
     return "\n".join(lines) + "\n" if lines else ""
 
 
+def _restore_inline_pragmas(code: str) -> str:
+    """Re-add inline pragmas that ast.unparse strips (comments are not AST nodes).
+
+    The fake ``client_secret`` in the setup fixture carries an allowlist pragma
+    in the template so detect-secrets ignores it. ast.unparse drops all inline
+    comments, so we re-attach it here to keep generated tests hook-clean.
+    """
+    return code.replace(
+        'client_secret="test_client_secret",\n',  # pragma: allowlist secret
+        'client_secret="test_client_secret",  # pragma: allowlist secret # nosec B106\n',  # pragma: allowlist secret
+    )
+
+
 def generate_pagination_tests(
     api_name: str,
     pagination_configs: list[PaginationEndpointConfig],
@@ -102,7 +115,7 @@ def generate_pagination_tests(
         )
 
     # Convert AST back to code (re-prepend leading comments stripped by ast.unparse)
-    final_code = leading_comments + ast.unparse(tree)
+    final_code = leading_comments + _restore_inline_pragmas(ast.unparse(tree))
 
     # Write back to file
     test_file.write_text(final_code)

@@ -6,10 +6,9 @@ from pathlib import Path
 from typing import Any, Union
 from uuid import UUID
 
-from satvu.core import SDKClient, _deep_merge
+from satvu.core import DEFAULT_MAX_WAIT_SECONDS, DownloadEvent, SDKClient, _deep_merge
 from satvu.http import HttpClient
 from satvu.http.errors import HttpError
-from satvu.result import Err as ResultErr
 from satvu.result import Ok as ResultOk
 from satvu.result import Result, is_err
 from satvu.services.otm.models.assured_order_request import AssuredOrderRequest
@@ -111,7 +110,7 @@ class OtmService(SDKClient):
             params=params,
             timeout=timeout,
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 200:
@@ -206,7 +205,7 @@ class OtmService(SDKClient):
             json=json_body,
             timeout=timeout,
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 201:
@@ -238,7 +237,7 @@ class OtmService(SDKClient):
             url=f"/{contract_id}/tasking/orders/{order_id}",
             timeout=timeout,
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 200:
@@ -309,7 +308,7 @@ class OtmService(SDKClient):
             json=json_body,
             timeout=timeout,
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 200:
@@ -340,7 +339,7 @@ class OtmService(SDKClient):
             url=f"/{contract_id}/tasking/orders/{order_id}/cancel",
             timeout=timeout,
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 204:
@@ -405,7 +404,7 @@ class OtmService(SDKClient):
             follow_redirects=redirect if redirect is not None else True,
             timeout=timeout,
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.headers.get("Content-Type") == "application/zip":
@@ -428,6 +427,10 @@ class OtmService(SDKClient):
         chunk_size: int = 8192,
         progress_callback: Callable[[int, int | None], None] | None = None,
         timeout: int | None = None,
+        max_wait_seconds: float = DEFAULT_MAX_WAIT_SECONDS,
+        poll_interval: float | None = None,
+        request_id: str | None = None,
+        on_event: Callable[[DownloadEvent], None] | None = None,
     ) -> Result[Path, HttpError]:
         """Stream high-resolution imagery to disk
 
@@ -444,6 +447,13 @@ class OtmService(SDKClient):
             progress_callback: Optional callback for download progress tracking.
                              Signature: callback(bytes_downloaded: int, total_bytes: int | None)
             timeout: Optional request timeout in seconds. Overrides the instance timeout.
+            max_wait_seconds (float): Total wall-clock budget to wait for the
+                             download to be prepared server-side (202 polling).
+            poll_interval (float | None): If set, overrides the server's Retry-After delay.
+            request_id (str | None): Correlation id for the operation; a uuid4 is
+                             generated if omitted. Sent on every request and reported in events.
+            on_event: Optional callback receiving a DownloadEvent at the started,
+                             polling, completed and failed phases (for BI/analytics).
 
         Returns:
             Result[Path, HttpError]: Ok(Path) on success, Err(HttpError) on failure"""
@@ -452,23 +462,22 @@ class OtmService(SDKClient):
             "collections": collections,
             "primary_formats": primary_formats,
         }
-        result = self.make_request(
-            method="get",
-            url=f"/{contract_id}/tasking/orders/{order_id}/download",
+        result = self.stream_when_ready(
+            "get",
+            f"/{contract_id}/tasking/orders/{order_id}/download",
+            output_path,
             params=params,
-            follow_redirects=True,
-            timeout=timeout,
-        )
-        if is_err(result):
-            return ResultErr(result.error())
-        response = result.unwrap()
-        downloaded_path = self.stream_to_file(
-            response=response,
-            output_path=output_path,
             chunk_size=chunk_size,
             progress_callback=progress_callback,
+            timeout=timeout,
+            max_wait_seconds=max_wait_seconds,
+            poll_interval=poll_interval,
+            request_id=request_id,
+            on_event=on_event,
         )
-        return ResultOk(downloaded_path)
+        if is_err(result):
+            return result
+        return ResultOk(result.unwrap().path)
 
     def get_order_task_details(
         self, contract_id: UUID, order_id: UUID, timeout: int | None = None
@@ -492,7 +501,7 @@ class OtmService(SDKClient):
             url=f"/{contract_id}/tasking/orders/{order_id}/acquisition/details",
             timeout=timeout,
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 200:
@@ -523,7 +532,7 @@ class OtmService(SDKClient):
             url=f"/{contract_id}/tasking/orders/{order_id}/tasks",
             timeout=timeout,
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 200:
@@ -562,7 +571,7 @@ class OtmService(SDKClient):
             params=params,
             timeout=timeout,
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 200:
@@ -648,7 +657,7 @@ class OtmService(SDKClient):
             json=json_body,
             timeout=timeout,
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 202:
@@ -677,7 +686,7 @@ class OtmService(SDKClient):
             url=f"/{contract_id}/tasking/feasibilities/{id}",
             timeout=timeout,
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 200:
@@ -707,7 +716,7 @@ class OtmService(SDKClient):
             url=f"/{contract_id}/tasking/feasibilities/{id}/response",
             timeout=timeout,
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 200:
@@ -757,7 +766,7 @@ class OtmService(SDKClient):
             json=json_body,
             timeout=timeout,
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 202:
@@ -803,7 +812,7 @@ class OtmService(SDKClient):
             params=params,
             timeout=timeout,
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 200:
@@ -855,7 +864,7 @@ class OtmService(SDKClient):
             json=json_body,
             timeout=timeout,
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 200:
@@ -879,7 +888,7 @@ class OtmService(SDKClient):
         result = self.make_request(
             method="get", url=f"/{contract_id}/tasking/outages/", timeout=timeout
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 200:
@@ -920,7 +929,7 @@ class OtmService(SDKClient):
             json=json_body,
             timeout=timeout,
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 200:

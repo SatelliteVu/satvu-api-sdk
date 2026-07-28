@@ -125,10 +125,58 @@ def test_{{ config.stream_method }}_error_404(self, backend, tmp_path):
     )
 
     # Assert result is Err
-    assert result.is_err()
+    assert is_err(result)
 
     # Assert error is ClientError with status 404
     error = result.error()
     assert isinstance(error, ClientError)
     assert error.status_code == 404
+{%- endmacro -%}
+
+{#- Tracking test: validates request-id + on_event wiring through to stream_when_ready -#}
+{%- macro streaming_tracking_test(config, api_name) -%}
+@pook.on
+def test_{{ config.stream_method }}_emits_download_events(self, backend, tmp_path):
+    """Test {{ config.stream_method }} forwards request_id and on_event."""
+    output_path = tmp_path / "{{ config.example_filename }}"
+    mock_content = b"fake zip content"
+    events = []
+{% for param_name, param_type in config.path_params %}
+    {{ param_name }} = {% if param_type == "str" %}str(uuid4()){% else %}uuid4(){% endif %}
+
+{% endfor %}
+    path = "{{ config.url_pattern }}".format(
+{%- for param_name, param_type in config.path_params %}
+        {{ param_name }}={{ param_name }}{% if not loop.last %},{% endif %}
+
+{%- endfor %}
+    )
+    url = f"{self.base_url}{path}"
+
+    # Mock streaming HTTP response (ready immediately)
+    pook.get(url).reply(200).body(mock_content).header(
+        "Content-Type", "application/zip"
+    ).header(
+        "Content-Length", str(len(mock_content))
+    )
+
+    # Call streaming method with an explicit request_id and event collector
+    result = self.sdk.{{ api_name }}.{{ config.stream_method }}(
+{%- for param_name, param_type in config.path_params %}
+        {{ param_name }}={{ param_name }},
+{%- endfor %}
+        output_path=output_path,
+        request_id="test-request-id",
+        on_event=events.append,
+    )
+
+    # Assert result is Ok and the file was written
+    assert result.is_ok()
+    assert output_path.read_bytes() == mock_content
+
+    # Assert events were emitted for this operation under the given request id
+    phases = [event.phase for event in events]
+    assert "started" in phases
+    assert "completed" in phases
+    assert all(event.request_id == "test-request-id" for event in events)
 {%- endmacro -%}

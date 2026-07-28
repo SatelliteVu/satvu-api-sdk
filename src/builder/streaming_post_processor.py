@@ -81,10 +81,13 @@ def add_streaming_methods(
         {
             "pathlib": [("Path", None)],
             "satvu.http.errors": [("HttpError", None)],
+            "satvu.core": [
+                ("DownloadEvent", None),
+                ("DEFAULT_MAX_WAIT_SECONDS", None),
+            ],
             "satvu.result": [
                 ("Result", None),
                 ("Ok", "ResultOk"),
-                ("Err", "ResultErr"),
                 ("is_err", None),
             ],
         },

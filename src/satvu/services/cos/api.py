@@ -6,10 +6,9 @@ from pathlib import Path
 from typing import Any, Union
 from uuid import UUID
 
-from satvu.core import SDKClient, _deep_merge
+from satvu.core import DEFAULT_MAX_WAIT_SECONDS, DownloadEvent, SDKClient, _deep_merge
 from satvu.http import HttpClient
 from satvu.http.errors import HttpError
-from satvu.result import Err as ResultErr
 from satvu.result import Ok as ResultOk
 from satvu.result import Result, is_err
 from satvu.services.cos.models.download_order_collections_item import (
@@ -82,7 +81,7 @@ class CosService(SDKClient):
         result = self.make_request(
             method="get", url=f"/{contract_id}/{order_id}", timeout=timeout
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 200:
@@ -128,7 +127,7 @@ class CosService(SDKClient):
             json=json_body,
             timeout=timeout,
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 200:
@@ -164,7 +163,7 @@ class CosService(SDKClient):
         result = self.make_request(
             method="get", url=f"/{contract_id}/", params=params, timeout=timeout
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 200:
@@ -250,7 +249,7 @@ class CosService(SDKClient):
         result = self.make_request(
             method="post", url=f"/{contract_id}/", json=json_body, timeout=timeout
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 201:
@@ -292,7 +291,7 @@ class CosService(SDKClient):
             json=json_body,
             timeout=timeout,
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 200:
@@ -393,7 +392,7 @@ class CosService(SDKClient):
             follow_redirects=redirect if redirect is not None else True,
             timeout=timeout,
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.headers.get("Content-Type") == "application/zip":
@@ -418,6 +417,10 @@ class CosService(SDKClient):
         chunk_size: int = 8192,
         progress_callback: Callable[[int, int | None], None] | None = None,
         timeout: int | None = None,
+        max_wait_seconds: float = DEFAULT_MAX_WAIT_SECONDS,
+        poll_interval: float | None = None,
+        request_id: str | None = None,
+        on_event: Callable[[DownloadEvent], None] | None = None,
     ) -> Result[Path, HttpError]:
         """Stream high-resolution imagery to disk
 
@@ -434,27 +437,33 @@ class CosService(SDKClient):
             progress_callback: Optional callback for download progress tracking.
                              Signature: callback(bytes_downloaded: int, total_bytes: int | None)
             timeout: Optional request timeout in seconds. Overrides the instance timeout.
+            max_wait_seconds (float): Total wall-clock budget to wait for the
+                             download to be prepared server-side (202 polling).
+            poll_interval (float | None): If set, overrides the server's Retry-After delay.
+            request_id (str | None): Correlation id for the operation; a uuid4 is
+                             generated if omitted. Sent on every request and reported in events.
+            on_event: Optional callback receiving a DownloadEvent at the started,
+                             polling, completed and failed phases (for BI/analytics).
 
         Returns:
             Result[Path, HttpError]: Ok(Path) on success, Err(HttpError) on failure"""
         params = {"redirect": True, "primary_formats": primary_formats}
-        result = self.make_request(
-            method="get",
-            url=f"/{contract_id}/{order_id}/{item_id}/download",
+        result = self.stream_when_ready(
+            "get",
+            f"/{contract_id}/{order_id}/{item_id}/download",
+            output_path,
             params=params,
-            follow_redirects=True,
-            timeout=timeout,
-        )
-        if is_err(result):
-            return ResultErr(result.error())
-        response = result.unwrap()
-        downloaded_path = self.stream_to_file(
-            response=response,
-            output_path=output_path,
             chunk_size=chunk_size,
             progress_callback=progress_callback,
+            timeout=timeout,
+            max_wait_seconds=max_wait_seconds,
+            poll_interval=poll_interval,
+            request_id=request_id,
+            on_event=on_event,
         )
-        return ResultOk(downloaded_path)
+        if is_err(result):
+            return result
+        return ResultOk(result.unwrap().path)
 
     def download_order(
         self,
@@ -512,7 +521,7 @@ class CosService(SDKClient):
             follow_redirects=redirect if redirect is not None else True,
             timeout=timeout,
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.headers.get("Content-Type") == "application/zip":
@@ -535,6 +544,10 @@ class CosService(SDKClient):
         chunk_size: int = 8192,
         progress_callback: Callable[[int, int | None], None] | None = None,
         timeout: int | None = None,
+        max_wait_seconds: float = DEFAULT_MAX_WAIT_SECONDS,
+        poll_interval: float | None = None,
+        request_id: str | None = None,
+        on_event: Callable[[DownloadEvent], None] | None = None,
     ) -> Result[Path, HttpError]:
         """Stream high-resolution imagery to disk
 
@@ -551,6 +564,13 @@ class CosService(SDKClient):
             progress_callback: Optional callback for download progress tracking.
                              Signature: callback(bytes_downloaded: int, total_bytes: int | None)
             timeout: Optional request timeout in seconds. Overrides the instance timeout.
+            max_wait_seconds (float): Total wall-clock budget to wait for the
+                             download to be prepared server-side (202 polling).
+            poll_interval (float | None): If set, overrides the server's Retry-After delay.
+            request_id (str | None): Correlation id for the operation; a uuid4 is
+                             generated if omitted. Sent on every request and reported in events.
+            on_event: Optional callback receiving a DownloadEvent at the started,
+                             polling, completed and failed phases (for BI/analytics).
 
         Returns:
             Result[Path, HttpError]: Ok(Path) on success, Err(HttpError) on failure"""
@@ -559,23 +579,22 @@ class CosService(SDKClient):
             "collections": collections,
             "primary_formats": primary_formats,
         }
-        result = self.make_request(
-            method="get",
-            url=f"/{contract_id}/{order_id}/download",
+        result = self.stream_when_ready(
+            "get",
+            f"/{contract_id}/{order_id}/download",
+            output_path,
             params=params,
-            follow_redirects=True,
-            timeout=timeout,
-        )
-        if is_err(result):
-            return ResultErr(result.error())
-        response = result.unwrap()
-        downloaded_path = self.stream_to_file(
-            response=response,
-            output_path=output_path,
             chunk_size=chunk_size,
             progress_callback=progress_callback,
+            timeout=timeout,
+            max_wait_seconds=max_wait_seconds,
+            poll_interval=poll_interval,
+            request_id=request_id,
+            on_event=on_event,
         )
-        return ResultOk(downloaded_path)
+        if is_err(result):
+            return result
+        return ResultOk(result.unwrap().path)
 
     def calculate_price(
         self,
@@ -626,7 +645,7 @@ class CosService(SDKClient):
             params=params,
             timeout=timeout,
         )
-        if result.is_err():
+        if is_err(result):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 200:

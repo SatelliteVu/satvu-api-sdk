@@ -18,6 +18,7 @@ from pydantic import TypeAdapter
 
 from satvu import SatVuSDK, create_http_client
 from satvu.http.errors import ClientError
+from satvu.result import is_err
 from satvu.services.cos.models.feature_collection_order import FeatureCollectionOrder
 from satvu.services.cos.models.order_download_url import OrderDownloadUrl
 from satvu.services.cos.models.order_edit_payload import OrderEditPayload
@@ -56,11 +57,10 @@ class TestCosService:
         )
         self.sdk = SatVuSDK(
             client_id="test_client_id",
-            client_secret="test_client_secret",
+            client_secret="test_client_secret",  # pragma: allowlist secret # nosec B106
             http_client=http_client,
             env="qa",
         )
-        self.sdk.cos._get_token = mock_get_token
 
     @settings(
         max_examples=10,
@@ -90,7 +90,7 @@ class TestCosService:
         result = self.sdk.cos.get_order(contract_id=contract_id, order_id=order_id)
         assert result is not None
         assert isinstance(
-            result, (FeatureCollectionOrder, ResellerFeatureCollectionOrder)
+            result, FeatureCollectionOrder | ResellerFeatureCollectionOrder
         )
 
     @settings(
@@ -189,7 +189,7 @@ class TestCosService:
         )
         assert result is not None
         assert isinstance(
-            result, (FeatureCollectionOrder, ResellerFeatureCollectionOrder)
+            result, FeatureCollectionOrder | ResellerFeatureCollectionOrder
         )
 
     @settings(
@@ -352,7 +352,7 @@ class TestCosService:
         result = self.sdk.cos.submit_order(contract_id=contract_id, body=body)
         assert result is not None
         assert isinstance(
-            result, (FeatureCollectionOrder, ResellerFeatureCollectionOrder)
+            result, FeatureCollectionOrder | ResellerFeatureCollectionOrder
         )
 
     @settings(
@@ -577,7 +577,7 @@ class TestCosService:
         """
         contract_id = uuid4()
         order_id = uuid4()
-        item_id = uuid4()
+        item_id = str(uuid4())
         path = f"/{contract_id}/{order_id}/{item_id}/download"
         url = f"{self.base_url}{path}"
         pook.reset()
@@ -613,7 +613,7 @@ class TestCosService:
         """
         contract_id = uuid4()
         order_id = uuid4()
-        item_id = uuid4()
+        item_id = str(uuid4())
         path = f"/{contract_id}/{order_id}/{item_id}/download"
         url = f"{self.base_url}{path}"
         pook.reset()
@@ -649,7 +649,7 @@ class TestCosService:
         """
         contract_id = uuid4()
         order_id = uuid4()
-        item_id = uuid4()
+        item_id = str(uuid4())
         path = f"/{contract_id}/{order_id}/{item_id}/download"
         url = f"{self.base_url}{path}"
         pook.reset()
@@ -789,7 +789,7 @@ class TestCosService:
         body = body_adapter.validate_python(body_data)
         result = self.sdk.cos.calculate_price(contract_id=contract_id, body=body)
         assert result is not None
-        assert isinstance(result, (OrderPrice, ResellerOrderPrice))
+        assert isinstance(result, OrderPrice | ResellerOrderPrice)
 
     @settings(
         max_examples=10,
@@ -1171,7 +1171,7 @@ class TestCosService:
             item_id=item_id,
             output_path=output_path,
         )
-        assert result.is_err()
+        assert is_err(result)
         error = result.error()
         assert isinstance(error, ClientError)
         assert error.status_code == 404
@@ -1238,7 +1238,63 @@ class TestCosService:
         result = self.sdk.cos.download_order_to_file(
             contract_id=contract_id, order_id=order_id, output_path=output_path
         )
-        assert result.is_err()
+        assert is_err(result)
         error = result.error()
         assert isinstance(error, ClientError)
         assert error.status_code == 404
+
+    @pook.on
+    def test_download_order_item_to_file_emits_download_events(self, backend, tmp_path):
+        """Test download_order_item_to_file forwards request_id and on_event."""
+        output_path = tmp_path / "download.zip"
+        mock_content = b"fake zip content"
+        events = []
+        contract_id = uuid4()
+        order_id = uuid4()
+        item_id = str(uuid4())
+        path = f"/{contract_id}/{order_id}/{item_id}/download"
+        url = f"{self.base_url}{path}"
+        pook.get(url).reply(200).body(mock_content).header(
+            "Content-Type", "application/zip"
+        ).header("Content-Length", str(len(mock_content)))
+        result = self.sdk.cos.download_order_item_to_file(
+            contract_id=contract_id,
+            order_id=order_id,
+            item_id=item_id,
+            output_path=output_path,
+            request_id="test-request-id",
+            on_event=events.append,
+        )
+        assert result.is_ok()
+        assert output_path.read_bytes() == mock_content
+        phases = [event.phase for event in events]
+        assert "started" in phases
+        assert "completed" in phases
+        assert all(event.request_id == "test-request-id" for event in events)
+
+    @pook.on
+    def test_download_order_to_file_emits_download_events(self, backend, tmp_path):
+        """Test download_order_to_file forwards request_id and on_event."""
+        output_path = tmp_path / "download.zip"
+        mock_content = b"fake zip content"
+        events = []
+        contract_id = uuid4()
+        order_id = uuid4()
+        path = f"/{contract_id}/{order_id}/download"
+        url = f"{self.base_url}{path}"
+        pook.get(url).reply(200).body(mock_content).header(
+            "Content-Type", "application/zip"
+        ).header("Content-Length", str(len(mock_content)))
+        result = self.sdk.cos.download_order_to_file(
+            contract_id=contract_id,
+            order_id=order_id,
+            output_path=output_path,
+            request_id="test-request-id",
+            on_event=events.append,
+        )
+        assert result.is_ok()
+        assert output_path.read_bytes() == mock_content
+        phases = [event.phase for event in events]
+        assert "started" in phases
+        assert "completed" in phases
+        assert all(event.request_id == "test-request-id" for event in events)

@@ -72,6 +72,9 @@ if extra_body:
 {%- if endpoint.query_parameters -%}
 {{ query_params(endpoint) }}
 {%- endif -%}
+{%- if endpoint.streaming_request_id %}
+request_id = str(uuid4())
+{% endif -%}
 result = self.make_request(method="{{ endpoint.method }}", url={{ url(endpoint) }},
 {%- if endpoint.bodies | length -%}
 json=json_body,
@@ -83,6 +86,9 @@ params=params,
 follow_redirects=redirect if redirect is not None else True,
 {%- endif -%}
 timeout=timeout,
+{%- if endpoint.streaming_request_id -%}
+headers={"x-download-request-id": request_id},
+{%- endif -%}
 )
 
 # Raise HttpError for failed requests (network errors, 4xx, 5xx, etc.)
@@ -153,8 +159,11 @@ import io
 
 from collections.abc import Callable, Generator
 from typing import Any, Union, List, Dict
+{% if endpoints | selectattr("streaming_request_id") | list | length -%}
+from uuid import UUID, uuid4
+{% else -%}
 from uuid import UUID
-
+{% endif %}
 from satvu.core import SDKClient, _deep_merge
 from satvu.http import HttpClient
 from satvu.shared.parsing import normalize_keys, parse_response

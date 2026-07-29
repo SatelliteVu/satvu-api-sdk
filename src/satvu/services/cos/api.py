@@ -4,7 +4,7 @@ import io
 from collections.abc import Callable, Generator
 from pathlib import Path
 from typing import Any, Union
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from satvu.core import SDKClient, _deep_merge
 from satvu.http import HttpClient
@@ -386,12 +386,14 @@ class CosService(SDKClient):
             Union[OrderItemDownloadUrl, Any, io.BytesIO]
         """
         params = {"primary_formats": primary_formats, "redirect": redirect}
+        request_id = str(uuid4())
         result = self.make_request(
             method="get",
             url=f"/{contract_id}/{order_id}/{item_id}/download",
             params=params,
             follow_redirects=redirect if redirect is not None else True,
             timeout=timeout,
+            headers={"x-download-request-id": request_id},
         )
         if result.is_err():
             raise result.error()
@@ -438,12 +440,14 @@ class CosService(SDKClient):
         Returns:
             Result[Path, HttpError]: Ok(Path) on success, Err(HttpError) on failure"""
         params = {"redirect": True, "primary_formats": primary_formats}
+        request_id = str(uuid4())
         result = self.make_request(
             method="get",
             url=f"/{contract_id}/{order_id}/{item_id}/download",
             params=params,
             follow_redirects=True,
             timeout=timeout,
+            headers={"x-download-request-id": request_id},
         )
         if is_err(result):
             return ResultErr(result.error())
@@ -505,12 +509,14 @@ class CosService(SDKClient):
             "primary_formats": primary_formats,
             "redirect": redirect,
         }
+        request_id = str(uuid4())
         result = self.make_request(
             method="get",
             url=f"/{contract_id}/{order_id}/download",
             params=params,
             follow_redirects=redirect if redirect is not None else True,
             timeout=timeout,
+            headers={"x-download-request-id": request_id},
         )
         if result.is_err():
             raise result.error()
@@ -559,12 +565,14 @@ class CosService(SDKClient):
             "collections": collections,
             "primary_formats": primary_formats,
         }
+        request_id = str(uuid4())
         result = self.make_request(
             method="get",
             url=f"/{contract_id}/{order_id}/download",
             params=params,
             follow_redirects=True,
             timeout=timeout,
+            headers={"x-download-request-id": request_id},
         )
         if is_err(result):
             return ResultErr(result.error())

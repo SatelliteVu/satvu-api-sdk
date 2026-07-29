@@ -80,6 +80,7 @@ def add_streaming_methods(
         tree,
         {
             "pathlib": [("Path", None)],
+            "uuid": [("uuid4", None)],
             "satvu.http.errors": [("HttpError", None)],
             "satvu.result": [
                 ("Result", None),

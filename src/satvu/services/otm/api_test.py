@@ -2612,7 +2612,9 @@ class TestOtmService:
         order_id = uuid4()
         path = f"/{contract_id}/tasking/orders/{order_id}/download"
         url = f"{self.base_url}{path}"
-        pook.get(url).reply(200).body(mock_content).header(
+        pook.get(url).header(
+            "x-download-request-id", pook.regex("[0-9a-fA-F-]{36}")
+        ).reply(200).body(mock_content).header(
             "Content-Type", "application/zip"
         ).header("Content-Length", str(len(mock_content)))
         result = self.sdk.otm.download_tasking_order_to_file(

@@ -19,8 +19,12 @@ def test_{{ config.stream_method }}_success(self, backend, tmp_path):
     )
     url = f"{self.base_url}{path}"
 
-    # Mock streaming HTTP response
-    pook.get(url).reply(200).body(mock_content).header(
+    # Mock streaming HTTP response. The x-download-request-id request-header
+    # matcher asserts the SDK sends a unique correlation id; if the header is
+    # missing the mock won't match and the request fails.
+    pook.get(url).header(
+        "x-download-request-id", pook.regex(r"[0-9a-fA-F-]{36}")
+    ).reply(200).body(mock_content).header(
         "Content-Type", "application/zip"
     ).header(
         "Content-Length", str(len(mock_content))

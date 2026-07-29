@@ -182,6 +182,25 @@ class ASTMethodBuilder:
             )
         )
 
+        # 1b. Generate a unique request id (reused across the 202 polling loop
+        # inside make_request) so the API can correlate polls + final download.
+        body.append(
+            ast.Assign(
+                targets=[ast.Name(id="request_id", ctx=ast.Store())],
+                value=ast.Call(
+                    func=ast.Name(id="str", ctx=ast.Load()),
+                    args=[
+                        ast.Call(
+                            func=ast.Name(id="uuid4", ctx=ast.Load()),
+                            args=[],
+                            keywords=[],
+                        )
+                    ],
+                    keywords=[],
+                ),
+            )
+        )
+
         # 2. Build URL format args (only path params)
         url_format_keywords = [
             ast.keyword(arg=name, value=ast.Name(id=name, ctx=ast.Load()))
@@ -221,6 +240,13 @@ class ASTMethodBuilder:
                         ),
                         ast.keyword(
                             arg="timeout", value=ast.Name(id="timeout", ctx=ast.Load())
+                        ),
+                        ast.keyword(
+                            arg="headers",
+                            value=ast.Dict(
+                                keys=[ast.Constant(value="x-download-request-id")],
+                                values=[ast.Name(id="request_id", ctx=ast.Load())],
+                            ),
                         ),
                     ],
                 ),

@@ -4,7 +4,7 @@ import io
 from collections.abc import Callable, Generator
 from pathlib import Path
 from typing import Any, Union
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from satvu.core import SDKClient, _deep_merge
 from satvu.http import HttpClient
@@ -398,12 +398,14 @@ class OtmService(SDKClient):
             "collections": collections,
             "primary_formats": primary_formats,
         }
+        request_id = str(uuid4())
         result = self.make_request(
             method="get",
             url=f"/{contract_id}/tasking/orders/{order_id}/download",
             params=params,
             follow_redirects=redirect if redirect is not None else True,
             timeout=timeout,
+            headers={"x-download-request-id": request_id},
         )
         if result.is_err():
             raise result.error()
@@ -452,12 +454,14 @@ class OtmService(SDKClient):
             "collections": collections,
             "primary_formats": primary_formats,
         }
+        request_id = str(uuid4())
         result = self.make_request(
             method="get",
             url=f"/{contract_id}/tasking/orders/{order_id}/download",
             params=params,
             follow_redirects=True,
             timeout=timeout,
+            headers={"x-download-request-id": request_id},
         )
         if is_err(result):
             return ResultErr(result.error())

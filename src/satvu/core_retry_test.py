@@ -240,3 +240,52 @@ class TestHeaderParsing:
             {"Content-Type": "application/json"}, max_seconds=300.0
         )
         assert result is None
+
+
+class TestRequestHeaders:
+    """Tests for forwarding custom request headers through make_request."""
+
+    def test_headers_forwarded_to_client(self, sdk_client, mock_http_client):
+        """A headers dict is forwarded verbatim to the HTTP client."""
+        mock_http_client.request.return_value = Ok(create_mock_response(200))
+
+        headers = {"x-download-request-id": "abc-123"}
+        sdk_client.make_request("GET", "/download", headers=headers)
+
+        call_kwargs = mock_http_client.request.call_args[1]
+        assert call_kwargs["headers"] == headers
+
+    def test_headers_default_none(self, sdk_client, mock_http_client):
+        """When no headers are supplied, None is forwarded (adapters merge auth)."""
+        mock_http_client.request.return_value = Ok(create_mock_response(200))
+
+        sdk_client.make_request("GET", "/endpoint")
+
+        call_kwargs = mock_http_client.request.call_args[1]
+        assert call_kwargs["headers"] is None
+
+    @patch("satvu.core.time.sleep")
+    def test_same_headers_reused_across_polling(
+        self, mock_sleep, sdk_client, mock_http_client
+    ):
+        """The same headers dict is sent on every 202 -> 200 polling attempt.
+
+        This is the correlation guarantee: a per-download request id stays
+        constant across the internal Retry-After retry loop.
+        """
+        response_202 = create_mock_response(202, {"Retry-After": "1"})
+        response_200 = create_mock_response(200)
+        mock_http_client.request.side_effect = [
+            Ok(response_202),
+            Ok(response_202),
+            Ok(response_200),
+        ]
+
+        headers = {"x-download-request-id": "stable-id-123"}
+        result = sdk_client.make_request("GET", "/download", headers=headers)
+
+        assert result.unwrap().status_code == 200
+        assert mock_http_client.request.call_count == 3
+        # Every attempt received the identical header value.
+        for call in mock_http_client.request.call_args_list:
+            assert call[1]["headers"] == {"x-download-request-id": "stable-id-123"}

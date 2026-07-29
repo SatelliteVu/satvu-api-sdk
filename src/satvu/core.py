@@ -96,6 +96,7 @@ class SDKClient:
         params: dict[str, Any] | None = None,
         follow_redirects: bool = False,
         timeout: int | None = None,
+        headers: dict[str, str] | None = None,
     ) -> Result[HttpResponse, HttpError]:
         """
         Make an HTTP request with automatic Retry-After handling.
@@ -105,6 +106,10 @@ class SDKClient:
         The delay is capped at max_retry_after_seconds (default 5 minutes) and
         will retry up to max_retry_attempts times (default 5).
 
+        The same ``headers`` dict is reused for every retry attempt, so a caller
+        that generates a per-request correlation id keeps a stable value across
+        the entire 202 -> 200 polling sequence.
+
         Args:
             method: HTTP method (GET, POST, PUT, PATCH, DELETE, etc.)
             url: URL to request
@@ -112,6 +117,7 @@ class SDKClient:
             params: Optional query parameters
             follow_redirects: Whether to follow redirects
             timeout: Request timeout in seconds (uses instance timeout if None)
+            headers: Optional HTTP headers to send with the request
 
         Returns:
             Result containing either:
@@ -120,7 +126,7 @@ class SDKClient:
         """
         for attempt in range(1, self.max_retry_attempts + 1):
             result = self._execute_request(
-                method, url, json, params, follow_redirects, timeout
+                method, url, json, params, follow_redirects, timeout, headers
             )
 
             if result.is_err():
@@ -156,6 +162,7 @@ class SDKClient:
         params: dict[str, Any] | None = None,
         follow_redirects: bool = False,
         timeout: int | None = None,
+        headers: dict[str, str] | None = None,
     ) -> Result[HttpResponse, HttpError]:
         """
         Execute HTTP request.
@@ -167,6 +174,7 @@ class SDKClient:
             params: Optional query parameters
             follow_redirects: Whether to follow redirects
             timeout: Request timeout in seconds (uses instance timeout if None)
+            headers: Optional HTTP headers to send with the request
 
         Returns:
             Result containing either:
@@ -193,6 +201,7 @@ class SDKClient:
             params=params,
             follow_redirects=follow_redirects,
             timeout=float(timeout_val),
+            headers=headers,
         )
 
     @staticmethod

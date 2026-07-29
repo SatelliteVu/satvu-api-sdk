@@ -1109,7 +1109,9 @@ class TestCosService:
         item_id = str(uuid4())
         path = f"/{contract_id}/{order_id}/{item_id}/download"
         url = f"{self.base_url}{path}"
-        pook.get(url).reply(200).body(mock_content).header(
+        pook.get(url).header(
+            "x-download-request-id", pook.regex("[0-9a-fA-F-]{36}")
+        ).reply(200).body(mock_content).header(
             "Content-Type", "application/zip"
         ).header("Content-Length", str(len(mock_content)))
         result = self.sdk.cos.download_order_item_to_file(
@@ -1185,7 +1187,9 @@ class TestCosService:
         order_id = uuid4()
         path = f"/{contract_id}/{order_id}/download"
         url = f"{self.base_url}{path}"
-        pook.get(url).reply(200).body(mock_content).header(
+        pook.get(url).header(
+            "x-download-request-id", pook.regex("[0-9a-fA-F-]{36}")
+        ).reply(200).body(mock_content).header(
             "Content-Type", "application/zip"
         ).header("Content-Length", str(len(mock_content)))
         result = self.sdk.cos.download_order_to_file(

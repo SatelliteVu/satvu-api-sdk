@@ -20,6 +20,7 @@ from builder.load import load_openapi
 from builder.openapi_preprocessor import preprocess_for_sdk_generation
 from builder.pagination_detector import PaginationEndpointDetector
 from builder.pagination_test_generator import generate_pagination_tests
+from builder.streaming_detector import StreamingEndpointDetector
 from builder.streaming_post_processor import add_streaming_methods
 from builder.test_generator import generate_tests
 
@@ -320,12 +321,29 @@ class ServiceCodeGenerator:
             "base_path": self.context.base_path,
         }
 
+        # Detect streaming-download endpoints so their base methods emit an
+        # x-download-request-id header (reused by *_to_file streaming variants
+        # and the polling loop in make_request). Reuses the same detector as
+        # _add_streaming_methods to avoid duplicating detection logic.
+        endpoints = [
+            ep
+            for collection in self.project.openapi.endpoint_collections_by_tag.values()
+            for ep in collection.endpoints
+        ]
+        streaming_detector = StreamingEndpointDetector(
+            self.context.api_id, self.openapi_dict
+        )
+        streaming_base_methods = {
+            config.base_method for config in streaming_detector.detect_all(endpoints)
+        }
+
         # Add body_docstrings and pagination to endpoints
         for enhanced, endpoint in zip(
             self.enhanced_endpoints, template_context["endpoints"], strict=False
         ):
             endpoint.body_docstrings = enhanced.body_docstrings
             endpoint.pagination = enhanced.pagination
+            endpoint.streaming_request_id = endpoint.name in streaming_base_methods
 
         api_class_path.write_text(
             endpoint_template.render(**template_context),

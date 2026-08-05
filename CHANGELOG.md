@@ -1,5 +1,73 @@
 # [0.9.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.8.0...v0.9.0) (2026-05-07)
 
+## [0.9.0.20260805.1107] - 2026-08-05
+
+### feat(id): update 8 endpoints
+
+####  
+* removed the schema `ResellerNotificationCategory`
+* removed the schema `ResellerNotificationConfig`
+* removed the schema `ResellerNotificationDescription`
+* removed the schema `ResellerNotificationUpdate`
+
+
+#### GET /user/details
+* removed `#/components/schemas/ResellerNotificationCategory` from the `user_metadata/notifications/anyOf[subschema #1]/items/category` response property `anyOf` list for the response status `200`
+
+
+#### PUT /user/settings
+* removed `subschema #2` from the `notifications` request property `anyOf` list
+* removed `#/components/schemas/ResellerNotificationCategory` from the `user_metadata/notifications/anyOf[subschema #1]/items/category` response property `anyOf` list for the response status `200`
+
+
+#### GET /webhooks/
+* removed `#/components/schemas/NotificationDescription, #/components/schemas/ResellerNotificationDescription` from the `webhooks/items/event_types/items/` response property `anyOf` list for the response status `200`
+* the `webhooks/items/event_types/items/` response's property `type` was narrowed from `any` to `object` for status `200`
+* added the required property `webhooks/items/event_types/items/description` to the response with the `200` status
+* added the required property `webhooks/items/event_types/items/name` to the response with the `200` status
+* added the required property `webhooks/items/event_types/items/topic` to the response with the `200` status
+
+
+#### POST /webhooks/
+* removed `#/components/schemas/NotificationDescription, #/components/schemas/ResellerNotificationDescription` from the `event_types/items/` response property `anyOf` list for the response status `200`
+* the `event_types/items/` response's property `type` was narrowed from `any` to `object` for status `200`
+* added the required property `event_types/items/description` to the response with the `200` status
+* added the required property `event_types/items/name` to the response with the `200` status
+* added the required property `event_types/items/topic` to the response with the `200` status
+
+
+#### GET /webhooks/{id}
+* removed `#/components/schemas/NotificationDescription, #/components/schemas/ResellerNotificationDescription` from the `event_types/items/` response property `anyOf` list for the response status `200`
+* the `event_types/items/` response's property `type` was narrowed from `any` to `object` for status `200`
+* added the required property `event_types/items/description` to the response with the `200` status
+* added the required property `event_types/items/name` to the response with the `200` status
+* added the required property `event_types/items/topic` to the response with the `200` status
+
+
+#### PATCH /webhooks/{id}
+* removed `#/components/schemas/NotificationDescription, #/components/schemas/ResellerNotificationDescription` from the `event_types/items/` response property `anyOf` list for the response status `200`
+* the `event_types/items/` response's property `type` was narrowed from `any` to `object` for status `200`
+* added the required property `event_types/items/description` to the response with the `200` status
+* added the required property `event_types/items/name` to the response with the `200` status
+* added the required property `event_types/items/topic` to the response with the `200` status
+
+
+#### POST /webhooks/{id}/rotate
+* removed `#/components/schemas/NotificationDescription, #/components/schemas/ResellerNotificationDescription` from the `event_types/items/` response property `anyOf` list for the response status `200`
+* the `event_types/items/` response's property `type` was narrowed from `any` to `object` for status `200`
+* added the required property `event_types/items/description` to the response with the `200` status
+* added the required property `event_types/items/name` to the response with the `200` status
+* added the required property `event_types/items/topic` to the response with the `200` status
+
+
+#### POST /webhooks/{id}/test
+* removed `#/components/schemas/NotificationDescription, #/components/schemas/ResellerNotificationDescription` from the `event_types/items/` response property `anyOf` list for the response status `200`
+* the `event_types/items/` response's property `type` was narrowed from `any` to `object` for status `200`
+* added the required property `event_types/items/description` to the response with the `200` status
+* added the required property `event_types/items/name` to the response with the `200` status
+* added the required property `event_types/items/topic` to the response with the `200` status
+
+
 ## [0.9.0.20260724.1338] - 2026-07-24
 
 ### feat(otm): endpoint added (GET /{contract_id}/tasking/series/{series_id}/download)

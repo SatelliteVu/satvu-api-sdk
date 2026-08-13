@@ -61,10 +61,13 @@ jobs:
           # Get all changed files since the last tag
           CHANGED_FILES=$(git diff --name-only "$LAST_TAG" HEAD)
 
-          # Check if any src/**/*.py files changed (excluding *_test.py)
+          # Check if any shipped source changed: python sources plus the codegen
+          # templates, since a template change alters every generated client.
+          # Test sources and test templates are excluded - they never ship.
           SHOULD_RELEASE="false"
           for file in $CHANGED_FILES; do
-            if [[ "$file" == src/*.py || "$file" == src/**/*.py ]] && [[ "$file" != *_test.py ]]; then
+            if [[ "$file" == src/*.py || "$file" == src/*.jinja ]] \
+              && [[ "$file" != *_test.py && "$file" != *test*.jinja ]]; then
               echo "Found releasable change: $file"
               SHOULD_RELEASE="true"
               break

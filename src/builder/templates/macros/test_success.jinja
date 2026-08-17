@@ -27,15 +27,36 @@
         pook.on()
 
         # Mock the HTTP response
+{% if endpoint.bodies | length %}
+        # Keep the Mock handle so the serialised request body can be inspected;
+        # .reply() returns the Response, not the Mock.
+        mock = pook.{{ endpoint.method }}(url)
+        mock.reply({{ status_code }}).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+{% else %}
         pook.{{ endpoint.method }}(url).reply({{ status_code }}).json(response_data).header(
             "Content-Type", "application/json"
         )
+{% endif %}
 
         # Call the service method
 {{ parse_body(endpoint) }}
         result = self.sdk.{{ api_name }}.{{ endpoint.name }}(
 {{ method_call_args(endpoint) }}
         )
+{% if endpoint.bodies | length %}
+
+        # Assert the body that went on the wire still describes what was asked
+        # for: nothing invented, and still valid against the spec it came from.
+        assert_request_body_matches_input(mock, body_data, "{{ endpoint.method | upper }} {{ endpoint.path }}")
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("{{ endpoint.path }}", "{{ endpoint.method }}"),
+            "{{ endpoint.method | upper }} {{ endpoint.path }}",
+            body_data,
+        )
+{% endif %}
 
         # Assert response parses correctly
         assert result is not None

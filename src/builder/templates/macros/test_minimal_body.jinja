@@ -1,0 +1,60 @@
+{#- Minimal request body test macro -#}
+{#- Posts a body reduced to only the fields the spec requires, so the request -#}
+{#- body guards fire on a deliberate omission rather than relying on whichever -#}
+{#- fields the cached example set happens to leave out. -#}
+{% from "macros/test_helpers.jinja" import generate_path, parse_body, method_call_args, given_params, test_params %}
+
+{%- macro minimal_body_test(endpoint, status_code, api_name) %}
+
+    @settings(
+        max_examples=5,
+        deadline=None,
+        suppress_health_check=[HealthCheck.filter_too_much, HealthCheck.too_slow, HealthCheck.data_too_large],
+    )
+    @given(
+{{ given_params(endpoint, status_code) }}
+    )
+    def test_{{ endpoint.name }}_minimal_body_sends_only_what_was_set(
+        self,
+        backend,
+{{ test_params(endpoint) }}
+    ):
+        """
+        Test {{ endpoint.name }} sends no field the caller left unset.
+        """
+        # Generate path parameters
+{{ generate_path(endpoint) }}
+
+        # Reduce the generated body to the fields the spec actually requires
+        body_data = drop_optional_properties(
+            body_data,
+            get_request_body_schema("{{ endpoint.path }}", "{{ endpoint.method }}"),
+        )
+
+        # Reset and activate pook for each hypothesis iteration
+        pook.reset()
+        pook.on()
+
+        mock = pook.{{ endpoint.method }}(url)
+        mock.reply({{ status_code }}).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+
+        # Call the service method. Only the request is under test here, so a
+        # response the generated example cannot satisfy must not mask it; a call
+        # that never reached the mock still fails on the assertions below.
+{{ parse_body(endpoint) }}
+        with suppress(Exception):
+            self.sdk.{{ api_name }}.{{ endpoint.name }}(
+{{ method_call_args(endpoint) }}
+            )
+
+        # Every field omitted above must stay omitted on the wire
+        assert_request_body_matches_input(mock, body_data, "{{ endpoint.method | upper }} {{ endpoint.path }}")
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("{{ endpoint.path }}", "{{ endpoint.method }}"),
+            "{{ endpoint.method | upper }} {{ endpoint.path }}",
+            body_data,
+        )
+{%- endmacro %}

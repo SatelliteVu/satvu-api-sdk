@@ -7,6 +7,7 @@ Generated from OpenAPI spec version {{ spec_version }}.
 Uses property-based testing with hypothesis-jsonschema.
 """
 
+from contextlib import suppress
 from unittest.mock import Mock
 from uuid import uuid4
 
@@ -18,6 +19,11 @@ from typing import Union
 
 from satvu import SatVuSDK, create_http_client
 from satvu.http.errors import ClientError, ServerError, HttpError
+from satvu.services.schema_conformance import (
+    assert_request_body_conforms,
+    assert_request_body_matches_input,
+    drop_optional_properties,
+)
 from .test_schemas import (
     get_response_schema,
     get_request_body_schema,
@@ -67,6 +73,7 @@ from .test_schemas import (
 {% from "macros/test_success.jinja" import success_test %}
 {% from "macros/test_error.jinja" import error_test_with_schema, error_test_static %}
 {% from "macros/test_no_content.jinja" import no_content_test %}
+{% from "macros/test_minimal_body.jinja" import minimal_body_test %}
 
 @pytest.mark.parametrize("backend", ["stdlib", "httpx", "urllib3", "requests"])
 class Test{{ service_class_name }}:
@@ -108,6 +115,10 @@ class Test{{ service_class_name }}:
 {%- for status_code, response_info in endpoint_data.responses.items() %}
 {{ success_test(endpoint, status_code, response_info, api_name) }}
 {% endfor %}
+{# ---- Minimal request body test (one per body endpoint) ---- #}
+{%- if endpoint.bodies | length and endpoint_data.responses %}
+{{ minimal_body_test(endpoint, endpoint_data.responses | list | first, api_name) }}
+{% endif %}
 {# ---- 4xx/5xx Error Response Tests ---- #}
 {% for status_code, error_info in endpoint_data.error_responses.items() %}
 {%- set exception_type = "ClientError" if status_code | int < 500 else "ServerError" %}

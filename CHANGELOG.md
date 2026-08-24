@@ -1,5 +1,18 @@
 # [0.9.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.8.0...v0.9.0) (2026-05-07)
 
+## [0.9.0.20260824.1429] - 2026-08-24
+
+### feat(otm): 3 changes to PATCH /{contract_id}/tasking/series/{series_id}
+
+#### PATCH /{contract_id}/tasking/series/{series_id}
+* added `#/components/schemas/StructuredErrorResponse, #/components/schemas/ErrorResponse` to the response body `anyOf` list for the response status `409`
+* the response's body `type` changed from `object` to `any` for status `409`
+* removed the required property `detail` from the response with the `409` status
+
+#### Description Updates
+* 2 description(s) modified
+
+
 ## [0.9.0.20260805.1107] - 2026-08-05
 
 ### feat(id): update 8 endpoints

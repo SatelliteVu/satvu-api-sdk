@@ -174,6 +174,23 @@ def _should_fetch_fresh(api_id: str, use_cached: bool) -> bool:
         return api_id == triggered_api
 
 
+def spec_content_hash(spec: dict) -> str:
+    """
+    Hash the *content* of an OpenAPI spec, for cache keys that must track the schema.
+
+    Deliberately not the spec URL: the URL is stable across API releases, so a
+    URL-derived key never invalidates and stale artefacts (e.g. pre-generated
+    hypothesis examples) survive schema changes and get replayed against models
+    that no longer accept them.
+
+    :param spec: The OpenAPI spec, ideally after preprocessing, so that changes to
+                 the preprocessor invalidate derived artefacts too.
+    :return: Hex sha1 of the spec serialised canonically (key order normalised).
+    """
+    canonical = dumps(spec, sort_keys=True, separators=(",", ":"))
+    return sha1(canonical.encode(), usedforsecurity=False).hexdigest()
+
+
 def load_openapi(api_id: str, use_cached: bool = False) -> tuple[dict, Path]:
     """
     Load and inline the OpenAPI specification for the given API ID.

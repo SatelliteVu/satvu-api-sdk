@@ -16,7 +16,7 @@ from openapi_python_client.parser.properties.union import UnionProperty
 
 from builder.config import APIS
 from builder.jinja_filters import to_pydantic_model_field
-from builder.load import load_openapi
+from builder.load import load_openapi, spec_content_hash
 from builder.openapi_preprocessor import preprocess_for_sdk_generation
 from builder.pagination_detector import PaginationEndpointDetector
 from builder.pagination_test_generator import generate_pagination_tests
@@ -460,9 +460,10 @@ def build_service(
         openapi_dict, openapi_src = load_openapi(api_id, use_cached)
         # Preprocess the spec to fix issues that would require patching
         openapi_dict = preprocess_for_sdk_generation(openapi_dict)
-        # Extract spec hash from cache filename for example caching
-        # Cache filename format: {api_id}-{hash}.json
-        spec_hash = openapi_src.stem.split("-", 1)[1] if "-" in openapi_src.stem else ""
+        # Hash the preprocessed spec content for example caching. Must not be derived
+        # from the cache filename: that hash is of the spec URL, which is invariant
+        # across API releases, so cached examples would never be invalidated.
+        spec_hash = spec_content_hash(openapi_dict)
     except Exception as e:
         return [GeneratorError(detail=f"Failed to load OpenAPI spec: {e}")]
 

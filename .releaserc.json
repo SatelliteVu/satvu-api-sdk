@@ -29,7 +29,8 @@
           "CHANGELOG.md",
           "pyproject.toml",
           "uv.lock",
-          "src/satvu/services/**"
+          "src/satvu/services/**",
+          "!src/satvu/services/**/test_schemas.py"
         ],
         "message": "chore(release): ${nextRelease.version} [skip ci]"
       }

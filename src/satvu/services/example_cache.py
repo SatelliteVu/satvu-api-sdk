@@ -14,8 +14,9 @@ Cache files are located at: .cache/hypothesis-examples/{api_name}-{spec_hash}.js
 Cache keys are pipe-separated: {path}|{method}|{type}|{status_or_name}
 Where type is one of: response, body, param
 
-The cache is automatically invalidated when the OpenAPI spec changes
-because the spec_hash in the filename changes.
+The cache is automatically invalidated when the OpenAPI spec changes: spec_hash is
+a hash of the preprocessed spec content, so a schema change yields a filename that
+does not exist yet and the examples are regenerated rather than replayed.
 """
 
 import json

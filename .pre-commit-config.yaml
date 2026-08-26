@@ -68,7 +68,7 @@ repos:
   repo: https://github.com/commitizen-tools/commitizen
   rev: v4.5.0
 - repo: https://github.com/RobertCraigie/pyright-python
-  rev: v1.1.407
+  rev: v1.1.411
   hooks:
   - id: pyright
     stages:

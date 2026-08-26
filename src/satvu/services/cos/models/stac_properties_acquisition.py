@@ -4,10 +4,15 @@
 from __future__ import annotations
 
 import datetime
+from typing import TYPE_CHECKING, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from ..models.satvu_cloud_confidence import SatvuCloudConfidence
 from ..models.satvu_filter import SatvuFilter
+
+if TYPE_CHECKING:
+    from ..models.eo_band import EoBand
 
 
 class StacPropertiesAcquisition(BaseModel):
@@ -28,6 +33,10 @@ class StacPropertiesAcquisition(BaseModel):
         satvu_filter ('SatvuFilter'):
         satvu_geometric_calibration (bool): Flag indicating if refined geometric processing was applied
         eo_cloud_cover (float): Estimate of cloud cover
+        satvu_cloud_confidence (Union['SatvuCloudConfidence', None]): Confidence level of the cloud cover estimate
+        instruments (list[str] | None):
+        constellation (None | str):
+        eo_bands (list[EoBand] | None):
     """
 
     datetime_: datetime.datetime = Field(
@@ -70,6 +79,20 @@ class StacPropertiesAcquisition(BaseModel):
     )
     eo_cloud_cover: float = Field(
         ..., description="""Estimate of cloud cover""", alias="eo:cloud_cover"
+    )
+    satvu_cloud_confidence: Union[SatvuCloudConfidence, None] = Field(
+        default=None,
+        description="""Confidence level of the cloud cover estimate""",
+        alias="satvu:cloud_confidence",
+    )
+    instruments: list[str] | None = Field(
+        default=None, description=None, alias="instruments"
+    )
+    constellation: None | str = Field(
+        default=None, description=None, alias="constellation"
+    )
+    eo_bands: list[EoBand] | None = Field(
+        default=None, description=None, alias="eo:bands"
     )
 
     model_config = ConfigDict(

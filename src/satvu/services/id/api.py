@@ -155,7 +155,7 @@ class IdService(SDKClient):
             CreateWebhookResponse
         """
 
-        json_body = body.model_dump(by_alias=True, mode="json")
+        json_body = body.model_dump(by_alias=True, mode="json", exclude_unset=True)
         if extra_body:
             json_body = _deep_merge(json_body or {}, extra_body)
 
@@ -272,7 +272,7 @@ class IdService(SDKClient):
             WebhookResponse
         """
 
-        json_body = body.model_dump(by_alias=True, mode="json")
+        json_body = body.model_dump(by_alias=True, mode="json", exclude_unset=True)
         if extra_body:
             json_body = _deep_merge(json_body or {}, extra_body)
 
@@ -556,7 +556,7 @@ class IdService(SDKClient):
             UserInfo
         """
 
-        json_body = body.model_dump(by_alias=True, mode="json")
+        json_body = body.model_dump(by_alias=True, mode="json", exclude_unset=True)
         if extra_body:
             json_body = _deep_merge(json_body or {}, extra_body)
 

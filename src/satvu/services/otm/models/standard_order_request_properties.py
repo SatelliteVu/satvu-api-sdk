@@ -21,14 +21,14 @@ class StandardOrderRequestProperties(BaseModel):
             from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set
             to the default specified in the relevant contract.
         name (None | str): The name of the order.
-        product (Literal['standard']): Standard Priority. Default: 'standard'.
         satvu_day_night_mode (Union[None, 'DayNightMode']):
-        max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage. Measured in percent.
-            Default: 15.
+        max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage where the lower limit is
+            capped to 25%. Measured in percent. Default: 25.
         min_off_nadir (Union[None, int]): The minimum angle from the sensor between nadir and the scene center. Measured
             in decimal degrees. Default: 0.
         max_off_nadir (Union[None, int]): The maximum angle from the sensor between nadir and the scene center. Measured
             in decimal degrees. Must be larger than `min_off_nadir`. Default: 30.
+        product (Literal['standard']): Standard Priority. Default: 'standard'.
     """
 
     datetime_: str = Field(
@@ -49,15 +49,12 @@ class StandardOrderRequestProperties(BaseModel):
     name: None | str = Field(
         default=None, description="""The name of the order.""", alias="name"
     )
-    product: Literal["standard"] = Field(
-        default="standard", description="""Standard Priority.""", alias="product"
-    )
     satvu_day_night_mode: Union[None, DayNightMode] = Field(
         default=None, description=None, alias="satvu:day_night_mode"
     )
     max_cloud_cover: Union[None, int] = Field(
-        default=15,
-        description="""The max threshold of acceptable cloud coverage. Measured in percent.""",
+        default=25,
+        description="""The max threshold of acceptable cloud coverage where the lower limit is capped to 25%. Measured in percent.""",
         alias="max_cloud_cover",
     )
     min_off_nadir: Union[None, int] = Field(
@@ -69,6 +66,9 @@ class StandardOrderRequestProperties(BaseModel):
         default=30,
         description="""The maximum angle from the sensor between nadir and the scene center. Measured in decimal degrees. Must be larger than `min_off_nadir`.""",
         alias="max_off_nadir",
+    )
+    product: Literal["standard"] = Field(
+        default="standard", description="""Standard Priority.""", alias="product"
     )
 
     model_config = ConfigDict(

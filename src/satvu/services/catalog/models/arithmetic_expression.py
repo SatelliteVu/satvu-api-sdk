@@ -16,14 +16,14 @@ if TYPE_CHECKING:
 class ArithmeticExpression(BaseModel):
     """
     Attributes:
-        op ('ArithmeticExpressionOp'):
         args (list[Union['ArithmeticExpression', 'PropertyRef', float]]):
+        op ('ArithmeticExpressionOp'):
     """
 
-    op: ArithmeticExpressionOp = Field(..., description=None, alias="op")
     args: list[Union[ArithmeticExpression, PropertyRef, float]] = Field(
         ..., description=None, alias="args"
     )
+    op: ArithmeticExpressionOp = Field(..., description=None, alias="op")
 
     model_config = ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"

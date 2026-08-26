@@ -19,12 +19,11 @@ if TYPE_CHECKING:
 class IsInListPredicate(BaseModel):
     """
     Attributes:
-        op ('IsInListPredicateOp'):
         args (list[Union['ArithmeticExpression', 'DateInstant', 'PropertyRef', 'TimestampInstant', bool, float,
             list[Union['ArithmeticExpression', 'DateInstant', 'PropertyRef', 'TimestampInstant', bool, float, str]], str]]):
+        op ('IsInListPredicateOp'):
     """
 
-    op: IsInListPredicateOp = Field(..., description=None, alias="op")
     args: list[
         Union[
             ArithmeticExpression,
@@ -47,6 +46,7 @@ class IsInListPredicate(BaseModel):
             str,
         ]
     ] = Field(..., description=None, alias="args")
+    op: IsInListPredicateOp = Field(..., description=None, alias="op")
 
     model_config = ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"

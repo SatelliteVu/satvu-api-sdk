@@ -3,10 +3,11 @@
 """
 Tests for id service.
 
-Generated from OpenAPI spec version 2.1.2.
+Generated from OpenAPI spec version v3.
 Uses property-based testing with hypothesis-jsonschema.
 """
 
+from contextlib import suppress
 from unittest.mock import Mock
 from uuid import uuid4
 
@@ -27,8 +28,17 @@ from satvu.services.id.models.test_webhook_response import TestWebhookResponse
 from satvu.services.id.models.user_info import UserInfo
 from satvu.services.id.models.user_settings import UserSettings
 from satvu.services.id.models.webhook_response import WebhookResponse
+from satvu.services.schema_conformance import (
+    assert_request_body_conforms,
+    assert_request_body_matches_input,
+    drop_optional_properties,
+)
 
-from .test_schemas import get_request_body_strategy, get_response_strategy
+from .test_schemas import (
+    get_request_body_schema,
+    get_request_body_strategy,
+    get_response_strategy,
+)
 
 
 @pytest.mark.parametrize("backend", ["stdlib", "httpx", "urllib3", "requests"])
@@ -127,13 +137,58 @@ class TestIdService:
         url = f"{self.base_url}{path}"
         pook.reset()
         pook.on()
-        pook.post(url).reply(200).json(response_data).header(
-            "Content-Type", "application/json"
-        )
+        mock = pook.post(url)
+        mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = CoreWebhook.model_validate(body_data)
         result = self.sdk.id.create_webhook(body=body)
+        assert_request_body_matches_input(mock, body_data, "POST /webhooks/")
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("/webhooks/", "post"),
+            "POST /webhooks/",
+            body_data,
+        )
         assert result is not None
         assert isinstance(result, CreateWebhookResponse)
+
+    @settings(
+        max_examples=5,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy("/webhooks/", "post", "200"),
+        body_data=get_request_body_strategy("/webhooks/", "post"),
+    )
+    def test_create_webhook_minimal_body_sends_only_what_was_set(
+        self, backend, response_data, body_data
+    ):
+        """
+        Test create_webhook sends no field the caller left unset.
+        """
+        path = "/webhooks/"
+        url = f"{self.base_url}{path}"
+        body_data = drop_optional_properties(
+            body_data, get_request_body_schema("/webhooks/", "post")
+        )
+        pook.reset()
+        pook.on()
+        mock = pook.post(url)
+        mock.reply(200).json(response_data).header("Content-Type", "application/json")
+        body = CoreWebhook.model_validate(body_data)
+        with suppress(Exception):
+            self.sdk.id.create_webhook(body=body)
+        assert_request_body_matches_input(mock, body_data, "POST /webhooks/")
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("/webhooks/", "post"),
+            "POST /webhooks/",
+            body_data,
+        )
 
     @settings(
         max_examples=10,
@@ -402,13 +457,59 @@ class TestIdService:
         url = f"{self.base_url}{path}"
         pook.reset()
         pook.on()
-        pook.patch(url).reply(200).json(response_data).header(
-            "Content-Type", "application/json"
-        )
+        mock = pook.patch(url)
+        mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = EditWebhookPayload.model_validate(body_data)
         result = self.sdk.id.edit_webhook(id=id, body=body)
+        assert_request_body_matches_input(mock, body_data, "PATCH /webhooks/{id}")
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("/webhooks/{id}", "patch"),
+            "PATCH /webhooks/{id}",
+            body_data,
+        )
         assert result is not None
         assert isinstance(result, WebhookResponse)
+
+    @settings(
+        max_examples=5,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy("/webhooks/{id}", "patch", "200"),
+        body_data=get_request_body_strategy("/webhooks/{id}", "patch"),
+    )
+    def test_edit_webhook_minimal_body_sends_only_what_was_set(
+        self, backend, response_data, body_data
+    ):
+        """
+        Test edit_webhook sends no field the caller left unset.
+        """
+        id = uuid4()
+        path = f"/webhooks/{id}"
+        url = f"{self.base_url}{path}"
+        body_data = drop_optional_properties(
+            body_data, get_request_body_schema("/webhooks/{id}", "patch")
+        )
+        pook.reset()
+        pook.on()
+        mock = pook.patch(url)
+        mock.reply(200).json(response_data).header("Content-Type", "application/json")
+        body = EditWebhookPayload.model_validate(body_data)
+        with suppress(Exception):
+            self.sdk.id.edit_webhook(id=id, body=body)
+        assert_request_body_matches_input(mock, body_data, "PATCH /webhooks/{id}")
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("/webhooks/{id}", "patch"),
+            "PATCH /webhooks/{id}",
+            body_data,
+        )
 
     @settings(
         max_examples=10,
@@ -915,13 +1016,58 @@ class TestIdService:
         url = f"{self.base_url}{path}"
         pook.reset()
         pook.on()
-        pook.put(url).reply(200).json(response_data).header(
-            "Content-Type", "application/json"
-        )
+        mock = pook.put(url)
+        mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = UserSettings.model_validate(body_data)
         result = self.sdk.id.edit_user_settings(body=body)
+        assert_request_body_matches_input(mock, body_data, "PUT /user/settings")
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("/user/settings", "put"),
+            "PUT /user/settings",
+            body_data,
+        )
         assert result is not None
         assert isinstance(result, UserInfo)
+
+    @settings(
+        max_examples=5,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy("/user/settings", "put", "200"),
+        body_data=get_request_body_strategy("/user/settings", "put"),
+    )
+    def test_edit_user_settings_minimal_body_sends_only_what_was_set(
+        self, backend, response_data, body_data
+    ):
+        """
+        Test edit_user_settings sends no field the caller left unset.
+        """
+        path = "/user/settings"
+        url = f"{self.base_url}{path}"
+        body_data = drop_optional_properties(
+            body_data, get_request_body_schema("/user/settings", "put")
+        )
+        pook.reset()
+        pook.on()
+        mock = pook.put(url)
+        mock.reply(200).json(response_data).header("Content-Type", "application/json")
+        body = UserSettings.model_validate(body_data)
+        with suppress(Exception):
+            self.sdk.id.edit_user_settings(body=body)
+        assert_request_body_matches_input(mock, body_data, "PUT /user/settings")
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("/user/settings", "put"),
+            "PUT /user/settings",
+            body_data,
+        )
 
     @settings(
         max_examples=10,

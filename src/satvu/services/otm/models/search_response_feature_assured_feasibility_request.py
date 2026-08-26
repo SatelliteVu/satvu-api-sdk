@@ -26,6 +26,7 @@ class SearchResponseFeatureAssuredFeasibilityRequest(BaseModel):
         contract_id (UUID): Contract ID associated with the search.
         collection (str): Name of collection associated with the search result item.
         links (Union[None, list[Link]]): A list of links to the STAC item that fulfilled the order, if applicable.
+        feature_type (Literal['feasibility-request-assured']):  Default: 'feasibility-request-assured'.
     """
 
     type_: Literal["Feature"] = Field(default="Feature", description=None, alias="type")
@@ -52,6 +53,9 @@ class SearchResponseFeatureAssuredFeasibilityRequest(BaseModel):
         default=None,
         description="""A list of links to the STAC item that fulfilled the order, if applicable.""",
         alias="links",
+    )
+    feature_type: Literal["feasibility-request-assured"] = Field(
+        default="feasibility-request-assured", description=None, alias="feature_type"
     )
 
     model_config = ConfigDict(

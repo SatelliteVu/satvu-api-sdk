@@ -23,6 +23,12 @@ class StoredStandardOrderRequestProperties(BaseModel):
         status ('OrderStatus'):
         created_at (datetime.datetime): The datetime at which the order was created.
         updated_at (datetime.datetime): The datetime at which the order was last updated.
+        stac_item_id (None | str): The item id of the STAC item that fulfilled the order, if the order has been
+            fulfilled.
+        stac_datetime (datetime.datetime | None): The acquisition datetime of the STAC item that fulfilled the order, if
+            the order has been fulfilled.
+        stac_metadata (dict | None): STAC item metadata including presigned asset URLs for high-resolution imagery, if
+            the order has been fulfilled and high-res assets are available.
         licence_level (None | str): The optional licence level for the order. Licence levels are specific to the
             contract. If not specified, the option will be set to the licence with the smallest uplift in the relevant
             contract.
@@ -30,16 +36,16 @@ class StoredStandardOrderRequestProperties(BaseModel):
             from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set
             to the default specified in the relevant contract.
         name (None | str): The name of the order.
-        product (Literal['standard']): Standard Priority. Default: 'standard'.
         satvu_day_night_mode (Union[None, 'DayNightMode']):
         max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage. Measured in percent.
-            Default: 15.
+            Default: 25.
         min_off_nadir (Union[None, int]): The minimum angle from the sensor between nadir and the scene center. Measured
             in decimal degrees. Default: 0.
         max_off_nadir (Union[None, int]): The maximum angle from the sensor between nadir and the scene center. Measured
             in decimal degrees. Must be larger than `min_off_nadir`. Default: 30.
+        product (Literal['standard']): Standard Priority. Default: 'standard'.
         status_history (Union[None, list[StatusHistoryEntry]]): Chronological history of status changes for this order,
-            from oldest to newest.
+            newest first.
     """
 
     datetime_: str = Field(
@@ -58,6 +64,21 @@ class StoredStandardOrderRequestProperties(BaseModel):
         description="""The datetime at which the order was last updated.""",
         alias="updated_at",
     )
+    stac_item_id: None | str = Field(
+        default=None,
+        description="""The item id of the STAC item that fulfilled the order, if the order has been fulfilled.""",
+        alias="stac:item_id",
+    )
+    stac_datetime: datetime.datetime | None = Field(
+        default=None,
+        description="""The acquisition datetime of the STAC item that fulfilled the order, if the order has been fulfilled.""",
+        alias="stac:datetime",
+    )
+    stac_metadata: dict | None = Field(
+        default=None,
+        description="""STAC item metadata including presigned asset URLs for high-resolution imagery, if the order has been fulfilled and high-res assets are available.""",
+        alias="stac:metadata",
+    )
     licence_level: None | str = Field(
         default=None,
         description="""The optional licence level for the order. Licence levels are specific to the contract. If not specified, the option will be set to the licence with the smallest uplift in the relevant contract.""",
@@ -71,14 +92,11 @@ class StoredStandardOrderRequestProperties(BaseModel):
     name: None | str = Field(
         default=None, description="""The name of the order.""", alias="name"
     )
-    product: Literal["standard"] = Field(
-        default="standard", description="""Standard Priority.""", alias="product"
-    )
     satvu_day_night_mode: Union[None, DayNightMode] = Field(
         default=None, description=None, alias="satvu:day_night_mode"
     )
     max_cloud_cover: Union[None, int] = Field(
-        default=15,
+        default=25,
         description="""The max threshold of acceptable cloud coverage. Measured in percent.""",
         alias="max_cloud_cover",
     )
@@ -92,9 +110,12 @@ class StoredStandardOrderRequestProperties(BaseModel):
         description="""The maximum angle from the sensor between nadir and the scene center. Measured in decimal degrees. Must be larger than `min_off_nadir`.""",
         alias="max_off_nadir",
     )
+    product: Literal["standard"] = Field(
+        default="standard", description="""Standard Priority.""", alias="product"
+    )
     status_history: Union[None, list[StatusHistoryEntry]] = Field(
         default=None,
-        description="""Chronological history of status changes for this order, from oldest to newest.""",
+        description="""Chronological history of status changes for this order, newest first.""",
         alias="status_history",
     )
 

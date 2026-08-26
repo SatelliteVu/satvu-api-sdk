@@ -7,6 +7,7 @@ Generated from OpenAPI spec version v3.
 Uses property-based testing with hypothesis-jsonschema.
 """
 
+from contextlib import suppress
 from typing import Union
 from unittest.mock import Mock
 from uuid import uuid4
@@ -17,7 +18,8 @@ from hypothesis import HealthCheck, given, settings
 from pydantic import TypeAdapter
 
 from satvu import SatVuSDK, create_http_client
-from satvu.http.errors import ClientError
+from satvu.http.errors import ClientError, ServerError
+from satvu.services.cos.models.download_pending import DownloadPending
 from satvu.services.cos.models.feature_collection_order import FeatureCollectionOrder
 from satvu.services.cos.models.order_download_url import OrderDownloadUrl
 from satvu.services.cos.models.order_edit_payload import OrderEditPayload
@@ -35,8 +37,17 @@ from satvu.services.cos.models.reseller_submission_order_payload import (
     ResellerSubmissionOrderPayload,
 )
 from satvu.services.cos.models.search_request import SearchRequest
+from satvu.services.schema_conformance import (
+    assert_request_body_conforms,
+    assert_request_body_matches_input,
+    drop_optional_properties,
+)
 
-from .test_schemas import get_request_body_strategy, get_response_strategy
+from .test_schemas import (
+    get_request_body_schema,
+    get_request_body_strategy,
+    get_response_strategy,
+)
 
 
 @pytest.mark.parametrize("backend", ["stdlib", "httpx", "urllib3", "requests"])
@@ -180,16 +191,71 @@ class TestCosService:
         url = f"{self.base_url}{path}"
         pook.reset()
         pook.on()
-        pook.patch(url).reply(200).json(response_data).header(
-            "Content-Type", "application/json"
-        )
+        mock = pook.patch(url)
+        mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = OrderEditPayload.model_validate(body_data)
         result = self.sdk.cos.edit_order(
             contract_id=contract_id, order_id=order_id, body=body
         )
+        assert_request_body_matches_input(
+            mock, body_data, "PATCH /{contract_id}/{order_id}"
+        )
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("/{contract_id}/{order_id}", "patch"),
+            "PATCH /{contract_id}/{order_id}",
+            body_data,
+        )
         assert result is not None
         assert isinstance(
             result, (FeatureCollectionOrder, ResellerFeatureCollectionOrder)
+        )
+
+    @settings(
+        max_examples=5,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
+            "/{contract_id}/{order_id}", "patch", "200"
+        ),
+        body_data=get_request_body_strategy("/{contract_id}/{order_id}", "patch"),
+    )
+    def test_edit_order_minimal_body_sends_only_what_was_set(
+        self, backend, response_data, body_data
+    ):
+        """
+        Test edit_order sends no field the caller left unset.
+        """
+        contract_id = uuid4()
+        order_id = uuid4()
+        path = f"/{contract_id}/{order_id}"
+        url = f"{self.base_url}{path}"
+        body_data = drop_optional_properties(
+            body_data, get_request_body_schema("/{contract_id}/{order_id}", "patch")
+        )
+        pook.reset()
+        pook.on()
+        mock = pook.patch(url)
+        mock.reply(200).json(response_data).header("Content-Type", "application/json")
+        body = OrderEditPayload.model_validate(body_data)
+        with suppress(Exception):
+            self.sdk.cos.edit_order(
+                contract_id=contract_id, order_id=order_id, body=body
+            )
+        assert_request_body_matches_input(
+            mock, body_data, "PATCH /{contract_id}/{order_id}"
+        )
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("/{contract_id}/{order_id}", "patch"),
+            "PATCH /{contract_id}/{order_id}",
+            body_data,
         )
 
     @settings(
@@ -342,17 +408,66 @@ class TestCosService:
         url = f"{self.base_url}{path}"
         pook.reset()
         pook.on()
-        pook.post(url).reply(201).json(response_data).header(
-            "Content-Type", "application/json"
-        )
+        mock = pook.post(url)
+        mock.reply(201).json(response_data).header("Content-Type", "application/json")
         body_adapter = TypeAdapter(
             Union[OrderSubmissionPayload, ResellerSubmissionOrderPayload]
         )
         body = body_adapter.validate_python(body_data)
         result = self.sdk.cos.submit_order(contract_id=contract_id, body=body)
+        assert_request_body_matches_input(mock, body_data, "POST /{contract_id}/")
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("/{contract_id}/", "post"),
+            "POST /{contract_id}/",
+            body_data,
+        )
         assert result is not None
         assert isinstance(
             result, (FeatureCollectionOrder, ResellerFeatureCollectionOrder)
+        )
+
+    @settings(
+        max_examples=5,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy("/{contract_id}/", "post", "201"),
+        body_data=get_request_body_strategy("/{contract_id}/", "post"),
+    )
+    def test_submit_order_minimal_body_sends_only_what_was_set(
+        self, backend, response_data, body_data
+    ):
+        """
+        Test submit_order sends no field the caller left unset.
+        """
+        contract_id = uuid4()
+        path = f"/{contract_id}/"
+        url = f"{self.base_url}{path}"
+        body_data = drop_optional_properties(
+            body_data, get_request_body_schema("/{contract_id}/", "post")
+        )
+        pook.reset()
+        pook.on()
+        mock = pook.post(url)
+        mock.reply(201).json(response_data).header("Content-Type", "application/json")
+        body_adapter = TypeAdapter(
+            Union[OrderSubmissionPayload, ResellerSubmissionOrderPayload]
+        )
+        body = body_adapter.validate_python(body_data)
+        with suppress(Exception):
+            self.sdk.cos.submit_order(contract_id=contract_id, body=body)
+        assert_request_body_matches_input(mock, body_data, "POST /{contract_id}/")
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("/{contract_id}/", "post"),
+            "POST /{contract_id}/",
+            body_data,
         )
 
     @settings(
@@ -505,6 +620,41 @@ class TestCosService:
         ],
     )
     @given(
+        response_data=get_response_strategy("/{contract_id}/", "post", "500"),
+        body_data=get_request_body_strategy("/{contract_id}/", "post"),
+    )
+    def test_submit_order_500_error(self, backend, response_data, body_data):
+        """
+        Test submit_order with 500 error response.
+
+        HTTP 500 errors raise ServerError.
+        """
+        contract_id = uuid4()
+        path = f"/{contract_id}/"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.post(url).reply(500).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        body_adapter = TypeAdapter(
+            Union[OrderSubmissionPayload, ResellerSubmissionOrderPayload]
+        )
+        body = body_adapter.validate_python(body_data)
+        with pytest.raises(ServerError) as exc_info:
+            self.sdk.cos.submit_order(contract_id=contract_id, body=body)
+        assert exc_info.value.status_code == 500
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
         response_data=get_response_strategy("/{contract_id}/search/", "post", "200"),
         body_data=get_request_body_strategy("/{contract_id}/search/", "post"),
     )
@@ -517,13 +667,63 @@ class TestCosService:
         url = f"{self.base_url}{path}"
         pook.reset()
         pook.on()
-        pook.post(url).reply(200).json(response_data).header(
-            "Content-Type", "application/json"
-        )
+        mock = pook.post(url)
+        mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = SearchRequest.model_validate(body_data)
         result = self.sdk.cos.search_orders(contract_id=contract_id, body=body)
+        assert_request_body_matches_input(
+            mock, body_data, "POST /{contract_id}/search/"
+        )
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("/{contract_id}/search/", "post"),
+            "POST /{contract_id}/search/",
+            body_data,
+        )
         assert result is not None
         assert isinstance(result, OrderPage)
+
+    @settings(
+        max_examples=5,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy("/{contract_id}/search/", "post", "200"),
+        body_data=get_request_body_strategy("/{contract_id}/search/", "post"),
+    )
+    def test_search_orders_minimal_body_sends_only_what_was_set(
+        self, backend, response_data, body_data
+    ):
+        """
+        Test search_orders sends no field the caller left unset.
+        """
+        contract_id = uuid4()
+        path = f"/{contract_id}/search/"
+        url = f"{self.base_url}{path}"
+        body_data = drop_optional_properties(
+            body_data, get_request_body_schema("/{contract_id}/search/", "post")
+        )
+        pook.reset()
+        pook.on()
+        mock = pook.post(url)
+        mock.reply(200).json(response_data).header("Content-Type", "application/json")
+        body = SearchRequest.model_validate(body_data)
+        with suppress(Exception):
+            self.sdk.cos.search_orders(contract_id=contract_id, body=body)
+        assert_request_body_matches_input(
+            mock, body_data, "POST /{contract_id}/search/"
+        )
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("/{contract_id}/search/", "post"),
+            "POST /{contract_id}/search/",
+            body_data,
+        )
 
     @settings(
         max_examples=10,
@@ -590,6 +790,40 @@ class TestCosService:
         )
         assert result is not None
         assert isinstance(result, OrderItemDownloadUrl)
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
+            "/{contract_id}/{order_id}/{item_id}/download", "get", "202"
+        )
+    )
+    def test_download_order_item_202(self, backend, response_data):
+        """
+        Test download_order_item with 202 response.
+        """
+        contract_id = uuid4()
+        order_id = uuid4()
+        item_id = uuid4()
+        path = f"/{contract_id}/{order_id}/{item_id}/download"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.get(url).reply(202).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        result = self.sdk.cos.download_order_item(
+            contract_id=contract_id, order_id=order_id, item_id=item_id
+        )
+        assert result is not None
+        assert isinstance(result, DownloadPending)
 
     @settings(
         max_examples=10,
@@ -705,6 +939,37 @@ class TestCosService:
     )
     @given(
         response_data=get_response_strategy(
+            "/{contract_id}/{order_id}/download", "get", "202"
+        )
+    )
+    def test_download_order_202(self, backend, response_data):
+        """
+        Test download_order with 202 response.
+        """
+        contract_id = uuid4()
+        order_id = uuid4()
+        path = f"/{contract_id}/{order_id}/download"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.get(url).reply(202).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        result = self.sdk.cos.download_order(contract_id=contract_id, order_id=order_id)
+        assert result is not None
+        assert isinstance(result, DownloadPending)
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
             "/{contract_id}/{order_id}/download", "get", "404"
         )
     )
@@ -782,14 +1047,61 @@ class TestCosService:
         url = f"{self.base_url}{path}"
         pook.reset()
         pook.on()
-        pook.post(url).reply(200).json(response_data).header(
-            "Content-Type", "application/json"
-        )
+        mock = pook.post(url)
+        mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body_adapter = TypeAdapter(Union[PriceRequest, ResellerPriceRequest])
         body = body_adapter.validate_python(body_data)
         result = self.sdk.cos.calculate_price(contract_id=contract_id, body=body)
+        assert_request_body_matches_input(mock, body_data, "POST /{contract_id}/price")
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("/{contract_id}/price", "post"),
+            "POST /{contract_id}/price",
+            body_data,
+        )
         assert result is not None
         assert isinstance(result, (OrderPrice, ResellerOrderPrice))
+
+    @settings(
+        max_examples=5,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy("/{contract_id}/price", "post", "200"),
+        body_data=get_request_body_strategy("/{contract_id}/price", "post"),
+    )
+    def test_calculate_price_minimal_body_sends_only_what_was_set(
+        self, backend, response_data, body_data
+    ):
+        """
+        Test calculate_price sends no field the caller left unset.
+        """
+        contract_id = uuid4()
+        path = f"/{contract_id}/price"
+        url = f"{self.base_url}{path}"
+        body_data = drop_optional_properties(
+            body_data, get_request_body_schema("/{contract_id}/price", "post")
+        )
+        pook.reset()
+        pook.on()
+        mock = pook.post(url)
+        mock.reply(200).json(response_data).header("Content-Type", "application/json")
+        body_adapter = TypeAdapter(Union[PriceRequest, ResellerPriceRequest])
+        body = body_adapter.validate_python(body_data)
+        with suppress(Exception):
+            self.sdk.cos.calculate_price(contract_id=contract_id, body=body)
+        assert_request_body_matches_input(mock, body_data, "POST /{contract_id}/price")
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("/{contract_id}/price", "post"),
+            "POST /{contract_id}/price",
+            body_data,
+        )
 
     @settings(
         max_examples=10,

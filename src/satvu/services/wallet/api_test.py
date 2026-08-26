@@ -3,7 +3,7 @@
 """
 Tests for wallet service.
 
-Generated from OpenAPI spec version 0.0.1.
+Generated from OpenAPI spec version v1.
 Uses property-based testing with hypothesis-jsonschema.
 """
 

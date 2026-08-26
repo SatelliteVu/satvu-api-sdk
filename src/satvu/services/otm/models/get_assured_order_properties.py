@@ -33,7 +33,7 @@ class GetAssuredOrderProperties(BaseModel):
             the order has been fulfilled and high-res assets are available.
         satvu_day_night_mode (Union[None, 'DayNightMode']):
         max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage. Measured in percent.
-            Default: 15.
+            Default: 25.
         min_off_nadir (Union[None, int]): The minimum angle from the sensor between nadir and the scene center. Measured
             in decimal degrees. Default: 0.
         max_off_nadir (Union[None, int]): The maximum angle from the sensor between nadir and the scene center. Measured
@@ -46,7 +46,7 @@ class GetAssuredOrderProperties(BaseModel):
             to the default specified in the relevant contract.
         name (None | str): The name of the order.
         status_history (Union[None, list[StatusHistoryEntry]]): Chronological history of status changes for this order,
-            from oldest to newest.
+            newest first.
     """
 
     product: Literal["assured"] = Field(
@@ -88,7 +88,7 @@ class GetAssuredOrderProperties(BaseModel):
         default=None, description=None, alias="satvu:day_night_mode"
     )
     max_cloud_cover: Union[None, int] = Field(
-        default=15,
+        default=25,
         description="""The max threshold of acceptable cloud coverage. Measured in percent.""",
         alias="max_cloud_cover",
     )
@@ -117,7 +117,7 @@ class GetAssuredOrderProperties(BaseModel):
     )
     status_history: Union[None, list[StatusHistoryEntry]] = Field(
         default=None,
-        description="""Chronological history of status changes for this order, from oldest to newest.""",
+        description="""Chronological history of status changes for this order, newest first.""",
         alias="status_history",
     )
 

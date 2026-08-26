@@ -17,7 +17,6 @@ if TYPE_CHECKING:
 class ResellerFeatureCollectionOrder(BaseModel):
     """
     Attributes:
-        reseller_end_user_id (UUID): The ID of the end user for whom the order is placed for.
         id (UUID): The order ID.
         features (list[FeatureOrder]): An array of Item objects.
         owned_by (str): The owner of the order.
@@ -25,6 +24,7 @@ class ResellerFeatureCollectionOrder(BaseModel):
         contract_id (UUID): The contract ID.
         price (OrderPricing): Detailed pricing breakdown for a satellite imagery order, including base price and license
             uplifts.
+        reseller_end_user_id (None | UUID): The ID of the end user for whom the order is placed for.
         type_ (Literal['FeatureCollection']):  Default: 'FeatureCollection'.
         name (None | str): The name of the order.
         updated_at (datetime.datetime | None): The datetime at which the order was updated.
@@ -32,11 +32,6 @@ class ResellerFeatureCollectionOrder(BaseModel):
             orders created before licensing was introduced.
     """
 
-    reseller_end_user_id: UUID = Field(
-        ...,
-        description="""The ID of the end user for whom the order is placed for.""",
-        alias="reseller_end_user_id",
-    )
     id: UUID = Field(..., description="""The order ID.""", alias="id")
     features: list[FeatureOrder] = Field(
         ..., description="""An array of Item objects.""", alias="features"
@@ -56,6 +51,11 @@ class ResellerFeatureCollectionOrder(BaseModel):
         ...,
         description="""Detailed pricing breakdown for a satellite imagery order, including base price and license uplifts.""",
         alias="price",
+    )
+    reseller_end_user_id: None | UUID = Field(
+        default=None,
+        description="""The ID of the end user for whom the order is placed for.""",
+        alias="reseller_end_user_id",
     )
     type_: Literal["FeatureCollection"] = Field(
         default="FeatureCollection", description=None, alias="type"

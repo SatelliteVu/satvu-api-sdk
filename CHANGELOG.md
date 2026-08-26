@@ -1,3 +1,20 @@
+# [0.10.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.9.0...v0.10.0) (2026-08-26)
+
+
+### Bug Fixes
+
+* **builder:** apply by_alias to list request bodies
+* **builder:** key hypothesis example cache on spec content
+* **builder:** scope example cache pruning to the spec environment
+* **ci:** rebase before pushing CHANGELOG in release workflow
+* **misc:** stop tracking generated test_schemas.py fixtures
+
+
+### Features
+
+* **builder:** omit unset fields from request bodies
+* **core:** add x-download-request-id header to download endpoints
+
 # [0.9.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.8.0...v0.9.0) (2026-05-07)
 
 ## [0.9.0.20260824.1429] - 2026-08-24

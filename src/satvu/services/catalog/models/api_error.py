@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -14,12 +14,10 @@ if TYPE_CHECKING:
 class ApiError(BaseModel):
     """
     Attributes:
-        errors (Union[None, list[Error]]):
+        errors (list[Error]):
     """
 
-    errors: Union[None, list[Error]] = Field(
-        default=None, description=None, alias="Errors"
-    )
+    errors: list[Error] = Field(..., description=None, alias="errors")
 
     model_config = ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"

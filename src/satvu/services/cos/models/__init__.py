@@ -7,6 +7,9 @@ from .download_order_item_primary_formats_item import (
     DownloadOrderItemPrimaryFormatsItem,
 )
 from .download_order_primary_formats_item import DownloadOrderPrimaryFormatsItem
+from .download_pending import DownloadPending
+from .download_progress import DownloadProgress
+from .eo_band import EoBand
 from .feature_collection_order import FeatureCollectionOrder
 from .feature_order import FeatureOrder
 from .geojson_polygon import GeojsonPolygon
@@ -34,6 +37,7 @@ from .reseller_order_price import ResellerOrderPrice
 from .reseller_price_request import ResellerPriceRequest
 from .reseller_submission_order_payload import ResellerSubmissionOrderPayload
 from .response_context import ResponseContext
+from .satvu_cloud_confidence import SatvuCloudConfidence
 from .satvu_filter import SatvuFilter
 from .search_request import SearchRequest
 from .stac_link import StacLink
@@ -47,6 +51,9 @@ __all__ = (
     "DownloadOrderCollectionsItem",
     "DownloadOrderItemPrimaryFormatsItem",
     "DownloadOrderPrimaryFormatsItem",
+    "DownloadPending",
+    "DownloadProgress",
+    "EoBand",
     "FeatureCollectionOrder",
     "FeatureOrder",
     "GeojsonPolygon",
@@ -74,6 +81,7 @@ __all__ = (
     "ResellerPriceRequest",
     "ResellerSubmissionOrderPayload",
     "ResponseContext",
+    "SatvuCloudConfidence",
     "SatvuFilter",
     "SearchRequest",
     "StacLink",

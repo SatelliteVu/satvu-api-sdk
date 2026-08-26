@@ -33,6 +33,7 @@ class ResellerStoredOrderResponse(BaseModel):
         contract_id (UUID): Contract ID.
         price (Price):
         reseller_end_user_id (UUID):
+        series_id (None | UUID): ID of the recurring order series this order belongs to.
     """
 
     type_: Literal["Feature"] = Field(default="Feature", description=None, alias="type")
@@ -52,6 +53,11 @@ class ResellerStoredOrderResponse(BaseModel):
     price: Price = Field(..., description=None, alias="price")
     reseller_end_user_id: UUID = Field(
         ..., description=None, alias="reseller_end_user_id"
+    )
+    series_id: None | UUID = Field(
+        default=None,
+        description="""ID of the recurring order series this order belongs to.""",
+        alias="series_id",
     )
 
     model_config = ConfigDict(

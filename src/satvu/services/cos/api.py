@@ -21,6 +21,7 @@ from satvu.services.cos.models.download_order_item_primary_formats_item import (
 from satvu.services.cos.models.download_order_primary_formats_item import (
     DownloadOrderPrimaryFormatsItem,
 )
+from satvu.services.cos.models.download_pending import DownloadPending
 from satvu.services.cos.models.feature_collection_order import FeatureCollectionOrder
 from satvu.services.cos.models.order_download_url import OrderDownloadUrl
 from satvu.services.cos.models.order_edit_payload import OrderEditPayload
@@ -68,7 +69,7 @@ class CosService(SDKClient):
         """
         Order details
 
-        Retrieve order details for a specified Order ID owned by the authenticated user.
+        Retrieve order details for a specified Order ID in the contract.
 
         Args:
             contract_id (UUID): The contract ID.
@@ -119,7 +120,7 @@ class CosService(SDKClient):
         Returns:
             Union['FeatureCollectionOrder', 'ResellerFeatureCollectionOrder']
         """
-        json_body = body.model_dump(by_alias=True, mode="json")
+        json_body = body.model_dump(by_alias=True, mode="json", exclude_unset=True)
         if extra_body:
             json_body = _deep_merge(json_body or {}, extra_body)
         result = self.make_request(
@@ -148,7 +149,7 @@ class CosService(SDKClient):
         """
         Query orders
 
-        Retrieve all existing orders owned by the authenticated user.
+        Retrieve all existing orders for the contract.
 
         Args:
             contract_id (UUID): The contract ID.
@@ -244,7 +245,7 @@ class CosService(SDKClient):
         Returns:
             Union['FeatureCollectionOrder', 'ResellerFeatureCollectionOrder']
         """
-        json_body = body.model_dump(by_alias=True, mode="json")
+        json_body = body.model_dump(by_alias=True, mode="json", exclude_unset=True)
         if extra_body:
             json_body = _deep_merge(json_body or {}, extra_body)
         result = self.make_request(
@@ -283,7 +284,7 @@ class CosService(SDKClient):
         Returns:
             OrderPage
         """
-        json_body = body.model_dump(by_alias=True, mode="json")
+        json_body = body.model_dump(by_alias=True, mode="json", exclude_unset=True)
         if extra_body:
             json_body = _deep_merge(json_body or {}, extra_body)
         result = self.make_request(
@@ -355,7 +356,7 @@ class CosService(SDKClient):
         ] = None,
         redirect: Union[None, bool] = True,
         timeout: int | None = None,
-    ) -> Union[OrderItemDownloadUrl, Any, io.BytesIO]:
+    ) -> Union[OrderItemDownloadUrl, DownloadPending, io.BytesIO]:
         """
         Item download
 
@@ -383,7 +384,7 @@ class CosService(SDKClient):
                 provided.
 
         Returns:
-            Union[OrderItemDownloadUrl, Any, io.BytesIO]
+            Union[OrderItemDownloadUrl, DownloadPending, io.BytesIO]
         """
         params = {"primary_formats": primary_formats, "redirect": redirect}
         request_id = str(uuid4())
@@ -404,7 +405,7 @@ class CosService(SDKClient):
         if response.status_code == 200:
             return parse_response(response.json().unwrap(), OrderItemDownloadUrl)
         if response.status_code == 202:
-            return response.json().unwrap()
+            return parse_response(response.json().unwrap(), DownloadPending)
         return response.json().unwrap()
 
     def download_order_item_to_file(
@@ -468,7 +469,7 @@ class CosService(SDKClient):
         primary_formats: Union[None, list["DownloadOrderPrimaryFormatsItem"]] = None,
         redirect: Union[None, bool] = True,
         timeout: int | None = None,
-    ) -> Union[OrderDownloadUrl, Any, io.BytesIO]:
+    ) -> Union[OrderDownloadUrl, DownloadPending, io.BytesIO]:
         """
         Order download
 
@@ -502,7 +503,7 @@ class CosService(SDKClient):
                 provided.
 
         Returns:
-            Union[OrderDownloadUrl, Any, io.BytesIO]
+            Union[OrderDownloadUrl, DownloadPending, io.BytesIO]
         """
         params = {
             "collections": collections,
@@ -527,7 +528,7 @@ class CosService(SDKClient):
         if response.status_code == 200:
             return parse_response(response.json().unwrap(), OrderDownloadUrl)
         if response.status_code == 202:
-            return response.json().unwrap()
+            return parse_response(response.json().unwrap(), DownloadPending)
         return response.json().unwrap()
 
     def download_order_to_file(
@@ -623,7 +624,7 @@ class CosService(SDKClient):
         Returns:
             Union['OrderPrice', 'ResellerOrderPrice']
         """
-        json_body = body.model_dump(by_alias=True, mode="json")
+        json_body = body.model_dump(by_alias=True, mode="json", exclude_unset=True)
         if extra_body:
             json_body = _deep_merge(json_body or {}, extra_body)
         params = {"baseprice": baseprice}

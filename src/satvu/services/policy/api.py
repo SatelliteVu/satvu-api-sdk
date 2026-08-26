@@ -66,7 +66,7 @@ class PolicyService(SDKClient):
             RouterActiveContractsResponse
         """
 
-        json_body = body.model_dump(by_alias=True, mode="json")
+        json_body = body.model_dump(by_alias=True, mode="json", exclude_unset=True)
         if extra_body:
             json_body = _deep_merge(json_body or {}, extra_body)
 
@@ -113,7 +113,7 @@ class PolicyService(SDKClient):
             TermsUserTermsAccepted
         """
 
-        json_body = body.model_dump(by_alias=True, mode="json")
+        json_body = body.model_dump(by_alias=True, mode="json", exclude_unset=True)
         if extra_body:
             json_body = _deep_merge(json_body or {}, extra_body)
 

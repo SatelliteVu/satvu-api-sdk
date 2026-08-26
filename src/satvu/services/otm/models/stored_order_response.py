@@ -32,6 +32,7 @@ class StoredOrderResponse(BaseModel):
         links (list[Link]): A list of related links for the order.
         contract_id (UUID): Contract ID.
         price (Price):
+        series_id (None | UUID): ID of the recurring order series this order belongs to.
     """
 
     type_: Literal["Feature"] = Field(default="Feature", description=None, alias="type")
@@ -49,6 +50,11 @@ class StoredOrderResponse(BaseModel):
     )
     contract_id: UUID = Field(..., description="""Contract ID.""", alias="contract_id")
     price: Price = Field(..., description=None, alias="price")
+    series_id: None | UUID = Field(
+        default=None,
+        description="""ID of the recurring order series this order belongs to.""",
+        alias="series_id",
+    )
 
     model_config = ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"

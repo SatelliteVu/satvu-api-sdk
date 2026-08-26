@@ -29,6 +29,8 @@ class SearchRequest(BaseModel):
         limit (int | None): The number of items to return per page. Default: 25.
         collections (list['Collections'] | None): A list of collection types.
         ids (list[UUID] | None): A list of IDs.
+        series_ids (list[UUID] | None): Filter results by series IDs. Only orders belonging to these series are
+            returned.
         datetime_ (None | str):
         created_at (None | str): The datetime interval during which the entity was created.
         updated_at (None | str): The datetime interval during which the entity was last updated.
@@ -55,6 +57,11 @@ class SearchRequest(BaseModel):
     )
     ids: list[UUID] | None = Field(
         default=None, description="""A list of IDs.""", alias="ids"
+    )
+    series_ids: list[UUID] | None = Field(
+        default=None,
+        description="""Filter results by series IDs. Only orders belonging to these series are returned.""",
+        alias="series_ids",
     )
     datetime_: None | str = Field(default=None, description=None, alias="datetime")
     created_at: None | str = Field(

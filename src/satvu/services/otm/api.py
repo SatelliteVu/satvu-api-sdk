@@ -14,7 +14,9 @@ from satvu.result import Ok as ResultOk
 from satvu.result import Result, is_err
 from satvu.services.otm.models.assured_order_request import AssuredOrderRequest
 from satvu.services.otm.models.collection import Collection
+from satvu.services.otm.models.download_pending import DownloadPending
 from satvu.services.otm.models.edit_order_payload import EditOrderPayload
+from satvu.services.otm.models.edit_series_properties import EditSeriesProperties
 from satvu.services.otm.models.feasibility_request import FeasibilityRequest
 from satvu.services.otm.models.feasibility_response import FeasibilityResponse
 from satvu.services.otm.models.get_order_response import GetOrderResponse
@@ -22,8 +24,12 @@ from satvu.services.otm.models.list_order_tasks_response import ListOrderTasksRe
 from satvu.services.otm.models.list_order_tasks_unavailable_response import (
     ListOrderTasksUnavailableResponse,
 )
+from satvu.services.otm.models.list_series_response import ListSeriesResponse
 from satvu.services.otm.models.list_stored_orders_response import (
     ListStoredOrdersResponse,
+)
+from satvu.services.otm.models.list_stored_orders_response_1 import (
+    ListStoredOrdersResponse1,
 )
 from satvu.services.otm.models.modify_feasibility_request import (
     ModifyFeasibilityRequest,
@@ -48,6 +54,8 @@ from satvu.services.otm.models.reseller_stored_order_response import (
 )
 from satvu.services.otm.models.search_request import SearchRequest
 from satvu.services.otm.models.search_response import SearchResponse
+from satvu.services.otm.models.series_price_response import SeriesPriceResponse
+from satvu.services.otm.models.series_request import SeriesRequest
 from satvu.services.otm.models.stac_feature import StacFeature
 from satvu.services.otm.models.standard_order_request import StandardOrderRequest
 from satvu.services.otm.models.stored_feasibility_feature_collection import (
@@ -57,6 +65,7 @@ from satvu.services.otm.models.stored_feasibility_request import (
     StoredFeasibilityRequest,
 )
 from satvu.services.otm.models.stored_order_response import StoredOrderResponse
+from satvu.services.otm.models.stored_series_response import StoredSeriesResponse
 from satvu.shared.parsing import parse_response
 
 
@@ -87,7 +96,7 @@ class OtmService(SDKClient):
         per_page: Union[None, int] = 25,
         token: None | str = None,
         timeout: int | None = None,
-    ) -> ListStoredOrdersResponse:
+    ) -> ListStoredOrdersResponse1:
         """
         List all tasking orders.
 
@@ -102,7 +111,7 @@ class OtmService(SDKClient):
                 provided.
 
         Returns:
-            ListStoredOrdersResponse
+            ListStoredOrdersResponse1
         """
         params = {"per_page": per_page, "token": token}
         result = self.make_request(
@@ -115,7 +124,7 @@ class OtmService(SDKClient):
             raise result.error()
         response = result.unwrap()
         if response.status_code == 200:
-            return parse_response(response.json().unwrap(), ListStoredOrdersResponse)
+            return parse_response(response.json().unwrap(), ListStoredOrdersResponse1)
         return response.json().unwrap()
 
     def get_tasking_orders_iter(
@@ -123,7 +132,7 @@ class OtmService(SDKClient):
         contract_id: UUID,
         per_page: Union[None, int] = 25,
         max_pages: int | None = None,
-    ) -> Generator[ListStoredOrdersResponse, None, None]:
+    ) -> Generator[ListStoredOrdersResponse1, None, None]:
         """
         List all tasking orders. (Paginated Iterator)
 
@@ -197,7 +206,7 @@ class OtmService(SDKClient):
         Returns:
             Union['ResellerStoredOrderResponse', 'StoredOrderResponse']
         """
-        json_body = body.model_dump(by_alias=True, mode="json")
+        json_body = body.model_dump(by_alias=True, mode="json", exclude_unset=True)
         if extra_body:
             json_body = _deep_merge(json_body or {}, extra_body)
         result = self.make_request(
@@ -300,7 +309,7 @@ class OtmService(SDKClient):
         Returns:
             Union['GetOrderResponse', 'ResellerGetOrderResponse']
         """
-        json_body = body.model_dump(by_alias=True, mode="json")
+        json_body = body.model_dump(by_alias=True, mode="json", exclude_unset=True)
         if extra_body:
             json_body = _deep_merge(json_body or {}, extra_body)
         result = self.make_request(
@@ -325,6 +334,12 @@ class OtmService(SDKClient):
         Cancel a tasking order request.
 
         Cancels a tasking order request.
+
+        For orders that are part of a recurring series, cancellation also rolls back
+        the series state: the order count is decremented and the series is rescheduled
+        from the cancelled order's window end, so the scheduler will create a
+        replacement order for the next due window. If the series had already reached
+        completion due to this order, it is reactivated.
 
         Args:
             contract_id (UUID): Contract ID
@@ -355,7 +370,7 @@ class OtmService(SDKClient):
         collections: list["Collection"] | None = None,
         primary_formats: list["PrimaryFormat"] | None = None,
         timeout: int | None = None,
-    ) -> Union[OrderItemDownloadUrl, Any, io.BytesIO]:
+    ) -> Union[OrderItemDownloadUrl, DownloadPending, io.BytesIO]:
         """
         Download a tasking order.
 
@@ -391,7 +406,7 @@ class OtmService(SDKClient):
                 provided.
 
         Returns:
-            Union[OrderItemDownloadUrl, Any, io.BytesIO]
+            Union[OrderItemDownloadUrl, DownloadPending, io.BytesIO]
         """
         params = {
             "redirect": redirect,
@@ -416,7 +431,7 @@ class OtmService(SDKClient):
         if response.status_code == 200:
             return parse_response(response.json().unwrap(), OrderItemDownloadUrl)
         if response.status_code == 202:
-            return response.json().unwrap()
+            return parse_response(response.json().unwrap(), DownloadPending)
         return response.json().unwrap()
 
     def download_tasking_order_to_file(
@@ -643,7 +658,7 @@ class OtmService(SDKClient):
         Returns:
             StoredFeasibilityRequest
         """
-        json_body = body.model_dump(by_alias=True, mode="json")
+        json_body = body.model_dump(by_alias=True, mode="json", exclude_unset=True)
         if extra_body:
             json_body = _deep_merge(json_body or {}, extra_body)
         result = self.make_request(
@@ -734,7 +749,7 @@ class OtmService(SDKClient):
         All fields in the payload are optional - unspecified fields will be sourced from the existing order.
 
         Orders can only be modified if they are not in a terminal or non-modifiable state.
-        Orders in the following states can be modified: `committed`, `staged`.
+        Orders in the following states can be modified: `staged`.
 
         Args:
             contract_id (UUID): Contract ID
@@ -752,7 +767,7 @@ class OtmService(SDKClient):
         Returns:
             StoredFeasibilityRequest
         """
-        json_body = body.model_dump(by_alias=True, mode="json")
+        json_body = body.model_dump(by_alias=True, mode="json", exclude_unset=True)
         if extra_body:
             json_body = _deep_merge(json_body or {}, extra_body)
         result = self.make_request(
@@ -796,7 +811,7 @@ class OtmService(SDKClient):
         Returns:
             OrderPrice
         """
-        json_body = body.model_dump(by_alias=True, mode="json")
+        json_body = body.model_dump(by_alias=True, mode="json", exclude_unset=True)
         if extra_body:
             json_body = _deep_merge(json_body or {}, extra_body)
         params = {"baseprice": baseprice}
@@ -850,7 +865,7 @@ class OtmService(SDKClient):
         Returns:
             OrderModificationPrice
         """
-        json_body = body.model_dump(by_alias=True, mode="json")
+        json_body = body.model_dump(by_alias=True, mode="json", exclude_unset=True)
         if extra_body:
             json_body = _deep_merge(json_body or {}, extra_body)
         result = self.make_request(
@@ -890,6 +905,442 @@ class OtmService(SDKClient):
             return parse_response(response.json().unwrap(), list[Outage])
         return response.json().unwrap()
 
+    def get_tasking_series(
+        self,
+        contract_id: UUID,
+        per_page: Union[None, int] = 25,
+        token: None | str = None,
+        timeout: int | None = None,
+    ) -> ListSeriesResponse:
+        """
+        List all tasking series.
+
+        Returns all series belonging to the contract, sorted by creation date
+        (newest first).
+
+        Args:
+            contract_id (UUID): Contract ID
+            per_page (Union[None, int]): Number of series to return per page. Default: 25.
+            token (None | str): Pagination token.
+            timeout: Optional request timeout in seconds. Overrides the instance timeout if
+                provided.
+
+        Returns:
+            ListSeriesResponse
+        """
+        params = {"per_page": per_page, "token": token}
+        result = self.make_request(
+            method="get",
+            url=f"/{contract_id}/tasking/series/",
+            params=params,
+            timeout=timeout,
+        )
+        if result.is_err():
+            raise result.error()
+        response = result.unwrap()
+        if response.status_code == 200:
+            return parse_response(response.json().unwrap(), ListSeriesResponse)
+        return response.json().unwrap()
+
+    def get_tasking_series_iter(
+        self,
+        contract_id: UUID,
+        per_page: Union[None, int] = 25,
+        max_pages: int | None = None,
+    ) -> Generator[ListSeriesResponse, None, None]:
+        """
+        List all tasking series. (Paginated Iterator)
+
+        Automatically handles pagination by following STAC links.
+
+        Args:
+            contract_id (UUID): Contract ID
+            per_page (Union[None, int]): Number of series to return per page. Default: 25.
+            max_pages: Stop after fetching this many pages (default: unlimited)
+
+        Yields:
+            Response pages from paginated results
+
+        Example:
+            ```python
+            for page in sdk.otm.get_tasking_series_iter(
+                contract_id=...,
+                max_pages=10
+            ):
+                for item in page.features:
+                    print(item)
+            ```
+        """
+        token = None
+        page_count = 0
+        while True:
+            if max_pages and page_count >= max_pages:
+                break
+            response = self.get_tasking_series(
+                contract_id=contract_id, per_page=per_page, token=token
+            )
+            page_count += 1
+            yield response
+            token = self.extract_next_token(response)
+            if not token:
+                break
+
+    def post_tasking_series(
+        self,
+        body: SeriesRequest,
+        contract_id: UUID,
+        extra_body: dict[str, Any] | None = None,
+        timeout: int | None = None,
+    ) -> StoredSeriesResponse:
+        """
+        Create a recurring tasking series.
+
+        Create a recurring tasking series.
+
+        Schedules standard priority orders at the given frequency starting from
+        start_date, until total_order_count orders have been created.
+
+        Provide either total_order_count or end_date to specify series length.
+
+        Args:
+            contract_id (UUID): Contract ID
+            body (SeriesRequest): Request body for creating a recurring tasking series.
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
+            timeout: Optional request timeout in seconds. Overrides the instance timeout if
+                provided.
+
+        Returns:
+            StoredSeriesResponse
+        """
+        json_body = body.model_dump(by_alias=True, mode="json", exclude_unset=True)
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
+        result = self.make_request(
+            method="post",
+            url=f"/{contract_id}/tasking/series/",
+            json=json_body,
+            timeout=timeout,
+        )
+        if result.is_err():
+            raise result.error()
+        response = result.unwrap()
+        if response.status_code == 201:
+            return parse_response(response.json().unwrap(), StoredSeriesResponse)
+        return response.json().unwrap()
+
+    def get_tasking_series_by_id(
+        self, contract_id: UUID, series_id: UUID, timeout: int | None = None
+    ) -> StoredSeriesResponse:
+        """
+        Retrieve a tasking series.
+
+        Retrieves the tasking series with the given ID.
+
+        Args:
+            contract_id (UUID): Contract ID
+            series_id (UUID): Series ID
+            timeout: Optional request timeout in seconds. Overrides the instance timeout if
+                provided.
+
+        Returns:
+            StoredSeriesResponse
+        """
+        result = self.make_request(
+            method="get",
+            url=f"/{contract_id}/tasking/series/{series_id}",
+            timeout=timeout,
+        )
+        if result.is_err():
+            raise result.error()
+        response = result.unwrap()
+        if response.status_code == 200:
+            return parse_response(response.json().unwrap(), StoredSeriesResponse)
+        return response.json().unwrap()
+
+    def edit_tasking_series(
+        self,
+        body: EditSeriesProperties,
+        contract_id: UUID,
+        series_id: UUID,
+        extra_body: dict[str, Any] | None = None,
+        timeout: int | None = None,
+    ) -> StoredSeriesResponse:
+        """
+        Update a tasking series.
+
+        Update a series.
+
+        - name: can be updated in any status
+        - geometry, order_parameters, frequency, total_order_count: only when status=active
+
+        Updates only affect future child orders. Already-created orders remain unchanged.
+
+        Args:
+            contract_id (UUID): Contract ID
+            series_id (UUID): Series ID
+            body (EditSeriesProperties): Editable fields for series updates.
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
+            timeout: Optional request timeout in seconds. Overrides the instance timeout if
+                provided.
+
+        Returns:
+            StoredSeriesResponse
+        """
+        json_body = body.model_dump(by_alias=True, mode="json", exclude_unset=True)
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
+        result = self.make_request(
+            method="patch",
+            url=f"/{contract_id}/tasking/series/{series_id}",
+            json=json_body,
+            timeout=timeout,
+        )
+        if result.is_err():
+            raise result.error()
+        response = result.unwrap()
+        if response.status_code == 200:
+            return parse_response(response.json().unwrap(), StoredSeriesResponse)
+        return response.json().unwrap()
+
+    def get_tasking_series_orders(
+        self,
+        contract_id: UUID,
+        series_id: UUID,
+        per_page: Union[None, int] = 25,
+        token: None | str = None,
+        timeout: int | None = None,
+    ) -> ListStoredOrdersResponse:
+        """
+        List orders belonging to a series.
+
+        Returns all orders belonging to the series, sorted by creation date
+        (newest first).
+
+        Args:
+            contract_id (UUID): Contract ID
+            series_id (UUID): Series ID
+            per_page (Union[None, int]): Number of orders to return per page. Default: 25.
+            token (None | str): Pagination token.
+            timeout: Optional request timeout in seconds. Overrides the instance timeout if
+                provided.
+
+        Returns:
+            ListStoredOrdersResponse
+        """
+        params = {"per_page": per_page, "token": token}
+        result = self.make_request(
+            method="get",
+            url=f"/{contract_id}/tasking/series/{series_id}/orders/",
+            params=params,
+            timeout=timeout,
+        )
+        if result.is_err():
+            raise result.error()
+        response = result.unwrap()
+        if response.status_code == 200:
+            return parse_response(response.json().unwrap(), ListStoredOrdersResponse)
+        return response.json().unwrap()
+
+    def get_tasking_series_orders_iter(
+        self,
+        contract_id: UUID,
+        series_id: UUID,
+        per_page: Union[None, int] = 25,
+        max_pages: int | None = None,
+    ) -> Generator[ListStoredOrdersResponse, None, None]:
+        """
+        List orders belonging to a series. (Paginated Iterator)
+
+        Automatically handles pagination by following STAC links.
+
+        Args:
+            contract_id (UUID): Contract ID
+            series_id (UUID): Series ID
+            per_page (Union[None, int]): Number of orders to return per page. Default: 25.
+            max_pages: Stop after fetching this many pages (default: unlimited)
+
+        Yields:
+            Response pages from paginated results
+
+        Example:
+            ```python
+            for page in sdk.otm.get_tasking_series_orders_iter(
+                contract_id=...,
+                series_id=...,
+                max_pages=10
+            ):
+                for item in page.features:
+                    print(item)
+            ```
+        """
+        token = None
+        page_count = 0
+        while True:
+            if max_pages and page_count >= max_pages:
+                break
+            response = self.get_tasking_series_orders(
+                contract_id=contract_id,
+                series_id=series_id,
+                per_page=per_page,
+                token=token,
+            )
+            page_count += 1
+            yield response
+            token = self.extract_next_token(response)
+            if not token:
+                break
+
+    def post_tasking_series_price(
+        self,
+        body: SeriesRequest,
+        contract_id: UUID,
+        extra_body: dict[str, Any] | None = None,
+        timeout: int | None = None,
+    ) -> SeriesPriceResponse:
+        """
+        Calculate series price estimate.
+
+        Calculate price estimate for a series before creation.
+
+        Returns the estimated total cost based on the series parameters and current
+        contract pricing. The estimate is not a commitment — actual charges occur
+        per-order when child orders are created.
+
+        Args:
+            contract_id (UUID): Contract ID
+            body (SeriesRequest): Request body for creating a recurring tasking series.
+            extra_body: Optional dict deep-merged into the request body after
+                serialisation. Use this to pass fields added to the API after this
+                SDK version shipped. Nested dicts merge recursively; lists and
+                scalars in extra_body replace the original value.
+            timeout: Optional request timeout in seconds. Overrides the instance timeout if
+                provided.
+
+        Returns:
+            SeriesPriceResponse
+        """
+        json_body = body.model_dump(by_alias=True, mode="json", exclude_unset=True)
+        if extra_body:
+            json_body = _deep_merge(json_body or {}, extra_body)
+        result = self.make_request(
+            method="post",
+            url=f"/{contract_id}/tasking/series/price/",
+            json=json_body,
+            timeout=timeout,
+        )
+        if result.is_err():
+            raise result.error()
+        response = result.unwrap()
+        if response.status_code == 200:
+            return parse_response(response.json().unwrap(), SeriesPriceResponse)
+        return response.json().unwrap()
+
+    def cancel_tasking_series(
+        self, contract_id: UUID, series_id: UUID, timeout: int | None = None
+    ) -> None:
+        """
+        Cancel a tasking series.
+
+        Cancel a tasking series.
+
+        Cancels the series and prevents future child orders from being created.
+        This operation is idempotent — cancelling an already-cancelled series
+        succeeds with 204. A series that has already completed cannot be
+        cancelled and returns 409.
+
+        Args:
+            contract_id (UUID): Contract ID
+            series_id (UUID): Series ID
+            timeout: Optional request timeout in seconds. Overrides the instance timeout if
+                provided.
+
+        Returns:
+            None
+        """
+        result = self.make_request(
+            method="post",
+            url=f"/{contract_id}/tasking/series/{series_id}/cancel",
+            timeout=timeout,
+        )
+        if result.is_err():
+            raise result.error()
+        response = result.unwrap()
+        if response.status_code == 204:
+            return None
+        return response.json().unwrap()
+
+    def download_tasking_series(
+        self,
+        contract_id: UUID,
+        series_id: UUID,
+        redirect: Union[None, bool] = True,
+        collections: list["Collection"] | None = None,
+        primary_formats: list["PrimaryFormat"] | None = None,
+        timeout: int | None = None,
+    ) -> Union[OrderItemDownloadUrl, DownloadPending, io.BytesIO]:
+        """
+        Download a tasking series.
+
+        Download the items for all fulfilled orders in a tasking series as a single
+        bundle.
+
+        All linked collections (e.g. primary, surface-brightness-temperature) are
+        downloaded by default with GeoTIFF format for the primary collection. Use
+        the collections and primary_formats parameters to select a subset, applied
+        across the whole series.
+
+        Args:
+            contract_id (UUID): Contract ID
+            series_id (UUID): Series ID
+            redirect (Union[None, bool]): If `true` download the image content locally, otherwise if
+                `false` return a presigned download URL with an expiry. Defaults to `true`. Default: True.
+            collections (list['Collection'] | None): Specify a subset of collections to download.
+                        Defaults to all linked collections (e.g. primary,
+                        surface-brightness-temperature) with GeoTIFF format for primary.
+                        To specify multiple collections, repeat the query parameter.
+
+            primary_formats (list['PrimaryFormat'] | None): Specify a file format to download.
+                            Defaults to geotiff, which will download without nitf.
+                            To specify multiple formats, repeat the query parameter.
+                            If NITF is specified but not available for an item, GeoTIFF will be provided
+                instead.
+
+            timeout: Optional request timeout in seconds. Overrides the instance timeout if
+                provided.
+
+        Returns:
+            Union[OrderItemDownloadUrl, DownloadPending, io.BytesIO]
+        """
+        params = {
+            "redirect": redirect,
+            "collections": collections,
+            "primary_formats": primary_formats,
+        }
+        result = self.make_request(
+            method="get",
+            url=f"/{contract_id}/tasking/series/{series_id}/download",
+            params=params,
+            follow_redirects=redirect if redirect is not None else True,
+            timeout=timeout,
+        )
+        if result.is_err():
+            raise result.error()
+        response = result.unwrap()
+        if response.headers.get("Content-Type") == "application/zip":
+            zip_bytes = io.BytesIO(response.body)
+            return zip_bytes
+        if response.status_code == 200:
+            return parse_response(response.json().unwrap(), OrderItemDownloadUrl)
+        if response.status_code == 202:
+            return parse_response(response.json().unwrap(), DownloadPending)
+        return response.json().unwrap()
+
     def search(
         self,
         body: SearchRequest,
@@ -915,7 +1366,7 @@ class OtmService(SDKClient):
         Returns:
             SearchResponse
         """
-        json_body = body.model_dump(by_alias=True, mode="json")
+        json_body = body.model_dump(by_alias=True, mode="json", exclude_unset=True)
         if extra_body:
             json_body = _deep_merge(json_body or {}, extra_body)
         result = self.make_request(

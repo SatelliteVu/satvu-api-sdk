@@ -21,12 +21,11 @@ if TYPE_CHECKING:
 class AndOrExpression(BaseModel):
     """
     Attributes:
-        op ('AndOrExpressionOp'):
         args (list[Union['AndOrExpression', 'BinaryComparisonPredicate', 'IsBetweenPredicate', 'IsInListPredicate',
             'IsLikePredicate', 'IsNullPredicate', 'NotExpression', bool]]):
+        op ('AndOrExpressionOp'):
     """
 
-    op: AndOrExpressionOp = Field(..., description=None, alias="op")
     args: list[
         Union[
             AndOrExpression,
@@ -39,6 +38,7 @@ class AndOrExpression(BaseModel):
             bool,
         ]
     ] = Field(..., description=None, alias="args")
+    op: AndOrExpressionOp = Field(..., description=None, alias="op")
 
     model_config = ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"

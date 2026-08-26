@@ -21,14 +21,14 @@ class StandardFeasibilityResponseProperties(BaseModel):
         datetime_ (str): The closed date-time interval of the tasking order request.
         created_at (datetime.datetime): The datetime at which the feasibility response was created.
         updated_at (datetime.datetime): The datetime at which the feasibility response was last updated.
-        product (Literal['standard']): Standard Priority. Default: 'standard'.
         satvu_day_night_mode (Union[None, 'DayNightMode']):
         max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage. Measured in percent.
-            Default: 15.
+            Default: 25.
         min_off_nadir (Union[None, int]): The minimum angle from the sensor between nadir and the scene center. Measured
             in decimal degrees. Default: 0.
         max_off_nadir (Union[None, int]): The maximum angle from the sensor between nadir and the scene center. Measured
             in decimal degrees. Must be larger than `min_off_nadir`. Default: 30.
+        product (Literal['standard']): Standard Priority. Default: 'standard'.
         price (Union['Price', None]): Pricing information.
         min_sun_el (float | None): The minimum sun elevation angle of the pass. Measured in decimal degrees from the
             horizontal.
@@ -55,14 +55,11 @@ class StandardFeasibilityResponseProperties(BaseModel):
         description="""The datetime at which the feasibility response was last updated.""",
         alias="updated_at",
     )
-    product: Literal["standard"] = Field(
-        default="standard", description="""Standard Priority.""", alias="product"
-    )
     satvu_day_night_mode: Union[None, DayNightMode] = Field(
         default=None, description=None, alias="satvu:day_night_mode"
     )
     max_cloud_cover: Union[None, int] = Field(
-        default=15,
+        default=25,
         description="""The max threshold of acceptable cloud coverage. Measured in percent.""",
         alias="max_cloud_cover",
     )
@@ -75,6 +72,9 @@ class StandardFeasibilityResponseProperties(BaseModel):
         default=30,
         description="""The maximum angle from the sensor between nadir and the scene center. Measured in decimal degrees. Must be larger than `min_off_nadir`.""",
         alias="max_off_nadir",
+    )
+    product: Literal["standard"] = Field(
+        default="standard", description="""Standard Priority.""", alias="product"
     )
     price: Union[Price, None] = Field(
         default=None, description="""Pricing information.""", alias="price"

@@ -19,7 +19,8 @@ class ModifyFeasibilityRequestProperties(BaseModel):
             datetime_ (None | str): The closed date-time interval of the modified tasking order request. Start date can be
                 in the past, end date can be less than 7 days in the future, but minimum 7-day window must be maintained.
             satvu_day_night_mode (Union['DayNightMode', None]): The mode of data capture.
-            max_cloud_cover (int | None): The max threshold of acceptable cloud coverage. Measured in percent.
+            max_cloud_cover (int | None): The max threshold of acceptable cloud coverage where the lower limit is capped to
+                25%. Measured in percent.
             min_off_nadir (int | None): The minimum angle from the sensor between nadir and the scene center. Measured in
                 decimal degrees.
             max_off_nadir (int | None): The maximum angle from the sensor between nadir and the scene center. Measured in
@@ -38,7 +39,7 @@ class ModifyFeasibilityRequestProperties(BaseModel):
     )
     max_cloud_cover: int | None = Field(
         default=None,
-        description="""The max threshold of acceptable cloud coverage. Measured in percent.""",
+        description="""The max threshold of acceptable cloud coverage where the lower limit is capped to 25%. Measured in percent.""",
         alias="max_cloud_cover",
     )
     min_off_nadir: int | None = Field(

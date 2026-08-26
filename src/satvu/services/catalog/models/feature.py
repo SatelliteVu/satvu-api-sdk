@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Union
 from pydantic import BaseModel, ConfigDict, Field
 
 if TYPE_CHECKING:
+    from ..models.feature_properties import FeatureProperties
     from ..models.geo_json_geometry_collection import GeoJSONGeometryCollection
     from ..models.geo_json_line_string import GeoJSONLineString
     from ..models.geo_json_multi_line_string import GeoJSONMultiLineString
@@ -28,7 +29,7 @@ class Feature(BaseModel):
             their geometry and a provided GeoJSON geometry.
         id (str): The identifier of the Item, unique within the Collection that contains the Item. Example: item.
         links (list[Link]): A list of link objects to resources and related URLs.
-        properties (dict): A mapping of additional metadata for the Item.
+        properties (FeatureProperties): Properties of the Item
         stac_version (str): The STAC version the Item implements. Example: 1.0.0.
         type_ (str): Feature. Example: Feature.
         assets (Union[None, dict]): Mapping of asset objects that can be downloaded, each with a unique key.
@@ -68,10 +69,8 @@ class Feature(BaseModel):
         description="""A list of link objects to resources and related URLs.""",
         alias="links",
     )
-    properties: dict = Field(
-        ...,
-        description="""A mapping of additional metadata for the Item.""",
-        alias="properties",
+    properties: FeatureProperties = Field(
+        ..., description="""Properties of the Item""", alias="properties"
     )
     stac_version: str = Field(
         ...,

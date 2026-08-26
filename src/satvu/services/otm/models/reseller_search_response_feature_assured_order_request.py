@@ -27,6 +27,8 @@ class ResellerSearchResponseFeatureAssuredOrderRequest(BaseModel):
         price (Price):
         reseller_end_user_id (UUID):
         links (Union[None, list[Link]]): A list of links to the STAC item that fulfilled the order, if applicable.
+        series_id (None | UUID): ID of the recurring order series this order belongs to.
+        feature_type (Literal['reseller-order-request-assured']):  Default: 'reseller-order-request-assured'.
     """
 
     type_: Literal["Feature"] = Field(default="Feature", description=None, alias="type")
@@ -57,6 +59,14 @@ class ResellerSearchResponseFeatureAssuredOrderRequest(BaseModel):
         default=None,
         description="""A list of links to the STAC item that fulfilled the order, if applicable.""",
         alias="links",
+    )
+    series_id: None | UUID = Field(
+        default=None,
+        description="""ID of the recurring order series this order belongs to.""",
+        alias="series_id",
+    )
+    feature_type: Literal["reseller-order-request-assured"] = Field(
+        default="reseller-order-request-assured", description=None, alias="feature_type"
     )
 
     model_config = ConfigDict(

@@ -8,7 +8,6 @@ from typing import TYPE_CHECKING, Union
 from pydantic import BaseModel, ConfigDict, Field
 
 from ..models.notification_category import NotificationCategory
-from ..models.reseller_notification_category import ResellerNotificationCategory
 
 if TYPE_CHECKING:
     from ..models.notification_settings import NotificationSettings
@@ -17,12 +16,12 @@ if TYPE_CHECKING:
 class VerboseNotification(BaseModel):
     """
     Attributes:
-        category (Union['NotificationCategory', 'ResellerNotificationCategory', None]): Category for notification topic
+        category (Union['NotificationCategory', None]): Category for notification topic
         settings (list[NotificationSettings] | None): Configuration of notification settings related to a specific
             topic.
     """
 
-    category: Union[NotificationCategory, ResellerNotificationCategory, None] = Field(
+    category: Union[NotificationCategory, None] = Field(
         default=None,
         description="""Category for notification topic""",
         alias="category",

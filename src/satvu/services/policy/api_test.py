@@ -3,10 +3,11 @@
 """
 Tests for policy service.
 
-Generated from OpenAPI spec version v0.82.2.
+Generated from OpenAPI spec version v1.
 Uses property-based testing with hypothesis-jsonschema.
 """
 
+from contextlib import suppress
 from unittest.mock import Mock
 
 import pook
@@ -27,8 +28,14 @@ from satvu.services.policy.models.terms_user_terms_accepted import (
 from satvu.services.policy.models.user_acceptance_terms_input import (
     UserAcceptanceTermsInput,
 )
+from satvu.services.schema_conformance import (
+    assert_request_body_conforms,
+    assert_request_body_matches_input,
+    drop_optional_properties,
+)
 
 from .test_schemas import (
+    get_request_body_schema,
     get_request_body_strategy,
     get_response_strategy,
 )
@@ -99,9 +106,10 @@ class TestPolicyService:
         pook.on()
 
         # Mock the HTTP response
-        pook.post(url).reply(200).json(response_data).header(
-            "Content-Type", "application/json"
-        )
+        # Keep the Mock handle so the serialised request body can be inspected;
+        # .reply() returns the Response, not the Mock.
+        mock = pook.post(url)
+        mock.reply(200).json(response_data).header("Content-Type", "application/json")
 
         # Call the service method
         # Parse body_data into Pydantic model
@@ -111,11 +119,80 @@ class TestPolicyService:
             body=body,
         )
 
+        # Assert the body that went on the wire still describes what was asked
+        # for: nothing invented, and still valid against the spec it came from.
+        assert_request_body_matches_input(mock, body_data, "POST /contracts")
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("/contracts", "post"),
+            "POST /contracts",
+            body_data,
+        )
+
         # Assert response parses correctly
         assert result is not None
 
         # Assert response type matches expected type
         assert isinstance(result, RouterActiveContractsResponse)
+
+    @settings(
+        max_examples=5,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy("/contracts", "post", "200"),
+        body_data=get_request_body_strategy("/contracts", "post"),
+    )
+    def test_list_active_contracts_minimal_body_sends_only_what_was_set(
+        self,
+        backend,
+        response_data,
+        body_data,
+    ):
+        """
+        Test list_active_contracts sends no field the caller left unset.
+        """
+        # Generate path parameters
+        path = "/contracts"
+        url = f"{self.base_url}{path}"
+
+        # Reduce the generated body to the fields the spec actually requires
+        body_data = drop_optional_properties(
+            body_data,
+            get_request_body_schema("/contracts", "post"),
+        )
+
+        # Reset and activate pook for each hypothesis iteration
+        pook.reset()
+        pook.on()
+
+        mock = pook.post(url)
+        mock.reply(200).json(response_data).header("Content-Type", "application/json")
+
+        # Call the service method. Only the request is under test here, so a
+        # response the generated example cannot satisfy must not mask it; a call
+        # that never reached the mock still fails on the assertions below.
+        # Parse body_data into Pydantic model
+        body = ListActiveContractsInput.model_validate(body_data)
+
+        with suppress(Exception):
+            self.sdk.policy.list_active_contracts(
+                body=body,
+            )
+
+        # Every field omitted above must stay omitted on the wire
+        assert_request_body_matches_input(mock, body_data, "POST /contracts")
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("/contracts", "post"),
+            "POST /contracts",
+            body_data,
+        )
 
     @settings(
         max_examples=10,
@@ -197,9 +274,10 @@ class TestPolicyService:
         pook.on()
 
         # Mock the HTTP response
-        pook.post(url).reply(200).json(response_data).header(
-            "Content-Type", "application/json"
-        )
+        # Keep the Mock handle so the serialised request body can be inspected;
+        # .reply() returns the Response, not the Mock.
+        mock = pook.post(url)
+        mock.reply(200).json(response_data).header("Content-Type", "application/json")
 
         # Call the service method
         # Parse body_data into Pydantic model
@@ -209,11 +287,80 @@ class TestPolicyService:
             body=body,
         )
 
+        # Assert the body that went on the wire still describes what was asked
+        # for: nothing invented, and still valid against the spec it came from.
+        assert_request_body_matches_input(mock, body_data, "POST /terms")
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("/terms", "post"),
+            "POST /terms",
+            body_data,
+        )
+
         # Assert response parses correctly
         assert result is not None
 
         # Assert response type matches expected type
         assert isinstance(result, TermsUserTermsAccepted)
+
+    @settings(
+        max_examples=5,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy("/terms", "post", "200"),
+        body_data=get_request_body_strategy("/terms", "post"),
+    )
+    def test_user_acceptance_terms_minimal_body_sends_only_what_was_set(
+        self,
+        backend,
+        response_data,
+        body_data,
+    ):
+        """
+        Test user_acceptance_terms sends no field the caller left unset.
+        """
+        # Generate path parameters
+        path = "/terms"
+        url = f"{self.base_url}{path}"
+
+        # Reduce the generated body to the fields the spec actually requires
+        body_data = drop_optional_properties(
+            body_data,
+            get_request_body_schema("/terms", "post"),
+        )
+
+        # Reset and activate pook for each hypothesis iteration
+        pook.reset()
+        pook.on()
+
+        mock = pook.post(url)
+        mock.reply(200).json(response_data).header("Content-Type", "application/json")
+
+        # Call the service method. Only the request is under test here, so a
+        # response the generated example cannot satisfy must not mask it; a call
+        # that never reached the mock still fails on the assertions below.
+        # Parse body_data into Pydantic model
+        body = UserAcceptanceTermsInput.model_validate(body_data)
+
+        with suppress(Exception):
+            self.sdk.policy.user_acceptance_terms(
+                body=body,
+            )
+
+        # Every field omitted above must stay omitted on the wire
+        assert_request_body_matches_input(mock, body_data, "POST /terms")
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("/terms", "post"),
+            "POST /terms",
+            body_data,
+        )
 
     @settings(
         max_examples=10,

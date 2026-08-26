@@ -55,7 +55,10 @@ class ResellerService(SDKClient):
             list[CreateUserResponse]
         """
 
-        json_body = [item.model_dump(mode="json") for item in items]
+        json_body = [
+            item.model_dump(by_alias=True, mode="json", exclude_unset=True)
+            for item in items
+        ]
 
         result = self.make_request(
             method="post",
@@ -276,7 +279,7 @@ class ResellerService(SDKClient):
             GetUsers
         """
 
-        json_body = body.model_dump(by_alias=True, mode="json")
+        json_body = body.model_dump(by_alias=True, mode="json", exclude_unset=True)
         if extra_body:
             json_body = _deep_merge(json_body or {}, extra_body)
 
@@ -369,7 +372,7 @@ class ResellerService(SDKClient):
             GetCompanies
         """
 
-        json_body = body.model_dump(by_alias=True, mode="json")
+        json_body = body.model_dump(by_alias=True, mode="json", exclude_unset=True)
         if extra_body:
             json_body = _deep_merge(json_body or {}, extra_body)
 

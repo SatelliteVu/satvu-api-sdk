@@ -12,21 +12,21 @@ class StacGeometry(BaseModel):
     """Searches items by performing intersection between their geometry and provided GeoJSON geometry.
 
     Attributes:
-        bbox (Union[None, list[int]]): Bounding box.
-        coordinates (Union[None, list[int]]): The coordinates of the Geometry object.
-        geometries (Union[None, list[int]]): A list of geometries. For 'GeometryCollection' geometries only.
+        bbox (Union[None, list[float]]): Bounding box.
+        coordinates (Union[None, list[float]]): The coordinates of the Geometry object.
+        geometries (Union[None, list[float]]): A list of geometries. For 'GeometryCollection' geometries only.
         type_ (None | str): The type of geometry represented.
     """
 
-    bbox: Union[None, list[int]] = Field(
+    bbox: Union[None, list[float]] = Field(
         default=None, description="""Bounding box.""", alias="bbox"
     )
-    coordinates: Union[None, list[int]] = Field(
+    coordinates: Union[None, list[float]] = Field(
         default=None,
         description="""The coordinates of the Geometry object.""",
         alias="coordinates",
     )
-    geometries: Union[None, list[int]] = Field(
+    geometries: Union[None, list[float]] = Field(
         default=None,
         description="""A list of geometries. For 'GeometryCollection' geometries only.""",
         alias="geometries",

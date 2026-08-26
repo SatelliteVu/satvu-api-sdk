@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, Union
+from typing import TYPE_CHECKING, Annotated, Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -53,15 +53,18 @@ class SearchResponse(BaseModel):
         default="FeatureCollection", description=None, alias="type"
     )
     features: list[
-        Union[
-            ResellerSearchResponseFeatureAssuredOrderRequest,
-            ResellerSearchResponseFeatureStandardOrderRequest,
-            SearchResponseFeatureAssuredFeasibilityRequest,
-            SearchResponseFeatureAssuredFeasibilityResponse,
-            SearchResponseFeatureAssuredOrderRequest,
-            SearchResponseFeatureStandardFeasibilityRequest,
-            SearchResponseFeatureStandardFeasibilityResponse,
-            SearchResponseFeatureStandardOrderRequest,
+        Annotated[
+            Union[
+                ResellerSearchResponseFeatureAssuredOrderRequest,
+                ResellerSearchResponseFeatureStandardOrderRequest,
+                SearchResponseFeatureAssuredFeasibilityRequest,
+                SearchResponseFeatureAssuredFeasibilityResponse,
+                SearchResponseFeatureAssuredOrderRequest,
+                SearchResponseFeatureStandardFeasibilityRequest,
+                SearchResponseFeatureStandardFeasibilityResponse,
+                SearchResponseFeatureStandardOrderRequest,
+            ],
+            Field(discriminator="feature_type"),
         ]
     ] = Field(
         ...,

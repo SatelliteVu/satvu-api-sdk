@@ -33,14 +33,13 @@ if TYPE_CHECKING:
 class IsNullPredicate(BaseModel):
     """
     Attributes:
-        op ('IsNullPredicateOp'):
         args (list[Union['AndOrExpression', 'ArithmeticExpression', 'BboxLiteral', 'BinaryComparisonPredicate',
             'DateInstant', 'GeoJSONGeometryCollection', 'GeoJSONLineString', 'GeoJSONMultiLineString', 'GeoJSONMultiPoint',
             'GeoJSONMultiPolygon', 'GeoJSONPoint', 'GeoJSONPolygon', 'IsBetweenPredicate', 'IsInListPredicate',
             'IsLikePredicate', 'IsNullPredicate', 'NotExpression', 'PropertyRef', 'TimestampInstant', bool, float, str]]):
+        op ('IsNullPredicateOp'):
     """
 
-    op: IsNullPredicateOp = Field(..., description=None, alias="op")
     args: list[
         Union[
             AndOrExpression,
@@ -67,6 +66,7 @@ class IsNullPredicate(BaseModel):
             str,
         ]
     ] = Field(..., description=None, alias="args")
+    op: IsNullPredicateOp = Field(..., description=None, alias="op")
 
     model_config = ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"

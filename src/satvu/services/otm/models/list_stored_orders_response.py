@@ -3,22 +3,22 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, Union
+from typing import TYPE_CHECKING, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
 if TYPE_CHECKING:
     from ..models.link import Link
-    from ..models.reseller_stored_order_response import ResellerStoredOrderResponse
     from ..models.response_context import ResponseContext
     from ..models.stored_order_response import StoredOrderResponse
 
 
 class ListStoredOrdersResponse(BaseModel):
-    """
+    """Payload for list stored orders response.
+
     Attributes:
         type_ (Literal['FeatureCollection']):
-        features (list[Union['ResellerStoredOrderResponse', 'StoredOrderResponse']]): List of stored order requests.
+        features (list[StoredOrderResponse]): List of stored order requests.
         links (list[Link]): Links to previous and/or next page.
         context (ResponseContext): Context about the response.
     """
@@ -26,7 +26,7 @@ class ListStoredOrdersResponse(BaseModel):
     type_: Literal["FeatureCollection"] = Field(
         default="FeatureCollection", description=None, alias="type"
     )
-    features: list[Union[ResellerStoredOrderResponse, StoredOrderResponse]] = Field(
+    features: list[StoredOrderResponse] = Field(
         ..., description="""List of stored order requests.""", alias="features"
     )
     links: list[Link] = Field(

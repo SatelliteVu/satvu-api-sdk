@@ -17,14 +17,14 @@ if TYPE_CHECKING:
 class IsBetweenPredicate(BaseModel):
     """
     Attributes:
-        op ('IsBetweenPredicateOp'):
         args (list[Union['ArithmeticExpression', 'PropertyRef', float]]):
+        op ('IsBetweenPredicateOp'):
     """
 
-    op: IsBetweenPredicateOp = Field(..., description=None, alias="op")
     args: list[Union[ArithmeticExpression, PropertyRef, float]] = Field(
         ..., description=None, alias="args"
     )
+    op: IsBetweenPredicateOp = Field(..., description=None, alias="op")
 
     model_config = ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"

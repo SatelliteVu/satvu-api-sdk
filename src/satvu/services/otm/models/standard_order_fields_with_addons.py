@@ -18,14 +18,14 @@ class StandardOrderFieldsWithAddons(BaseModel):
             contract.
         addon_withhold (None | str): The optional ISO8601 string describing the duration that an order will be withheld
             from the public catalog. Withhold options are specific to the contract.
-        product (Literal['standard']): Standard Priority. Default: 'standard'.
         satvu_day_night_mode (Union[None, 'DayNightMode']):
         max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage. Measured in percent.
-            Default: 15.
+            Default: 25.
         min_off_nadir (Union[None, int]): The minimum angle from the sensor between nadir and the scene center. Measured
             in decimal degrees. Default: 0.
         max_off_nadir (Union[None, int]): The maximum angle from the sensor between nadir and the scene center. Measured
             in decimal degrees. Must be larger than `min_off_nadir`. Default: 30.
+        product (Literal['standard']): Standard Priority. Default: 'standard'.
     """
 
     datetime_: str = Field(
@@ -43,14 +43,11 @@ class StandardOrderFieldsWithAddons(BaseModel):
         description="""The optional ISO8601 string describing the duration that an order will be withheld from the public catalog. Withhold options are specific to the contract.""",
         alias="addon:withhold",
     )
-    product: Literal["standard"] = Field(
-        default="standard", description="""Standard Priority.""", alias="product"
-    )
     satvu_day_night_mode: Union[None, DayNightMode] = Field(
         default=None, description=None, alias="satvu:day_night_mode"
     )
     max_cloud_cover: Union[None, int] = Field(
-        default=15,
+        default=25,
         description="""The max threshold of acceptable cloud coverage. Measured in percent.""",
         alias="max_cloud_cover",
     )
@@ -63,6 +60,9 @@ class StandardOrderFieldsWithAddons(BaseModel):
         default=30,
         description="""The maximum angle from the sensor between nadir and the scene center. Measured in decimal degrees. Must be larger than `min_off_nadir`.""",
         alias="max_off_nadir",
+    )
+    product: Literal["standard"] = Field(
+        default="standard", description="""Standard Priority.""", alias="product"
     )
 
     model_config = ConfigDict(

@@ -15,19 +15,19 @@ class GeojsonGeometry(BaseModel):
     """Defines the full footprint of the asset represented by the Item, formatted according to RFC 7946 section 3.1.
 
     Attributes:
-        bbox (Union[None, list[int]]):
-        coordinates (Union[None, list[int]]):
+        bbox (Union[None, list[float]]):
+        coordinates (Union[None, list[float]]):
         crs (Union[None, GeojsonCRS]):
-        geometries (Union[None, list[int]]):
+        geometries (Union[None, list[float]]):
         type_ (Union[None, str]):
     """
 
-    bbox: Union[None, list[int]] = Field(default=None, description=None, alias="bbox")
-    coordinates: Union[None, list[int]] = Field(
+    bbox: Union[None, list[float]] = Field(default=None, description=None, alias="bbox")
+    coordinates: Union[None, list[float]] = Field(
         default=None, description=None, alias="coordinates"
     )
     crs: Union[None, GeojsonCRS] = Field(default=None, description=None, alias="crs")
-    geometries: Union[None, list[int]] = Field(
+    geometries: Union[None, list[float]] = Field(
         default=None, description=None, alias="geometries"
     )
     type_: Union[None, str] = Field(default=None, description=None, alias="type")

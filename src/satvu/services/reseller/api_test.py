@@ -3,10 +3,11 @@
 """
 Tests for reseller service.
 
-Generated from OpenAPI spec version 0.1.0.
+Generated from OpenAPI spec version v1.
 Uses property-based testing with hypothesis-jsonschema.
 """
 
+from contextlib import suppress
 from unittest.mock import Mock
 
 import pook
@@ -21,8 +22,17 @@ from satvu.services.reseller.models.get_companies import GetCompanies
 from satvu.services.reseller.models.get_users import GetUsers
 from satvu.services.reseller.models.search_companies import SearchCompanies
 from satvu.services.reseller.models.search_users import SearchUsers
+from satvu.services.schema_conformance import (
+    assert_request_body_conforms,
+    assert_request_body_matches_input,
+    drop_optional_properties,
+)
 
-from .test_schemas import get_request_body_strategy, get_response_strategy
+from .test_schemas import (
+    get_request_body_schema,
+    get_request_body_strategy,
+    get_response_strategy,
+)
 
 
 @pytest.mark.parametrize("backend", ["stdlib", "httpx", "urllib3", "requests"])
@@ -69,14 +79,54 @@ class TestResellerService:
         url = f"{self.base_url}{path}"
         pook.reset()
         pook.on()
-        pook.post(url).reply(201).json(response_data).header(
-            "Content-Type", "application/json"
-        )
+        mock = pook.post(url)
+        mock.reply(201).json(response_data).header("Content-Type", "application/json")
         body_adapter = TypeAdapter(list[CreateUser])
         body = body_adapter.validate_python(body_data)
         result = self.sdk.reseller.create_users(items=body)
+        assert_request_body_matches_input(mock, body_data, "POST /user")
+        assert_request_body_conforms(
+            mock, get_request_body_schema("/user", "post"), "POST /user", body_data
+        )
         assert result is not None
         assert isinstance(result, list)
+
+    @settings(
+        max_examples=5,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy("/user", "post", "201"),
+        body_data=get_request_body_strategy("/user", "post"),
+    )
+    def test_create_users_minimal_body_sends_only_what_was_set(
+        self, backend, response_data, body_data
+    ):
+        """
+        Test create_users sends no field the caller left unset.
+        """
+        path = "/user"
+        url = f"{self.base_url}{path}"
+        body_data = drop_optional_properties(
+            body_data, get_request_body_schema("/user", "post")
+        )
+        pook.reset()
+        pook.on()
+        mock = pook.post(url)
+        mock.reply(201).json(response_data).header("Content-Type", "application/json")
+        body_adapter = TypeAdapter(list[CreateUser])
+        body = body_adapter.validate_python(body_data)
+        with suppress(Exception):
+            self.sdk.reseller.create_users(items=body)
+        assert_request_body_matches_input(mock, body_data, "POST /user")
+        assert_request_body_conforms(
+            mock, get_request_body_schema("/user", "post"), "POST /user", body_data
+        )
 
     @settings(
         max_examples=10,
@@ -235,13 +285,58 @@ class TestResellerService:
         url = f"{self.base_url}{path}"
         pook.reset()
         pook.on()
-        pook.post(url).reply(200).json(response_data).header(
-            "Content-Type", "application/json"
-        )
+        mock = pook.post(url)
+        mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = SearchUsers.model_validate(body_data)
         result = self.sdk.reseller.search_users(body=body)
+        assert_request_body_matches_input(mock, body_data, "POST /search/users")
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("/search/users", "post"),
+            "POST /search/users",
+            body_data,
+        )
         assert result is not None
         assert isinstance(result, GetUsers)
+
+    @settings(
+        max_examples=5,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy("/search/users", "post", "200"),
+        body_data=get_request_body_strategy("/search/users", "post"),
+    )
+    def test_search_users_minimal_body_sends_only_what_was_set(
+        self, backend, response_data, body_data
+    ):
+        """
+        Test search_users sends no field the caller left unset.
+        """
+        path = "/search/users"
+        url = f"{self.base_url}{path}"
+        body_data = drop_optional_properties(
+            body_data, get_request_body_schema("/search/users", "post")
+        )
+        pook.reset()
+        pook.on()
+        mock = pook.post(url)
+        mock.reply(200).json(response_data).header("Content-Type", "application/json")
+        body = SearchUsers.model_validate(body_data)
+        with suppress(Exception):
+            self.sdk.reseller.search_users(body=body)
+        assert_request_body_matches_input(mock, body_data, "POST /search/users")
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("/search/users", "post"),
+            "POST /search/users",
+            body_data,
+        )
 
     @settings(
         max_examples=10,
@@ -295,13 +390,58 @@ class TestResellerService:
         url = f"{self.base_url}{path}"
         pook.reset()
         pook.on()
-        pook.post(url).reply(200).json(response_data).header(
-            "Content-Type", "application/json"
-        )
+        mock = pook.post(url)
+        mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = SearchCompanies.model_validate(body_data)
         result = self.sdk.reseller.search_companies(body=body)
+        assert_request_body_matches_input(mock, body_data, "POST /search/companies")
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("/search/companies", "post"),
+            "POST /search/companies",
+            body_data,
+        )
         assert result is not None
         assert isinstance(result, GetCompanies)
+
+    @settings(
+        max_examples=5,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy("/search/companies", "post", "200"),
+        body_data=get_request_body_strategy("/search/companies", "post"),
+    )
+    def test_search_companies_minimal_body_sends_only_what_was_set(
+        self, backend, response_data, body_data
+    ):
+        """
+        Test search_companies sends no field the caller left unset.
+        """
+        path = "/search/companies"
+        url = f"{self.base_url}{path}"
+        body_data = drop_optional_properties(
+            body_data, get_request_body_schema("/search/companies", "post")
+        )
+        pook.reset()
+        pook.on()
+        mock = pook.post(url)
+        mock.reply(200).json(response_data).header("Content-Type", "application/json")
+        body = SearchCompanies.model_validate(body_data)
+        with suppress(Exception):
+            self.sdk.reseller.search_companies(body=body)
+        assert_request_body_matches_input(mock, body_data, "POST /search/companies")
+        assert_request_body_conforms(
+            mock,
+            get_request_body_schema("/search/companies", "post"),
+            "POST /search/companies",
+            body_data,
+        )
 
     @settings(
         max_examples=10,

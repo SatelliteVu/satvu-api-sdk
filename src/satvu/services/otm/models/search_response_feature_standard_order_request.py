@@ -26,6 +26,8 @@ class SearchResponseFeatureStandardOrderRequest(BaseModel):
         collection (str): Name of collection associated with the search result item.
         price (Price):
         links (Union[None, list[Link]]): A list of links to the STAC item that fulfilled the order, if applicable.
+        series_id (None | UUID): ID of the recurring order series this order belongs to.
+        feature_type (Literal['order-request-standard']):  Default: 'order-request-standard'.
     """
 
     type_: Literal["Feature"] = Field(default="Feature", description=None, alias="type")
@@ -53,6 +55,14 @@ class SearchResponseFeatureStandardOrderRequest(BaseModel):
         default=None,
         description="""A list of links to the STAC item that fulfilled the order, if applicable.""",
         alias="links",
+    )
+    series_id: None | UUID = Field(
+        default=None,
+        description="""ID of the recurring order series this order belongs to.""",
+        alias="series_id",
+    )
+    feature_type: Literal["order-request-standard"] = Field(
+        default="order-request-standard", description=None, alias="feature_type"
     )
 
     model_config = ConfigDict(

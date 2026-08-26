@@ -19,11 +19,10 @@ if TYPE_CHECKING:
 class BinaryComparisonPredicate(BaseModel):
     """
     Attributes:
-        op ('BinaryComparisonPredicateOp'):
         args (list[Union['ArithmeticExpression', 'DateInstant', 'PropertyRef', 'TimestampInstant', bool, float, str]]):
+        op ('BinaryComparisonPredicateOp'):
     """
 
-    op: BinaryComparisonPredicateOp = Field(..., description=None, alias="op")
     args: list[
         Union[
             ArithmeticExpression,
@@ -35,6 +34,7 @@ class BinaryComparisonPredicate(BaseModel):
             str,
         ]
     ] = Field(..., description=None, alias="args")
+    op: BinaryComparisonPredicateOp = Field(..., description=None, alias="op")
 
     model_config = ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"

@@ -32,8 +32,8 @@ class EditOrderProperties(BaseModel):
                 Created/Staged states.
             satvu_day_night_mode (Union['DayNightMode', None]): The mode of data capture. Only editable for Standard orders
                 in Created/Staged states.
-            max_cloud_cover (int | None): The max threshold of acceptable cloud coverage. Only editable for Standard orders
-                in Created/Staged states.
+            max_cloud_cover (int | None): The max threshold of acceptable cloud coverage where the lower limit is capped to
+                25%. Only editable for Standard orders in Created/Staged states.
             min_off_nadir (int | None): The minimum angle from the sensor between nadir and the scene center. Only editable
                 for Standard orders in Created/Staged states.
             max_off_nadir (int | None): The maximum angle from the sensor between nadir and the scene center. Only editable
@@ -70,7 +70,7 @@ class EditOrderProperties(BaseModel):
     )
     max_cloud_cover: int | None = Field(
         default=None,
-        description="""The max threshold of acceptable cloud coverage. Only editable for Standard orders in Created/Staged states.""",
+        description="""The max threshold of acceptable cloud coverage where the lower limit is capped to 25%. Only editable for Standard orders in Created/Staged states.""",
         alias="max_cloud_cover",
     )
     min_off_nadir: int | None = Field(

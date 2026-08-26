@@ -19,7 +19,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "sed -i 's/^version = \".*\"/version = \"${nextRelease.version}\"/' pyproject.toml && uv lock && dagger call build-release --is-qa=false --triggered-api=none --spec-env=prod export --path=./build-output --wipe && mv ./build-output/dist ./dist && mv ./build-output/.cache ./.cache && cp -r ./build-output/src/satvu/services/* src/satvu/services/ && rm -rf ./build-output && git add src/satvu/services/"
+        "prepareCmd": "sed -i 's/^version = \".*\"/version = \"${nextRelease.version}\"/' pyproject.toml && uv lock && dagger call build-release --is-qa=false --triggered-api=none --spec-env=prod export --path=./build-output --wipe && mv ./build-output/dist ./dist && mv ./build-output/.cache ./.cache && rsync -a --delete --exclude='__pycache__/' ./build-output/src/satvu/services/ src/satvu/services/ && rm -rf ./build-output && git add src/satvu/services/"
       }
     ],
     [

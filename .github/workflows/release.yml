@@ -54,9 +54,19 @@ jobs:
       - name: Check for src changes since last tag
         id: check
         run: |
-          # Find the last production release tag (exclude .dev QA tags)
-          LAST_TAG=$(git tag -l 'v*' --sort=-v:refname | grep -v '\.dev' | head -1)
+          # Only true semantic-release tags (vX.Y.Z) define the release baseline.
+          # The vX.Y.Z.<date>.<time> tags cut by API-triggered builds point at
+          # whatever main HEAD was at build time, so they would otherwise hide
+          # unreleased src changes behind a moving baseline.
+          LAST_TAG=$(git tag -l 'v*' --sort=-v:refname \
+            | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -1)
           echo "Last tag: $LAST_TAG"
+
+          if [ -z "$LAST_TAG" ]; then
+            echo "No semantic-release tag found - releasing from scratch"
+            echo "should_release=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
 
           # Get all changed files since the last tag
           CHANGED_FILES=$(git diff --name-only "$LAST_TAG" HEAD)
@@ -188,8 +198,10 @@ jobs:
         run: |
           echo "## 📦 Pending Release" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          # Find the last production release tag (exclude .dev QA tags)
-          LAST_TAG=$(git tag -l 'v*' --sort=-v:refname | grep -v '\.dev' | head -1)
+          # Match check-changes: only vX.Y.Z tags, never the vX.Y.Z.<date>.<time>
+          # tags from API-triggered builds.
+          LAST_TAG=$(git tag -l 'v*' --sort=-v:refname \
+            | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -1)
           echo "### Commits since \`$LAST_TAG\`:" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
           git log ${LAST_TAG}..HEAD --oneline >> $GITHUB_STEP_SUMMARY

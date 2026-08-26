@@ -4,10 +4,10 @@ Pre-generate hypothesis-jsonschema examples for test caching.
 This module generates examples during SDK build time and stores them
 in .cache/hypothesis-examples/{api_name}-{spec_hash}.json
 
-Cache invalidation is automatic: spec_hash is a hash of the preprocessed spec
-*content* (see builder.load.spec_content_hash), so any schema change yields a new
-filename and regeneration. Keying on anything URL-derived would silently replay
-examples built from an older schema.
+Cache invalidation is automatic: spec_hash is "{spec_env}-{hash of the preprocessed spec
+*content*}" (see builder.load.spec_content_hash), so any schema change yields a new
+filename and regeneration, and prod and qa never collide. Keying on anything URL-derived
+would silently replay examples built from an older schema.
 
 Cache Format
 ------------
@@ -67,7 +67,7 @@ def generate_examples_cache(
     # Skip generation if cache already exists for this spec_hash
     if cache_file.exists():
         print(f"  [EXAMPLES] Using existing cache for {api_name} -> {cache_file.name}")
-        _prune_stale_caches(api_name, keep=cache_file)
+        _prune_stale_caches(cache_file)
         return cache_file
 
     print(f"  [EXAMPLES] Generating {num_examples} examples per schema for {api_name}")
@@ -125,7 +125,7 @@ def generate_examples_cache(
     # Atomic rename (replaces existing file safely)
     tmp_path.replace(cache_file)
 
-    _prune_stale_caches(api_name, keep=cache_file)
+    _prune_stale_caches(cache_file)
 
     total_examples = sum(len(examples) for examples in all_examples.values())
     print(
@@ -137,14 +137,20 @@ def generate_examples_cache(
     return cache_file
 
 
-def _prune_stale_caches(api_name: str, keep: Path) -> None:
+def _prune_stale_caches(keep: Path) -> None:
     """
-    Drop this API's caches for older spec revisions.
+    Drop this API's caches for older spec revisions of the same spec environment.
 
     Filenames are content-addressed, so each schema change adds a file rather than
     replacing one. Left alone they accumulate indefinitely in the CI cache.
+
+    Scoped to the env prefix of the file being kept, not a global one: prod and qa hash
+    to different filenames, and both environments share a single CI cache, so an
+    unscoped glob would make each release run evict the other environment's examples.
     """
-    for stale in EXAMPLES_CACHE_DIR.glob(f"{api_name}-*.json"):
+    env_prefix = keep.stem.rsplit("-", 1)[0]
+
+    for stale in EXAMPLES_CACHE_DIR.glob(f"{env_prefix}-*.json"):
         if stale == keep:
             continue
         try:

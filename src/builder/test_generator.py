@@ -164,7 +164,7 @@ def generate_tests(
         openapi_dict: Raw OpenAPI dict with components/schemas
         base_path: Base path for the API (e.g., '/catalog/v1')
         output_dir: Directory to write test files to
-        spec_hash: Hash of the preprocessed OpenAPI spec content, for example caching
+        spec_hash: Example cache key: spec env plus a hash of the preprocessed spec content
 
     Generated files:
         - api_test.py: Test class with test methods

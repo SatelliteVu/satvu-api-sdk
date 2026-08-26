@@ -5,15 +5,20 @@ import os
 SATVU_SPEC_ENV_VAR = "SATVU_SPEC_ENV"
 
 
+def _get_spec_env() -> str:
+    """Get the spec environment from the SATVU_SPEC_ENV environment variable."""
+    return os.environ.get(SATVU_SPEC_ENV_VAR, "qa").strip().lower()
+
+
 def _get_base_url() -> str:
     """Get the base URL based on SATVU_SPEC_ENV environment variable."""
-    env = os.environ.get(SATVU_SPEC_ENV_VAR, "qa").strip().lower()
-    if env == "prod":
+    if _get_spec_env() == "prod":
         return "https://api.satellitevu.com/"
     else:
         return "https://api.qa.satellitevu.com/"
 
 
+SPEC_ENV = _get_spec_env()
 BASE_URL = _get_base_url()
 
 APIS: dict[str, str] = {

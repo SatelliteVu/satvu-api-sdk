@@ -14,7 +14,7 @@ from openapi_python_client.parser.properties.list_property import ListProperty
 from openapi_python_client.parser.properties.model_property import ModelProperty
 from openapi_python_client.parser.properties.union import UnionProperty
 
-from builder.config import APIS
+from builder.config import APIS, SPEC_ENV
 from builder.jinja_filters import to_pydantic_model_field
 from builder.load import load_openapi, spec_content_hash
 from builder.openapi_preprocessor import preprocess_for_sdk_generation
@@ -460,10 +460,12 @@ def build_service(
         openapi_dict, openapi_src = load_openapi(api_id, use_cached)
         # Preprocess the spec to fix issues that would require patching
         openapi_dict = preprocess_for_sdk_generation(openapi_dict)
-        # Hash the preprocessed spec content for example caching. Must not be derived
-        # from the cache filename: that hash is of the spec URL, which is invariant
-        # across API releases, so cached examples would never be invalidated.
-        spec_hash = spec_content_hash(openapi_dict)
+        # Cache key for pre-generated examples. Hashes the preprocessed spec *content*:
+        # deriving it from the cache filename would hash the spec URL, which is invariant
+        # across API releases, so cached examples would never be invalidated. Prefixed
+        # with the spec env so prod and qa keep separate caches rather than evicting
+        # each other.
+        spec_hash = f"{SPEC_ENV}-{spec_content_hash(openapi_dict)}"
     except Exception as e:
         return [GeneratorError(detail=f"Failed to load OpenAPI spec: {e}")]
 

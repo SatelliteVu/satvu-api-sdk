@@ -1,12 +1,13 @@
 """Tests for SDKClient core functionality."""
 
+import json
 from unittest.mock import MagicMock
 
 import pook
 import pytest
 from pydantic import BaseModel
 
-from satvu.core import SDKClient
+from satvu.core import SDKClient, _serialize_query_params
 from satvu.http import create_http_client
 from satvu.http.errors import ClientError, ServerError
 from satvu.result import Ok, is_err, is_ok
@@ -190,6 +191,80 @@ def test_make_request_params_filters_none_values(sdk_client):
     assert is_ok(result)
     response = result.unwrap()
     assert response.status_code == 200
+
+
+class TestSerializeQueryParams:
+    """Unit tests for _serialize_query_params.
+
+    Regression coverage for structured query params (e.g. CQL2 ``filter`` and
+    GeoJSON ``intersects``) that were previously mangled by urlencode into
+    ``filter=op&filter=args`` and silently ignored by the API.
+    """
+
+    def test_dict_value_is_json_encoded(self):
+        """A dict value (CQL2 filter) is serialized to a JSON string."""
+        filter_ = {"op": "=", "args": [{"property": "platform"}, "hotsat-2"]}
+        result = _serialize_query_params({"filter": filter_})
+
+        assert result == {"filter": json.dumps(filter_)}
+        # Round-trips back to the original structure.
+        assert json.loads(result["filter"]) == filter_
+
+    def test_pydantic_model_is_json_encoded(self):
+        """A Pydantic model value is serialized to a JSON string (by alias)."""
+        model = ParameterTestModel(field1="value1", field2=42)
+        result = _serialize_query_params({"model": model})
+
+        assert json.loads(result["model"]) == {"field1": "value1", "field2": 42}
+
+    def test_lists_are_left_untouched(self):
+        """Lists stay as lists so adapters emit repeated params (explode=true)."""
+        result = _serialize_query_params(
+            {"collections": ["a", "b"], "bbox": [-90, -45, 90, 45]}
+        )
+
+        assert result == {"collections": ["a", "b"], "bbox": [-90, -45, 90, 45]}
+
+    def test_none_values_are_dropped(self):
+        """None values are omitted entirely."""
+        result = _serialize_query_params({"a": "keep", "b": None})
+
+        assert result == {"a": "keep"}
+
+    def test_falsy_non_none_values_are_kept(self):
+        """Falsy-but-meaningful values (0, "", False) are preserved."""
+        result = _serialize_query_params({"limit": 0, "flag": False, "s": ""})
+
+        assert result == {"limit": 0, "flag": False, "s": ""}
+
+    def test_input_is_not_mutated(self):
+        """The caller's params dict is never mutated (immutability)."""
+        model = ParameterTestModel(field1="value1", field2=42)
+        original = {"model": model, "token": None, "filter": {"op": "="}}
+        snapshot = dict(original)
+
+        _serialize_query_params(original)
+
+        assert original == snapshot
+        assert original["model"] is model
+
+
+@pook.on
+def test_make_request_dict_param_sent_as_json(sdk_client):
+    """A dict-valued query param reaches the wire as a JSON string, not
+    as repeated keys (regression for silently-ignored CQL2 filters)."""
+    filter_ = {"op": "=", "args": [{"property": "platform"}, "hotsat-2"]}
+    (
+        pook.get("https://api.satellitevu.com/test/search")
+        .param("filter", json.dumps(filter_))
+        .reply(200)
+        .json({"results": []})
+    )
+
+    result = sdk_client.make_request("GET", "/search", params={"filter": filter_})
+
+    assert is_ok(result)
+    assert result.unwrap().status_code == 200
 
 
 @pook.on

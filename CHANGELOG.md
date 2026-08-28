@@ -1,3 +1,10 @@
+## [0.10.1](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.10.0...v0.10.1) (2026-08-28)
+
+
+### Bug Fixes
+
+* **core:** serialize dict query params as JSON
+
 # [0.10.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.9.0...v0.10.0) (2026-08-26)
 
 

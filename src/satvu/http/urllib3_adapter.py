@@ -240,7 +240,6 @@ class Urllib3Adapter:
             if 400 <= response.status < 500:
                 return Err(
                     ClientError(
-                        message=f"Client error: {response.status}",
                         status_code=response.status,
                         url=full_url,
                         response_body=response.data,
@@ -250,7 +249,6 @@ class Urllib3Adapter:
             elif 500 <= response.status < 600:
                 return Err(
                     ServerError(
-                        message=f"Server error: {response.status}",
                         status_code=response.status,
                         url=full_url,
                         response_body=response.data,

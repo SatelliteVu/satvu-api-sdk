@@ -6,6 +6,7 @@ during request execution, from network issues to parsing failures.
 """
 
 from abc import ABC, abstractmethod
+import json
 from typing import Any
 
 
@@ -259,7 +260,6 @@ class HttpStatusError(HttpError):
 
     def __init__(
         self,
-        message: str,
         status_code: int,
         url: str | None = None,
         response_body: bytes | None = None,
@@ -269,7 +269,6 @@ class HttpStatusError(HttpError):
         Initialize an HTTP status error.
 
         Args:
-            message: Error description
             status_code: HTTP status code
             url: Request URL
             response_body: Response body bytes
@@ -278,6 +277,22 @@ class HttpStatusError(HttpError):
         context: dict[str, Any] = {"status_code": status_code}
         if url:
             context["url"] = url
+
+        if response_body:
+            try:
+                body = response_body.decode()
+                try:
+                    detail = json.loads(body).get("detail", body)
+                except json.JSONDecodeError:
+                    detail = body
+                    
+                response_str = " " + str(detail)
+            except UnicodeDecodeError:
+                response_str = ""
+        else:
+            response_str = ""
+
+        message = f"{self.error_type()}: {status_code}{response_str}"
 
         super().__init__(message, context)
         self.status_code = status_code
@@ -299,7 +314,6 @@ class ClientError(HttpStatusError):
 
     def __init__(
         self,
-        message: str,
         status_code: int,
         url: str | None = None,
         response_body: bytes | None = None,
@@ -309,7 +323,6 @@ class ClientError(HttpStatusError):
         Initialize a client error.
 
         Args:
-            message: Error description
             status_code: HTTP 4xx status code
             url: Request URL
             response_body: Response body bytes
@@ -317,7 +330,7 @@ class ClientError(HttpStatusError):
         """
         if not (400 <= status_code < 500):
             raise ValueError(f"ClientError requires 4xx status code, got {status_code}")
-        super().__init__(message, status_code, url, response_body, response_headers)
+        super().__init__(status_code, url, response_body, response_headers)
 
     def error_type(self) -> str:
         return "ClientError"
@@ -333,7 +346,6 @@ class ServerError(HttpStatusError):
 
     def __init__(
         self,
-        message: str,
         status_code: int,
         url: str | None = None,
         response_body: bytes | None = None,
@@ -343,7 +355,6 @@ class ServerError(HttpStatusError):
         Initialize a server error.
 
         Args:
-            message: Error description
             status_code: HTTP 5xx status code
             url: Request URL
             response_body: Response body bytes
@@ -351,7 +362,7 @@ class ServerError(HttpStatusError):
         """
         if not (500 <= status_code < 600):
             raise ValueError(f"ServerError requires 5xx status code, got {status_code}")
-        super().__init__(message, status_code, url, response_body, response_headers)
+        super().__init__(status_code, url, response_body, response_headers)
 
     def error_type(self) -> str:
         return "ServerError"

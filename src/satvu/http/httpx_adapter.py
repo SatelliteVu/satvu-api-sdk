@@ -201,7 +201,6 @@ class HttpxAdapter:
             if 400 <= response.status_code < 500:
                 return Err(
                     ClientError(
-                        message=f"Client error: {response.status_code}",
                         status_code=response.status_code,
                         url=str(response.url),
                         response_body=response.content,
@@ -211,7 +210,6 @@ class HttpxAdapter:
             elif 500 <= response.status_code < 600:
                 return Err(
                     ServerError(
-                        message=f"Server error: {response.status_code}",
                         status_code=response.status_code,
                         url=str(response.url),
                         response_body=response.content,

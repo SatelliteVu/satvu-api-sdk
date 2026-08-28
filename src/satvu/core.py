@@ -1,3 +1,4 @@
+import json
 import logging
 import time
 from collections.abc import Callable
@@ -13,6 +14,43 @@ from satvu.http.protocol import HttpResponse
 from satvu.result import Result
 
 logger = logging.getLogger(__name__)
+
+
+def _serialize_query_params(params: dict[str, Any]) -> dict[str, Any]:
+    """
+    Prepare query parameters for URL encoding, returning a new dict.
+
+    The input dict is never mutated (see the immutability rationale in the
+    coding guidelines). Each value is handled as follows:
+
+    - ``None`` values are dropped so the parameter is omitted entirely.
+    - Pydantic models and ``dict`` values are JSON-serialized to a string.
+      This is essential for structured query params such as a CQL2 ``filter``
+      or a GeoJSON ``intersects`` geometry: without it, ``urlencode(...,
+      doseq=True)`` iterates over the dict's *keys* and emits nonsense like
+      ``filter=op&filter=args``, which every SatVu API silently ignores.
+    - Everything else (scalars and lists of scalars) is passed through
+      unchanged. Lists are intentionally left as-is so adapters encode them as
+      repeated params (``a=1&a=2``), matching the OpenAPI ``explode=true``
+      default the APIs expect.
+
+    Args:
+        params: The raw query parameters built by a service method.
+
+    Returns:
+        A new dict with structured values JSON-encoded and ``None`` dropped.
+    """
+    serialized: dict[str, Any] = {}
+    for key, value in params.items():
+        if value is None:
+            continue
+        if isinstance(value, BaseModel):
+            serialized[key] = value.model_dump_json(by_alias=True)
+        elif isinstance(value, dict):
+            serialized[key] = json.dumps(value)
+        else:
+            serialized[key] = value
+    return serialized
 
 
 def _deep_merge(base: dict[str, Any], overrides: dict[str, Any]) -> dict[str, Any]:
@@ -183,13 +221,9 @@ class SDKClient:
 
         """
         if params:
-            # Convert any pydantic model objects in params to json-serializable dicts
-            for key, val in params.items():
-                if isinstance(val, BaseModel):
-                    params[key] = val.model_dump()
-
-            # Drop any params that are None
-            params = {k: v for k, v in params.items() if v}
+            # Serialize structured params (pydantic models, dicts) to JSON and
+            # drop None values. Returns a new dict, leaving the caller's intact.
+            params = _serialize_query_params(params)
 
         # Use instance timeout if not specified
         timeout_val = timeout if timeout is not None else self.timeout

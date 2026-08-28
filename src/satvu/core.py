@@ -20,8 +20,9 @@ def _serialize_query_params(params: dict[str, Any]) -> dict[str, Any]:
     """
     Prepare query parameters for URL encoding, returning a new dict.
 
-    The input dict is never mutated (see the immutability rationale in the
-    coding guidelines). Each value is handled as follows:
+    The caller's dict is never mutated; a new dict is built and returned so
+    the same params object can be safely reused (e.g. across 202 retries)
+    without hidden side effects. Each value is handled as follows:
 
     - ``None`` values are dropped so the parameter is omitted entirely.
     - Pydantic models and ``dict`` values are JSON-serialized to a string.

@@ -1,5 +1,26 @@
 ## [0.10.2](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.10.1...v0.10.2) (2026-09-02)
 
+## [0.10.2.20260902.1457] - 2026-09-02
+
+### feat(wallet): update GET /balances, GET /{contract_id}/credit
+
+#### GET /balances
+* response property `balances/additionalProperties/balance` deprecated
+* added the required property `balances/additionalProperties/credit_available` to the response with the `200` status
+* added the required property `balances/additionalProperties/credit_fulfilled` to the response with the `200` status
+* added the required property `balances/additionalProperties/credit_reserved` to the response with the `200` status
+
+
+#### GET /{contract_id}/credit
+* response property `balance` deprecated
+* added the required property `credit_available` to the response with the `200` status
+* added the required property `credit_fulfilled` to the response with the `200` status
+* added the required property `credit_reserved` to the response with the `200` status
+
+#### Description Updates
+* 4 description(s) modified
+
+
 ## [0.10.2.20260902.1436] - 2026-09-02
 
 ### fix(otm): 6 changes to GET /{contract_id}/tasking/orders/{order_id}/tasks

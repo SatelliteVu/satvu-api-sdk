@@ -10,7 +10,7 @@ Stores entire OpenAPI spec as operations with helper functions for access.
 from satvu.services.example_cache import get_cached_example_strategy
 
 # Spec hash for example cache invalidation
-_SPEC_HASH = "prod-86c7c1c166f6d02b9793a5a40b58b572eba03ad6"
+_SPEC_HASH = "prod-f871a3f2f2380a2ba2fb6bb8ae5daa6215d1c589"
 
 # Component schemas for $ref resolution (cleaned for JSON Schema draft-07)
 _COMPONENTS = {
@@ -33,12 +33,19 @@ _COMPONENTS = {
         "description": "Response body for credit balance queries.",
         "properties": {
             "balance": {
-                "description": "The "
+                "deprecated": True,
+                "description": "Deprecated: "
+                "use "
+                "`credit_available` "
+                "instead. "
+                "The "
                 "credit "
                 "balance "
-                "of the "
-                "user in "
-                "minor "
+                "still "
+                "available "
+                "to "
+                "spend, "
+                "in minor "
                 "currency "
                 "units "
                 "(e.g. "
@@ -77,8 +84,81 @@ _COMPONENTS = {
                 "contract "
                 "start "
                 "date.",
-                "examples": [None, "08-2026"],
+                "examples": [None, "09-2026"],
                 "title": "Billing Cycle",
+            },
+            "credit_available": {
+                "description": "The "
+                "credit "
+                "remaining, "
+                "and "
+                "available "
+                "for "
+                "use, "
+                "in "
+                "minor "
+                "currency "
+                "units "
+                "(e.g. "
+                "pence, "
+                "cents). "
+                "Equal "
+                "to "
+                "the "
+                "credit "
+                "allowance "
+                "minus "
+                "`credit_reserved` "
+                "and "
+                "`credit_fulfilled`.",
+                "examples": ["100000"],
+                "title": "Credit Available",
+                "type": "integer",
+            },
+            "credit_fulfilled": {
+                "description": "The "
+                "total "
+                "credit "
+                "redeemed "
+                "and "
+                "fully "
+                "billable, "
+                "in "
+                "minor "
+                "currency "
+                "units "
+                "(e.g. "
+                "pence, "
+                "cents).",
+                "examples": ["5000"],
+                "title": "Credit Fulfilled",
+                "type": "integer",
+            },
+            "credit_reserved": {
+                "description": "The "
+                "credit "
+                "currently "
+                "reserved "
+                "for "
+                "staged/in-progress "
+                "tasking "
+                "orders "
+                "that "
+                "are "
+                "not "
+                "yet "
+                "billable "
+                "— "
+                "in "
+                "minor "
+                "currency "
+                "units "
+                "(e.g. "
+                "pence, "
+                "cents).",
+                "examples": ["2500"],
+                "title": "Credit Reserved",
+                "type": "integer",
             },
             "currency": {
                 "description": "The currency of the credit balance.",
@@ -87,7 +167,14 @@ _COMPONENTS = {
                 "type": "string",
             },
         },
-        "required": ["currency", "balance", "billing_cycle"],
+        "required": [
+            "currency",
+            "balance",
+            "credit_available",
+            "credit_reserved",
+            "credit_fulfilled",
+            "billing_cycle",
+        ],
         "title": "CreditBalanceResponse",
         "type": "object",
     },
@@ -164,12 +251,18 @@ _OPERATIONS = {
                             "description": "Response body for credit balance queries.",
                             "properties": {
                                 "balance": {
-                                    "description": "The "
+                                    "deprecated": True,
+                                    "description": "Deprecated: "
+                                    "use "
+                                    "`credit_available` "
+                                    "instead. "
+                                    "The "
                                     "credit "
                                     "balance "
-                                    "of "
-                                    "the "
-                                    "user "
+                                    "still "
+                                    "available "
+                                    "to "
+                                    "spend, "
                                     "in "
                                     "minor "
                                     "currency "
@@ -210,8 +303,81 @@ _OPERATIONS = {
                                     "contract "
                                     "start "
                                     "date.",
-                                    "examples": [None, "08-2026"],
+                                    "examples": [None, "09-2026"],
                                     "title": "Billing Cycle",
+                                },
+                                "credit_available": {
+                                    "description": "The "
+                                    "credit "
+                                    "remaining, "
+                                    "and "
+                                    "available "
+                                    "for "
+                                    "use, "
+                                    "in "
+                                    "minor "
+                                    "currency "
+                                    "units "
+                                    "(e.g. "
+                                    "pence, "
+                                    "cents). "
+                                    "Equal "
+                                    "to "
+                                    "the "
+                                    "credit "
+                                    "allowance "
+                                    "minus "
+                                    "`credit_reserved` "
+                                    "and "
+                                    "`credit_fulfilled`.",
+                                    "examples": ["100000"],
+                                    "title": "Credit Available",
+                                    "type": "integer",
+                                },
+                                "credit_fulfilled": {
+                                    "description": "The "
+                                    "total "
+                                    "credit "
+                                    "redeemed "
+                                    "and "
+                                    "fully "
+                                    "billable, "
+                                    "in "
+                                    "minor "
+                                    "currency "
+                                    "units "
+                                    "(e.g. "
+                                    "pence, "
+                                    "cents).",
+                                    "examples": ["5000"],
+                                    "title": "Credit Fulfilled",
+                                    "type": "integer",
+                                },
+                                "credit_reserved": {
+                                    "description": "The "
+                                    "credit "
+                                    "currently "
+                                    "reserved "
+                                    "for "
+                                    "staged/in-progress "
+                                    "tasking "
+                                    "orders "
+                                    "that "
+                                    "are "
+                                    "not "
+                                    "yet "
+                                    "billable "
+                                    "— "
+                                    "in "
+                                    "minor "
+                                    "currency "
+                                    "units "
+                                    "(e.g. "
+                                    "pence, "
+                                    "cents).",
+                                    "examples": ["2500"],
+                                    "title": "Credit Reserved",
+                                    "type": "integer",
                                 },
                                 "currency": {
                                     "description": "The "
@@ -225,7 +391,14 @@ _OPERATIONS = {
                                     "type": "string",
                                 },
                             },
-                            "required": ["currency", "balance", "billing_cycle"],
+                            "required": [
+                                "currency",
+                                "balance",
+                                "credit_available",
+                                "credit_reserved",
+                                "credit_fulfilled",
+                                "billing_cycle",
+                            ],
                             "title": "CreditBalanceResponse",
                             "type": "object",
                         },
@@ -329,12 +502,18 @@ _OPERATIONS = {
                             "description": "Response body for credit balance queries.",
                             "properties": {
                                 "balance": {
-                                    "description": "The "
+                                    "deprecated": True,
+                                    "description": "Deprecated: "
+                                    "use "
+                                    "`credit_available` "
+                                    "instead. "
+                                    "The "
                                     "credit "
                                     "balance "
-                                    "of "
-                                    "the "
-                                    "user "
+                                    "still "
+                                    "available "
+                                    "to "
+                                    "spend, "
                                     "in "
                                     "minor "
                                     "currency "
@@ -375,8 +554,81 @@ _OPERATIONS = {
                                     "contract "
                                     "start "
                                     "date.",
-                                    "examples": [None, "08-2026"],
+                                    "examples": [None, "09-2026"],
                                     "title": "Billing Cycle",
+                                },
+                                "credit_available": {
+                                    "description": "The "
+                                    "credit "
+                                    "remaining, "
+                                    "and "
+                                    "available "
+                                    "for "
+                                    "use, "
+                                    "in "
+                                    "minor "
+                                    "currency "
+                                    "units "
+                                    "(e.g. "
+                                    "pence, "
+                                    "cents). "
+                                    "Equal "
+                                    "to "
+                                    "the "
+                                    "credit "
+                                    "allowance "
+                                    "minus "
+                                    "`credit_reserved` "
+                                    "and "
+                                    "`credit_fulfilled`.",
+                                    "examples": ["100000"],
+                                    "title": "Credit Available",
+                                    "type": "integer",
+                                },
+                                "credit_fulfilled": {
+                                    "description": "The "
+                                    "total "
+                                    "credit "
+                                    "redeemed "
+                                    "and "
+                                    "fully "
+                                    "billable, "
+                                    "in "
+                                    "minor "
+                                    "currency "
+                                    "units "
+                                    "(e.g. "
+                                    "pence, "
+                                    "cents).",
+                                    "examples": ["5000"],
+                                    "title": "Credit Fulfilled",
+                                    "type": "integer",
+                                },
+                                "credit_reserved": {
+                                    "description": "The "
+                                    "credit "
+                                    "currently "
+                                    "reserved "
+                                    "for "
+                                    "staged/in-progress "
+                                    "tasking "
+                                    "orders "
+                                    "that "
+                                    "are "
+                                    "not "
+                                    "yet "
+                                    "billable "
+                                    "— "
+                                    "in "
+                                    "minor "
+                                    "currency "
+                                    "units "
+                                    "(e.g. "
+                                    "pence, "
+                                    "cents).",
+                                    "examples": ["2500"],
+                                    "title": "Credit Reserved",
+                                    "type": "integer",
                                 },
                                 "currency": {
                                     "description": "The "
@@ -390,7 +642,14 @@ _OPERATIONS = {
                                     "type": "string",
                                 },
                             },
-                            "required": ["currency", "balance", "billing_cycle"],
+                            "required": [
+                                "currency",
+                                "balance",
+                                "credit_available",
+                                "credit_reserved",
+                                "credit_fulfilled",
+                                "billing_cycle",
+                            ],
                             "title": "CreditBalanceResponse",
                             "type": "object",
                         },
@@ -430,12 +689,18 @@ _OPERATIONS = {
                     "description": "Response body for credit balance queries.",
                     "properties": {
                         "balance": {
-                            "description": "The "
+                            "deprecated": True,
+                            "description": "Deprecated: "
+                            "use "
+                            "`credit_available` "
+                            "instead. "
+                            "The "
                             "credit "
                             "balance "
-                            "of "
-                            "the "
-                            "user "
+                            "still "
+                            "available "
+                            "to "
+                            "spend, "
                             "in "
                             "minor "
                             "currency "
@@ -476,8 +741,81 @@ _OPERATIONS = {
                             "contract "
                             "start "
                             "date.",
-                            "examples": [None, "08-2026"],
+                            "examples": [None, "09-2026"],
                             "title": "Billing Cycle",
+                        },
+                        "credit_available": {
+                            "description": "The "
+                            "credit "
+                            "remaining, "
+                            "and "
+                            "available "
+                            "for "
+                            "use, "
+                            "in "
+                            "minor "
+                            "currency "
+                            "units "
+                            "(e.g. "
+                            "pence, "
+                            "cents). "
+                            "Equal "
+                            "to "
+                            "the "
+                            "credit "
+                            "allowance "
+                            "minus "
+                            "`credit_reserved` "
+                            "and "
+                            "`credit_fulfilled`.",
+                            "examples": ["100000"],
+                            "title": "Credit Available",
+                            "type": "integer",
+                        },
+                        "credit_fulfilled": {
+                            "description": "The "
+                            "total "
+                            "credit "
+                            "redeemed "
+                            "and "
+                            "fully "
+                            "billable, "
+                            "in "
+                            "minor "
+                            "currency "
+                            "units "
+                            "(e.g. "
+                            "pence, "
+                            "cents).",
+                            "examples": ["5000"],
+                            "title": "Credit Fulfilled",
+                            "type": "integer",
+                        },
+                        "credit_reserved": {
+                            "description": "The "
+                            "credit "
+                            "currently "
+                            "reserved "
+                            "for "
+                            "staged/in-progress "
+                            "tasking "
+                            "orders "
+                            "that "
+                            "are "
+                            "not "
+                            "yet "
+                            "billable "
+                            "— "
+                            "in "
+                            "minor "
+                            "currency "
+                            "units "
+                            "(e.g. "
+                            "pence, "
+                            "cents).",
+                            "examples": ["2500"],
+                            "title": "Credit Reserved",
+                            "type": "integer",
                         },
                         "currency": {
                             "description": "The currency of the credit balance.",
@@ -486,7 +824,14 @@ _OPERATIONS = {
                             "type": "string",
                         },
                     },
-                    "required": ["currency", "balance", "billing_cycle"],
+                    "required": [
+                        "currency",
+                        "balance",
+                        "credit_available",
+                        "credit_reserved",
+                        "credit_fulfilled",
+                        "billing_cycle",
+                    ],
                     "title": "CreditBalanceResponse",
                     "type": "object",
                 },
@@ -529,12 +874,18 @@ _OPERATIONS = {
                             "description": "Response body for credit balance queries.",
                             "properties": {
                                 "balance": {
-                                    "description": "The "
+                                    "deprecated": True,
+                                    "description": "Deprecated: "
+                                    "use "
+                                    "`credit_available` "
+                                    "instead. "
+                                    "The "
                                     "credit "
                                     "balance "
-                                    "of "
-                                    "the "
-                                    "user "
+                                    "still "
+                                    "available "
+                                    "to "
+                                    "spend, "
                                     "in "
                                     "minor "
                                     "currency "
@@ -575,8 +926,81 @@ _OPERATIONS = {
                                     "contract "
                                     "start "
                                     "date.",
-                                    "examples": [None, "08-2026"],
+                                    "examples": [None, "09-2026"],
                                     "title": "Billing Cycle",
+                                },
+                                "credit_available": {
+                                    "description": "The "
+                                    "credit "
+                                    "remaining, "
+                                    "and "
+                                    "available "
+                                    "for "
+                                    "use, "
+                                    "in "
+                                    "minor "
+                                    "currency "
+                                    "units "
+                                    "(e.g. "
+                                    "pence, "
+                                    "cents). "
+                                    "Equal "
+                                    "to "
+                                    "the "
+                                    "credit "
+                                    "allowance "
+                                    "minus "
+                                    "`credit_reserved` "
+                                    "and "
+                                    "`credit_fulfilled`.",
+                                    "examples": ["100000"],
+                                    "title": "Credit Available",
+                                    "type": "integer",
+                                },
+                                "credit_fulfilled": {
+                                    "description": "The "
+                                    "total "
+                                    "credit "
+                                    "redeemed "
+                                    "and "
+                                    "fully "
+                                    "billable, "
+                                    "in "
+                                    "minor "
+                                    "currency "
+                                    "units "
+                                    "(e.g. "
+                                    "pence, "
+                                    "cents).",
+                                    "examples": ["5000"],
+                                    "title": "Credit Fulfilled",
+                                    "type": "integer",
+                                },
+                                "credit_reserved": {
+                                    "description": "The "
+                                    "credit "
+                                    "currently "
+                                    "reserved "
+                                    "for "
+                                    "staged/in-progress "
+                                    "tasking "
+                                    "orders "
+                                    "that "
+                                    "are "
+                                    "not "
+                                    "yet "
+                                    "billable "
+                                    "— "
+                                    "in "
+                                    "minor "
+                                    "currency "
+                                    "units "
+                                    "(e.g. "
+                                    "pence, "
+                                    "cents).",
+                                    "examples": ["2500"],
+                                    "title": "Credit Reserved",
+                                    "type": "integer",
                                 },
                                 "currency": {
                                     "description": "The "
@@ -590,7 +1014,14 @@ _OPERATIONS = {
                                     "type": "string",
                                 },
                             },
-                            "required": ["currency", "balance", "billing_cycle"],
+                            "required": [
+                                "currency",
+                                "balance",
+                                "credit_available",
+                                "credit_reserved",
+                                "credit_fulfilled",
+                                "billing_cycle",
+                            ],
                             "title": "CreditBalanceResponse",
                             "type": "object",
                         },

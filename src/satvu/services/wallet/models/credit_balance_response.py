@@ -11,7 +11,14 @@ class CreditBalanceResponse(BaseModel):
 
     Attributes:
         currency (str): The currency of the credit balance.
-        balance (int): The credit balance of the user in minor currency units (e.g. pence, cents).
+        balance (int): Deprecated: use `credit_available` instead. The credit balance still available to spend, in minor
+            currency units (e.g. pence, cents).
+        credit_available (int): The credit remaining, and available for use, in minor currency units (e.g. pence,
+            cents). Equal to the credit allowance minus `credit_reserved` and `credit_fulfilled`.
+        credit_reserved (int): The credit currently reserved for staged/in-progress tasking orders that are not yet
+            billable — in minor currency units (e.g. pence, cents).
+        credit_fulfilled (int): The total credit redeemed and fully billable, in minor currency units (e.g. pence,
+            cents).
         billing_cycle (None | str): The current billing cycle, for example the current calendar month (UTC). If the
             billing cycle is `null`, the billing period will be from the contract start date.
     """
@@ -21,8 +28,23 @@ class CreditBalanceResponse(BaseModel):
     )
     balance: int = Field(
         ...,
-        description="""The credit balance of the user in minor currency units (e.g. pence, cents).""",
+        description="""Deprecated: use `credit_available` instead. The credit balance still available to spend, in minor currency units (e.g. pence, cents).""",
         alias="balance",
+    )
+    credit_available: int = Field(
+        ...,
+        description="""The credit remaining, and available for use, in minor currency units (e.g. pence, cents). Equal to the credit allowance minus `credit_reserved` and `credit_fulfilled`.""",
+        alias="credit_available",
+    )
+    credit_reserved: int = Field(
+        ...,
+        description="""The credit currently reserved for staged/in-progress tasking orders that are not yet billable — in minor currency units (e.g. pence, cents).""",
+        alias="credit_reserved",
+    )
+    credit_fulfilled: int = Field(
+        ...,
+        description="""The total credit redeemed and fully billable, in minor currency units (e.g. pence, cents).""",
+        alias="credit_fulfilled",
     )
     billing_cycle: None | str = Field(
         ...,

@@ -6,9 +6,7 @@ class UserFacingTaskStatus(str, Enum):
     FULFILLED = "fulfilled"
     IN_PROGRESS = "in progress"
     NOT_FULFILLED = "not fulfilled"
-    PLANNED = "planned"
     PROCESSING = "processing"
-    REJECTED = "rejected"
 
     def __str__(self) -> str:
         return str(self.value)

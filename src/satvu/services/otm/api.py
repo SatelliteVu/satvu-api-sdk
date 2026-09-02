@@ -335,11 +335,10 @@ class OtmService(SDKClient):
 
         Cancels a tasking order request.
 
-        For orders that are part of a recurring series, cancellation also rolls back
-        the series state: the order count is decremented and the series is rescheduled
-        from the cancelled order's window end, so the scheduler will create a
-        replacement order for the next due window. If the series had already reached
-        completion due to this order, it is reactivated.
+        For orders that are part of a recurring series, cancellation is terminal
+        and consumes the order's slot in the series — no replacement order is
+        scheduled. If the cancelled order was the series' last outstanding one
+        (all orders created and all now terminal), the series is completed.
 
         Args:
             contract_id (UUID): Contract ID

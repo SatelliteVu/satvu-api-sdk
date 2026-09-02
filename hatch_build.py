@@ -17,12 +17,26 @@ sys.path.insert(0, str(ROOT_DIR / "src"))
 # Set SATVU_GENERATE_TESTS=1 to generate tests (e.g., when running test suite)
 GENERATE_TESTS_ENV_VAR = "SATVU_GENERATE_TESTS"
 
+# The builder's openapi-python-client dependency requires 3.11+, while the published SDK
+# supports 3.10 (see requires-python), so it is absent from 3.10 build environments.
+GENERATOR_MIN_PYTHON = (3, 11)
+
 
 class CustomBuildHook(BuildHookInterface):
     """Build hook to generate SDK code before packaging."""
 
     def initialize(self, version, build_data):
         """Run the SDK builder before packaging."""
+        if sys.version_info < GENERATOR_MIN_PYTHON:
+            version_required = ".".join(str(part) for part in GENERATOR_MIN_PYTHON)
+            print(
+                f"  [BUILD] Skipping SDK generation: needs Python {version_required}+. "
+                "Packaging the generated code committed to src/satvu/services."
+            )
+            return
+
+        # Imported here rather than at module scope so this hook stays importable on
+        # Python versions that cannot install the generator.
         from builder.build import build
 
         # Check if test generation is requested via environment variable

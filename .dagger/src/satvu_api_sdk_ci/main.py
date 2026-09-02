@@ -14,6 +14,16 @@ SOURCE: TypeAlias = Annotated[
 SUPPORTED_PYTHON_VERSIONS = ["3.10", "3.11", "3.12", "3.13"]
 DEFAULT_PYTHON_VERSION = "3.13"
 
+# The builder's openapi-python-client dependency requires 3.11+, while the published SDK
+# supports 3.10 (see requires-python).
+GENERATOR_MIN_PYTHON = (3, 11)
+
+
+def supports_generator(python_version: str) -> bool:
+    """Whether the SDK builder can run on the given Python version."""
+    parts = tuple(int(part) for part in python_version.split(".")[:2])
+    return parts >= GENERATOR_MIN_PYTHON
+
 
 @object_type
 class SatvuApiSdkCi:
@@ -49,6 +59,51 @@ class SatvuApiSdkCi:
             ).with_env_variable("PATH", "${PATH}:/src/.venv/bin")
 
         return builder
+
+    def test_container(
+        self,
+        source: dagger.Directory,
+        python_version: str,
+        triggered_api: str = "",
+        spec_env: str = "",
+    ) -> dagger.Container:
+        """Returns a container with dependencies installed and the SDK generated.
+
+        Generation happens in the container itself where the target Python version can
+        run the builder. Where it cannot, the generated code is taken from a container
+        that can — the generated tests are gitignored, so they are only ever produced by
+        a generation run, never mounted from source.
+        """
+        builder = self.build_container(
+            source, python_version=python_version, install_deps=True
+        )
+
+        # Forward selective spec fetching config to the build container
+        if triggered_api:
+            builder = builder.with_env_variable("SATVU_TRIGGERED_API", triggered_api)
+        if spec_env:
+            builder = builder.with_env_variable("SATVU_SPEC_ENV", spec_env)
+
+        # Enable test generation for test runs (tests are needed to run pytest)
+        builder = builder.with_env_variable("SATVU_GENERATE_TESTS", "1")
+
+        if not supports_generator(python_version):
+            generated = self.test_container(
+                source,
+                python_version=DEFAULT_PYTHON_VERSION,
+                triggered_api=triggered_api,
+                spec_env=spec_env,
+            )
+            builder = builder.with_directory(
+                "/src/src/satvu/services",
+                generated.directory("/src/src/satvu/services"),
+            ).with_directory("/src/.cache", generated.directory("/src/.cache"))
+
+        # Runs the hatch hook: generation where supported, packaging only where not
+        # Build wheel only (skip sdist) to avoid running hatch hook twice
+        return builder.with_exec(["python", "--version"]).with_exec(
+            ["/bin/uv", "build", "--wheel"]
+        )
 
     @function
     async def build_release(
@@ -229,30 +284,16 @@ class SatvuApiSdkCi:
                 ]
             )
 
-        builder = self.build_container(
-            source, python_version=python_version, install_deps=True
+        builder = self.test_container(
+            source,
+            python_version=python_version,
+            triggered_api=triggered_api,
+            spec_env=spec_env,
         )
 
-        # Forward selective spec fetching config to the build container
-        if triggered_api:
-            builder = builder.with_env_variable("SATVU_TRIGGERED_API", triggered_api)
-        if spec_env:
-            builder = builder.with_env_variable("SATVU_SPEC_ENV", spec_env)
-
-        # Enable test generation for test runs (tests are needed to run pytest)
-        builder = builder.with_env_variable("SATVU_GENERATE_TESTS", "1")
-
-        run = (
-            await builder
-            # Verify correct Python version is being used
-            .with_exec(["python", "--version"])
-            .with_env_variable("PYTEST_ADDOPTS", add_opts)
-            # Build wheel only (skip sdist) to avoid running hatch hook twice
-            .with_exec(["/bin/uv", "build", "--wheel"])
-            .with_exec(
-                pytest_args,
-                redirect_stdout="/tmp/pytest-coverage.txt",  # nosec: B108
-            )
+        run = await builder.with_env_variable("PYTEST_ADDOPTS", add_opts).with_exec(
+            pytest_args,
+            redirect_stdout="/tmp/pytest-coverage.txt",  # nosec: B108
         )
 
         # Export test results and full .cache (OpenAPI specs + hypothesis examples)
@@ -332,27 +373,16 @@ class SatvuApiSdkCi:
             "-v",
         ] + test_paths
 
-        builder = self.build_container(
-            source, python_version=python_version, install_deps=True
+        builder = self.test_container(
+            source,
+            python_version=python_version,
+            triggered_api=triggered_api,
+            spec_env=spec_env,
         )
 
-        # Forward selective spec fetching config to the build container
-        if triggered_api:
-            builder = builder.with_env_variable("SATVU_TRIGGERED_API", triggered_api)
-        if spec_env:
-            builder = builder.with_env_variable("SATVU_SPEC_ENV", spec_env)
-
-        # Enable test generation for test runs (tests are needed to run pytest)
-        builder = builder.with_env_variable("SATVU_GENERATE_TESTS", "1")
-
-        run = (
-            await builder.with_exec(["python", "--version"])
-            # Build wheel only (skip sdist) to avoid running hatch hook twice
-            .with_exec(["/bin/uv", "build", "--wheel"])
-            .with_exec(
-                pytest_args,
-                redirect_stdout="/tmp/pytest-coverage.txt",  # nosec: B108
-            )
+        run = await builder.with_exec(
+            pytest_args,
+            redirect_stdout="/tmp/pytest-coverage.txt",  # nosec: B108
         )
 
         # Export test results and full .cache (OpenAPI specs + hypothesis examples)

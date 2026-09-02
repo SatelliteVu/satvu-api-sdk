@@ -13,8 +13,10 @@ from typing import Any
 from openapi_python_client import Project
 from openapi_python_client.parser.openapi import Endpoint
 from openapi_python_client.parser.responses import Response
+from openapi_python_client.schema import UntrustedString
 from openapi_python_client.schema.openapi_schema_pydantic import Reference
 
+from builder.code_strings import unwrap_code
 from builder.schema_utils import (
     clean_schema,
     find_recursive_refs,
@@ -48,7 +50,7 @@ def extract_response_schema(response: Response) -> dict[str, Any] | None:
     if not response.data.content:
         return None
 
-    media_type = response.data.content.get("application/json")
+    media_type = response.data.content.get(UntrustedString("application/json"))
     if not media_type or not media_type.media_type_schema:
         return None
 
@@ -287,7 +289,9 @@ def _extract_operations(
             )
 
             if endpoint_info:
-                key = (endpoint.path, endpoint.method.lower())
+                # Raw path is safe here: the template renders the key via `pprint`,
+                # which escapes it, unlike plain interpolation.
+                key = (endpoint.path.get_untrusted_value(), endpoint.method.lower())
                 operations[key] = operation_data
                 endpoints_data.append(endpoint_info)
 
@@ -366,7 +370,7 @@ def _process_endpoint(
             response_info[status] = {
                 "status_code": int(status),
                 "schema": prepared,
-                "type_string": response.prop.get_type_string(),
+                "type_string": unwrap_code(response.prop.get_type_string()),
                 "description": getattr(response.data, "description", ""),
             }
 

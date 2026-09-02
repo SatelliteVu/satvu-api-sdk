@@ -6,14 +6,14 @@
 {% for param in endpoint.path_parameters %}
         {{ param.python_name }} = uuid4()
 {% endfor %}
-        path = "{{ endpoint.path }}".format(
+        path = "{{ endpoint.path | in_double_quote_literal }}".format(
 {% for param in endpoint.path_parameters %}
             {{ param.python_name }}={{ param.python_name }}{% if not loop.last %},{% endif %}
 
 {% endfor %}
         )
 {% else %}
-        path = "{{ endpoint.path }}"
+        path = "{{ endpoint.path | in_double_quote_literal }}"
 {% endif %}
         url = f"{self.base_url}{path}"
 {%- endmacro %}
@@ -21,7 +21,7 @@
 {#- Parse request body data into Pydantic model -#}
 {%- macro parse_body(endpoint) %}
 {% if endpoint.bodies -%}
-{%- set body_type_string = endpoint.bodies[0].prop.get_type_string() -%}
+{%- set body_type_string = endpoint.bodies[0].prop.get_type_string() | as_unembedded_code -%}
 {%- if 'Union[' in body_type_string %}
 {%- set union_classes = body_type_string.replace('Union[', '').replace(']', '').replace("'", "").split(', ') %}
         # For Union types, use TypeAdapter to validate
@@ -45,7 +45,7 @@
             {{ param.python_name }}={{ param.python_name }},
 {% endfor %}
 {% if endpoint.bodies %}
-{%- if endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[") %}
+{%- if endpoint.bodies | length == 1 and (endpoint.bodies[0].prop.get_type_string() | as_unembedded_code).startswith("list[") %}
             items=body,
 {% else %}
             body=body,
@@ -66,14 +66,14 @@
 {#- Uses strategy functions that load from example cache with fallback to from_schema() -#}
 {%- macro given_params(endpoint, status_code, include_response=true) %}
 {%- if include_response %}
-        response_data=get_response_strategy("{{ endpoint.path }}", "{{ endpoint.method }}", "{{ status_code }}"),
+        response_data=get_response_strategy("{{ endpoint.path | in_double_quote_literal }}", "{{ endpoint.method }}", "{{ status_code }}"),
 {%- endif %}
 {%- if endpoint.bodies %}
-        body_data=get_request_body_strategy("{{ endpoint.path }}", "{{ endpoint.method }}"),
+        body_data=get_request_body_strategy("{{ endpoint.path | in_double_quote_literal }}", "{{ endpoint.method }}"),
 {%- endif %}
 {%- for param in endpoint.query_parameters %}
 {%- if param.required %}
-        {{ param.python_name }}=get_parameter_strategy("{{ endpoint.path }}", "{{ endpoint.method }}", "{{ param.name }}"),
+        {{ param.python_name }}=get_parameter_strategy("{{ endpoint.path | in_double_quote_literal }}", "{{ endpoint.method }}", "{{ param.name | in_double_quote_literal }}"),
 {%- endif %}
 {%- endfor %}
 {%- endmacro %}

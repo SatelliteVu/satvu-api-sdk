@@ -8,8 +8,8 @@
     suppress_health_check=[HealthCheck.filter_too_much, HealthCheck.too_slow, HealthCheck.data_too_large],
 )
 @given(
-    page1_data=get_response_strategy("{{ config.url_pattern }}", "{{ config.http_method }}", "200"),
-    page2_data=get_response_strategy("{{ config.url_pattern }}", "{{ config.http_method }}", "200"),
+    page1_data=get_response_strategy("{{ config.url_pattern | in_double_quote_literal }}", "{{ config.http_method }}", "200"),
+    page2_data=get_response_strategy("{{ config.url_pattern | in_double_quote_literal }}", "{{ config.http_method }}", "200"),
 )
 def test_{{ config.iter_method }}_pagination(self, backend, page1_data, page2_data):
     """Test {{ config.iter_method }} follows next links correctly."""
@@ -20,7 +20,7 @@ def test_{{ config.iter_method }}_pagination(self, backend, page1_data, page2_da
     {{ param_name }} = {% if 'UUID' in param_type %}uuid4(){% elif param_type == "str" %}str(uuid4()){% else %}uuid4(){% endif %}
 
 {% endfor %}
-    path = "{{ config.url_pattern }}".format(
+    path = "{{ config.url_pattern | in_double_quote_literal }}".format(
 {%- for param_name, param_type in config.path_params %}
         {{ param_name }}={{ param_name }}{% if not loop.last %},{% endif %}
 
@@ -69,9 +69,9 @@ def test_{{ config.iter_method }}_pagination(self, backend, page1_data, page2_da
     suppress_health_check=[HealthCheck.filter_too_much, HealthCheck.too_slow, HealthCheck.data_too_large],
 )
 @given(
-    page1_data=get_response_strategy("{{ config.url_pattern }}", "{{ config.http_method }}", "200"),
-    page2_data=get_response_strategy("{{ config.url_pattern }}", "{{ config.http_method }}", "200"),
-    page3_data=get_response_strategy("{{ config.url_pattern }}", "{{ config.http_method }}", "200"),
+    page1_data=get_response_strategy("{{ config.url_pattern | in_double_quote_literal }}", "{{ config.http_method }}", "200"),
+    page2_data=get_response_strategy("{{ config.url_pattern | in_double_quote_literal }}", "{{ config.http_method }}", "200"),
+    page3_data=get_response_strategy("{{ config.url_pattern | in_double_quote_literal }}", "{{ config.http_method }}", "200"),
 )
 def test_{{ config.iter_method }}_max_pages(self, backend, page1_data, page2_data, page3_data):
     """Test {{ config.iter_method }} respects max_pages limit."""
@@ -83,7 +83,7 @@ def test_{{ config.iter_method }}_max_pages(self, backend, page1_data, page2_dat
     {{ param_name }} = {% if 'UUID' in param_type %}uuid4(){% elif param_type == "str" %}str(uuid4()){% else %}uuid4(){% endif %}
 
 {% endfor %}
-    path = "{{ config.url_pattern }}".format(
+    path = "{{ config.url_pattern | in_double_quote_literal }}".format(
 {%- for param_name, param_type in config.path_params %}
         {{ param_name }}={{ param_name }}{% if not loop.last %},{% endif %}
 
@@ -136,7 +136,7 @@ def test_{{ config.iter_method }}_max_pages(self, backend, page1_data, page2_dat
     suppress_health_check=[HealthCheck.filter_too_much, HealthCheck.too_slow, HealthCheck.data_too_large],
 )
 @given(
-    page_data=get_response_strategy("{{ config.url_pattern }}", "{{ config.http_method }}", "200"),
+    page_data=get_response_strategy("{{ config.url_pattern | in_double_quote_literal }}", "{{ config.http_method }}", "200"),
 )
 def test_{{ config.iter_method }}_no_next_link(self, backend, page_data):
     """Test {{ config.iter_method }} terminates when no next link present."""
@@ -146,7 +146,7 @@ def test_{{ config.iter_method }}_no_next_link(self, backend, page_data):
     {{ param_name }} = {% if 'UUID' in param_type %}uuid4(){% elif param_type == "str" %}str(uuid4()){% else %}uuid4(){% endif %}
 
 {% endfor %}
-    path = "{{ config.url_pattern }}".format(
+    path = "{{ config.url_pattern | in_double_quote_literal }}".format(
 {%- for param_name, param_type in config.path_params %}
         {{ param_name }}={{ param_name }}{% if not loop.last %},{% endif %}
 

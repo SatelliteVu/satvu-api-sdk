@@ -13,7 +13,10 @@ from openapi_python_client.parser.openapi import Endpoint, GeneratorData
 from openapi_python_client.parser.properties.list_property import ListProperty
 from openapi_python_client.parser.properties.model_property import ModelProperty
 from openapi_python_client.parser.properties.union import UnionProperty
+from openapi_python_client.schema import UntrustedString
+from openapi_python_client.strings import safe_for_docstring
 
+from builder.code_strings import unwrap_code
 from builder.config import APIS, SPEC_ENV
 from builder.jinja_filters import to_pydantic_model_field
 from builder.load import load_openapi, spec_content_hash
@@ -97,9 +100,9 @@ class EndpointTransformer:
 
         # Transform path (remove version prefix)
         if self.context.strip_version_prefix and endpoint.path.startswith("/v"):
-            parts = endpoint.path.split("/", 2)
+            parts = endpoint.path.get_untrusted_value().split("/", 2)
             if len(parts) > 2:
-                endpoint.path = "/" + parts[2]
+                endpoint.path = UntrustedString("/" + parts[2])
 
         # Generate body docstrings
         if endpoint.bodies:
@@ -123,11 +126,14 @@ class EndpointTransformer:
 
         if isinstance(body.prop, UnionProperty):
             models = body.prop.inner_properties
-            docstring = f"body ({body.prop.get_type_string()}):\n"
+            docstring = f"body ({unwrap_code(body.prop.get_type_string())}):\n"
             docstring += "One of:\n"
 
             for model in models:
-                model_docstring = f"- {model.get_type_string()}: {model.description}\n"
+                model_type = unwrap_code(model.get_type_string())
+                model_docstring = (
+                    f"- {model_type}: {safe_for_docstring(model.description or '')}\n"
+                )
                 docstring += model_docstring
 
             docstrings.append(docstring)
@@ -137,7 +143,9 @@ class EndpointTransformer:
                 if isinstance(body.prop, ListProperty)
                 else body.prop
             )
-            docstring = f"body ({body_prop.get_type_string()}): {body_prop.description}"
+            body_type = unwrap_code(body_prop.get_type_string())
+            description = safe_for_docstring(body_prop.description or "")
+            docstring = f"body ({body_type}): {description}"
             docstrings.append(docstring)
 
         return docstrings
@@ -215,11 +223,13 @@ class EndpointTransformer:
 
         for prop in all_properties:
             if prop.name != "links" and isinstance(prop, ListProperty):
-                items_field = prop.name
+                # python_name, not name: this is read back as a model attribute
+                # (`page.features`), and `name` is raw document text.
+                items_field = str(prop.python_name)
 
                 # Extract item type directly from ListProperty.inner_property
                 if hasattr(prop, "inner_property") and prop.inner_property:
-                    items_type = prop.inner_property.get_type_string()
+                    items_type = unwrap_code(prop.inner_property.get_type_string())
 
                 break
 
@@ -310,7 +320,9 @@ class ServiceCodeGenerator:
         api_class_path = api_dir / "api.py"
         endpoint_template = self.project.env.get_template(
             "endpoint_module.py.jinja",
-            globals={"isbool": lambda obj: obj.get_base_type_string() == "bool"},
+            globals={
+                "isbool": lambda obj: unwrap_code(obj.get_base_type_string()) == "bool"
+            },
         )
         endpoint_template.environment.filters["split"] = lambda s, sep: s.split(sep)
 

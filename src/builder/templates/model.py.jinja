@@ -1,13 +1,13 @@
-{% from "helpers.jinja" import safe_docstring %}
+{% from "helpers.jinja" import docstring %}
 
 {% set class_name = model.class_info.name %}
 {% set module_name = model.class_info.module_name %}
 
 {% macro class_docstring_content(model) %}
-    {% if model.title %}{{ model.title | wordwrap(116) }}
+    {% if model.title %}{{ model.title | safe_for_docstring | wordwrap(116) }}
 
     {% endif -%}
-    {%- if model.description %}{{ model.description | wordwrap(116) }}
+    {%- if model.description %}{{ model.description | safe_for_docstring | wordwrap(116) }}
 
     {% endif %}
     {% if not model.title and not model.description %}
@@ -16,7 +16,7 @@
     {% endif %}
     {% if model.example %}
     Example:
-        {{ model.example | string | wordwrap(112) | indent(12) }}
+        {{ model.example | safe_for_docstring | wordwrap(112) | indent(12) }}
 
     {% endif %}
     {% if model.required_properties or model.optional_properties %}
@@ -47,7 +47,7 @@ if TYPE_CHECKING:
 {% endfor %}
 
 class {{ class_name }}(BaseModel):
-    {{ safe_docstring(class_docstring_content(model)) | indent(4) }}
+    {{ docstring(class_docstring_content(model)) | indent(4) }}
 
     {% for property in model.required_properties + model.optional_properties %}
     {{ property | to_pydantic_field }}

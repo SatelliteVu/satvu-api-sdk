@@ -28,7 +28,7 @@
         # Reduce the generated body to the fields the spec actually requires
         body_data = drop_optional_properties(
             body_data,
-            get_request_body_schema("{{ endpoint.path }}", "{{ endpoint.method }}"),
+            get_request_body_schema("{{ endpoint.path | in_double_quote_literal }}", "{{ endpoint.method }}"),
         )
 
         # Reset and activate pook for each hypothesis iteration
@@ -50,11 +50,11 @@
             )
 
         # Every field omitted above must stay omitted on the wire
-        assert_request_body_matches_input(mock, body_data, "{{ endpoint.method | upper }} {{ endpoint.path }}")
+        assert_request_body_matches_input(mock, body_data, "{{ endpoint.method | upper }} {{ endpoint.path | in_double_quote_literal }}")
         assert_request_body_conforms(
             mock,
-            get_request_body_schema("{{ endpoint.path }}", "{{ endpoint.method }}"),
-            "{{ endpoint.method | upper }} {{ endpoint.path }}",
+            get_request_body_schema("{{ endpoint.path | in_double_quote_literal }}", "{{ endpoint.method }}"),
+            "{{ endpoint.method | upper }} {{ endpoint.path | in_double_quote_literal }}",
             body_data,
         )
 {%- endmacro %}

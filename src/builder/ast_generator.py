@@ -224,7 +224,11 @@ class ASTMethodBuilder:
                             arg="url",
                             value=ast.Call(
                                 func=ast.Attribute(
-                                    value=ast.Constant(value=self.config.url_pattern),
+                                    # Raw value is safe here: ast.unparse escapes the
+                                    # constant, unlike template interpolation.
+                                    value=ast.Constant(
+                                        value=self.config.url_pattern.get_untrusted_value()
+                                    ),
                                     attr="format",
                                     ctx=ast.Load(),
                                 ),

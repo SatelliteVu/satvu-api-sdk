@@ -1403,7 +1403,7 @@ class CatalogService(SDKClient):
             )
         return response.json().unwrap()
 
-    def getCollectionSearch(
+    def get_collection_search(
         self,
         contract_id: str,
         collection_id: str,
@@ -1495,7 +1495,7 @@ class CatalogService(SDKClient):
             return parse_response(response.json().unwrap(), SearchResponse)
         return response.json().unwrap()
 
-    def getCollectionSearch_iter(
+    def get_collection_search_iter(
         self,
         contract_id: str,
         collection_id: str,
@@ -1526,7 +1526,7 @@ class CatalogService(SDKClient):
 
         Example:
             ```python
-            for page in sdk.catalog.getCollectionSearch_iter(
+            for page in sdk.catalog.get_collection_search_iter(
                 contract_id=...,
                 collection_id=...,
                 max_pages=10
@@ -1542,7 +1542,7 @@ class CatalogService(SDKClient):
             if max_pages and page_count >= max_pages:
                 break
 
-            response = self.getCollectionSearch(
+            response = self.get_collection_search(
                 contract_id=contract_id,
                 collection_id=collection_id,
                 bbox=bbox,
@@ -1559,7 +1559,7 @@ class CatalogService(SDKClient):
             if not token:
                 break
 
-    def postCollectionSearch(
+    def post_collection_search(
         self,
         body: Union[None, PostCollectionSearchInput],
         contract_id: str,
@@ -1646,7 +1646,7 @@ class CatalogService(SDKClient):
             return parse_response(response.json().unwrap(), SearchResponse)
         return response.json().unwrap()
 
-    def postCollectionSearch_iter(
+    def post_collection_search_iter(
         self,
         body: Union[None, PostCollectionSearchInput],
         contract_id: str,
@@ -1670,7 +1670,7 @@ class CatalogService(SDKClient):
 
         Example:
             ```python
-            for page in sdk.catalog.postCollectionSearch_iter(
+            for page in sdk.catalog.post_collection_search_iter(
                 body=...,
                 contract_id=...,
                 collection_id=...,
@@ -1688,7 +1688,7 @@ class CatalogService(SDKClient):
                 break
 
             body_with_token = body.model_copy(update={"token": token}) if body else None
-            response = self.postCollectionSearch(
+            response = self.post_collection_search(
                 body=body_with_token,
                 contract_id=contract_id,
                 collection_id=collection_id,

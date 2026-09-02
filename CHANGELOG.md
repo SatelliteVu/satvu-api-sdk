@@ -1,3 +1,13 @@
+## [0.10.2](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.10.1...v0.10.2) (2026-09-02)
+
+
+### Bug Fixes
+
+* **builder:** collapse json schema 2020-12 tuple arrays
+* **builder:** emit str-mixin enums for python 3.10 compatibility
+* **builder:** skip sdk generation on python 3.10
+* **builder:** unwrap 0.29.1 tainted string wrappers before emitting code
+
 ## [0.10.1](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.10.0...v0.10.1) (2026-08-28)
 
 

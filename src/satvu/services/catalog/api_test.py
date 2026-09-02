@@ -1649,9 +1649,9 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/search", "get", "200"
         )
     )
-    def test_getCollectionSearch_200(self, backend, response_data):
+    def test_get_collection_search_200(self, backend, response_data):
         """
-        Test getCollectionSearch with 200 response.
+        Test get_collection_search with 200 response.
         """
         contract_id = uuid4()
         collection_id = uuid4()
@@ -1662,7 +1662,7 @@ class TestCatalogService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.catalog.getCollectionSearch(
+        result = self.sdk.catalog.get_collection_search(
             contract_id=contract_id, collection_id=collection_id
         )
         assert result is not None
@@ -1682,9 +1682,9 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/search", "get", "429"
         )
     )
-    def test_getCollectionSearch_429_error(self, backend, response_data):
+    def test_get_collection_search_429_error(self, backend, response_data):
         """
-        Test getCollectionSearch with 429 error response.
+        Test get_collection_search with 429 error response.
 
         HTTP 429 errors raise ClientError.
         """
@@ -1698,7 +1698,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.catalog.getCollectionSearch(
+            self.sdk.catalog.get_collection_search(
                 contract_id=contract_id, collection_id=collection_id
             )
         assert exc_info.value.status_code == 429
@@ -1720,9 +1720,9 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/search", "post"
         ),
     )
-    def test_postCollectionSearch_200(self, backend, response_data, body_data):
+    def test_post_collection_search_200(self, backend, response_data, body_data):
         """
-        Test postCollectionSearch with 200 response.
+        Test post_collection_search with 200 response.
         """
         contract_id = uuid4()
         collection_id = uuid4()
@@ -1734,7 +1734,7 @@ class TestCatalogService:
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body_adapter = TypeAdapter(Union[None, PostCollectionSearchInput])
         body = body_adapter.validate_python(body_data)
-        result = self.sdk.catalog.postCollectionSearch(
+        result = self.sdk.catalog.post_collection_search(
             contract_id=contract_id, collection_id=collection_id, body=body
         )
         assert_request_body_matches_input(
@@ -1768,11 +1768,11 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/search", "post"
         ),
     )
-    def test_postCollectionSearch_minimal_body_sends_only_what_was_set(
+    def test_post_collection_search_minimal_body_sends_only_what_was_set(
         self, backend, response_data, body_data
     ):
         """
-        Test postCollectionSearch sends no field the caller left unset.
+        Test post_collection_search sends no field the caller left unset.
         """
         contract_id = uuid4()
         collection_id = uuid4()
@@ -1791,7 +1791,7 @@ class TestCatalogService:
         body_adapter = TypeAdapter(Union[None, PostCollectionSearchInput])
         body = body_adapter.validate_python(body_data)
         with suppress(Exception):
-            self.sdk.catalog.postCollectionSearch(
+            self.sdk.catalog.post_collection_search(
                 contract_id=contract_id, collection_id=collection_id, body=body
             )
         assert_request_body_matches_input(
@@ -1823,9 +1823,9 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/search", "post"
         ),
     )
-    def test_postCollectionSearch_429_error(self, backend, response_data, body_data):
+    def test_post_collection_search_429_error(self, backend, response_data, body_data):
         """
-        Test postCollectionSearch with 429 error response.
+        Test post_collection_search with 429 error response.
 
         HTTP 429 errors raise ClientError.
         """
@@ -1841,7 +1841,7 @@ class TestCatalogService:
         body_adapter = TypeAdapter(Union[None, PostCollectionSearchInput])
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.catalog.postCollectionSearch(
+            self.sdk.catalog.post_collection_search(
                 contract_id=contract_id, collection_id=collection_id, body=body
             )
         assert exc_info.value.status_code == 429
@@ -2615,8 +2615,10 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/search", "get", "200"
         ),
     )
-    def test_getCollectionSearch_iter_pagination(self, backend, page1_data, page2_data):
-        """Test getCollectionSearch_iter follows next links correctly."""
+    def test_get_collection_search_iter_pagination(
+        self, backend, page1_data, page2_data
+    ):
+        """Test get_collection_search_iter follows next links correctly."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         contract_id = str(uuid4())
@@ -2642,7 +2644,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.catalog.getCollectionSearch_iter(
+            self.sdk.catalog.get_collection_search_iter(
                 contract_id=contract_id, collection_id=collection_id
             )
         )
@@ -2668,10 +2670,10 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/search", "get", "200"
         ),
     )
-    def test_getCollectionSearch_iter_max_pages(
+    def test_get_collection_search_iter_max_pages(
         self, backend, page1_data, page2_data, page3_data
     ):
-        """Test getCollectionSearch_iter respects max_pages limit."""
+        """Test get_collection_search_iter respects max_pages limit."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         page3_data = {**page3_data}
@@ -2710,7 +2712,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.catalog.getCollectionSearch_iter(
+            self.sdk.catalog.get_collection_search_iter(
                 contract_id=contract_id, collection_id=collection_id, max_pages=2
             )
         )
@@ -2730,8 +2732,8 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/search", "get", "200"
         )
     )
-    def test_getCollectionSearch_iter_no_next_link(self, backend, page_data):
-        """Test getCollectionSearch_iter terminates when no next link present."""
+    def test_get_collection_search_iter_no_next_link(self, backend, page_data):
+        """Test get_collection_search_iter terminates when no next link present."""
         page_data = {**page_data}
         contract_id = str(uuid4())
         collection_id = str(uuid4())
@@ -2752,7 +2754,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.catalog.getCollectionSearch_iter(
+            self.sdk.catalog.get_collection_search_iter(
                 contract_id=contract_id, collection_id=collection_id
             )
         )
@@ -2775,10 +2777,10 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/search", "post", "200"
         ),
     )
-    def test_postCollectionSearch_iter_pagination(
+    def test_post_collection_search_iter_pagination(
         self, backend, page1_data, page2_data
     ):
-        """Test postCollectionSearch_iter follows next links correctly."""
+        """Test post_collection_search_iter follows next links correctly."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         contract_id = str(uuid4())
@@ -2805,7 +2807,7 @@ class TestCatalogService:
         )
         body = PostCollectionSearchInput()
         pages = list(
-            self.sdk.catalog.postCollectionSearch_iter(
+            self.sdk.catalog.post_collection_search_iter(
                 body=body, contract_id=contract_id, collection_id=collection_id
             )
         )
@@ -2831,10 +2833,10 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/search", "post", "200"
         ),
     )
-    def test_postCollectionSearch_iter_max_pages(
+    def test_post_collection_search_iter_max_pages(
         self, backend, page1_data, page2_data, page3_data
     ):
-        """Test postCollectionSearch_iter respects max_pages limit."""
+        """Test post_collection_search_iter respects max_pages limit."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         page3_data = {**page3_data}
@@ -2874,7 +2876,7 @@ class TestCatalogService:
         )
         body = PostCollectionSearchInput()
         pages = list(
-            self.sdk.catalog.postCollectionSearch_iter(
+            self.sdk.catalog.post_collection_search_iter(
                 body=body,
                 contract_id=contract_id,
                 collection_id=collection_id,
@@ -2897,8 +2899,8 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/search", "post", "200"
         )
     )
-    def test_postCollectionSearch_iter_no_next_link(self, backend, page_data):
-        """Test postCollectionSearch_iter terminates when no next link present."""
+    def test_post_collection_search_iter_no_next_link(self, backend, page_data):
+        """Test post_collection_search_iter terminates when no next link present."""
         page_data = {**page_data}
         contract_id = str(uuid4())
         collection_id = str(uuid4())
@@ -2920,7 +2922,7 @@ class TestCatalogService:
         )
         body = PostCollectionSearchInput()
         pages = list(
-            self.sdk.catalog.postCollectionSearch_iter(
+            self.sdk.catalog.post_collection_search_iter(
                 body=body, contract_id=contract_id, collection_id=collection_id
             )
         )

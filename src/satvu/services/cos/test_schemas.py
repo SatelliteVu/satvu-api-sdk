@@ -10,7 +10,7 @@ Stores entire OpenAPI spec as operations with helper functions for access.
 from satvu.services.example_cache import get_cached_example_strategy
 
 # Spec hash for example cache invalidation
-_SPEC_HASH = "prod-833d6c288df12dfb143b50821fa209d543c934d9"
+_SPEC_HASH = "prod-ff67be393ab97dcf273a043fcc1c595c797e670f"
 
 # Component schemas for $ref resolution (cleaned for JSON Schema draft-07)
 _COMPONENTS = {
@@ -718,10 +718,7 @@ _COMPONENTS = {
         "properties": {
             "coordinates": {
                 "description": "The coordinates of the point as [longitude, latitude].",
-                "items": [
-                    {"anyOf": [{"type": "number"}, {"type": "integer"}]},
-                    {"anyOf": [{"type": "number"}, {"type": "integer"}]},
-                ],
+                "items": {"anyOf": [{"type": "number"}, {"type": "integer"}]},
                 "maxItems": 2,
                 "minItems": 2,
                 "title": "Coordinates",
@@ -774,10 +771,7 @@ _COMPONENTS = {
                 "holes.",
                 "items": {
                     "items": {
-                        "items": [
-                            {"anyOf": [{"type": "number"}, {"type": "integer"}]},
-                            {"anyOf": [{"type": "number"}, {"type": "integer"}]},
-                        ],
+                        "items": {"anyOf": [{"type": "number"}, {"type": "integer"}]},
                         "maxItems": 2,
                         "minItems": 2,
                         "type": "array",
@@ -1479,12 +1473,7 @@ _COMPONENTS = {
                 "the asset "
                 "represented by this "
                 "item.",
-                "items": [
-                    {"anyOf": [{"type": "number"}, {"type": "integer"}]},
-                    {"anyOf": [{"type": "number"}, {"type": "integer"}]},
-                    {"anyOf": [{"type": "number"}, {"type": "integer"}]},
-                    {"anyOf": [{"type": "number"}, {"type": "integer"}]},
-                ],
+                "items": {"anyOf": [{"type": "number"}, {"type": "integer"}]},
                 "maxItems": 4,
                 "minItems": 4,
                 "title": "Bbox",
@@ -3303,20 +3292,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -3407,20 +3388,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -4329,32 +4302,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -6351,20 +6304,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -6455,20 +6400,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -7377,32 +7314,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -9341,20 +9258,9 @@ _OPERATIONS = {
                                 "as "
                                 "[longitude, "
                                 "latitude].",
-                                "items": [
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                ],
+                                "items": {
+                                    "anyOf": [{"type": "number"}, {"type": "integer"}]
+                                },
                                 "maxItems": 2,
                                 "minItems": 2,
                                 "title": "Coordinates",
@@ -9443,20 +9349,12 @@ _OPERATIONS = {
                                 "holes.",
                                 "items": {
                                     "items": {
-                                        "items": [
-                                            {
-                                                "anyOf": [
-                                                    {"type": "number"},
-                                                    {"type": "integer"},
-                                                ]
-                                            },
-                                            {
-                                                "anyOf": [
-                                                    {"type": "number"},
-                                                    {"type": "integer"},
-                                                ]
-                                            },
-                                        ],
+                                        "items": {
+                                            "anyOf": [
+                                                {"type": "number"},
+                                                {"type": "integer"},
+                                            ]
+                                        },
                                         "maxItems": 2,
                                         "minItems": 2,
                                         "type": "array",
@@ -10357,32 +10255,9 @@ _OPERATIONS = {
                                 "by "
                                 "this "
                                 "item.",
-                                "items": [
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                ],
+                                "items": {
+                                    "anyOf": [{"type": "number"}, {"type": "integer"}]
+                                },
                                 "maxItems": 4,
                                 "minItems": 4,
                                 "title": "Bbox",
@@ -12499,20 +12374,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -12603,20 +12470,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -13525,32 +13384,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -15503,20 +15342,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -15607,20 +15438,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -16529,32 +16352,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -18510,20 +18313,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -18614,20 +18409,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -19536,32 +19323,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -21517,20 +21284,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -21621,20 +21380,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -22543,32 +22294,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -24524,20 +24255,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -24628,20 +24351,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -25550,32 +25265,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -27536,20 +27231,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -27640,20 +27327,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -28562,32 +28241,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -30521,20 +30180,9 @@ _OPERATIONS = {
                                 "as "
                                 "[longitude, "
                                 "latitude].",
-                                "items": [
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                ],
+                                "items": {
+                                    "anyOf": [{"type": "number"}, {"type": "integer"}]
+                                },
                                 "maxItems": 2,
                                 "minItems": 2,
                                 "title": "Coordinates",
@@ -30623,20 +30271,12 @@ _OPERATIONS = {
                                 "holes.",
                                 "items": {
                                     "items": {
-                                        "items": [
-                                            {
-                                                "anyOf": [
-                                                    {"type": "number"},
-                                                    {"type": "integer"},
-                                                ]
-                                            },
-                                            {
-                                                "anyOf": [
-                                                    {"type": "number"},
-                                                    {"type": "integer"},
-                                                ]
-                                            },
-                                        ],
+                                        "items": {
+                                            "anyOf": [
+                                                {"type": "number"},
+                                                {"type": "integer"},
+                                            ]
+                                        },
                                         "maxItems": 2,
                                         "minItems": 2,
                                         "type": "array",
@@ -31537,32 +31177,9 @@ _OPERATIONS = {
                                 "by "
                                 "this "
                                 "item.",
-                                "items": [
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                ],
+                                "items": {
+                                    "anyOf": [{"type": "number"}, {"type": "integer"}]
+                                },
                                 "maxItems": 4,
                                 "minItems": 4,
                                 "title": "Bbox",
@@ -33705,20 +33322,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -33809,20 +33418,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -34731,32 +34332,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -36709,20 +36290,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -36813,20 +36386,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -37735,32 +37300,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -39700,20 +39245,9 @@ _OPERATIONS = {
                                 "as "
                                 "[longitude, "
                                 "latitude].",
-                                "items": [
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                ],
+                                "items": {
+                                    "anyOf": [{"type": "number"}, {"type": "integer"}]
+                                },
                                 "maxItems": 2,
                                 "minItems": 2,
                                 "title": "Coordinates",
@@ -39802,20 +39336,12 @@ _OPERATIONS = {
                                 "holes.",
                                 "items": {
                                     "items": {
-                                        "items": [
-                                            {
-                                                "anyOf": [
-                                                    {"type": "number"},
-                                                    {"type": "integer"},
-                                                ]
-                                            },
-                                            {
-                                                "anyOf": [
-                                                    {"type": "number"},
-                                                    {"type": "integer"},
-                                                ]
-                                            },
-                                        ],
+                                        "items": {
+                                            "anyOf": [
+                                                {"type": "number"},
+                                                {"type": "integer"},
+                                            ]
+                                        },
                                         "maxItems": 2,
                                         "minItems": 2,
                                         "type": "array",
@@ -40716,32 +40242,9 @@ _OPERATIONS = {
                                 "by "
                                 "this "
                                 "item.",
-                                "items": [
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                ],
+                                "items": {
+                                    "anyOf": [{"type": "number"}, {"type": "integer"}]
+                                },
                                 "maxItems": 4,
                                 "minItems": 4,
                                 "title": "Bbox",
@@ -42714,20 +42217,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -42818,20 +42313,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -43740,32 +43227,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -45762,20 +45229,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -45866,20 +45325,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -46788,32 +46239,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -48783,20 +48214,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -48887,20 +48310,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -49809,32 +49224,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -51787,20 +51182,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -51891,20 +51278,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -52813,32 +52192,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -54794,20 +54153,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -54898,20 +54249,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -55820,32 +55163,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -57784,20 +57107,9 @@ _OPERATIONS = {
                                 "as "
                                 "[longitude, "
                                 "latitude].",
-                                "items": [
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                ],
+                                "items": {
+                                    "anyOf": [{"type": "number"}, {"type": "integer"}]
+                                },
                                 "maxItems": 2,
                                 "minItems": 2,
                                 "title": "Coordinates",
@@ -57886,20 +57198,12 @@ _OPERATIONS = {
                                 "holes.",
                                 "items": {
                                     "items": {
-                                        "items": [
-                                            {
-                                                "anyOf": [
-                                                    {"type": "number"},
-                                                    {"type": "integer"},
-                                                ]
-                                            },
-                                            {
-                                                "anyOf": [
-                                                    {"type": "number"},
-                                                    {"type": "integer"},
-                                                ]
-                                            },
-                                        ],
+                                        "items": {
+                                            "anyOf": [
+                                                {"type": "number"},
+                                                {"type": "integer"},
+                                            ]
+                                        },
                                         "maxItems": 2,
                                         "minItems": 2,
                                         "type": "array",
@@ -58800,32 +58104,9 @@ _OPERATIONS = {
                                 "by "
                                 "this "
                                 "item.",
-                                "items": [
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                    {
-                                        "anyOf": [
-                                            {"type": "number"},
-                                            {"type": "integer"},
-                                        ]
-                                    },
-                                ],
+                                "items": {
+                                    "anyOf": [{"type": "number"}, {"type": "integer"}]
+                                },
                                 "maxItems": 4,
                                 "minItems": 4,
                                 "title": "Bbox",
@@ -60780,20 +60061,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -60884,20 +60157,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -61806,32 +61071,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -63784,20 +63029,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -63888,20 +63125,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -64810,32 +64039,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -66791,20 +66000,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -66895,20 +66096,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -67817,32 +67010,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -69808,20 +68981,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -69912,20 +69077,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -70834,32 +69991,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -72838,20 +71975,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -72942,20 +72071,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -73864,32 +72985,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -75879,20 +74980,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -75983,20 +75076,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -76905,32 +75990,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -78886,20 +77951,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -78990,20 +78047,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -79912,32 +78961,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -81903,20 +80932,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -82007,20 +81028,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -82929,32 +81942,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -84933,20 +83926,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -85037,20 +84022,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -85959,32 +84936,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -87974,20 +86931,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -88078,20 +87027,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -89000,32 +87941,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",
@@ -90981,20 +89902,12 @@ _OPERATIONS = {
                                     "as "
                                     "[longitude, "
                                     "latitude].",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 2,
                                     "minItems": 2,
                                     "title": "Coordinates",
@@ -91085,20 +89998,12 @@ _OPERATIONS = {
                                     "holes.",
                                     "items": {
                                         "items": {
-                                            "items": [
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                                {
-                                                    "anyOf": [
-                                                        {"type": "number"},
-                                                        {"type": "integer"},
-                                                    ]
-                                                },
-                                            ],
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
                                             "maxItems": 2,
                                             "minItems": 2,
                                             "type": "array",
@@ -92007,32 +90912,12 @@ _OPERATIONS = {
                                     "by "
                                     "this "
                                     "item.",
-                                    "items": [
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                        {
-                                            "anyOf": [
-                                                {"type": "number"},
-                                                {"type": "integer"},
-                                            ]
-                                        },
-                                    ],
+                                    "items": {
+                                        "anyOf": [
+                                            {"type": "number"},
+                                            {"type": "integer"},
+                                        ]
+                                    },
                                     "maxItems": 4,
                                     "minItems": 4,
                                     "title": "Bbox",

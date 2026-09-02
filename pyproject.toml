@@ -1,6 +1,6 @@
 [project]
 name = "satvu"
-version = "0.10.1"
+version = "0.10.2"
 description = "SatVu API SDK"
 readme = "README.md"
 license = "MIT"

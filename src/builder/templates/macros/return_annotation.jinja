@@ -14,7 +14,7 @@
 			{%- if response.status_code.pattern == '204' -%}
 				{%- set ns.return_string = ns.return_string + "None" -%}
 			{%- else -%}
-				{%- set ns.return_string = ns.return_string + response.prop.get_type_string() -%}
+				{%- set ns.return_string = ns.return_string + (response.prop.get_type_string() | as_unembedded_code) -%}
 			{%- endif -%}
 			{%- if not loop.last -%}
 			{%- set ns.return_string = ns.return_string + ", " -%}
@@ -30,14 +30,14 @@
 		{%- if ns.has_204 -%}
 		{%- set ns.return_string = "Union[None, io.BytesIO]" -%}
 		{%- else -%}
-		{%- set ns.return_string = "Union[" + success_responses[0].prop.get_type_string() + ", io.BytesIO]" -%}
+		{%- set ns.return_string = "Union[" + (success_responses[0].prop.get_type_string() | as_unembedded_code) + ", io.BytesIO]" -%}
 		{%- endif -%}
 	{# if only one success response and no redirect response, return the type of that response #}
 	{%- elif success_responses | length == 1 -%}
 		{%- if ns.has_204 -%}
 		{%- set ns.return_string = "None" -%}
 		{%- else -%}
-		{%- set ns.return_string = success_responses[0].prop.get_type_string() -%}
+		{%- set ns.return_string = success_responses[0].prop.get_type_string() | as_unembedded_code -%}
 		{%- endif -%}
 	{%- else -%}
 	{%- set ns.return_string = "Any" -%}

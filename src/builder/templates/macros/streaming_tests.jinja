@@ -11,7 +11,7 @@ def test_{{ config.stream_method }}_success(self, backend, tmp_path):
     {{ param_name }} = {% if param_type == "str" %}str(uuid4()){% else %}uuid4(){% endif %}
 
 {% endfor %}
-    path = "{{ config.url_pattern }}".format(
+    path = "{{ config.url_pattern | in_double_quote_literal }}".format(
 {%- for param_name, param_type in config.path_params %}
         {{ param_name }}={{ param_name }}{% if not loop.last %},{% endif %}
 
@@ -61,7 +61,7 @@ def test_{{ config.stream_method }}_progress_callback(self, backend, tmp_path):
     {{ param_name }} = {% if param_type == "str" %}str(uuid4()){% else %}uuid4(){% endif %}
 
 {% endfor %}
-    path = "{{ config.url_pattern }}".format(
+    path = "{{ config.url_pattern | in_double_quote_literal }}".format(
 {%- for param_name, param_type in config.path_params %}
         {{ param_name }}={{ param_name }}{% if not loop.last %},{% endif %}
 
@@ -107,7 +107,7 @@ def test_{{ config.stream_method }}_error_404(self, backend, tmp_path):
     {{ param_name }} = {% if param_type == "str" %}str(uuid4()){% else %}uuid4(){% endif %}
 
 {% endfor %}
-    path = "{{ config.url_pattern }}".format(
+    path = "{{ config.url_pattern | in_double_quote_literal }}".format(
 {%- for param_name, param_type in config.path_params %}
         {{ param_name }}={{ param_name }}{% if not loop.last %},{% endif %}
 

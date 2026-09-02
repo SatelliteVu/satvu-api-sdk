@@ -6,6 +6,9 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from openapi_python_client.parser.openapi import Endpoint
+from openapi_python_client.schema import UntrustedString
+
+from builder.code_strings import unwrap_code
 
 if TYPE_CHECKING:
     from builder.build import PaginationInfo
@@ -24,8 +27,9 @@ class PaginationEndpointConfig:
     http_method: str
     """HTTP method: 'get' or 'post'"""
 
-    url_pattern: str
-    """URL path pattern for the endpoint"""
+    url_pattern: UntrustedString
+    """URL path pattern for the endpoint. Stays untrusted: the test templates escape it
+    with `in_double_quote_literal` at the point of emission."""
 
     path_params: list[tuple[str, str]]
     """List of (name, type) tuples for path parameters"""
@@ -93,7 +97,7 @@ class PaginationEndpointDetector:
         response_type = None
         for response in endpoint.responses:
             if response.status_code.pattern == "200" and response.prop:
-                response_type = response.prop.get_type_string()
+                response_type = unwrap_code(response.prop.get_type_string())
                 break
 
         if not response_type:
@@ -101,13 +105,13 @@ class PaginationEndpointDetector:
 
         # Extract path parameters
         path_params = [
-            (str(param.python_name), param.get_type_string())
+            (str(param.python_name), unwrap_code(param.get_type_string()))
             for param in endpoint.path_parameters
         ]
 
         # Extract query parameters (excluding 'token')
         query_params = [
-            (str(param.python_name), param.get_type_string())
+            (str(param.python_name), unwrap_code(param.get_type_string()))
             for param in endpoint.query_parameters
             if param.python_name != "token"
         ]
@@ -116,7 +120,7 @@ class PaginationEndpointDetector:
         has_body = bool(endpoint.bodies)
         body_type = None
         if has_body and endpoint.bodies:
-            body_type_str = endpoint.bodies[0].prop.get_type_string()
+            body_type_str = unwrap_code(endpoint.bodies[0].prop.get_type_string())
             # Extract non-None type from Union[None, ModelType] or Union[ModelType, None]
             body_type = self._extract_model_from_union(body_type_str)
 

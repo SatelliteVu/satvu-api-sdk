@@ -3,6 +3,10 @@
 from dataclasses import dataclass
 
 from openapi_python_client.parser.openapi import Endpoint
+from openapi_python_client.schema import UntrustedString
+from openapi_python_client.strings import safe_for_docstring
+
+from builder.code_strings import unwrap_code
 
 
 @dataclass
@@ -15,8 +19,10 @@ class StreamingEndpointConfig:
     stream_method: str
     """Name for streaming variant (e.g., 'download_order_stream')"""
 
-    url_pattern: str
-    """URL pattern for the endpoint"""
+    url_pattern: UntrustedString
+    """URL pattern for the endpoint. Stays untrusted: consumers escape it for their own
+    emission context (`in_double_quote_literal` in templates, `ast.Constant` in the AST
+    generator, which escapes itself)."""
 
     path_params: list[tuple[str, str]]
     """List of (name, type) tuples for path parameters (used in URL format)"""
@@ -94,7 +100,7 @@ class StreamingEndpointDetector:
             # Extract path segments from endpoint (without parameters)
             endpoint_segments = [
                 seg
-                for seg in endpoint.path.split("/")
+                for seg in endpoint.path.get_untrusted_value().split("/")
                 if seg and not seg.startswith("{")
             ]
 
@@ -158,7 +164,7 @@ class StreamingEndpointDetector:
 
         # Extract path parameters (used in URL format)
         path_params = [
-            (str(param.python_name), param.get_type_string())
+            (str(param.python_name), unwrap_code(param.get_type_string()))
             for param in endpoint.path_parameters
         ]
 
@@ -167,7 +173,9 @@ class StreamingEndpointDetector:
         query_params: list[tuple[str, str]] = []
         for param in endpoint.query_parameters:
             if param.python_name not in ["redirect"]:
-                query_params.append((str(param.python_name), param.get_type_string()))
+                query_params.append(
+                    (str(param.python_name), unwrap_code(param.get_type_string()))
+                )
 
         # Generate docstring
         docstring = (
@@ -208,7 +216,7 @@ class StreamingEndpointDetector:
     def _generate_docstring(self, endpoint: Endpoint) -> str:
         """Generate docstring for streaming method."""
         if endpoint.summary:
-            base = endpoint.summary.rstrip(".")
+            base = safe_for_docstring(endpoint.summary).rstrip(".")
             return f"{base} - save to disk (memory-efficient for large files)."
 
         return "Save download to disk (memory-efficient for large files)."

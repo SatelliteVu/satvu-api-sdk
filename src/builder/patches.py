@@ -10,7 +10,7 @@ import openapi_python_client
 import openapi_python_client.parser.properties as props
 import openapi_python_client.parser.properties.union as union_module
 from attr import define, evolve
-from openapi_python_client import utils
+from openapi_python_client import strings
 from openapi_python_client.config import Config
 from openapi_python_client.parser.errors import PropertyError
 from openapi_python_client.parser.properties import (
@@ -29,6 +29,9 @@ from openapi_python_client.parser.properties.protocol import PropertyProtocol, V
 from openapi_python_client.parser.properties.union import UnionProperty
 from openapi_python_client.schema import DataType as OAIDataType
 from openapi_python_client.schema import Schema as OAISchema
+from openapi_python_client.schema import UntrustedString
+
+from builder.code_strings import unwrap_code
 
 # ============================================================================
 # PATCH 1: Allow "id" as field name
@@ -38,7 +41,7 @@ from openapi_python_client.schema import Schema as OAISchema
 # So we remove it from the reserved words list.
 
 RESERVED_WORDS = (set(dir(builtins)) | {"self", "true", "false", "datetime"}) - {"id"}
-openapi_python_client.utils.RESERVED_WORDS = RESERVED_WORDS
+strings.RESERVED_WORDS = RESERVED_WORDS
 
 
 # ============================================================================
@@ -56,7 +59,7 @@ def list_get_type_string(
     json: bool = False,
     *,
     quoted: bool = False,
-) -> str:
+) -> strings.PythonCode:
     """Get type string for ListProperty without Unset."""
     if json:
         type_string = self.get_base_json_type_string()
@@ -66,17 +69,19 @@ def list_get_type_string(
     if no_optional or self.required:
         return type_string
     # Use None instead of Unset for optional lists
-    return f"Union[None, {type_string}]"
+    return strings.PythonCode(f"Union[None, {unwrap_code(type_string)}]")
 
 
-def list_get_base_type_string(self, *, quoted: bool = False) -> str:
+def list_get_base_type_string(self, *, quoted: bool = False) -> strings.PythonCode:
     """Use lowercase list[T] syntax."""
-    return f"list[{self.inner_property.get_type_string()}]"
+    inner = unwrap_code(self.inner_property.get_type_string())
+    return strings.PythonCode(f"list[{inner}]")
 
 
-def list_get_base_json_type_string(self, *, quoted: bool = False) -> str:
+def list_get_base_json_type_string(self, *, quoted: bool = False) -> strings.PythonCode:
     """Use lowercase list[T] syntax for JSON types."""
-    return f"list[{self.inner_property.get_type_string(json=True)}]"
+    inner = unwrap_code(self.inner_property.get_type_string(json=True))
+    return strings.PythonCode(f"list[{inner}]")
 
 
 openapi_python_client.parser.properties.list_property.ListProperty.get_type_string = (
@@ -98,7 +103,7 @@ def property_protocol_get_type_string(
     json: bool = False,
     *,
     quoted: bool = False,
-) -> str:
+) -> strings.PythonCode:
     """
     Get type string for any property with optional quoted parameter support.
 
@@ -118,7 +123,7 @@ def property_protocol_get_type_string(
 
     if no_optional or self.required:
         return type_string
-    return f"Union[None, {type_string}]"
+    return strings.PythonCode(f"Union[None, {unwrap_code(type_string)}]")
 
 
 openapi_python_client.parser.properties.protocol.PropertyProtocol.get_type_string = (
@@ -138,18 +143,18 @@ def const_get_type_string(
     json: bool = False,
     *,
     quoted: bool = False,
-) -> str:
+) -> strings.PythonCode:
     """Generate Literal type for const properties."""
-    lit = f"Literal[{self.value.python_code}]"
+    lit = f"Literal[{unwrap_code(self.value.python_code)}]"
     # A const with a default always round-trips as Literal — wrapping in
     # Union[..., None] is semantically useless (default guarantees non-None)
     # and breaks Pydantic's field-based discriminator which requires a plain
     # Literal on every variant.
     if self.default is not None:
-        return lit
+        return strings.PythonCode(lit)
     if not no_optional and not self.required:
-        return f"Union[{lit}, None]"
-    return lit
+        return strings.PythonCode(f"Union[{lit}, None]")
+    return strings.PythonCode(lit)
 
 
 openapi_python_client.parser.properties.const.get_type_string = const_get_type_string
@@ -169,7 +174,7 @@ openapi_python_client.parser.properties.const.ConstProperty.get_type_string = (
 
 def union_get_type_strings_in_union(
     self, *, no_optional: bool = False, json: bool, quoted: bool = True
-) -> set[str]:
+) -> set[strings.PythonCode]:
     """Get all type strings in the union."""
     type_strings = self._get_inner_type_strings(json=json, quoted=quoted)
     if no_optional:
@@ -177,7 +182,9 @@ def union_get_type_strings_in_union(
     return type_strings
 
 
-def union_get_inner_type_strings(self, json: bool, quoted: bool = True) -> set[str]:
+def union_get_inner_type_strings(
+    self, json: bool, quoted: bool = True
+) -> set[strings.PythonCode]:
     """Extract type strings from inner properties with quoted support."""
     result = set()
     for p in self.inner_properties:
@@ -189,7 +196,9 @@ def union_get_inner_type_strings(self, json: bool, quoted: bool = True) -> set[s
     return result
 
 
-def union_get_type_string_from_inner_type_strings(self, inner_types: set[str]) -> str:
+def union_get_type_string_from_inner_type_strings(
+    self, inner_types: set[strings.PythonCode]
+) -> strings.PythonCode:
     """
     Build union type string - CRITICAL for forward references.
 
@@ -199,25 +208,30 @@ def union_get_type_string_from_inner_type_strings(self, inner_types: set[str]) -
     if len(inner_types) == 1:
         return inner_types.pop()
 
+    unwrapped = sorted(
+        (unwrap_code(t) for t in inner_types),
+        key=lambda type_string: type_string.lower(),
+    )
+
     # Check if any type is quoted (forward reference)
-    has_quoted = any(t.startswith("'") and t.endswith("'") for t in inner_types)
+    has_quoted = any(t.startswith("'") for t in unwrapped)
 
     if has_quoted:
         # MUST use Union[...] syntax for quoted types
-        return f"Union[{', '.join(sorted(inner_types, key=lambda x: x.lower()))}]"
-    else:
-        # Can use | syntax for non-quoted types (cleaner)
-        return " | ".join(sorted(inner_types, key=lambda x: x.lower()))
+        return strings.PythonCode(f"Union[{', '.join(unwrapped)}]")
+
+    # Can use | syntax for non-quoted types (cleaner)
+    return strings.PythonCode(" | ".join(unwrapped))
 
 
-def union_get_base_type_string(self, *, quoted: bool = True) -> str:
+def union_get_base_type_string(self, *, quoted: bool = True) -> strings.PythonCode:
     """Get base type string with control over forward reference quoting."""
     return self._get_type_string_from_inner_type_strings(
         self._get_inner_type_strings(json=False, quoted=quoted)
     )
 
 
-def union_get_base_json_type_string(self, *, quoted: bool = True) -> str:
+def union_get_base_json_type_string(self, *, quoted: bool = True) -> strings.PythonCode:
     """Get JSON type string with control over forward reference quoting."""
     return self._get_type_string_from_inner_type_strings(
         self._get_inner_type_strings(json=True, quoted=quoted)
@@ -230,7 +244,7 @@ def union_get_type_string(
     json: bool = False,
     *,
     quoted: bool = True,
-) -> str:
+) -> strings.PythonCode:
     """Get full type string for union with optional support."""
     if json:
         type_string = self.get_base_json_type_string(quoted=quoted)
@@ -250,10 +264,11 @@ def union_get_type_string(
         return type_string
 
     # Use Union[None, ...] for quoted types, None | ... for others
-    if "'" in type_string or '"' in type_string:
-        return f"Union[None, {type_string}]"
+    code = unwrap_code(type_string)
+    if "'" in code or '"' in code:
+        return strings.PythonCode(f"Union[None, {code}]")
     else:
-        return f"None | {type_string}"
+        return strings.PythonCode(f"None | {code}")
 
 
 openapi_python_client.parser.properties.union.UnionProperty.get_type_strings_in_union = union_get_type_strings_in_union
@@ -282,20 +297,20 @@ def model_get_type_string(
     json: bool = False,
     *,
     quoted: bool = False,
-) -> str:
+) -> strings.PythonCode:
     """Get type string for model property with optional quoting."""
     if json:
-        type_string = self.get_base_json_type_string()
+        type_string = unwrap_code(self.get_base_json_type_string())
     else:
-        type_string = self.get_base_type_string()
+        type_string = unwrap_code(self.get_base_type_string())
 
     # Quote the type if requested (for forward references)
     if quoted and type_string == self.class_info.name:
         type_string = f"'{type_string}'"
 
     if no_optional or self.required:
-        return type_string
-    return f"Union[None, {type_string}]"
+        return strings.PythonCode(type_string)
+    return strings.PythonCode(f"Union[None, {type_string}]")
 
 
 openapi_python_client.parser.properties.model_property.ModelProperty.get_type_string = (
@@ -304,7 +319,7 @@ openapi_python_client.parser.properties.model_property.ModelProperty.get_type_st
 
 
 # ============================================================================
-# PATCH 15: utils.sanitize - Replace colons in field names
+# PATCH 15: strings.sanitize - Replace colons in field names
 # ============================================================================
 # Some APIs use colons in field names (e.g., GeoJSON: geo:lat, geo:lon)
 # Colons aren't valid in Python identifiers, so replace with underscores
@@ -319,10 +334,10 @@ def sanitize(value: str) -> str:
     - Other invalid characters with nothing
     """
     value = value.replace(":", "_")
-    return re.sub(rf"[^\w{utils.DELIMITERS}]+", "", value)
+    return re.sub(rf"[^\w{strings.DELIMITERS}]+", "", value)
 
 
-openapi_python_client.utils.sanitize = sanitize
+strings.sanitize = sanitize
 
 
 # ============================================================================
@@ -331,9 +346,9 @@ openapi_python_client.utils.sanitize = sanitize
 # Enum types should always be quoted as forward references
 
 
-def enum_get_base_type_string(self, *, quoted: bool = False) -> str:
+def enum_get_base_type_string(self, *, quoted: bool = False) -> strings.PythonCode:
     """Always return quoted enum name (forward reference)."""
-    return f"'{self.class_info.name}'"
+    return strings.PythonCode(f"'{self.class_info.name}'")
 
 
 openapi_python_client.parser.properties.enum_property.EnumProperty.get_base_type_string = enum_get_base_type_string
@@ -345,21 +360,22 @@ openapi_python_client.parser.properties.enum_property.EnumProperty.get_base_type
 # Override to_string to generate parameter strings with None instead of UNSET
 
 
-def property_to_string(self) -> str:
+def property_to_string(self) -> strings.PythonCode:
     """
     Generate parameter string with None instead of UNSET.
 
     For optional parameters, use None as default instead of UNSET.
     """
-    type_string = self.get_type_string()
+    type_string = unwrap_code(self.get_type_string())
 
     if self.required or self.default is not None:
         if self.default is not None:
-            return f"{self.python_name}: {type_string} = {self.default.python_code}"
-        return f"{self.python_name}: {type_string}"
+            default = unwrap_code(self.default.python_code)
+            return strings.PythonCode(f"{self.python_name}: {type_string} = {default}")
+        return strings.PythonCode(f"{self.python_name}: {type_string}")
 
     # Optional parameter - use None instead of UNSET
-    return f"{self.python_name}: {type_string} = None"
+    return strings.PythonCode(f"{self.python_name}: {type_string} = None")
 
 
 openapi_python_client.parser.properties.protocol.PropertyProtocol.to_string = (
@@ -383,24 +399,24 @@ openapi_python_client.parser.properties.protocol.PropertyProtocol.to_string = (
 class DictProperty(PropertyProtocol):
     """A property that represents a free-form dictionary (dict)."""
 
-    name: str
+    name: UntrustedString
     required: bool
     default: Value | None
-    python_name: utils.PythonIdentifier
-    description: str | None
-    example: str | None
+    python_name: strings.PythonIdentifier
+    description: UntrustedString | None
+    example: UntrustedString | None
     _type_string: ClassVar[str] = "dict"
     _json_type_string: ClassVar[str] = "dict"
 
     @classmethod
     def build(
         cls,
-        name: str,
+        name: UntrustedString,
         required: bool,
         default: Any,
-        python_name: utils.PythonIdentifier,
-        description: str | None,
-        example: str | None,
+        python_name: strings.PythonIdentifier,
+        description: UntrustedString | None,
+        example: UntrustedString | None,
     ) -> "DictProperty":
         return cls(
             name=name,
@@ -415,7 +431,7 @@ class DictProperty(PropertyProtocol):
     def convert_value(cls, value: Any) -> Value | None:
         if value is None:
             return None
-        return Value(python_code=repr(value), raw_value=value)
+        return Value(python_code=strings.PythonCode(repr(value)), raw_value=value)
 
 
 # Store original function
@@ -471,7 +487,7 @@ def patched_property_from_data(
                 name=name,
                 required=required,
                 default=data.default,
-                python_name=utils.PythonIdentifier(
+                python_name=strings.PythonIdentifier(
                     value=name, prefix=config.field_prefix
                 ),
                 description=data.description,
@@ -513,7 +529,7 @@ def model_property_build(
     parent_name: str | None,
     config: Config,
     process_properties: bool,
-    roots: set[ReferencePath | utils.ClassName],
+    roots: set[ReferencePath | strings.ClassName],
 ) -> tuple[ModelProperty | PropertyError, Schemas]:
     """
     Build a ModelProperty from OAI schema data, handling duplicate names.
@@ -521,7 +537,7 @@ def model_property_build(
     This is a critical patch that prevents "duplicate model" errors by
     appending numeric suffixes to conflicting model names.
     """
-    from openapi_python_client import utils
+    from openapi_python_client import strings
     from openapi_python_client.parser.properties import ModelProperty
 
     # Determine class name from title or name
@@ -530,16 +546,23 @@ def model_property_build(
     else:
         title = data.title or name
         if parent_name:
-            class_string = f"{utils.pascal_case(parent_name)}{utils.pascal_case(title)}"
+            class_string = (
+                f"{strings.pascal_case(parent_name)}{strings.pascal_case(title)}"
+            )
         else:
             class_string = title
 
     class_info = Class.from_string(string=class_string, config=config)
 
-    # Handle duplicate names by adding numeric suffix
+    # Handle duplicate names by adding numeric suffix. Suffix the sanitised
+    # ClassName rather than `class_string` — the latter may be an UntrustedString
+    # straight from the document, which doesn't support concatenation.
+    base_class_name = class_info.name
     suffix = 1
     while class_info.name in schemas.classes_by_name:
-        class_info = Class.from_string(string=class_string + str(suffix), config=config)
+        class_info = Class.from_string(
+            string=f"{base_class_name}{suffix}", config=config
+        )
         suffix += 1
 
     model_roots = {*roots, class_info.name}
@@ -565,7 +588,7 @@ def model_property_build(
         relative_imports = property_data.relative_imports
         lazy_imports = property_data.lazy_imports
         for root in roots:
-            if isinstance(root, utils.ClassName):
+            if isinstance(root, strings.ClassName):
                 continue
             schemas.add_dependencies(root, {class_info.name})
 
@@ -582,7 +605,7 @@ def model_property_build(
         default=None,
         required=required,
         name=name,
-        python_name=utils.PythonIdentifier(value=name, prefix=config.field_prefix),
+        python_name=strings.PythonIdentifier(value=name, prefix=config.field_prefix),
         example=data.example,
     )
 
@@ -690,18 +713,18 @@ _UNION_DISCRIMINATORS: dict[int, str] = {}
 _original_union_build = union_module.UnionProperty.build
 
 
-def _singularize_title(title: str) -> str:
+def _singularize_title(title: UntrustedString | str) -> UntrustedString:
     """
     Convert a plural title to singular PascalCase.
 
     "Primary Formats" → "PrimaryFormat"
     "Collections" → "Collection"
     """
+    pascal = strings.pascal_case(title)
     # Simple singularization: remove trailing 's' if present (but not 'ss')
-    if title.endswith("s") and not title.endswith("ss"):
-        title = title[:-1]
-    # Convert to PascalCase without spaces
-    return "".join(word.capitalize() for word in title.split())
+    if pascal.endswith("s") and not pascal.endswith("ss"):
+        pascal = pascal[:-1]
+    return UntrustedString(pascal)
 
 
 @classmethod  # type: ignore[misc]
@@ -772,7 +795,7 @@ def union_build_with_title_propagation(
         and data.discriminator.propertyName
     ):
         python_name = str(
-            utils.PythonIdentifier(
+            strings.PythonIdentifier(
                 value=data.discriminator.propertyName, prefix=config.field_prefix
             )
         )
@@ -808,6 +831,6 @@ print("      • EnumProperty.build: Use title directly without parent prefix")
 print(
     "      • UnionProperty.build: Propagate parent title to array enum items; stash discriminator for Field(discriminator=...) emission"
 )
-print("   🔧 Utilities (2 patches):")
+print("   🔧 Strings (2 patches):")
 print("      • RESERVED_WORDS: Allow 'id' as field name")
-print("      • utils.sanitize: Replace colons in field names (geo:lat → geo_lat)")
+print("      • strings.sanitize: Replace colons in field names (geo:lat → geo_lat)")

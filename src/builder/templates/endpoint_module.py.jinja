@@ -1,25 +1,32 @@
-{% from "helpers.jinja" import safe_docstring %}
+{% from "helpers.jinja" import docstring %}
 {% from "macros/return_annotation.jinja" import return_annotation %}
+
+{# Unwrap the body's PythonCode type once: it is not a str, so `.startswith` and
+   interpolation only work on the unembedded code. #}
+{%- macro body_type(endpoint) -%}
+{%- if endpoint.bodies | length == 1 -%}{{ endpoint.bodies[0].prop.get_type_string() | as_unembedded_code }}{%- endif -%}
+{%- endmacro %}
 
 {# Generate arguments for function #}
 {%- macro arguments(endpoint) %}
+{%- set is_list_body = body_type(endpoint).startswith("list[") -%}
 {# Any allowed bodies #}
 {%- if endpoint.bodies | length -%}
-{%- if endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[") -%}
-items: {{ endpoint.bodies[0].prop.get_type_string() }},
+{%- if is_list_body -%}
+items: {{ body_type(endpoint) }},
 {%- else -%}
-body: {% for body in endpoint.bodies %}{{ body.prop.get_type_string() }}{% if not loop.last %}|{% endif %}{% endfor %},
+body: {% for body in endpoint.bodies %}{{ body.prop.get_type_string() | as_unembedded_code }}{% if not loop.last %}|{% endif %}{% endfor %},
 {% endif %}
 {% endif %}
 {# path parameters #}
 {% for parameter in endpoint.path_parameters %}
-{{ parameter.to_string() }},
+{{ parameter.to_string() | as_unembedded_code }},
 {%- endfor -%}
 {# query parameters #}
 {%- for parameter in endpoint.query_parameters -%}
-{{ parameter.to_string() }},
+{{ parameter.to_string() | as_unembedded_code }},
 {%- endfor -%}
-{%- if endpoint.bodies | length and not (endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[")) -%}
+{%- if endpoint.bodies | length and not is_list_body -%}
 extra_body: dict[str, Any] | None = None,
 {% endif -%}
 timeout: int | None = None,
@@ -28,9 +35,9 @@ timeout: int | None = None,
 {# Build url #}
 {%- macro url(endpoint) %}
 {% if endpoint.path_parameters | length == 0 %}
-"{{ endpoint.path }}"
+"{{ endpoint.path | in_double_quote_literal }}"
 {% else %}
-"{{ endpoint.path }}".format(
+"{{ endpoint.path | in_double_quote_literal }}".format(
     {%- for parameter in endpoint.path_parameters -%}
     {{parameter.python_name}}={{parameter.python_name}}
     {%- if not loop.last -%}
@@ -46,7 +53,7 @@ timeout: int | None = None,
 {% if endpoint.query_parameters %}
 params = {
 {% for property in endpoint.query_parameters %}
-	"{{ property.name }}": {{ property.python_name }},
+	"{{ property.name | in_double_quote_literal }}": {{ property.python_name }},
 {% endfor %}
 }
 
@@ -54,7 +61,7 @@ params = {
 {% endmacro %}
 
 {%- macro build_json(endpoint) %}
-{%- if endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[") %}
+{%- if body_type(endpoint).startswith("list[") %}
 json_body = [item.model_dump(by_alias=True, mode="json", exclude_unset=True) for item in items]
 {%- elif endpoint.bodies | length %}
 {% if not endpoint.bodies[0].prop.required %}
@@ -99,11 +106,11 @@ response = result.unwrap()
 {% endmacro %}
 
 {%- macro docstring_content(endpoint, return_string) %}
-{% if endpoint.summary %}{{ endpoint.summary | wordwrap(100)}}
+{% if endpoint.summary %}{{ endpoint.summary | safe_for_docstring | wordwrap(100)}}
 
 {% endif -%}
 {%- if endpoint.description %}
-{{ endpoint.description | wordwrap(100) }}
+{{ endpoint.description | safe_for_docstring | wordwrap(100) }}
 
 {% endif %}
 {% if not endpoint.summary and not endpoint.description %}
@@ -119,7 +126,7 @@ Args:
     {% for string in endpoint.body_docstrings %}
     {{ string | wordwrap(90) | indent(8) }}
     {% endfor %}
-    {% if endpoint.bodies | length and not (endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[")) %}
+    {% if endpoint.bodies | length and not body_type(endpoint).startswith("list[") %}
     extra_body: Optional dict deep-merged into the request body after
         serialisation. Use this to pass fields added to the API after this
         SDK version shipped. Nested dicts merge recursively; lists and
@@ -132,8 +139,8 @@ Returns:
     {{ return_string }}
 {% endmacro %}
 
-{%- macro docstring(endpoint, return_string, is_detailed) %}
-{{ safe_docstring('\n' ~ docstring_content(endpoint, return_string)) | indent(8) }}
+{%- macro docstring_sdk(endpoint, return_string, is_detailed) %}
+{{ docstring('\n' ~ docstring_content(endpoint, return_string)) | indent(8) }}
 {% endmacro %}
 
 {% set ns = namespace(types=[]) %}
@@ -206,7 +213,7 @@ class {{ api_id | title }}Service(SDKClient):
     {% endfor %}
 
     def {{ endpoint.name }}(self, {{ arguments(endpoint) }}) -> {{ return_annotation(success_responses, redirect_response) }}:
-        {{ docstring(endpoint, return_annotation(success_responses, redirect_response), is_detailed=true) }}
+        {{ docstring_sdk(endpoint, return_annotation(success_responses, redirect_response), is_detailed=true) }}
 
         {% if endpoint.bodies | length %}
         {{ build_json(endpoint) | indent(8) }}
@@ -229,7 +236,7 @@ class {{ api_id | title }}Service(SDKClient):
             {% if response.status_code.pattern == '204' %}
             return None
             {% else %}
-            {% set response_type = response.prop.get_type_string(quoted=False) %}
+            {% set response_type = response.prop.get_type_string(quoted=False) | as_unembedded_code %}
             {% if response_type == 'Any' %}
             return response.json().unwrap()
             {% else %}
@@ -244,27 +251,27 @@ class {{ api_id | title }}Service(SDKClient):
         self,
         {% if endpoint.bodies %}
         {# POST endpoint with body - accept body parameter #}
-        {% if endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[") %}
-        items: {{ endpoint.bodies[0].prop.get_type_string() }},
+        {% if body_type(endpoint).startswith("list[") %}
+        items: {{ body_type(endpoint) }},
         {% else %}
-        body: {% for body in endpoint.bodies %}{{ body.prop.get_type_string() }}{% if not loop.last %}|{% endif %}{% endfor %},
+        body: {% for body in endpoint.bodies %}{{ body.prop.get_type_string() | as_unembedded_code }}{% if not loop.last %}|{% endif %}{% endfor %},
         {% endif %}
         {% endif %}
         {% for param in endpoint.path_parameters %}
-        {{ param.to_string() }},
+        {{ param.to_string() | as_unembedded_code }},
         {% endfor %}
         {% for param in endpoint.query_parameters %}
         {% if param.python_name != 'token' %}
-        {{ param.to_string() }},
+        {{ param.to_string() | as_unembedded_code }},
         {% endif %}
         {% endfor %}
-        {% if endpoint.bodies and not (endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[")) %}
+        {% if endpoint.bodies and not body_type(endpoint).startswith("list[") %}
         extra_body: dict[str, Any] | None = None,
         {% endif %}
         max_pages: int | None = None,
-    ) -> Generator[{{ success_responses[0].prop.get_type_string(quoted=False) }}, None, None]:
+    ) -> Generator[{{ success_responses[0].prop.get_type_string(quoted=False) | as_unembedded_code }}, None, None]:
         """
-        {{ endpoint.summary }} (Paginated Iterator)
+        {{ endpoint.summary | safe_for_docstring }} (Paginated Iterator)
 
         Automatically handles pagination by following STAC links.
 
@@ -311,7 +318,7 @@ class {{ api_id | title }}Service(SDKClient):
 
             {% if endpoint.bodies %}
             {# POST endpoint - update body with current token #}
-            {% if endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[") %}
+            {% if body_type(endpoint).startswith("list[") %}
             response = self.{{ endpoint.name }}(
                 items=items,
             {% else %}
@@ -335,7 +342,7 @@ class {{ api_id | title }}Service(SDKClient):
                 {{ param.python_name }}={{ param.python_name }},
                 {% endif %}
                 {% endfor %}
-                {% if endpoint.bodies and not (endpoint.bodies | length == 1 and endpoint.bodies[0].prop.get_type_string().startswith("list[")) %}
+                {% if endpoint.bodies and not body_type(endpoint).startswith("list[") %}
                 extra_body=extra_body,
                 {% endif %}
                 {% if not endpoint.bodies %}

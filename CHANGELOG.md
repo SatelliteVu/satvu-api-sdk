@@ -1,5 +1,21 @@
 ## [0.10.2](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.10.1...v0.10.2) (2026-09-02)
 
+## [0.10.2.20260902.1436] - 2026-09-02
+
+### fix(otm): 6 changes to GET /{contract_id}/tasking/orders/{order_id}/tasks
+
+#### GET /{contract_id}/tasking/orders/{order_id}/tasks
+* removed the `planned` enum value from the `anyOf[subschema #1: ListOrderTasksResponse]/tasks/items/status` response property for the response status `200`
+* removed the `planned` enum value from the `anyOf[subschema #1: ListOrderTasksResponse]/tasks/items/status_history/items/status_from/anyOf[subschema #1: UserFacingTaskStatus]/` response property for the response status `200`
+* removed the `planned` enum value from the `anyOf[subschema #1: ListOrderTasksResponse]/tasks/items/status_history/items/status_to` response property for the response status `200`
+* removed the `rejected` enum value from the `anyOf[subschema #1: ListOrderTasksResponse]/tasks/items/status` response property for the response status `200`
+* removed the `rejected` enum value from the `anyOf[subschema #1: ListOrderTasksResponse]/tasks/items/status_history/items/status_from/anyOf[subschema #1: UserFacingTaskStatus]/` response property for the response status `200`
+* removed the `rejected` enum value from the `anyOf[subschema #1: ListOrderTasksResponse]/tasks/items/status_history/items/status_to` response property for the response status `200`
+
+#### Description Updates
+* 1 description(s) modified
+
+
 
 ### Bug Fixes
 

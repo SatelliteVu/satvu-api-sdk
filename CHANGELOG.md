@@ -1,5 +1,54 @@
 ## [0.10.2](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.10.1...v0.10.2) (2026-09-02)
 
+## [0.10.2.20260903.0941] - 2026-09-03
+
+### fix(cos): update 5 endpoints
+
+#### GET /{contract_id}/
+* the schema of the response property `orders/items/anyOf[subschema #1: FeatureCollection[Order]]/features/items/geometry/anyOf[subschema #1: PointGeometry]/coordinates/items` became `false` for the status `200`: no value passes validation
+* the schema of the response property `orders/items/anyOf[subschema #1: FeatureCollection[Order]]/features/items/geometry/anyOf[subschema #2: PolygonGeometry]/coordinates/items/items//items` became `false` for the status `200`: no value passes validation
+* the schema of the response property `orders/items/anyOf[subschema #1: FeatureCollection[Order]]/features/items/properties/anyOf[subschema #1: Order]/stac_metadata/anyOf[subschema #1: StacMetadata]/bbox/items` became `false` for the status `200`: no value passes validation
+* the schema of the response property `orders/items/anyOf[subschema #2: ResellerFeatureCollection[Order]]/features/items/geometry/anyOf[subschema #1: PointGeometry]/coordinates/items` became `false` for the status `200`: no value passes validation
+* the schema of the response property `orders/items/anyOf[subschema #2: ResellerFeatureCollection[Order]]/features/items/geometry/anyOf[subschema #2: PolygonGeometry]/coordinates/items/items//items` became `false` for the status `200`: no value passes validation
+* the schema of the response property `orders/items/anyOf[subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/anyOf[subschema #1: Order]/stac_metadata/anyOf[subschema #1: StacMetadata]/bbox/items` became `false` for the status `200`: no value passes validation
+
+
+#### POST /{contract_id}/
+* the schema of the response property `anyOf[subschema #1: FeatureCollection[Order]]/features/items/geometry/anyOf[subschema #1: PointGeometry]/coordinates/items` became `false` for the status `201`: no value passes validation
+* the schema of the response property `anyOf[subschema #1: FeatureCollection[Order]]/features/items/geometry/anyOf[subschema #2: PolygonGeometry]/coordinates/items/items//items` became `false` for the status `201`: no value passes validation
+* the schema of the response property `anyOf[subschema #1: FeatureCollection[Order]]/features/items/properties/anyOf[subschema #1: Order]/stac_metadata/anyOf[subschema #1: StacMetadata]/bbox/items` became `false` for the status `201`: no value passes validation
+* the schema of the response property `anyOf[subschema #2: ResellerFeatureCollection[Order]]/features/items/geometry/anyOf[subschema #1: PointGeometry]/coordinates/items` became `false` for the status `201`: no value passes validation
+* the schema of the response property `anyOf[subschema #2: ResellerFeatureCollection[Order]]/features/items/geometry/anyOf[subschema #2: PolygonGeometry]/coordinates/items/items//items` became `false` for the status `201`: no value passes validation
+* the schema of the response property `anyOf[subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/anyOf[subschema #1: Order]/stac_metadata/anyOf[subschema #1: StacMetadata]/bbox/items` became `false` for the status `201`: no value passes validation
+
+
+#### POST /{contract_id}/search/
+* the schema of the response property `orders/items/anyOf[subschema #1: FeatureCollection[Order]]/features/items/geometry/anyOf[subschema #1: PointGeometry]/coordinates/items` became `false` for the status `200`: no value passes validation
+* the schema of the response property `orders/items/anyOf[subschema #1: FeatureCollection[Order]]/features/items/geometry/anyOf[subschema #2: PolygonGeometry]/coordinates/items/items//items` became `false` for the status `200`: no value passes validation
+* the schema of the response property `orders/items/anyOf[subschema #1: FeatureCollection[Order]]/features/items/properties/anyOf[subschema #1: Order]/stac_metadata/anyOf[subschema #1: StacMetadata]/bbox/items` became `false` for the status `200`: no value passes validation
+* the schema of the response property `orders/items/anyOf[subschema #2: ResellerFeatureCollection[Order]]/features/items/geometry/anyOf[subschema #1: PointGeometry]/coordinates/items` became `false` for the status `200`: no value passes validation
+* the schema of the response property `orders/items/anyOf[subschema #2: ResellerFeatureCollection[Order]]/features/items/geometry/anyOf[subschema #2: PolygonGeometry]/coordinates/items/items//items` became `false` for the status `200`: no value passes validation
+* the schema of the response property `orders/items/anyOf[subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/anyOf[subschema #1: Order]/stac_metadata/anyOf[subschema #1: StacMetadata]/bbox/items` became `false` for the status `200`: no value passes validation
+
+
+#### GET /{contract_id}/{order_id}
+* the schema of the response property `anyOf[subschema #1: FeatureCollection[Order]]/features/items/geometry/anyOf[subschema #1: PointGeometry]/coordinates/items` became `false` for the status `200`: no value passes validation
+* the schema of the response property `anyOf[subschema #1: FeatureCollection[Order]]/features/items/geometry/anyOf[subschema #2: PolygonGeometry]/coordinates/items/items//items` became `false` for the status `200`: no value passes validation
+* the schema of the response property `anyOf[subschema #1: FeatureCollection[Order]]/features/items/properties/anyOf[subschema #1: Order]/stac_metadata/anyOf[subschema #1: StacMetadata]/bbox/items` became `false` for the status `200`: no value passes validation
+* the schema of the response property `anyOf[subschema #2: ResellerFeatureCollection[Order]]/features/items/geometry/anyOf[subschema #1: PointGeometry]/coordinates/items` became `false` for the status `200`: no value passes validation
+* the schema of the response property `anyOf[subschema #2: ResellerFeatureCollection[Order]]/features/items/geometry/anyOf[subschema #2: PolygonGeometry]/coordinates/items/items//items` became `false` for the status `200`: no value passes validation
+* the schema of the response property `anyOf[subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/anyOf[subschema #1: Order]/stac_metadata/anyOf[subschema #1: StacMetadata]/bbox/items` became `false` for the status `200`: no value passes validation
+
+
+#### PATCH /{contract_id}/{order_id}
+* the schema of the response property `anyOf[subschema #1: FeatureCollection[Order]]/features/items/geometry/anyOf[subschema #1: PointGeometry]/coordinates/items` became `false` for the status `200`: no value passes validation
+* the schema of the response property `anyOf[subschema #1: FeatureCollection[Order]]/features/items/geometry/anyOf[subschema #2: PolygonGeometry]/coordinates/items/items//items` became `false` for the status `200`: no value passes validation
+* the schema of the response property `anyOf[subschema #1: FeatureCollection[Order]]/features/items/properties/anyOf[subschema #1: Order]/stac_metadata/anyOf[subschema #1: StacMetadata]/bbox/items` became `false` for the status `200`: no value passes validation
+* the schema of the response property `anyOf[subschema #2: ResellerFeatureCollection[Order]]/features/items/geometry/anyOf[subschema #1: PointGeometry]/coordinates/items` became `false` for the status `200`: no value passes validation
+* the schema of the response property `anyOf[subschema #2: ResellerFeatureCollection[Order]]/features/items/geometry/anyOf[subschema #2: PolygonGeometry]/coordinates/items/items//items` became `false` for the status `200`: no value passes validation
+* the schema of the response property `anyOf[subschema #2: ResellerFeatureCollection[Order]]/features/items/properties/anyOf[subschema #1: Order]/stac_metadata/anyOf[subschema #1: StacMetadata]/bbox/items` became `false` for the status `200`: no value passes validation
+
+
 ## [0.10.2.20260902.1457] - 2026-09-02
 
 ### feat(wallet): update GET /balances, GET /{contract_id}/credit

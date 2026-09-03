@@ -10,7 +10,7 @@ Stores entire OpenAPI spec as operations with helper functions for access.
 from satvu.services.example_cache import get_cached_example_strategy
 
 # Spec hash for example cache invalidation
-_SPEC_HASH = "prod-ff67be393ab97dcf273a043fcc1c595c797e670f"
+_SPEC_HASH = "prod-c7c157778eac9566aea2599795a833d89a8991c7"
 
 # Component schemas for $ref resolution (cleaned for JSON Schema draft-07)
 _COMPONENTS = {
@@ -360,7 +360,7 @@ _COMPONENTS = {
             },
             "order_id": {
                 "description": "The order ID.",
-                "examples": ["fc939161-0785-435e-916b-a1f84d0e350c"],
+                "examples": ["4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"],
                 "format": "uuid",
                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
                 "title": "Order Id",
@@ -2743,7 +2743,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -5755,7 +5755,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -8716,7 +8716,7 @@ _OPERATIONS = {
                             },
                             "order_id": {
                                 "description": "The order ID.",
-                                "examples": ["fc939161-0785-435e-916b-a1f84d0e350c"],
+                                "examples": ["4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"],
                                 "format": "uuid",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
                                 "title": "Order Id",
@@ -11825,7 +11825,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -14793,7 +14793,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -17764,7 +17764,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -20735,7 +20735,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -23706,7 +23706,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -26682,7 +26682,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -29638,7 +29638,7 @@ _OPERATIONS = {
                             },
                             "order_id": {
                                 "description": "The order ID.",
-                                "examples": ["fc939161-0785-435e-916b-a1f84d0e350c"],
+                                "examples": ["4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"],
                                 "format": "uuid",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
                                 "title": "Order Id",
@@ -32773,7 +32773,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -35741,7 +35741,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -38703,7 +38703,7 @@ _OPERATIONS = {
                             },
                             "order_id": {
                                 "description": "The order ID.",
-                                "examples": ["fc939161-0785-435e-916b-a1f84d0e350c"],
+                                "examples": ["4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"],
                                 "format": "uuid",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
                                 "title": "Order Id",
@@ -41668,7 +41668,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -44680,7 +44680,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -47665,7 +47665,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -50633,7 +50633,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -53604,7 +53604,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -56565,7 +56565,7 @@ _OPERATIONS = {
                             },
                             "order_id": {
                                 "description": "The order ID.",
-                                "examples": ["fc939161-0785-435e-916b-a1f84d0e350c"],
+                                "examples": ["4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"],
                                 "format": "uuid",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
                                 "title": "Order Id",
@@ -59512,7 +59512,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -62480,7 +62480,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -65451,7 +65451,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -68432,7 +68432,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -71426,7 +71426,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -74431,7 +74431,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -77402,7 +77402,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -80383,7 +80383,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -83377,7 +83377,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -86382,7 +86382,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -89353,7 +89353,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "fc939161-0785-435e-916b-a1f84d0e350c"
+                                        "4e0e1f7e-1feb-4519-aa4c-526c7a06ff72"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",

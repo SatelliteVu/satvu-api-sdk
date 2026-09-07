@@ -1,5 +1,13 @@
 ## [0.10.2](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.10.1...v0.10.2) (2026-09-02)
 
+## [0.10.2.20260907.0937] - 2026-09-07
+
+### fix(wallet): api operation id `get-batch-credit-balances` removed and replaced with `list-batch-credit-balances` (GET /balances)
+
+#### GET /balances
+* api operation id `get-batch-credit-balances` removed and replaced with `list-batch-credit-balances`
+
+
 ## [0.10.2.20260907.0846] - 2026-09-07
 
 ### feat(otm)!: update 23 endpoints

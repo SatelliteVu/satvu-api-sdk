@@ -1,5 +1,221 @@
 ## [0.10.2](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.10.1...v0.10.2) (2026-09-02)
 
+## [0.10.2.20260907.0846] - 2026-09-07
+
+### feat(otm)!: update 23 endpoints
+
+#### POST /{contract_id}/search/
+* **BREAKING**: the schema of the request property `properties/anyOf[subschema #1: FilterFields]/max_off_nadir/anyOf[subschema #2]//items` became `false`: no value passes validation
+* **BREAKING**: the schema of the request property `properties/anyOf[subschema #1: FilterFields]/min_off_nadir/anyOf[subschema #2]//items` became `false`: no value passes validation
+* added `subschema #1, subschema #2` to the `intersects/anyOf[subschema #1]/oneOf[subschema #1: Point]/bbox` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `intersects/anyOf[subschema #1]/oneOf[subschema #2: MultiPoint]/bbox` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `intersects/anyOf[subschema #1]/oneOf[subschema #3: LineString]/bbox` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `intersects/anyOf[subschema #1]/oneOf[subschema #4: MultiLineString]/bbox` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `intersects/anyOf[subschema #1]/oneOf[subschema #5: Polygon]/bbox` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `intersects/anyOf[subschema #1]/oneOf[subschema #6: MultiPolygon]/bbox` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `intersects/anyOf[subschema #1]/oneOf[subschema #7: GeometryCollection]/bbox` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `intersects/anyOf[subschema #1]/oneOf[subschema #7: GeometryCollection]/geometries/items/oneOf[subschema #1: Point]/bbox` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `intersects/anyOf[subschema #1]/oneOf[subschema #7: GeometryCollection]/geometries/items/oneOf[subschema #2: MultiPoint]/bbox` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `intersects/anyOf[subschema #1]/oneOf[subschema #7: GeometryCollection]/geometries/items/oneOf[subschema #3: LineString]/bbox` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `intersects/anyOf[subschema #1]/oneOf[subschema #7: GeometryCollection]/geometries/items/oneOf[subschema #4: MultiLineString]/bbox` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `intersects/anyOf[subschema #1]/oneOf[subschema #7: GeometryCollection]/geometries/items/oneOf[subschema #5: Polygon]/bbox` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `intersects/anyOf[subschema #1]/oneOf[subschema #7: GeometryCollection]/geometries/items/oneOf[subschema #6: MultiPolygon]/bbox` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `intersects/anyOf[subschema #1]/oneOf[subschema #1: Point]/bbox` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `intersects/anyOf[subschema #1]/oneOf[subschema #2: MultiPoint]/bbox` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `intersects/anyOf[subschema #1]/oneOf[subschema #3: LineString]/bbox` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `intersects/anyOf[subschema #1]/oneOf[subschema #4: MultiLineString]/bbox` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `intersects/anyOf[subschema #1]/oneOf[subschema #5: Polygon]/bbox` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `intersects/anyOf[subschema #1]/oneOf[subschema #6: MultiPolygon]/bbox` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `intersects/anyOf[subschema #1]/oneOf[subschema #7: GeometryCollection]/bbox` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `intersects/anyOf[subschema #1]/oneOf[subschema #7: GeometryCollection]/geometries/items/oneOf[subschema #1: Point]/bbox` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `intersects/anyOf[subschema #1]/oneOf[subschema #7: GeometryCollection]/geometries/items/oneOf[subschema #2: MultiPoint]/bbox` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `intersects/anyOf[subschema #1]/oneOf[subschema #7: GeometryCollection]/geometries/items/oneOf[subschema #3: LineString]/bbox` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `intersects/anyOf[subschema #1]/oneOf[subschema #7: GeometryCollection]/geometries/items/oneOf[subschema #4: MultiLineString]/bbox` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `intersects/anyOf[subschema #1]/oneOf[subschema #7: GeometryCollection]/geometries/items/oneOf[subschema #5: Polygon]/bbox` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `intersects/anyOf[subschema #1]/oneOf[subschema #7: GeometryCollection]/geometries/items/oneOf[subschema #6: MultiPolygon]/bbox` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `features/items/oneOf[subschema #1: SearchResponseFeatureStandardFeasibilityRequest]/geometry/anyOf[subschema #1: Point]/bbox` response property `anyOf` list for the response status `200`
+* added `subschema #1, subschema #2` to the `features/items/oneOf[subschema #2: SearchResponseFeatureAssuredFeasibilityRequest]/geometry/anyOf[subschema #1: Point]/bbox` response property `anyOf` list for the response status `200`
+* added `subschema #1, subschema #2` to the `features/items/oneOf[subschema #3: SearchResponseFeatureStandardFeasibilityResponse]/geometry/anyOf[subschema #1: Point]/bbox` response property `anyOf` list for the response status `200`
+* added `subschema #1, subschema #2` to the `features/items/oneOf[subschema #4: SearchResponseFeatureAssuredFeasibilityResponse]/geometry/anyOf[subschema #1: Point]/bbox` response property `anyOf` list for the response status `200`
+* added `subschema #1, subschema #2` to the `features/items/oneOf[subschema #5: SearchResponseFeatureStandardOrderRequest]/geometry/anyOf[subschema #1: Point]/bbox` response property `anyOf` list for the response status `200`
+* added `subschema #1, subschema #2` to the `features/items/oneOf[subschema #6: SearchResponseFeatureAssuredOrderRequest]/geometry/anyOf[subschema #1: Point]/bbox` response property `anyOf` list for the response status `200`
+* added `subschema #1, subschema #2` to the `features/items/oneOf[subschema #7: ResellerSearchResponseFeatureStandardOrderRequest]/geometry/anyOf[subschema #1: Point]/bbox` response property `anyOf` list for the response status `200`
+* added `subschema #1, subschema #2` to the `features/items/oneOf[subschema #8: ResellerSearchResponseFeatureAssuredOrderRequest]/geometry/anyOf[subschema #1: Point]/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `features/items/oneOf[subschema #1: SearchResponseFeatureStandardFeasibilityRequest]/geometry/anyOf[subschema #1: Point]/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `features/items/oneOf[subschema #2: SearchResponseFeatureAssuredFeasibilityRequest]/geometry/anyOf[subschema #1: Point]/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `features/items/oneOf[subschema #3: SearchResponseFeatureStandardFeasibilityResponse]/geometry/anyOf[subschema #1: Point]/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `features/items/oneOf[subschema #4: SearchResponseFeatureAssuredFeasibilityResponse]/geometry/anyOf[subschema #1: Point]/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `features/items/oneOf[subschema #5: SearchResponseFeatureStandardOrderRequest]/geometry/anyOf[subschema #1: Point]/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `features/items/oneOf[subschema #6: SearchResponseFeatureAssuredOrderRequest]/geometry/anyOf[subschema #1: Point]/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `features/items/oneOf[subschema #7: ResellerSearchResponseFeatureStandardOrderRequest]/geometry/anyOf[subschema #1: Point]/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `features/items/oneOf[subschema #8: ResellerSearchResponseFeatureAssuredOrderRequest]/geometry/anyOf[subschema #1: Point]/bbox` response property `anyOf` list for the response status `200`
+
+
+#### GET /{contract_id}/tasking/feasibilities/
+* api operation id `get-tasking-feasibility-requests` removed and replaced with `list-feasibility-requests`
+* added `subschema #1, subschema #2` to the `features/items/geometry/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `features/items/geometry/bbox` response property `anyOf` list for the response status `200`
+
+
+#### POST /{contract_id}/tasking/feasibilities/
+* api operation id `post-tasking-feasibility` removed and replaced with `create-feasibility-request`
+* added `subschema #1, subschema #2` to the `geometry/bbox` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `geometry/bbox` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `geometry/bbox` response property `anyOf` list for the response status `202`
+* removed `subschema #1, subschema #2` from the `geometry/bbox` response property `anyOf` list for the response status `202`
+
+
+#### POST /{contract_id}/tasking/feasibilities/orders/{order_id}
+* api operation id `post-tasking-order-feasibility` removed and replaced with `create-order-feasibility-request`
+* added `subschema #1, subschema #2` to the `geometry/anyOf[subschema #1: Point]/bbox` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `geometry/anyOf[subschema #1: Point]/bbox` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `geometry/bbox` response property `anyOf` list for the response status `202`
+* removed `subschema #1, subschema #2` from the `geometry/bbox` response property `anyOf` list for the response status `202`
+
+
+#### GET /{contract_id}/tasking/feasibilities/{id}
+* api operation id `get-tasking-feasibility-request` removed and replaced with `get-feasibility-request`
+* added `subschema #1, subschema #2` to the `geometry/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `geometry/bbox` response property `anyOf` list for the response status `200`
+
+
+#### GET /{contract_id}/tasking/feasibilities/{id}/response
+* api operation id `get-tasking-feasibility-response` removed and replaced with `get-feasibility-response`
+* added `subschema #1, subschema #2` to the `features/items/anyOf[subschema #1: StandardFeasibilityResponseFeature]/geometry/bbox` response property `anyOf` list for the response status `200`
+* added `subschema #1, subschema #2` to the `features/items/anyOf[subschema #2: AssuredFeasibilityResponseFeature]/geometry/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `features/items/anyOf[subschema #1: StandardFeasibilityResponseFeature]/geometry/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `features/items/anyOf[subschema #2: AssuredFeasibilityResponseFeature]/geometry/bbox` response property `anyOf` list for the response status `200`
+
+
+#### GET /{contract_id}/tasking/orders/
+* api operation id `get-tasking-orders` removed and replaced with `list-orders`
+* added `subschema #1, subschema #2` to the `features/items/anyOf[subschema #1: StoredOrderResponse]/geometry/bbox` response property `anyOf` list for the response status `200`
+* added `subschema #1, subschema #2` to the `features/items/anyOf[subschema #2: ResellerStoredOrderResponse]/geometry/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `features/items/anyOf[subschema #1: StoredOrderResponse]/geometry/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `features/items/anyOf[subschema #2: ResellerStoredOrderResponse]/geometry/bbox` response property `anyOf` list for the response status `200`
+
+
+#### POST /{contract_id}/tasking/orders/
+* api operation id `post-tasking-orders` removed and replaced with `create-order`
+* added `subschema #1, subschema #2` to the request body `anyOf` list
+* removed `subschema #1, subschema #2` from the request body `anyOf` list
+* added `subschema #1, subschema #2` to the `anyOf[subschema #1: StoredOrderResponse]/geometry/bbox` response property `anyOf` list for the response status `201`
+* added `subschema #1, subschema #2` to the `anyOf[subschema #2: ResellerStoredOrderResponse]/geometry/bbox` response property `anyOf` list for the response status `201`
+* removed `subschema #1, subschema #2` from the `anyOf[subschema #1: StoredOrderResponse]/geometry/bbox` response property `anyOf` list for the response status `201`
+* removed `subschema #1, subschema #2` from the `anyOf[subschema #2: ResellerStoredOrderResponse]/geometry/bbox` response property `anyOf` list for the response status `201`
+
+
+#### GET /{contract_id}/tasking/orders/{order_id}
+* added `subschema #1, subschema #2` to the `anyOf[subschema #1: GetOrderResponse]/geometry/bbox` response property `anyOf` list for the response status `200`
+* added `subschema #1, subschema #2` to the `anyOf[subschema #2: ResellerGetOrderResponse]/geometry/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `anyOf[subschema #1: GetOrderResponse]/geometry/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `anyOf[subschema #2: ResellerGetOrderResponse]/geometry/bbox` response property `anyOf` list for the response status `200`
+
+
+#### PATCH /{contract_id}/tasking/orders/{order_id}
+* added `subschema #1, subschema #2` to the `geometry/anyOf[subschema #1: Point]/bbox` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `geometry/anyOf[subschema #1: Point]/bbox` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `anyOf[subschema #1: GetOrderResponse]/geometry/bbox` response property `anyOf` list for the response status `200`
+* added `subschema #1, subschema #2` to the `anyOf[subschema #2: ResellerGetOrderResponse]/geometry/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `anyOf[subschema #1: GetOrderResponse]/geometry/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `anyOf[subschema #2: ResellerGetOrderResponse]/geometry/bbox` response property `anyOf` list for the response status `200`
+
+
+#### GET /{contract_id}/tasking/orders/{order_id}/acquisition/details
+* api operation id `get-order-task-details` removed and replaced with `get-order-acquisition`
+* the schema of the response property `bbox/items` became `false` for the status `200`: no value passes validation
+* the schema of the response property `geometry/anyOf[subschema #1: PointGeometry]/coordinates/items` became `false` for the status `200`: no value passes validation
+* the schema of the response property `geometry/anyOf[subschema #2: PolygonGeometry]/coordinates/items/items//items` became `false` for the status `200`: no value passes validation
+
+
+#### GET /{contract_id}/tasking/orders/{order_id}/tasks
+* api operation id `get-tasking-order-tasks` removed and replaced with `list-order-tasks`
+* added `subschema #1, subschema #2` to the `anyOf[subschema #1: ListOrderTasksResponse]/tasks/items/acquisition/anyOf[subschema #1: TaskAcquisition]/geometry/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `anyOf[subschema #1: ListOrderTasksResponse]/tasks/items/acquisition/anyOf[subschema #1: TaskAcquisition]/geometry/bbox` response property `anyOf` list for the response status `200`
+
+
+#### GET /{contract_id}/tasking/outages/
+* api operation id `get-unplanned-outages` removed and replaced with `list-unplanned-outages`
+
+
+#### POST /{contract_id}/tasking/price/
+* api operation id `get-price` removed and replaced with `calculate-price`
+* added `subschema #1, subschema #2` to the `geometry/bbox` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `geometry/bbox` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `geometry/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `geometry/bbox` response property `anyOf` list for the response status `200`
+
+
+#### POST /{contract_id}/tasking/price/{order_id}
+* added `subschema #1, subschema #2` to the `geometry/anyOf[subschema #1: Point]/bbox` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `geometry/anyOf[subschema #1: Point]/bbox` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `original_order/geometry/bbox` response property `anyOf` list for the response status `200`
+* added `subschema #1, subschema #2` to the `updated_order/geometry/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `original_order/geometry/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `updated_order/geometry/bbox` response property `anyOf` list for the response status `200`
+
+
+#### GET /{contract_id}/tasking/series/
+* api operation id `get-tasking-series` removed and replaced with `list-series`
+* added `subschema #1, subschema #2` to the `bbox` response property `anyOf` list for the response status `200`
+* added `subschema #1, subschema #2` to the `features/items/bbox` response property `anyOf` list for the response status `200`
+* added `subschema #1, subschema #2` to the `features/items/geometry/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `features/items/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `features/items/geometry/bbox` response property `anyOf` list for the response status `200`
+
+
+#### POST /{contract_id}/tasking/series/
+* api operation id `post-tasking-series` removed and replaced with `create-series`
+* added `subschema #1, subschema #2` to the `geometry/bbox` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `geometry/bbox` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `bbox` response property `anyOf` list for the response status `201`
+* added `subschema #1, subschema #2` to the `geometry/bbox` response property `anyOf` list for the response status `201`
+* removed `subschema #1, subschema #2` from the `bbox` response property `anyOf` list for the response status `201`
+* removed `subschema #1, subschema #2` from the `geometry/bbox` response property `anyOf` list for the response status `201`
+
+
+#### POST /{contract_id}/tasking/series/price/
+* api operation id `post-tasking-series-price` removed and replaced with `calculate-series-price-estimate`
+* added `subschema #1, subschema #2` to the `geometry/bbox` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `geometry/bbox` request property `anyOf` list
+
+
+#### GET /{contract_id}/tasking/series/{series_id}
+* api operation id `get-tasking-series-by-id` removed and replaced with `get-series`
+* added `subschema #1, subschema #2` to the `bbox` response property `anyOf` list for the response status `200`
+* added `subschema #1, subschema #2` to the `geometry/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `geometry/bbox` response property `anyOf` list for the response status `200`
+
+
+#### PATCH /{contract_id}/tasking/series/{series_id}
+* api operation id `edit-tasking-series` removed and replaced with `edit-series`
+* added `subschema #1, subschema #2` to the `geometry/anyOf[subschema #1: Point]/bbox` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `geometry/anyOf[subschema #1: Point]/bbox` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `bbox` response property `anyOf` list for the response status `200`
+* added `subschema #1, subschema #2` to the `geometry/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `geometry/bbox` response property `anyOf` list for the response status `200`
+
+
+#### POST /{contract_id}/tasking/series/{series_id}/cancel
+* api operation id `cancel-tasking-series` removed and replaced with `cancel-series`
+
+
+#### GET /{contract_id}/tasking/series/{series_id}/download
+* api operation id `download-tasking-series` removed and replaced with `download-series`
+
+
+#### GET /{contract_id}/tasking/series/{series_id}/orders/
+* api operation id `get-tasking-series-orders` removed and replaced with `list-series-orders`
+* added `subschema #1, subschema #2` to the `features/items/geometry/bbox` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `features/items/geometry/bbox` response property `anyOf` list for the response status `200`
+
+#### Description Updates
+* 18 description(s) modified
+
+
 ## [0.10.2.20260903.0941] - 2026-09-03
 
 ### fix(cos): update 5 endpoints

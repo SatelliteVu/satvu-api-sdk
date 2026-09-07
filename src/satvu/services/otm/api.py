@@ -90,7 +90,7 @@ class OtmService(SDKClient):
             max_retry_after_seconds=max_retry_after_seconds,
         )
 
-    def get_tasking_orders(
+    def list_orders(
         self,
         contract_id: UUID,
         per_page: Union[None, int] = 25,
@@ -127,7 +127,7 @@ class OtmService(SDKClient):
             return parse_response(response.json().unwrap(), ListStoredOrdersResponse1)
         return response.json().unwrap()
 
-    def get_tasking_orders_iter(
+    def list_orders_iter(
         self,
         contract_id: UUID,
         per_page: Union[None, int] = 25,
@@ -148,7 +148,7 @@ class OtmService(SDKClient):
 
         Example:
             ```python
-            for page in sdk.otm.get_tasking_orders_iter(
+            for page in sdk.otm.list_orders_iter(
                 contract_id=...,
                 max_pages=10
             ):
@@ -161,7 +161,7 @@ class OtmService(SDKClient):
         while True:
             if max_pages and page_count >= max_pages:
                 break
-            response = self.get_tasking_orders(
+            response = self.list_orders(
                 contract_id=contract_id, per_page=per_page, token=token
             )
             page_count += 1
@@ -170,7 +170,7 @@ class OtmService(SDKClient):
             if not token:
                 break
 
-    def post_tasking_orders(
+    def create_order(
         self,
         body: Union[
             "AssuredOrderRequest",
@@ -488,7 +488,7 @@ class OtmService(SDKClient):
         )
         return ResultOk(downloaded_path)
 
-    def get_order_task_details(
+    def get_order_acquisition(
         self, contract_id: UUID, order_id: UUID, timeout: int | None = None
     ) -> StacFeature:
         """
@@ -517,7 +517,7 @@ class OtmService(SDKClient):
             return parse_response(response.json().unwrap(), StacFeature)
         return response.json().unwrap()
 
-    def get_tasking_order_tasks(
+    def list_order_tasks(
         self, contract_id: UUID, order_id: UUID, timeout: int | None = None
     ) -> Union["ListOrderTasksResponse", "ListOrderTasksUnavailableResponse"]:
         """
@@ -551,7 +551,7 @@ class OtmService(SDKClient):
             )
         return response.json().unwrap()
 
-    def get_tasking_feasibility_requests(
+    def list_feasibility_requests(
         self,
         contract_id: UUID,
         per_page: Union[None, int] = 25,
@@ -589,7 +589,7 @@ class OtmService(SDKClient):
             )
         return response.json().unwrap()
 
-    def get_tasking_feasibility_requests_iter(
+    def list_feasibility_requests_iter(
         self,
         contract_id: UUID,
         per_page: Union[None, int] = 25,
@@ -610,7 +610,7 @@ class OtmService(SDKClient):
 
         Example:
             ```python
-            for page in sdk.otm.get_tasking_feasibility_requests_iter(
+            for page in sdk.otm.list_feasibility_requests_iter(
                 contract_id=...,
                 max_pages=10
             ):
@@ -623,7 +623,7 @@ class OtmService(SDKClient):
         while True:
             if max_pages and page_count >= max_pages:
                 break
-            response = self.get_tasking_feasibility_requests(
+            response = self.list_feasibility_requests(
                 contract_id=contract_id, per_page=per_page, token=token
             )
             page_count += 1
@@ -632,7 +632,7 @@ class OtmService(SDKClient):
             if not token:
                 break
 
-    def post_tasking_feasibility(
+    def create_feasibility_request(
         self,
         body: FeasibilityRequest,
         contract_id: UUID,
@@ -673,7 +673,7 @@ class OtmService(SDKClient):
             return parse_response(response.json().unwrap(), StoredFeasibilityRequest)
         return response.json().unwrap()
 
-    def get_tasking_feasibility_request(
+    def get_feasibility_request(
         self, contract_id: UUID, id: UUID, timeout: int | None = None
     ) -> StoredFeasibilityRequest:
         """
@@ -702,7 +702,7 @@ class OtmService(SDKClient):
             return parse_response(response.json().unwrap(), StoredFeasibilityRequest)
         return response.json().unwrap()
 
-    def get_tasking_feasibility_response(
+    def get_feasibility_response(
         self, contract_id: UUID, id: UUID, timeout: int | None = None
     ) -> FeasibilityResponse:
         """
@@ -732,7 +732,7 @@ class OtmService(SDKClient):
             return parse_response(response.json().unwrap(), FeasibilityResponse)
         return response.json().unwrap()
 
-    def post_tasking_order_feasibility(
+    def create_order_feasibility_request(
         self,
         body: ModifyFeasibilityRequest,
         contract_id: UUID,
@@ -782,7 +782,7 @@ class OtmService(SDKClient):
             return parse_response(response.json().unwrap(), StoredFeasibilityRequest)
         return response.json().unwrap()
 
-    def get_price(
+    def calculate_price(
         self,
         body: PriceRequest,
         contract_id: UUID,
@@ -880,7 +880,7 @@ class OtmService(SDKClient):
             return parse_response(response.json().unwrap(), OrderModificationPrice)
         return response.json().unwrap()
 
-    def get_unplanned_outages(
+    def list_unplanned_outages(
         self, contract_id: UUID, timeout: int | None = None
     ) -> list[Outage]:
         """
@@ -904,7 +904,7 @@ class OtmService(SDKClient):
             return parse_response(response.json().unwrap(), list[Outage])
         return response.json().unwrap()
 
-    def get_tasking_series(
+    def list_series(
         self,
         contract_id: UUID,
         per_page: Union[None, int] = 25,
@@ -941,7 +941,7 @@ class OtmService(SDKClient):
             return parse_response(response.json().unwrap(), ListSeriesResponse)
         return response.json().unwrap()
 
-    def get_tasking_series_iter(
+    def list_series_iter(
         self,
         contract_id: UUID,
         per_page: Union[None, int] = 25,
@@ -962,7 +962,7 @@ class OtmService(SDKClient):
 
         Example:
             ```python
-            for page in sdk.otm.get_tasking_series_iter(
+            for page in sdk.otm.list_series_iter(
                 contract_id=...,
                 max_pages=10
             ):
@@ -975,7 +975,7 @@ class OtmService(SDKClient):
         while True:
             if max_pages and page_count >= max_pages:
                 break
-            response = self.get_tasking_series(
+            response = self.list_series(
                 contract_id=contract_id, per_page=per_page, token=token
             )
             page_count += 1
@@ -984,7 +984,7 @@ class OtmService(SDKClient):
             if not token:
                 break
 
-    def post_tasking_series(
+    def create_series(
         self,
         body: SeriesRequest,
         contract_id: UUID,
@@ -1030,7 +1030,7 @@ class OtmService(SDKClient):
             return parse_response(response.json().unwrap(), StoredSeriesResponse)
         return response.json().unwrap()
 
-    def get_tasking_series_by_id(
+    def get_series(
         self, contract_id: UUID, series_id: UUID, timeout: int | None = None
     ) -> StoredSeriesResponse:
         """
@@ -1059,7 +1059,7 @@ class OtmService(SDKClient):
             return parse_response(response.json().unwrap(), StoredSeriesResponse)
         return response.json().unwrap()
 
-    def edit_tasking_series(
+    def edit_series(
         self,
         body: EditSeriesProperties,
         contract_id: UUID,
@@ -1107,7 +1107,7 @@ class OtmService(SDKClient):
             return parse_response(response.json().unwrap(), StoredSeriesResponse)
         return response.json().unwrap()
 
-    def get_tasking_series_orders(
+    def list_series_orders(
         self,
         contract_id: UUID,
         series_id: UUID,
@@ -1146,7 +1146,7 @@ class OtmService(SDKClient):
             return parse_response(response.json().unwrap(), ListStoredOrdersResponse)
         return response.json().unwrap()
 
-    def get_tasking_series_orders_iter(
+    def list_series_orders_iter(
         self,
         contract_id: UUID,
         series_id: UUID,
@@ -1169,7 +1169,7 @@ class OtmService(SDKClient):
 
         Example:
             ```python
-            for page in sdk.otm.get_tasking_series_orders_iter(
+            for page in sdk.otm.list_series_orders_iter(
                 contract_id=...,
                 series_id=...,
                 max_pages=10
@@ -1183,7 +1183,7 @@ class OtmService(SDKClient):
         while True:
             if max_pages and page_count >= max_pages:
                 break
-            response = self.get_tasking_series_orders(
+            response = self.list_series_orders(
                 contract_id=contract_id,
                 series_id=series_id,
                 per_page=per_page,
@@ -1195,7 +1195,7 @@ class OtmService(SDKClient):
             if not token:
                 break
 
-    def post_tasking_series_price(
+    def calculate_series_price_estimate(
         self,
         body: SeriesRequest,
         contract_id: UUID,
@@ -1240,7 +1240,7 @@ class OtmService(SDKClient):
             return parse_response(response.json().unwrap(), SeriesPriceResponse)
         return response.json().unwrap()
 
-    def cancel_tasking_series(
+    def cancel_series(
         self, contract_id: UUID, series_id: UUID, timeout: int | None = None
     ) -> None:
         """
@@ -1274,7 +1274,7 @@ class OtmService(SDKClient):
             return None
         return response.json().unwrap()
 
-    def download_tasking_series(
+    def download_series(
         self,
         contract_id: UUID,
         series_id: UUID,

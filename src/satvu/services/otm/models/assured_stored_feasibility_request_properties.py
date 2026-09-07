@@ -16,7 +16,9 @@ class AssuredStoredFeasibilityRequestProperties(BaseModel):
 
     Attributes:
         product (Literal['assured']): Assured Priority.
-        datetime_ (str): The closed date-time interval of the request.
+        datetime_ (str): The closed date-time interval of the request, measured from the time the request is made. The
+            upper bound must not extend further into the future than the contract's assured tasking window; feasibility
+            results only include passes from the request time onwards.
         status ('FeasibilityRequestStatus'): The status of the feasibility request.
         created_at (datetime.datetime): The datetime at which the feasibility request was created.
         updated_at (datetime.datetime): The datetime at which the feasibility request was last updated.
@@ -27,7 +29,7 @@ class AssuredStoredFeasibilityRequestProperties(BaseModel):
     )
     datetime_: str = Field(
         ...,
-        description="""The closed date-time interval of the request.""",
+        description="""The closed date-time interval of the request, measured from the time the request is made. The upper bound must not extend further into the future than the contract's assured tasking window; feasibility results only include passes from the request time onwards.""",
         alias="datetime",
     )
     status: FeasibilityRequestStatus = Field(

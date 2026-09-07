@@ -12,7 +12,9 @@ class AssuredFeasibilityFields(BaseModel):
     """
     Attributes:
         product (Literal['assured']): Assured Priority.
-        datetime_ (str): The closed date-time interval of the request.
+        datetime_ (str): The closed date-time interval of the request, measured from the time the request is made. The
+            upper bound must not extend further into the future than the contract's assured tasking window; feasibility
+            results only include passes from the request time onwards.
     """
 
     product: Literal["assured"] = Field(
@@ -20,7 +22,7 @@ class AssuredFeasibilityFields(BaseModel):
     )
     datetime_: str = Field(
         ...,
-        description="""The closed date-time interval of the request.""",
+        description="""The closed date-time interval of the request, measured from the time the request is made. The upper bound must not extend further into the future than the contract's assured tasking window; feasibility results only include passes from the request time onwards.""",
         alias="datetime",
     )
 

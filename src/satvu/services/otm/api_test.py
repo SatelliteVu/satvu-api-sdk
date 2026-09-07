@@ -120,9 +120,9 @@ class TestOtmService:
             "/{contract_id}/tasking/orders/", "get", "200"
         )
     )
-    def test_get_tasking_orders_200(self, backend, response_data):
+    def test_list_orders_200(self, backend, response_data):
         """
-        Test get_tasking_orders with 200 response.
+        Test list_orders with 200 response.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/tasking/orders/"
@@ -132,7 +132,7 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.get_tasking_orders(contract_id=contract_id)
+        result = self.sdk.otm.list_orders(contract_id=contract_id)
         assert result is not None
         assert isinstance(result, ListStoredOrdersResponse1)
 
@@ -150,9 +150,9 @@ class TestOtmService:
             "/{contract_id}/tasking/orders/", "get", "422"
         )
     )
-    def test_get_tasking_orders_422_error(self, backend, response_data):
+    def test_list_orders_422_error(self, backend, response_data):
         """
-        Test get_tasking_orders with 422 error response.
+        Test list_orders with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -165,7 +165,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_tasking_orders(contract_id=contract_id)
+            self.sdk.otm.list_orders(contract_id=contract_id)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -183,9 +183,9 @@ class TestOtmService:
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/orders/", "post"),
     )
-    def test_post_tasking_orders_201(self, backend, response_data, body_data):
+    def test_create_order_201(self, backend, response_data, body_data):
         """
-        Test post_tasking_orders with 201 response.
+        Test create_order with 201 response.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/tasking/orders/"
@@ -203,7 +203,7 @@ class TestOtmService:
             ]
         )
         body = body_adapter.validate_python(body_data)
-        result = self.sdk.otm.post_tasking_orders(contract_id=contract_id, body=body)
+        result = self.sdk.otm.create_order(contract_id=contract_id, body=body)
         assert_request_body_matches_input(
             mock, body_data, "POST /{contract_id}/tasking/orders/"
         )
@@ -231,11 +231,11 @@ class TestOtmService:
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/orders/", "post"),
     )
-    def test_post_tasking_orders_minimal_body_sends_only_what_was_set(
+    def test_create_order_minimal_body_sends_only_what_was_set(
         self, backend, response_data, body_data
     ):
         """
-        Test post_tasking_orders sends no field the caller left unset.
+        Test create_order sends no field the caller left unset.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/tasking/orders/"
@@ -257,7 +257,7 @@ class TestOtmService:
         )
         body = body_adapter.validate_python(body_data)
         with suppress(Exception):
-            self.sdk.otm.post_tasking_orders(contract_id=contract_id, body=body)
+            self.sdk.otm.create_order(contract_id=contract_id, body=body)
         assert_request_body_matches_input(
             mock, body_data, "POST /{contract_id}/tasking/orders/"
         )
@@ -283,9 +283,9 @@ class TestOtmService:
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/orders/", "post"),
     )
-    def test_post_tasking_orders_400_error(self, backend, response_data, body_data):
+    def test_create_order_400_error(self, backend, response_data, body_data):
         """
-        Test post_tasking_orders with 400 error response.
+        Test create_order with 400 error response.
 
         HTTP 400 errors raise ClientError.
         """
@@ -307,7 +307,7 @@ class TestOtmService:
         )
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.post_tasking_orders(contract_id=contract_id, body=body)
+            self.sdk.otm.create_order(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 400
 
     @settings(
@@ -325,9 +325,9 @@ class TestOtmService:
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/orders/", "post"),
     )
-    def test_post_tasking_orders_402_error(self, backend, response_data, body_data):
+    def test_create_order_402_error(self, backend, response_data, body_data):
         """
-        Test post_tasking_orders with 402 error response.
+        Test create_order with 402 error response.
 
         HTTP 402 errors raise ClientError.
         """
@@ -349,7 +349,7 @@ class TestOtmService:
         )
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.post_tasking_orders(contract_id=contract_id, body=body)
+            self.sdk.otm.create_order(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 402
 
     @settings(
@@ -367,9 +367,9 @@ class TestOtmService:
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/orders/", "post"),
     )
-    def test_post_tasking_orders_403_error(self, backend, response_data, body_data):
+    def test_create_order_403_error(self, backend, response_data, body_data):
         """
-        Test post_tasking_orders with 403 error response.
+        Test create_order with 403 error response.
 
         HTTP 403 errors raise ClientError.
         """
@@ -391,7 +391,7 @@ class TestOtmService:
         )
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.post_tasking_orders(contract_id=contract_id, body=body)
+            self.sdk.otm.create_order(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 403
 
     @settings(
@@ -409,9 +409,9 @@ class TestOtmService:
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/orders/", "post"),
     )
-    def test_post_tasking_orders_409_error(self, backend, response_data, body_data):
+    def test_create_order_409_error(self, backend, response_data, body_data):
         """
-        Test post_tasking_orders with 409 error response.
+        Test create_order with 409 error response.
 
         HTTP 409 errors raise ClientError.
         """
@@ -433,7 +433,7 @@ class TestOtmService:
         )
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.post_tasking_orders(contract_id=contract_id, body=body)
+            self.sdk.otm.create_order(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 409
 
     @settings(
@@ -451,9 +451,9 @@ class TestOtmService:
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/orders/", "post"),
     )
-    def test_post_tasking_orders_422_error(self, backend, response_data, body_data):
+    def test_create_order_422_error(self, backend, response_data, body_data):
         """
-        Test post_tasking_orders with 422 error response.
+        Test create_order with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -475,7 +475,7 @@ class TestOtmService:
         )
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.post_tasking_orders(contract_id=contract_id, body=body)
+            self.sdk.otm.create_order(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -493,9 +493,9 @@ class TestOtmService:
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/orders/", "post"),
     )
-    def test_post_tasking_orders_500_error(self, backend, response_data, body_data):
+    def test_create_order_500_error(self, backend, response_data, body_data):
         """
-        Test post_tasking_orders with 500 error response.
+        Test create_order with 500 error response.
 
         HTTP 500 errors raise ServerError.
         """
@@ -517,7 +517,7 @@ class TestOtmService:
         )
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ServerError) as exc_info:
-            self.sdk.otm.post_tasking_orders(contract_id=contract_id, body=body)
+            self.sdk.otm.create_order(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 500
 
     @settings(
@@ -535,9 +535,9 @@ class TestOtmService:
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/orders/", "post"),
     )
-    def test_post_tasking_orders_503_error(self, backend, response_data, body_data):
+    def test_create_order_503_error(self, backend, response_data, body_data):
         """
-        Test post_tasking_orders with 503 error response.
+        Test create_order with 503 error response.
 
         HTTP 503 errors raise ServerError.
         """
@@ -559,7 +559,7 @@ class TestOtmService:
         )
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ServerError) as exc_info:
-            self.sdk.otm.post_tasking_orders(contract_id=contract_id, body=body)
+            self.sdk.otm.create_order(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 503
 
     @settings(
@@ -1112,9 +1112,9 @@ class TestOtmService:
             "/{contract_id}/tasking/orders/{order_id}/acquisition/details", "get", "200"
         )
     )
-    def test_get_order_task_details_200(self, backend, response_data):
+    def test_get_order_acquisition_200(self, backend, response_data):
         """
-        Test get_order_task_details with 200 response.
+        Test get_order_acquisition with 200 response.
         """
         contract_id = uuid4()
         order_id = uuid4()
@@ -1125,7 +1125,7 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.get_order_task_details(
+        result = self.sdk.otm.get_order_acquisition(
             contract_id=contract_id, order_id=order_id
         )
         assert result is not None
@@ -1145,9 +1145,9 @@ class TestOtmService:
             "/{contract_id}/tasking/orders/{order_id}/acquisition/details", "get", "422"
         )
     )
-    def test_get_order_task_details_422_error(self, backend, response_data):
+    def test_get_order_acquisition_422_error(self, backend, response_data):
         """
-        Test get_order_task_details with 422 error response.
+        Test get_order_acquisition with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -1161,7 +1161,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_order_task_details(
+            self.sdk.otm.get_order_acquisition(
                 contract_id=contract_id, order_id=order_id
             )
         assert exc_info.value.status_code == 422
@@ -1180,9 +1180,9 @@ class TestOtmService:
             "/{contract_id}/tasking/orders/{order_id}/tasks", "get", "200"
         )
     )
-    def test_get_tasking_order_tasks_200(self, backend, response_data):
+    def test_list_order_tasks_200(self, backend, response_data):
         """
-        Test get_tasking_order_tasks with 200 response.
+        Test list_order_tasks with 200 response.
         """
         contract_id = uuid4()
         order_id = uuid4()
@@ -1193,7 +1193,7 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.get_tasking_order_tasks(
+        result = self.sdk.otm.list_order_tasks(
             contract_id=contract_id, order_id=order_id
         )
         assert result is not None
@@ -1215,9 +1215,9 @@ class TestOtmService:
             "/{contract_id}/tasking/orders/{order_id}/tasks", "get", "404"
         )
     )
-    def test_get_tasking_order_tasks_404_error(self, backend, response_data):
+    def test_list_order_tasks_404_error(self, backend, response_data):
         """
-        Test get_tasking_order_tasks with 404 error response.
+        Test list_order_tasks with 404 error response.
 
         HTTP 404 errors raise ClientError.
         """
@@ -1231,9 +1231,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_tasking_order_tasks(
-                contract_id=contract_id, order_id=order_id
-            )
+            self.sdk.otm.list_order_tasks(contract_id=contract_id, order_id=order_id)
         assert exc_info.value.status_code == 404
 
     @settings(
@@ -1250,9 +1248,9 @@ class TestOtmService:
             "/{contract_id}/tasking/orders/{order_id}/tasks", "get", "422"
         )
     )
-    def test_get_tasking_order_tasks_422_error(self, backend, response_data):
+    def test_list_order_tasks_422_error(self, backend, response_data):
         """
-        Test get_tasking_order_tasks with 422 error response.
+        Test list_order_tasks with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -1266,9 +1264,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_tasking_order_tasks(
-                contract_id=contract_id, order_id=order_id
-            )
+            self.sdk.otm.list_order_tasks(contract_id=contract_id, order_id=order_id)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -1285,9 +1281,9 @@ class TestOtmService:
             "/{contract_id}/tasking/feasibilities/", "get", "200"
         )
     )
-    def test_get_tasking_feasibility_requests_200(self, backend, response_data):
+    def test_list_feasibility_requests_200(self, backend, response_data):
         """
-        Test get_tasking_feasibility_requests with 200 response.
+        Test list_feasibility_requests with 200 response.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/tasking/feasibilities/"
@@ -1297,7 +1293,7 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.get_tasking_feasibility_requests(contract_id=contract_id)
+        result = self.sdk.otm.list_feasibility_requests(contract_id=contract_id)
         assert result is not None
         assert isinstance(result, StoredFeasibilityFeatureCollection)
 
@@ -1315,9 +1311,9 @@ class TestOtmService:
             "/{contract_id}/tasking/feasibilities/", "get", "422"
         )
     )
-    def test_get_tasking_feasibility_requests_422_error(self, backend, response_data):
+    def test_list_feasibility_requests_422_error(self, backend, response_data):
         """
-        Test get_tasking_feasibility_requests with 422 error response.
+        Test list_feasibility_requests with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -1330,7 +1326,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_tasking_feasibility_requests(contract_id=contract_id)
+            self.sdk.otm.list_feasibility_requests(contract_id=contract_id)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -1350,9 +1346,9 @@ class TestOtmService:
             "/{contract_id}/tasking/feasibilities/", "post"
         ),
     )
-    def test_post_tasking_feasibility_202(self, backend, response_data, body_data):
+    def test_create_feasibility_request_202(self, backend, response_data, body_data):
         """
-        Test post_tasking_feasibility with 202 response.
+        Test create_feasibility_request with 202 response.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/tasking/feasibilities/"
@@ -1362,7 +1358,7 @@ class TestOtmService:
         mock = pook.post(url)
         mock.reply(202).json(response_data).header("Content-Type", "application/json")
         body = FeasibilityRequest.model_validate(body_data)
-        result = self.sdk.otm.post_tasking_feasibility(
+        result = self.sdk.otm.create_feasibility_request(
             contract_id=contract_id, body=body
         )
         assert_request_body_matches_input(
@@ -1394,11 +1390,11 @@ class TestOtmService:
             "/{contract_id}/tasking/feasibilities/", "post"
         ),
     )
-    def test_post_tasking_feasibility_minimal_body_sends_only_what_was_set(
+    def test_create_feasibility_request_minimal_body_sends_only_what_was_set(
         self, backend, response_data, body_data
     ):
         """
-        Test post_tasking_feasibility sends no field the caller left unset.
+        Test create_feasibility_request sends no field the caller left unset.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/tasking/feasibilities/"
@@ -1413,7 +1409,7 @@ class TestOtmService:
         mock.reply(202).json(response_data).header("Content-Type", "application/json")
         body = FeasibilityRequest.model_validate(body_data)
         with suppress(Exception):
-            self.sdk.otm.post_tasking_feasibility(contract_id=contract_id, body=body)
+            self.sdk.otm.create_feasibility_request(contract_id=contract_id, body=body)
         assert_request_body_matches_input(
             mock, body_data, "POST /{contract_id}/tasking/feasibilities/"
         )
@@ -1441,11 +1437,11 @@ class TestOtmService:
             "/{contract_id}/tasking/feasibilities/", "post"
         ),
     )
-    def test_post_tasking_feasibility_403_error(
+    def test_create_feasibility_request_403_error(
         self, backend, response_data, body_data
     ):
         """
-        Test post_tasking_feasibility with 403 error response.
+        Test create_feasibility_request with 403 error response.
 
         HTTP 403 errors raise ClientError.
         """
@@ -1459,7 +1455,7 @@ class TestOtmService:
         )
         body = FeasibilityRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.post_tasking_feasibility(contract_id=contract_id, body=body)
+            self.sdk.otm.create_feasibility_request(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 403
 
     @settings(
@@ -1479,11 +1475,11 @@ class TestOtmService:
             "/{contract_id}/tasking/feasibilities/", "post"
         ),
     )
-    def test_post_tasking_feasibility_422_error(
+    def test_create_feasibility_request_422_error(
         self, backend, response_data, body_data
     ):
         """
-        Test post_tasking_feasibility with 422 error response.
+        Test create_feasibility_request with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -1497,7 +1493,7 @@ class TestOtmService:
         )
         body = FeasibilityRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.post_tasking_feasibility(contract_id=contract_id, body=body)
+            self.sdk.otm.create_feasibility_request(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -1514,9 +1510,9 @@ class TestOtmService:
             "/{contract_id}/tasking/feasibilities/{id}", "get", "200"
         )
     )
-    def test_get_tasking_feasibility_request_200(self, backend, response_data):
+    def test_get_feasibility_request_200(self, backend, response_data):
         """
-        Test get_tasking_feasibility_request with 200 response.
+        Test get_feasibility_request with 200 response.
         """
         contract_id = uuid4()
         id = uuid4()
@@ -1527,9 +1523,7 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.get_tasking_feasibility_request(
-            contract_id=contract_id, id=id
-        )
+        result = self.sdk.otm.get_feasibility_request(contract_id=contract_id, id=id)
         assert result is not None
         assert isinstance(result, StoredFeasibilityRequest)
 
@@ -1547,9 +1541,9 @@ class TestOtmService:
             "/{contract_id}/tasking/feasibilities/{id}", "get", "404"
         )
     )
-    def test_get_tasking_feasibility_request_404_error(self, backend, response_data):
+    def test_get_feasibility_request_404_error(self, backend, response_data):
         """
-        Test get_tasking_feasibility_request with 404 error response.
+        Test get_feasibility_request with 404 error response.
 
         HTTP 404 errors raise ClientError.
         """
@@ -1563,7 +1557,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_tasking_feasibility_request(contract_id=contract_id, id=id)
+            self.sdk.otm.get_feasibility_request(contract_id=contract_id, id=id)
         assert exc_info.value.status_code == 404
 
     @settings(
@@ -1580,9 +1574,9 @@ class TestOtmService:
             "/{contract_id}/tasking/feasibilities/{id}", "get", "422"
         )
     )
-    def test_get_tasking_feasibility_request_422_error(self, backend, response_data):
+    def test_get_feasibility_request_422_error(self, backend, response_data):
         """
-        Test get_tasking_feasibility_request with 422 error response.
+        Test get_feasibility_request with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -1596,7 +1590,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_tasking_feasibility_request(contract_id=contract_id, id=id)
+            self.sdk.otm.get_feasibility_request(contract_id=contract_id, id=id)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -1613,9 +1607,9 @@ class TestOtmService:
             "/{contract_id}/tasking/feasibilities/{id}/response", "get", "200"
         )
     )
-    def test_get_tasking_feasibility_response_200(self, backend, response_data):
+    def test_get_feasibility_response_200(self, backend, response_data):
         """
-        Test get_tasking_feasibility_response with 200 response.
+        Test get_feasibility_response with 200 response.
         """
         contract_id = uuid4()
         id = uuid4()
@@ -1626,9 +1620,7 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.get_tasking_feasibility_response(
-            contract_id=contract_id, id=id
-        )
+        result = self.sdk.otm.get_feasibility_response(contract_id=contract_id, id=id)
         assert result is not None
         assert isinstance(result, FeasibilityResponse)
 
@@ -1646,9 +1638,9 @@ class TestOtmService:
             "/{contract_id}/tasking/feasibilities/{id}/response", "get", "404"
         )
     )
-    def test_get_tasking_feasibility_response_404_error(self, backend, response_data):
+    def test_get_feasibility_response_404_error(self, backend, response_data):
         """
-        Test get_tasking_feasibility_response with 404 error response.
+        Test get_feasibility_response with 404 error response.
 
         HTTP 404 errors raise ClientError.
         """
@@ -1662,9 +1654,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_tasking_feasibility_response(
-                contract_id=contract_id, id=id
-            )
+            self.sdk.otm.get_feasibility_response(contract_id=contract_id, id=id)
         assert exc_info.value.status_code == 404
 
     @settings(
@@ -1681,9 +1671,9 @@ class TestOtmService:
             "/{contract_id}/tasking/feasibilities/{id}/response", "get", "422"
         )
     )
-    def test_get_tasking_feasibility_response_422_error(self, backend, response_data):
+    def test_get_feasibility_response_422_error(self, backend, response_data):
         """
-        Test get_tasking_feasibility_response with 422 error response.
+        Test get_feasibility_response with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -1697,9 +1687,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_tasking_feasibility_response(
-                contract_id=contract_id, id=id
-            )
+            self.sdk.otm.get_feasibility_response(contract_id=contract_id, id=id)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -1719,11 +1707,11 @@ class TestOtmService:
             "/{contract_id}/tasking/feasibilities/orders/{order_id}", "post"
         ),
     )
-    def test_post_tasking_order_feasibility_202(
+    def test_create_order_feasibility_request_202(
         self, backend, response_data, body_data
     ):
         """
-        Test post_tasking_order_feasibility with 202 response.
+        Test create_order_feasibility_request with 202 response.
         """
         contract_id = uuid4()
         order_id = uuid4()
@@ -1734,7 +1722,7 @@ class TestOtmService:
         mock = pook.post(url)
         mock.reply(202).json(response_data).header("Content-Type", "application/json")
         body = ModifyFeasibilityRequest.model_validate(body_data)
-        result = self.sdk.otm.post_tasking_order_feasibility(
+        result = self.sdk.otm.create_order_feasibility_request(
             contract_id=contract_id, order_id=order_id, body=body
         )
         assert_request_body_matches_input(
@@ -1770,11 +1758,11 @@ class TestOtmService:
             "/{contract_id}/tasking/feasibilities/orders/{order_id}", "post"
         ),
     )
-    def test_post_tasking_order_feasibility_minimal_body_sends_only_what_was_set(
+    def test_create_order_feasibility_request_minimal_body_sends_only_what_was_set(
         self, backend, response_data, body_data
     ):
         """
-        Test post_tasking_order_feasibility sends no field the caller left unset.
+        Test create_order_feasibility_request sends no field the caller left unset.
         """
         contract_id = uuid4()
         order_id = uuid4()
@@ -1792,7 +1780,7 @@ class TestOtmService:
         mock.reply(202).json(response_data).header("Content-Type", "application/json")
         body = ModifyFeasibilityRequest.model_validate(body_data)
         with suppress(Exception):
-            self.sdk.otm.post_tasking_order_feasibility(
+            self.sdk.otm.create_order_feasibility_request(
                 contract_id=contract_id, order_id=order_id, body=body
             )
         assert_request_body_matches_input(
@@ -1826,11 +1814,11 @@ class TestOtmService:
             "/{contract_id}/tasking/feasibilities/orders/{order_id}", "post"
         ),
     )
-    def test_post_tasking_order_feasibility_403_error(
+    def test_create_order_feasibility_request_403_error(
         self, backend, response_data, body_data
     ):
         """
-        Test post_tasking_order_feasibility with 403 error response.
+        Test create_order_feasibility_request with 403 error response.
 
         HTTP 403 errors raise ClientError.
         """
@@ -1845,7 +1833,7 @@ class TestOtmService:
         )
         body = ModifyFeasibilityRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.post_tasking_order_feasibility(
+            self.sdk.otm.create_order_feasibility_request(
                 contract_id=contract_id, order_id=order_id, body=body
             )
         assert exc_info.value.status_code == 403
@@ -1867,11 +1855,11 @@ class TestOtmService:
             "/{contract_id}/tasking/feasibilities/orders/{order_id}", "post"
         ),
     )
-    def test_post_tasking_order_feasibility_404_error(
+    def test_create_order_feasibility_request_404_error(
         self, backend, response_data, body_data
     ):
         """
-        Test post_tasking_order_feasibility with 404 error response.
+        Test create_order_feasibility_request with 404 error response.
 
         HTTP 404 errors raise ClientError.
         """
@@ -1886,7 +1874,7 @@ class TestOtmService:
         )
         body = ModifyFeasibilityRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.post_tasking_order_feasibility(
+            self.sdk.otm.create_order_feasibility_request(
                 contract_id=contract_id, order_id=order_id, body=body
             )
         assert exc_info.value.status_code == 404
@@ -1908,11 +1896,11 @@ class TestOtmService:
             "/{contract_id}/tasking/feasibilities/orders/{order_id}", "post"
         ),
     )
-    def test_post_tasking_order_feasibility_409_error(
+    def test_create_order_feasibility_request_409_error(
         self, backend, response_data, body_data
     ):
         """
-        Test post_tasking_order_feasibility with 409 error response.
+        Test create_order_feasibility_request with 409 error response.
 
         HTTP 409 errors raise ClientError.
         """
@@ -1927,7 +1915,7 @@ class TestOtmService:
         )
         body = ModifyFeasibilityRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.post_tasking_order_feasibility(
+            self.sdk.otm.create_order_feasibility_request(
                 contract_id=contract_id, order_id=order_id, body=body
             )
         assert exc_info.value.status_code == 409
@@ -1949,11 +1937,11 @@ class TestOtmService:
             "/{contract_id}/tasking/feasibilities/orders/{order_id}", "post"
         ),
     )
-    def test_post_tasking_order_feasibility_422_error(
+    def test_create_order_feasibility_request_422_error(
         self, backend, response_data, body_data
     ):
         """
-        Test post_tasking_order_feasibility with 422 error response.
+        Test create_order_feasibility_request with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -1968,7 +1956,7 @@ class TestOtmService:
         )
         body = ModifyFeasibilityRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.post_tasking_order_feasibility(
+            self.sdk.otm.create_order_feasibility_request(
                 contract_id=contract_id, order_id=order_id, body=body
             )
         assert exc_info.value.status_code == 422
@@ -1988,9 +1976,9 @@ class TestOtmService:
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/price/", "post"),
     )
-    def test_get_price_200(self, backend, response_data, body_data):
+    def test_calculate_price_200(self, backend, response_data, body_data):
         """
-        Test get_price with 200 response.
+        Test calculate_price with 200 response.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/tasking/price/"
@@ -2000,7 +1988,7 @@ class TestOtmService:
         mock = pook.post(url)
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = PriceRequest.model_validate(body_data)
-        result = self.sdk.otm.get_price(contract_id=contract_id, body=body)
+        result = self.sdk.otm.calculate_price(contract_id=contract_id, body=body)
         assert_request_body_matches_input(
             mock, body_data, "POST /{contract_id}/tasking/price/"
         )
@@ -2028,11 +2016,11 @@ class TestOtmService:
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/price/", "post"),
     )
-    def test_get_price_minimal_body_sends_only_what_was_set(
+    def test_calculate_price_minimal_body_sends_only_what_was_set(
         self, backend, response_data, body_data
     ):
         """
-        Test get_price sends no field the caller left unset.
+        Test calculate_price sends no field the caller left unset.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/tasking/price/"
@@ -2046,7 +2034,7 @@ class TestOtmService:
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = PriceRequest.model_validate(body_data)
         with suppress(Exception):
-            self.sdk.otm.get_price(contract_id=contract_id, body=body)
+            self.sdk.otm.calculate_price(contract_id=contract_id, body=body)
         assert_request_body_matches_input(
             mock, body_data, "POST /{contract_id}/tasking/price/"
         )
@@ -2072,9 +2060,9 @@ class TestOtmService:
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/price/", "post"),
     )
-    def test_get_price_400_error(self, backend, response_data, body_data):
+    def test_calculate_price_400_error(self, backend, response_data, body_data):
         """
-        Test get_price with 400 error response.
+        Test calculate_price with 400 error response.
 
         HTTP 400 errors raise ClientError.
         """
@@ -2088,7 +2076,7 @@ class TestOtmService:
         )
         body = PriceRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_price(contract_id=contract_id, body=body)
+            self.sdk.otm.calculate_price(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 400
 
     @settings(
@@ -2106,9 +2094,9 @@ class TestOtmService:
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/price/", "post"),
     )
-    def test_get_price_403_error(self, backend, response_data, body_data):
+    def test_calculate_price_403_error(self, backend, response_data, body_data):
         """
-        Test get_price with 403 error response.
+        Test calculate_price with 403 error response.
 
         HTTP 403 errors raise ClientError.
         """
@@ -2122,7 +2110,7 @@ class TestOtmService:
         )
         body = PriceRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_price(contract_id=contract_id, body=body)
+            self.sdk.otm.calculate_price(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 403
 
     @settings(
@@ -2140,9 +2128,9 @@ class TestOtmService:
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/price/", "post"),
     )
-    def test_get_price_422_error(self, backend, response_data, body_data):
+    def test_calculate_price_422_error(self, backend, response_data, body_data):
         """
-        Test get_price with 422 error response.
+        Test calculate_price with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -2156,7 +2144,7 @@ class TestOtmService:
         )
         body = PriceRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_price(contract_id=contract_id, body=body)
+            self.sdk.otm.calculate_price(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -2434,9 +2422,9 @@ class TestOtmService:
             "/{contract_id}/tasking/outages/", "get", "200"
         )
     )
-    def test_get_unplanned_outages_200(self, backend, response_data):
+    def test_list_unplanned_outages_200(self, backend, response_data):
         """
-        Test get_unplanned_outages with 200 response.
+        Test list_unplanned_outages with 200 response.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/tasking/outages/"
@@ -2446,7 +2434,7 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.get_unplanned_outages(contract_id=contract_id)
+        result = self.sdk.otm.list_unplanned_outages(contract_id=contract_id)
         assert result is not None
         assert isinstance(result, list)
 
@@ -2464,9 +2452,9 @@ class TestOtmService:
             "/{contract_id}/tasking/outages/", "get", "422"
         )
     )
-    def test_get_unplanned_outages_422_error(self, backend, response_data):
+    def test_list_unplanned_outages_422_error(self, backend, response_data):
         """
-        Test get_unplanned_outages with 422 error response.
+        Test list_unplanned_outages with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -2479,7 +2467,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_unplanned_outages(contract_id=contract_id)
+            self.sdk.otm.list_unplanned_outages(contract_id=contract_id)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -2496,9 +2484,9 @@ class TestOtmService:
             "/{contract_id}/tasking/series/", "get", "200"
         )
     )
-    def test_get_tasking_series_200(self, backend, response_data):
+    def test_list_series_200(self, backend, response_data):
         """
-        Test get_tasking_series with 200 response.
+        Test list_series with 200 response.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/tasking/series/"
@@ -2508,7 +2496,7 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.get_tasking_series(contract_id=contract_id)
+        result = self.sdk.otm.list_series(contract_id=contract_id)
         assert result is not None
         assert isinstance(result, ListSeriesResponse)
 
@@ -2526,9 +2514,9 @@ class TestOtmService:
             "/{contract_id}/tasking/series/", "get", "422"
         )
     )
-    def test_get_tasking_series_422_error(self, backend, response_data):
+    def test_list_series_422_error(self, backend, response_data):
         """
-        Test get_tasking_series with 422 error response.
+        Test list_series with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -2541,7 +2529,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_tasking_series(contract_id=contract_id)
+            self.sdk.otm.list_series(contract_id=contract_id)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -2559,9 +2547,9 @@ class TestOtmService:
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/series/", "post"),
     )
-    def test_post_tasking_series_201(self, backend, response_data, body_data):
+    def test_create_series_201(self, backend, response_data, body_data):
         """
-        Test post_tasking_series with 201 response.
+        Test create_series with 201 response.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/tasking/series/"
@@ -2571,7 +2559,7 @@ class TestOtmService:
         mock = pook.post(url)
         mock.reply(201).json(response_data).header("Content-Type", "application/json")
         body = SeriesRequest.model_validate(body_data)
-        result = self.sdk.otm.post_tasking_series(contract_id=contract_id, body=body)
+        result = self.sdk.otm.create_series(contract_id=contract_id, body=body)
         assert_request_body_matches_input(
             mock, body_data, "POST /{contract_id}/tasking/series/"
         )
@@ -2599,11 +2587,11 @@ class TestOtmService:
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/series/", "post"),
     )
-    def test_post_tasking_series_minimal_body_sends_only_what_was_set(
+    def test_create_series_minimal_body_sends_only_what_was_set(
         self, backend, response_data, body_data
     ):
         """
-        Test post_tasking_series sends no field the caller left unset.
+        Test create_series sends no field the caller left unset.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/tasking/series/"
@@ -2617,7 +2605,7 @@ class TestOtmService:
         mock.reply(201).json(response_data).header("Content-Type", "application/json")
         body = SeriesRequest.model_validate(body_data)
         with suppress(Exception):
-            self.sdk.otm.post_tasking_series(contract_id=contract_id, body=body)
+            self.sdk.otm.create_series(contract_id=contract_id, body=body)
         assert_request_body_matches_input(
             mock, body_data, "POST /{contract_id}/tasking/series/"
         )
@@ -2643,9 +2631,9 @@ class TestOtmService:
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/series/", "post"),
     )
-    def test_post_tasking_series_400_error(self, backend, response_data, body_data):
+    def test_create_series_400_error(self, backend, response_data, body_data):
         """
-        Test post_tasking_series with 400 error response.
+        Test create_series with 400 error response.
 
         HTTP 400 errors raise ClientError.
         """
@@ -2659,7 +2647,7 @@ class TestOtmService:
         )
         body = SeriesRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.post_tasking_series(contract_id=contract_id, body=body)
+            self.sdk.otm.create_series(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 400
 
     @settings(
@@ -2677,9 +2665,9 @@ class TestOtmService:
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/series/", "post"),
     )
-    def test_post_tasking_series_402_error(self, backend, response_data, body_data):
+    def test_create_series_402_error(self, backend, response_data, body_data):
         """
-        Test post_tasking_series with 402 error response.
+        Test create_series with 402 error response.
 
         HTTP 402 errors raise ClientError.
         """
@@ -2693,7 +2681,7 @@ class TestOtmService:
         )
         body = SeriesRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.post_tasking_series(contract_id=contract_id, body=body)
+            self.sdk.otm.create_series(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 402
 
     @settings(
@@ -2711,9 +2699,9 @@ class TestOtmService:
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/series/", "post"),
     )
-    def test_post_tasking_series_403_error(self, backend, response_data, body_data):
+    def test_create_series_403_error(self, backend, response_data, body_data):
         """
-        Test post_tasking_series with 403 error response.
+        Test create_series with 403 error response.
 
         HTTP 403 errors raise ClientError.
         """
@@ -2727,7 +2715,7 @@ class TestOtmService:
         )
         body = SeriesRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.post_tasking_series(contract_id=contract_id, body=body)
+            self.sdk.otm.create_series(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 403
 
     @settings(
@@ -2745,9 +2733,9 @@ class TestOtmService:
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/series/", "post"),
     )
-    def test_post_tasking_series_422_error(self, backend, response_data, body_data):
+    def test_create_series_422_error(self, backend, response_data, body_data):
         """
-        Test post_tasking_series with 422 error response.
+        Test create_series with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -2761,7 +2749,7 @@ class TestOtmService:
         )
         body = SeriesRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.post_tasking_series(contract_id=contract_id, body=body)
+            self.sdk.otm.create_series(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -2779,9 +2767,9 @@ class TestOtmService:
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/series/", "post"),
     )
-    def test_post_tasking_series_500_error(self, backend, response_data, body_data):
+    def test_create_series_500_error(self, backend, response_data, body_data):
         """
-        Test post_tasking_series with 500 error response.
+        Test create_series with 500 error response.
 
         HTTP 500 errors raise ServerError.
         """
@@ -2795,7 +2783,7 @@ class TestOtmService:
         )
         body = SeriesRequest.model_validate(body_data)
         with pytest.raises(ServerError) as exc_info:
-            self.sdk.otm.post_tasking_series(contract_id=contract_id, body=body)
+            self.sdk.otm.create_series(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 500
 
     @settings(
@@ -2813,9 +2801,9 @@ class TestOtmService:
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/series/", "post"),
     )
-    def test_post_tasking_series_503_error(self, backend, response_data, body_data):
+    def test_create_series_503_error(self, backend, response_data, body_data):
         """
-        Test post_tasking_series with 503 error response.
+        Test create_series with 503 error response.
 
         HTTP 503 errors raise ServerError.
         """
@@ -2829,7 +2817,7 @@ class TestOtmService:
         )
         body = SeriesRequest.model_validate(body_data)
         with pytest.raises(ServerError) as exc_info:
-            self.sdk.otm.post_tasking_series(contract_id=contract_id, body=body)
+            self.sdk.otm.create_series(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 503
 
     @settings(
@@ -2846,9 +2834,9 @@ class TestOtmService:
             "/{contract_id}/tasking/series/{series_id}", "get", "200"
         )
     )
-    def test_get_tasking_series_by_id_200(self, backend, response_data):
+    def test_get_series_200(self, backend, response_data):
         """
-        Test get_tasking_series_by_id with 200 response.
+        Test get_series with 200 response.
         """
         contract_id = uuid4()
         series_id = uuid4()
@@ -2859,9 +2847,7 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.get_tasking_series_by_id(
-            contract_id=contract_id, series_id=series_id
-        )
+        result = self.sdk.otm.get_series(contract_id=contract_id, series_id=series_id)
         assert result is not None
         assert isinstance(result, StoredSeriesResponse)
 
@@ -2879,9 +2865,9 @@ class TestOtmService:
             "/{contract_id}/tasking/series/{series_id}", "get", "404"
         )
     )
-    def test_get_tasking_series_by_id_404_error(self, backend, response_data):
+    def test_get_series_404_error(self, backend, response_data):
         """
-        Test get_tasking_series_by_id with 404 error response.
+        Test get_series with 404 error response.
 
         HTTP 404 errors raise ClientError.
         """
@@ -2895,9 +2881,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_tasking_series_by_id(
-                contract_id=contract_id, series_id=series_id
-            )
+            self.sdk.otm.get_series(contract_id=contract_id, series_id=series_id)
         assert exc_info.value.status_code == 404
 
     @settings(
@@ -2914,9 +2898,9 @@ class TestOtmService:
             "/{contract_id}/tasking/series/{series_id}", "get", "422"
         )
     )
-    def test_get_tasking_series_by_id_422_error(self, backend, response_data):
+    def test_get_series_422_error(self, backend, response_data):
         """
-        Test get_tasking_series_by_id with 422 error response.
+        Test get_series with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -2930,9 +2914,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_tasking_series_by_id(
-                contract_id=contract_id, series_id=series_id
-            )
+            self.sdk.otm.get_series(contract_id=contract_id, series_id=series_id)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -2952,9 +2934,9 @@ class TestOtmService:
             "/{contract_id}/tasking/series/{series_id}", "patch"
         ),
     )
-    def test_edit_tasking_series_200(self, backend, response_data, body_data):
+    def test_edit_series_200(self, backend, response_data, body_data):
         """
-        Test edit_tasking_series with 200 response.
+        Test edit_series with 200 response.
         """
         contract_id = uuid4()
         series_id = uuid4()
@@ -2965,7 +2947,7 @@ class TestOtmService:
         mock = pook.patch(url)
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = EditSeriesProperties.model_validate(body_data)
-        result = self.sdk.otm.edit_tasking_series(
+        result = self.sdk.otm.edit_series(
             contract_id=contract_id, series_id=series_id, body=body
         )
         assert_request_body_matches_input(
@@ -2999,11 +2981,11 @@ class TestOtmService:
             "/{contract_id}/tasking/series/{series_id}", "patch"
         ),
     )
-    def test_edit_tasking_series_minimal_body_sends_only_what_was_set(
+    def test_edit_series_minimal_body_sends_only_what_was_set(
         self, backend, response_data, body_data
     ):
         """
-        Test edit_tasking_series sends no field the caller left unset.
+        Test edit_series sends no field the caller left unset.
         """
         contract_id = uuid4()
         series_id = uuid4()
@@ -3021,7 +3003,7 @@ class TestOtmService:
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = EditSeriesProperties.model_validate(body_data)
         with suppress(Exception):
-            self.sdk.otm.edit_tasking_series(
+            self.sdk.otm.edit_series(
                 contract_id=contract_id, series_id=series_id, body=body
             )
         assert_request_body_matches_input(
@@ -3053,9 +3035,9 @@ class TestOtmService:
             "/{contract_id}/tasking/series/{series_id}", "patch"
         ),
     )
-    def test_edit_tasking_series_400_error(self, backend, response_data, body_data):
+    def test_edit_series_400_error(self, backend, response_data, body_data):
         """
-        Test edit_tasking_series with 400 error response.
+        Test edit_series with 400 error response.
 
         HTTP 400 errors raise ClientError.
         """
@@ -3070,7 +3052,7 @@ class TestOtmService:
         )
         body = EditSeriesProperties.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.edit_tasking_series(
+            self.sdk.otm.edit_series(
                 contract_id=contract_id, series_id=series_id, body=body
             )
         assert exc_info.value.status_code == 400
@@ -3092,9 +3074,9 @@ class TestOtmService:
             "/{contract_id}/tasking/series/{series_id}", "patch"
         ),
     )
-    def test_edit_tasking_series_404_error(self, backend, response_data, body_data):
+    def test_edit_series_404_error(self, backend, response_data, body_data):
         """
-        Test edit_tasking_series with 404 error response.
+        Test edit_series with 404 error response.
 
         HTTP 404 errors raise ClientError.
         """
@@ -3109,7 +3091,7 @@ class TestOtmService:
         )
         body = EditSeriesProperties.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.edit_tasking_series(
+            self.sdk.otm.edit_series(
                 contract_id=contract_id, series_id=series_id, body=body
             )
         assert exc_info.value.status_code == 404
@@ -3131,9 +3113,9 @@ class TestOtmService:
             "/{contract_id}/tasking/series/{series_id}", "patch"
         ),
     )
-    def test_edit_tasking_series_409_error(self, backend, response_data, body_data):
+    def test_edit_series_409_error(self, backend, response_data, body_data):
         """
-        Test edit_tasking_series with 409 error response.
+        Test edit_series with 409 error response.
 
         HTTP 409 errors raise ClientError.
         """
@@ -3148,7 +3130,7 @@ class TestOtmService:
         )
         body = EditSeriesProperties.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.edit_tasking_series(
+            self.sdk.otm.edit_series(
                 contract_id=contract_id, series_id=series_id, body=body
             )
         assert exc_info.value.status_code == 409
@@ -3170,9 +3152,9 @@ class TestOtmService:
             "/{contract_id}/tasking/series/{series_id}", "patch"
         ),
     )
-    def test_edit_tasking_series_422_error(self, backend, response_data, body_data):
+    def test_edit_series_422_error(self, backend, response_data, body_data):
         """
-        Test edit_tasking_series with 422 error response.
+        Test edit_series with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -3187,7 +3169,7 @@ class TestOtmService:
         )
         body = EditSeriesProperties.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.edit_tasking_series(
+            self.sdk.otm.edit_series(
                 contract_id=contract_id, series_id=series_id, body=body
             )
         assert exc_info.value.status_code == 422
@@ -3206,9 +3188,9 @@ class TestOtmService:
             "/{contract_id}/tasking/series/{series_id}/orders/", "get", "200"
         )
     )
-    def test_get_tasking_series_orders_200(self, backend, response_data):
+    def test_list_series_orders_200(self, backend, response_data):
         """
-        Test get_tasking_series_orders with 200 response.
+        Test list_series_orders with 200 response.
         """
         contract_id = uuid4()
         series_id = uuid4()
@@ -3219,7 +3201,7 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.get_tasking_series_orders(
+        result = self.sdk.otm.list_series_orders(
             contract_id=contract_id, series_id=series_id
         )
         assert result is not None
@@ -3239,9 +3221,9 @@ class TestOtmService:
             "/{contract_id}/tasking/series/{series_id}/orders/", "get", "404"
         )
     )
-    def test_get_tasking_series_orders_404_error(self, backend, response_data):
+    def test_list_series_orders_404_error(self, backend, response_data):
         """
-        Test get_tasking_series_orders with 404 error response.
+        Test list_series_orders with 404 error response.
 
         HTTP 404 errors raise ClientError.
         """
@@ -3255,7 +3237,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_tasking_series_orders(
+            self.sdk.otm.list_series_orders(
                 contract_id=contract_id, series_id=series_id
             )
         assert exc_info.value.status_code == 404
@@ -3274,9 +3256,9 @@ class TestOtmService:
             "/{contract_id}/tasking/series/{series_id}/orders/", "get", "422"
         )
     )
-    def test_get_tasking_series_orders_422_error(self, backend, response_data):
+    def test_list_series_orders_422_error(self, backend, response_data):
         """
-        Test get_tasking_series_orders with 422 error response.
+        Test list_series_orders with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -3290,7 +3272,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_tasking_series_orders(
+            self.sdk.otm.list_series_orders(
                 contract_id=contract_id, series_id=series_id
             )
         assert exc_info.value.status_code == 422
@@ -3312,9 +3294,11 @@ class TestOtmService:
             "/{contract_id}/tasking/series/price/", "post"
         ),
     )
-    def test_post_tasking_series_price_200(self, backend, response_data, body_data):
+    def test_calculate_series_price_estimate_200(
+        self, backend, response_data, body_data
+    ):
         """
-        Test post_tasking_series_price with 200 response.
+        Test calculate_series_price_estimate with 200 response.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/tasking/series/price/"
@@ -3324,7 +3308,7 @@ class TestOtmService:
         mock = pook.post(url)
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = SeriesRequest.model_validate(body_data)
-        result = self.sdk.otm.post_tasking_series_price(
+        result = self.sdk.otm.calculate_series_price_estimate(
             contract_id=contract_id, body=body
         )
         assert_request_body_matches_input(
@@ -3356,11 +3340,11 @@ class TestOtmService:
             "/{contract_id}/tasking/series/price/", "post"
         ),
     )
-    def test_post_tasking_series_price_minimal_body_sends_only_what_was_set(
+    def test_calculate_series_price_estimate_minimal_body_sends_only_what_was_set(
         self, backend, response_data, body_data
     ):
         """
-        Test post_tasking_series_price sends no field the caller left unset.
+        Test calculate_series_price_estimate sends no field the caller left unset.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/tasking/series/price/"
@@ -3375,7 +3359,9 @@ class TestOtmService:
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = SeriesRequest.model_validate(body_data)
         with suppress(Exception):
-            self.sdk.otm.post_tasking_series_price(contract_id=contract_id, body=body)
+            self.sdk.otm.calculate_series_price_estimate(
+                contract_id=contract_id, body=body
+            )
         assert_request_body_matches_input(
             mock, body_data, "POST /{contract_id}/tasking/series/price/"
         )
@@ -3403,11 +3389,11 @@ class TestOtmService:
             "/{contract_id}/tasking/series/price/", "post"
         ),
     )
-    def test_post_tasking_series_price_400_error(
+    def test_calculate_series_price_estimate_400_error(
         self, backend, response_data, body_data
     ):
         """
-        Test post_tasking_series_price with 400 error response.
+        Test calculate_series_price_estimate with 400 error response.
 
         HTTP 400 errors raise ClientError.
         """
@@ -3421,7 +3407,9 @@ class TestOtmService:
         )
         body = SeriesRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.post_tasking_series_price(contract_id=contract_id, body=body)
+            self.sdk.otm.calculate_series_price_estimate(
+                contract_id=contract_id, body=body
+            )
         assert exc_info.value.status_code == 400
 
     @settings(
@@ -3441,11 +3429,11 @@ class TestOtmService:
             "/{contract_id}/tasking/series/price/", "post"
         ),
     )
-    def test_post_tasking_series_price_403_error(
+    def test_calculate_series_price_estimate_403_error(
         self, backend, response_data, body_data
     ):
         """
-        Test post_tasking_series_price with 403 error response.
+        Test calculate_series_price_estimate with 403 error response.
 
         HTTP 403 errors raise ClientError.
         """
@@ -3459,7 +3447,9 @@ class TestOtmService:
         )
         body = SeriesRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.post_tasking_series_price(contract_id=contract_id, body=body)
+            self.sdk.otm.calculate_series_price_estimate(
+                contract_id=contract_id, body=body
+            )
         assert exc_info.value.status_code == 403
 
     @settings(
@@ -3479,11 +3469,11 @@ class TestOtmService:
             "/{contract_id}/tasking/series/price/", "post"
         ),
     )
-    def test_post_tasking_series_price_422_error(
+    def test_calculate_series_price_estimate_422_error(
         self, backend, response_data, body_data
     ):
         """
-        Test post_tasking_series_price with 422 error response.
+        Test calculate_series_price_estimate with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -3497,7 +3487,9 @@ class TestOtmService:
         )
         body = SeriesRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.post_tasking_series_price(contract_id=contract_id, body=body)
+            self.sdk.otm.calculate_series_price_estimate(
+                contract_id=contract_id, body=body
+            )
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -3514,9 +3506,9 @@ class TestOtmService:
             "/{contract_id}/tasking/series/{series_id}/cancel", "post", "404"
         )
     )
-    def test_cancel_tasking_series_404_error(self, backend, response_data):
+    def test_cancel_series_404_error(self, backend, response_data):
         """
-        Test cancel_tasking_series with 404 error response.
+        Test cancel_series with 404 error response.
 
         HTTP 404 errors raise ClientError.
         """
@@ -3530,9 +3522,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.cancel_tasking_series(
-                contract_id=contract_id, series_id=series_id
-            )
+            self.sdk.otm.cancel_series(contract_id=contract_id, series_id=series_id)
         assert exc_info.value.status_code == 404
 
     @settings(
@@ -3549,9 +3539,9 @@ class TestOtmService:
             "/{contract_id}/tasking/series/{series_id}/cancel", "post", "409"
         )
     )
-    def test_cancel_tasking_series_409_error(self, backend, response_data):
+    def test_cancel_series_409_error(self, backend, response_data):
         """
-        Test cancel_tasking_series with 409 error response.
+        Test cancel_series with 409 error response.
 
         HTTP 409 errors raise ClientError.
         """
@@ -3565,9 +3555,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.cancel_tasking_series(
-                contract_id=contract_id, series_id=series_id
-            )
+            self.sdk.otm.cancel_series(contract_id=contract_id, series_id=series_id)
         assert exc_info.value.status_code == 409
 
     @settings(
@@ -3584,9 +3572,9 @@ class TestOtmService:
             "/{contract_id}/tasking/series/{series_id}/cancel", "post", "422"
         )
     )
-    def test_cancel_tasking_series_422_error(self, backend, response_data):
+    def test_cancel_series_422_error(self, backend, response_data):
         """
-        Test cancel_tasking_series with 422 error response.
+        Test cancel_series with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -3600,15 +3588,13 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.cancel_tasking_series(
-                contract_id=contract_id, series_id=series_id
-            )
+            self.sdk.otm.cancel_series(contract_id=contract_id, series_id=series_id)
         assert exc_info.value.status_code == 422
 
     @pook.on
-    def test_cancel_tasking_series_204_no_content(self, backend):
+    def test_cancel_series_204_no_content(self, backend):
         """
-        Test cancel_tasking_series with 204 No Content response.
+        Test cancel_series with 204 No Content response.
 
         204 responses return None (no body).
         """
@@ -3617,7 +3603,7 @@ class TestOtmService:
         path = f"/{contract_id}/tasking/series/{series_id}/cancel"
         url = f"{self.base_url}{path}"
         pook.post(url).reply(204).header("Content-Type", "application/json")
-        result = self.sdk.otm.cancel_tasking_series(
+        result = self.sdk.otm.cancel_series(
             contract_id=contract_id, series_id=series_id
         )
         assert result is None
@@ -3636,9 +3622,9 @@ class TestOtmService:
             "/{contract_id}/tasking/series/{series_id}/download", "get", "200"
         )
     )
-    def test_download_tasking_series_200(self, backend, response_data):
+    def test_download_series_200(self, backend, response_data):
         """
-        Test download_tasking_series with 200 response.
+        Test download_series with 200 response.
         """
         contract_id = uuid4()
         series_id = uuid4()
@@ -3649,7 +3635,7 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.download_tasking_series(
+        result = self.sdk.otm.download_series(
             contract_id=contract_id, series_id=series_id
         )
         assert result is not None
@@ -3669,9 +3655,9 @@ class TestOtmService:
             "/{contract_id}/tasking/series/{series_id}/download", "get", "202"
         )
     )
-    def test_download_tasking_series_202(self, backend, response_data):
+    def test_download_series_202(self, backend, response_data):
         """
-        Test download_tasking_series with 202 response.
+        Test download_series with 202 response.
         """
         contract_id = uuid4()
         series_id = uuid4()
@@ -3682,7 +3668,7 @@ class TestOtmService:
         pook.get(url).reply(202).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.download_tasking_series(
+        result = self.sdk.otm.download_series(
             contract_id=contract_id, series_id=series_id
         )
         assert result is not None
@@ -3702,9 +3688,9 @@ class TestOtmService:
             "/{contract_id}/tasking/series/{series_id}/download", "get", "422"
         )
     )
-    def test_download_tasking_series_422_error(self, backend, response_data):
+    def test_download_series_422_error(self, backend, response_data):
         """
-        Test download_tasking_series with 422 error response.
+        Test download_series with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -3718,9 +3704,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.download_tasking_series(
-                contract_id=contract_id, series_id=series_id
-            )
+            self.sdk.otm.download_series(contract_id=contract_id, series_id=series_id)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -3884,8 +3868,8 @@ class TestOtmService:
             "/{contract_id}/tasking/orders/", "get", "200"
         ),
     )
-    def test_get_tasking_orders_iter_pagination(self, backend, page1_data, page2_data):
-        """Test get_tasking_orders_iter follows next links correctly."""
+    def test_list_orders_iter_pagination(self, backend, page1_data, page2_data):
+        """Test list_orders_iter follows next links correctly."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         contract_id = uuid4()
@@ -3909,7 +3893,7 @@ class TestOtmService:
         pook.get(url).times(1).reply(200).json(page2_data).header(
             "Content-Type", "application/json"
         )
-        pages = list(self.sdk.otm.get_tasking_orders_iter(contract_id=contract_id))
+        pages = list(self.sdk.otm.list_orders_iter(contract_id=contract_id))
         assert len(pages) == 2
 
     @settings(
@@ -3932,10 +3916,10 @@ class TestOtmService:
             "/{contract_id}/tasking/orders/", "get", "200"
         ),
     )
-    def test_get_tasking_orders_iter_max_pages(
+    def test_list_orders_iter_max_pages(
         self, backend, page1_data, page2_data, page3_data
     ):
-        """Test get_tasking_orders_iter respects max_pages limit."""
+        """Test list_orders_iter respects max_pages limit."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         page3_data = {**page3_data}
@@ -3973,7 +3957,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.otm.get_tasking_orders_iter(contract_id=contract_id, max_pages=2)
+            self.sdk.otm.list_orders_iter(contract_id=contract_id, max_pages=2)
         )
         assert len(pages) == 2
 
@@ -3989,8 +3973,8 @@ class TestOtmService:
     @given(
         page_data=get_response_strategy("/{contract_id}/tasking/orders/", "get", "200")
     )
-    def test_get_tasking_orders_iter_no_next_link(self, backend, page_data):
-        """Test get_tasking_orders_iter terminates when no next link present."""
+    def test_list_orders_iter_no_next_link(self, backend, page_data):
+        """Test list_orders_iter terminates when no next link present."""
         page_data = {**page_data}
         contract_id = uuid4()
         path = f"/{contract_id}/tasking/orders/"
@@ -4009,7 +3993,7 @@ class TestOtmService:
         pook.get(url).times(1).reply(200).json(page_data).header(
             "Content-Type", "application/json"
         )
-        pages = list(self.sdk.otm.get_tasking_orders_iter(contract_id=contract_id))
+        pages = list(self.sdk.otm.list_orders_iter(contract_id=contract_id))
         assert len(pages) == 1
 
     @settings(
@@ -4029,10 +4013,10 @@ class TestOtmService:
             "/{contract_id}/tasking/feasibilities/", "get", "200"
         ),
     )
-    def test_get_tasking_feasibility_requests_iter_pagination(
+    def test_list_feasibility_requests_iter_pagination(
         self, backend, page1_data, page2_data
     ):
-        """Test get_tasking_feasibility_requests_iter follows next links correctly."""
+        """Test list_feasibility_requests_iter follows next links correctly."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         contract_id = uuid4()
@@ -4057,7 +4041,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.otm.get_tasking_feasibility_requests_iter(contract_id=contract_id)
+            self.sdk.otm.list_feasibility_requests_iter(contract_id=contract_id)
         )
         assert len(pages) == 2
 
@@ -4081,10 +4065,10 @@ class TestOtmService:
             "/{contract_id}/tasking/feasibilities/", "get", "200"
         ),
     )
-    def test_get_tasking_feasibility_requests_iter_max_pages(
+    def test_list_feasibility_requests_iter_max_pages(
         self, backend, page1_data, page2_data, page3_data
     ):
-        """Test get_tasking_feasibility_requests_iter respects max_pages limit."""
+        """Test list_feasibility_requests_iter respects max_pages limit."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         page3_data = {**page3_data}
@@ -4122,7 +4106,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.otm.get_tasking_feasibility_requests_iter(
+            self.sdk.otm.list_feasibility_requests_iter(
                 contract_id=contract_id, max_pages=2
             )
         )
@@ -4142,10 +4126,8 @@ class TestOtmService:
             "/{contract_id}/tasking/feasibilities/", "get", "200"
         )
     )
-    def test_get_tasking_feasibility_requests_iter_no_next_link(
-        self, backend, page_data
-    ):
-        """Test get_tasking_feasibility_requests_iter terminates when no next link present."""
+    def test_list_feasibility_requests_iter_no_next_link(self, backend, page_data):
+        """Test list_feasibility_requests_iter terminates when no next link present."""
         page_data = {**page_data}
         contract_id = uuid4()
         path = f"/{contract_id}/tasking/feasibilities/"
@@ -4165,7 +4147,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.otm.get_tasking_feasibility_requests_iter(contract_id=contract_id)
+            self.sdk.otm.list_feasibility_requests_iter(contract_id=contract_id)
         )
         assert len(pages) == 1
 
@@ -4186,8 +4168,8 @@ class TestOtmService:
             "/{contract_id}/tasking/series/", "get", "200"
         ),
     )
-    def test_get_tasking_series_iter_pagination(self, backend, page1_data, page2_data):
-        """Test get_tasking_series_iter follows next links correctly."""
+    def test_list_series_iter_pagination(self, backend, page1_data, page2_data):
+        """Test list_series_iter follows next links correctly."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         contract_id = uuid4()
@@ -4211,7 +4193,7 @@ class TestOtmService:
         pook.get(url).times(1).reply(200).json(page2_data).header(
             "Content-Type", "application/json"
         )
-        pages = list(self.sdk.otm.get_tasking_series_iter(contract_id=contract_id))
+        pages = list(self.sdk.otm.list_series_iter(contract_id=contract_id))
         assert len(pages) == 2
 
     @settings(
@@ -4234,10 +4216,10 @@ class TestOtmService:
             "/{contract_id}/tasking/series/", "get", "200"
         ),
     )
-    def test_get_tasking_series_iter_max_pages(
+    def test_list_series_iter_max_pages(
         self, backend, page1_data, page2_data, page3_data
     ):
-        """Test get_tasking_series_iter respects max_pages limit."""
+        """Test list_series_iter respects max_pages limit."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         page3_data = {**page3_data}
@@ -4275,7 +4257,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.otm.get_tasking_series_iter(contract_id=contract_id, max_pages=2)
+            self.sdk.otm.list_series_iter(contract_id=contract_id, max_pages=2)
         )
         assert len(pages) == 2
 
@@ -4291,8 +4273,8 @@ class TestOtmService:
     @given(
         page_data=get_response_strategy("/{contract_id}/tasking/series/", "get", "200")
     )
-    def test_get_tasking_series_iter_no_next_link(self, backend, page_data):
-        """Test get_tasking_series_iter terminates when no next link present."""
+    def test_list_series_iter_no_next_link(self, backend, page_data):
+        """Test list_series_iter terminates when no next link present."""
         page_data = {**page_data}
         contract_id = uuid4()
         path = f"/{contract_id}/tasking/series/"
@@ -4311,7 +4293,7 @@ class TestOtmService:
         pook.get(url).times(1).reply(200).json(page_data).header(
             "Content-Type", "application/json"
         )
-        pages = list(self.sdk.otm.get_tasking_series_iter(contract_id=contract_id))
+        pages = list(self.sdk.otm.list_series_iter(contract_id=contract_id))
         assert len(pages) == 1
 
     @settings(
@@ -4331,10 +4313,8 @@ class TestOtmService:
             "/{contract_id}/tasking/series/{series_id}/orders/", "get", "200"
         ),
     )
-    def test_get_tasking_series_orders_iter_pagination(
-        self, backend, page1_data, page2_data
-    ):
-        """Test get_tasking_series_orders_iter follows next links correctly."""
+    def test_list_series_orders_iter_pagination(self, backend, page1_data, page2_data):
+        """Test list_series_orders_iter follows next links correctly."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         contract_id = uuid4()
@@ -4360,7 +4340,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.otm.get_tasking_series_orders_iter(
+            self.sdk.otm.list_series_orders_iter(
                 contract_id=contract_id, series_id=series_id
             )
         )
@@ -4386,10 +4366,10 @@ class TestOtmService:
             "/{contract_id}/tasking/series/{series_id}/orders/", "get", "200"
         ),
     )
-    def test_get_tasking_series_orders_iter_max_pages(
+    def test_list_series_orders_iter_max_pages(
         self, backend, page1_data, page2_data, page3_data
     ):
-        """Test get_tasking_series_orders_iter respects max_pages limit."""
+        """Test list_series_orders_iter respects max_pages limit."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         page3_data = {**page3_data}
@@ -4428,7 +4408,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.otm.get_tasking_series_orders_iter(
+            self.sdk.otm.list_series_orders_iter(
                 contract_id=contract_id, series_id=series_id, max_pages=2
             )
         )
@@ -4448,8 +4428,8 @@ class TestOtmService:
             "/{contract_id}/tasking/series/{series_id}/orders/", "get", "200"
         )
     )
-    def test_get_tasking_series_orders_iter_no_next_link(self, backend, page_data):
-        """Test get_tasking_series_orders_iter terminates when no next link present."""
+    def test_list_series_orders_iter_no_next_link(self, backend, page_data):
+        """Test list_series_orders_iter terminates when no next link present."""
         page_data = {**page_data}
         contract_id = uuid4()
         series_id = uuid4()
@@ -4470,7 +4450,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.otm.get_tasking_series_orders_iter(
+            self.sdk.otm.list_series_orders_iter(
                 contract_id=contract_id, series_id=series_id
             )
         )

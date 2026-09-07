@@ -1,5 +1,29 @@
 ## [0.10.2](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.10.1...v0.10.2) (2026-09-02)
 
+## [0.10.2.20260907.1016] - 2026-09-07
+
+### fix(reseller): update 5 endpoints
+
+#### GET /companies
+* api operation id `get-companies` removed and replaced with `list-end-user-companies`
+
+
+#### POST /search/companies
+* api operation id `search-companies` removed and replaced with `search-end-user-companies`
+
+
+#### POST /search/users
+* api operation id `search-users` removed and replaced with `search-end-users`
+
+
+#### POST /user
+* api operation id `create-users` removed and replaced with `create-end-user`
+
+
+#### GET /users
+* api operation id `get-users` removed and replaced with `list-end-users`
+
+
 ## [0.10.2.20260907.0937] - 2026-09-07
 
 ### fix(wallet): api operation id `get-batch-credit-balances` removed and replaced with `list-batch-credit-balances` (GET /balances)

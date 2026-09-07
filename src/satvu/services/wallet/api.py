@@ -68,7 +68,7 @@ class WalletService(SDKClient):
             return parse_response(response.json().unwrap(), CreditBalanceResponse)
         return response.json().unwrap()
 
-    def get_batch_credit_balances(
+    def list_batch_credit_balances(
         self,
         timeout: int | None = None,
     ) -> BatchBalanceResponse:

@@ -161,13 +161,13 @@ class TestWalletService:
     @given(
         response_data=get_response_strategy("/balances", "get", "200"),
     )
-    def test_get_batch_credit_balances_200(
+    def test_list_batch_credit_balances_200(
         self,
         backend,
         response_data,
     ):
         """
-        Test get_batch_credit_balances with 200 response.
+        Test list_batch_credit_balances with 200 response.
         """
         # Generate path parameters
         path = "/balances"
@@ -184,7 +184,7 @@ class TestWalletService:
 
         # Call the service method
 
-        result = self.sdk.wallet.get_batch_credit_balances()
+        result = self.sdk.wallet.list_batch_credit_balances()
 
         # Assert response parses correctly
         assert result is not None

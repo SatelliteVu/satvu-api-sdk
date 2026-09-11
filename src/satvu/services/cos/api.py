@@ -599,12 +599,9 @@ class CosService(SDKClient):
 
         Calculate order price based on items and licence level.
 
-        Returns base price (items × unit price) when baseprice=True, or full
-        price including licence uplift when baseprice=False. Handles both
+        Returns base price (items × unit price) when `baseprice` is True, or full
+        price including licence uplift when `baseprice` is False. Handles both
         regular and reseller order formats.
-
-        :raises HTTPException: 422 if licence_level missing when required, or
-            unknown licence requested, or reseller missing end_user_id.
 
         Args:
             contract_id (UUID): The contract ID.

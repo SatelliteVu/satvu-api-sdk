@@ -133,16 +133,16 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/) w
 
 ### Scopes
 
-| Scope     | Description                                      |
-| --------- | ------------------------------------------------ |
-| `core`    | SDK core (`SDKClient`, base functionality)       |
-| `auth`    | Authentication (`AuthService`, tokens)           |
-| `http`    | HTTP adapters (httpx, requests, urllib3, stdlib) |
-| `builder` | SDK code generator                               |
-| `deps`    | Dependencies                                     |
-| `docs`    | Documentation                                    |
-| `test`    | Test infrastructure                              |
-| `misc`    | Miscellaneous changes                            |
+| Scope     | Description                                              |
+| --------- | -------------------------------------------------------- |
+| `core`    | SDK core (`SDKClient`, base functionality)               |
+| `auth`    | Authentication (`AuthService`, tokens)                   |
+| `http`    | HTTP adapters (httpx, httpx2, requests, urllib3, stdlib) |
+| `builder` | SDK code generator                                       |
+| `deps`    | Dependencies                                             |
+| `docs`    | Documentation                                            |
+| `test`    | Test infrastructure                                      |
+| `misc`    | Miscellaneous changes                                    |
 
 **Auto-generated service scopes** (typically reserved for CI/automated commits):
 

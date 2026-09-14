@@ -374,10 +374,10 @@ if result.is_err():
 
 ## Adapter-Specific Notes
 
-All adapters (StdlibAdapter, HttpxAdapter, Urllib3Adapter, RequestsAdapter) follow the same Result-based API, but they map their library-specific exceptions differently:
+All adapters (StdlibAdapter, HttpxAdapter, Httpx2Adapter, Urllib3Adapter, RequestsAdapter) follow the same Result-based API, but they map their library-specific exceptions differently:
 
 - **stdlib**: Maps `urllib.error.URLError`, `socket.timeout`, etc.
-- **httpx**: Maps `httpx.TimeoutException`, `httpx.ConnectError`, etc.
+- **httpx** / **httpx2**: Maps `httpx.TimeoutException`, `httpx.ConnectError`, etc.
 - **urllib3**: Maps `urllib3.exceptions.*`
 - **requests**: Maps `requests.exceptions.*`
 

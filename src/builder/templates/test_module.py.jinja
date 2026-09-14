@@ -75,7 +75,7 @@ from .test_schemas import (
 {% from "macros/test_no_content.jinja" import no_content_test %}
 {% from "macros/test_minimal_body.jinja" import minimal_body_test %}
 
-@pytest.mark.parametrize("backend", ["stdlib", "httpx", "urllib3", "requests"])
+@pytest.mark.parametrize("backend", ["stdlib", "httpx", "httpx2", "urllib3", "requests"])
 class Test{{ service_class_name }}:
     """Property-based tests for {{ service_class_name }}."""
 

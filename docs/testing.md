@@ -124,7 +124,9 @@ The SDK automatically generates property-based tests for all API service endpoin
 Each generated test file follows this pattern:
 
 ```python
-@pytest.mark.parametrize("backend", ["stdlib", "httpx", "urllib3", "requests"])
+@pytest.mark.parametrize(
+    "backend", ["stdlib", "httpx", "httpx2", "urllib3", "requests"]
+)
 class TestCatalogService:
     """Property-based tests for CatalogService."""
 
@@ -264,7 +266,7 @@ By default, CI runs tests only against the `stdlib` backend for speed. To run al
 ALL_BACKENDS=1 ./scripts/test.sh
 ```
 
-Available backends: `stdlib`, `httpx`, `urllib3`, `requests`
+Available backends: `stdlib`, `httpx`, `httpx2`, `urllib3`, `requests`
 
 ### CI/CD with Dagger
 
@@ -299,7 +301,7 @@ src/satvu/
 │   └── parsing_test.py             # TypeAdapter parsing tests (manual)
 ├── http/
 │   ├── stdlib_adapter_test.py      # stdlib HTTP adapter (manual)
-│   ├── httpx_adapter_test.py       # httpx adapter (manual)
+│   ├── httpx_common_test.py        # httpx + httpx2 adapters (manual)
 │   ├── requests_adapter_test.py    # requests adapter (manual)
 │   └── urllib3_adapter_test.py     # urllib3 adapter (manual)
 └── services/
@@ -327,7 +329,7 @@ The services `conftest.py` provides:
 # src/satvu/services/conftest.py
 engine.MAX_SHRINKING_SECONDS = 30
 
-ALL_BACKENDS = ["stdlib", "httpx", "urllib3", "requests"]
+ALL_BACKENDS = ["stdlib", "httpx", "httpx2", "urllib3", "requests"]
 CI_BACKENDS = ["stdlib"]
 
 def pytest_addoption(parser):

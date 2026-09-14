@@ -19,9 +19,14 @@ from satvu.http.errors import (
 from satvu.http.protocol import HttpClient, HttpResponse
 from satvu.result import Err, Ok, Result, is_err, is_ok
 
+# Order matters: "auto" walks this list and takes the first backend that imports.
+_BACKENDS = ("httpx", "httpx2", "requests", "urllib3", "stdlib")
+
 
 def create_http_client(
-    backend: Literal["auto", "httpx", "requests", "urllib3", "stdlib"] = "auto",
+    backend: Literal[
+        "auto", "httpx", "httpx2", "requests", "urllib3", "stdlib"
+    ] = "auto",
     base_url: str | None = None,
     **options: Any,
 ) -> HttpClient:
@@ -30,8 +35,9 @@ def create_http_client(
 
     Args:
         backend: HTTP library to use. Options:
-            - "auto": Auto-detect best available (httpx → requests → urllib3 → stdlib)
+            - "auto": Auto-detect best available (httpx → httpx2 → requests → urllib3 → stdlib)
             - "httpx": Use httpx library (requires httpx)
+            - "httpx2": Use httpx2 library (requires httpx2)
             - "requests": Use requests library (requires requests)
             - "urllib3": Use urllib3 library (requires urllib3)
             - "stdlib": Use standard library urllib (no dependencies)
@@ -57,7 +63,7 @@ def create_http_client(
     """
     if backend == "auto":
         # Try backends in order of preference
-        for backend_name in ["httpx", "requests", "urllib3", "stdlib"]:
+        for backend_name in _BACKENDS:
             try:
                 return _create_backend(backend_name, base_url, **options)
             except ImportError:
@@ -66,10 +72,9 @@ def create_http_client(
         raise RuntimeError("Failed to create HTTP client with any backend")
 
     # Explicit backend selection
-    valid_backends = ["httpx", "requests", "urllib3", "stdlib"]
-    if backend not in valid_backends:
+    if backend not in _BACKENDS:
         raise ValueError(
-            f"Invalid backend '{backend}'. Must be one of: {', '.join(valid_backends + ['auto'])}"
+            f"Invalid backend '{backend}'. Must be one of: {', '.join([*_BACKENDS, 'auto'])}"
         )
 
     return _create_backend(backend, base_url, **options)
@@ -83,6 +88,11 @@ def _create_backend(
         from satvu.http.httpx_adapter import HttpxAdapter
 
         return cast(HttpClient, HttpxAdapter(base_url=base_url, **options))
+
+    elif backend == "httpx2":
+        from satvu.http.httpx2_adapter import Httpx2Adapter
+
+        return cast(HttpClient, Httpx2Adapter(base_url=base_url, **options))
 
     elif backend == "requests":
         from satvu.http.requests_adapter import RequestsAdapter

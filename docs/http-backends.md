@@ -8,6 +8,7 @@ The SDK supports multiple HTTP backends. Choose based on your requirements for f
 | ---------- | --------------- | ----- | ------------------ |
 | `stdlib`   | None (built-in) | No    | No                 |
 | `httpx`    | `httpx`         | Yes   | Yes                |
+| `httpx2`   | `httpx2`        | Yes   | Yes                |
 | `requests` | `requests`      | No    | Yes                |
 | `urllib3`  | `urllib3`       | No    | Yes                |
 
@@ -22,6 +23,12 @@ The SDK supports multiple HTTP backends. Choose based on your requirements for f
 
 - You need async/await support
 - You want HTTP/2 capabilities
+
+**Use `httpx2` when:**
+
+- You are already on `httpx2` ([pydantic/httpx2](https://github.com/pydantic/httpx2))
+- It behaves the same as the `httpx` backend, which the SDK achieves by backing both with
+  one implementation.
 
 **Use `requests` when:**
 
@@ -41,6 +48,7 @@ pip install satvu
 
 # Install with specific backend
 pip install satvu[http-httpx]
+pip install satvu[http-httpx2]
 pip install satvu[http-requests]
 pip install satvu[http-urllib3]
 
@@ -55,7 +63,7 @@ By default, the SDK auto-detects the best available backend:
 ```python
 from satvu import SatVuSDK
 
-# Uses best available: httpx → requests → urllib3 → stdlib
+# Uses best available: httpx → httpx2 → requests → urllib3 → stdlib
 sdk = SatVuSDK(
     client_id="...",
     client_secret="...",

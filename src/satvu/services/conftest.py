@@ -10,7 +10,7 @@ import hypothesis.internal.conjecture.engine as engine
 engine.MAX_SHRINKING_SECONDS = 30
 
 # All available HTTP backends
-ALL_BACKENDS = ["stdlib", "httpx", "urllib3", "requests"]
+ALL_BACKENDS = ["stdlib", "httpx", "httpx2", "urllib3", "requests"]
 
 # CI mode uses only stdlib for faster runs
 CI_BACKENDS = ["stdlib"]

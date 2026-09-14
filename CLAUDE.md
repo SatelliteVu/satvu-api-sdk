@@ -140,8 +140,20 @@ The SDK uses a pluggable HTTP adapter system (src/satvu/http/) for maximum flexi
 
 - **stdlib_adapter.py**: Zero-dependency adapter using Python's urllib
 - **httpx_adapter.py**: Modern async-capable adapter (requires `httpx`)
+- **httpx2_adapter.py**: Same, backed by httpx2 (requires `httpx2`)
 - **urllib3_adapter.py**: High-performance adapter with connection pooling (requires `urllib3`)
 - **requests_adapter.py**: Popular adapter using the requests library (requires `requests`)
+
+**httpx / httpx2 share one implementation:** `httpx_common.py` holds the response wrapper,
+status/exception mapping and `HttpxAdapterBase`; each adapter file is just an import guard
+plus `_module = httpx`/`httpx2`. httpx ([encode/httpx](https://github.com/encode/httpx)) and
+httpx2 ([pydantic/httpx2](https://github.com/pydantic/httpx2)) are independent projects with
+their own repos, versions and core deps — nothing obliges them to stay in step. They happen
+to agree today on the surface the adapter touches, which `HttpxLikeModule` states explicitly
+so divergence shows up as a protocol mismatch. Their exception classes are *distinct*
+objects, so every `except`/`isinstance` resolves them off `_module`. `httpx_common.py` must
+stay importable with neither library installed — hence the structural protocols
+(`HttpxLikeModule`, `HttpxLikeResponse`) rather than importing either one.
 
 **Creating HTTP Clients:**
 Use `create_http_client()` factory function from `satvu.http`:
@@ -149,7 +161,7 @@ Use `create_http_client()` factory function from `satvu.http`:
 ```python
 from satvu.http import create_http_client
 
-# Auto-detect best available library (httpx → requests → urllib3 → stdlib)
+# Auto-detect best available library (httpx → httpx2 → requests → urllib3 → stdlib)
 client = create_http_client()
 
 # Specify backend explicitly
@@ -410,9 +422,10 @@ The template system (`endpoint_module.py.jinja` and `macros/return_annotation.ji
 
 - `[standard]`: Includes `appdirs` for file-based token caching
 - `[http-httpx]`: Includes `httpx` for httpx adapter (modern, async-capable)
+- `[http-httpx2]`: Includes `httpx2` for the httpx2 adapter (pydantic/httpx2)
 - `[http-urllib3]`: Includes `urllib3` for urllib3 adapter (high-performance with connection pooling)
 - `[http-requests]`: Includes `requests` for requests adapter (popular, widely-used)
 
 The SDK includes a zero-dependency stdlib adapter that uses Python's built-in `urllib`, so HTTP functionality works without any optional dependencies.
 
-Install with extras: `uv pip install satvu[standard,http-httpx,http-urllib3,http-requests]`
+Install with extras: `uv pip install satvu[standard,http-httpx,http-httpx2,http-urllib3,http-requests]`

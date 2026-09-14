@@ -12,7 +12,7 @@ Python SDK for [SatVu's](https://www.satellitevu.com/) satellite imagery platfor
 - **Unified Interface** - Access all SatVu APIs through a single SDK
 - **Type Safety** - Full type hints with Pydantic models for requests and responses
 - **Explicit Error Handling** - Rust-inspired Result types for predictable error handling
-- **Multiple HTTP Backends** - Choose httpx, requests, urllib3, or stdlib
+- **Multiple HTTP Backends** - Choose httpx, httpx2, requests, urllib3, or stdlib
 - **Built-in Pagination** - Iterator methods for seamless pagination through large result sets
 - **Streaming Downloads** - Memory-efficient downloads for large satellite imagery files
 
@@ -28,6 +28,7 @@ With optional HTTP backends:
 
 ```bash
 pip install satvu[http-httpx]
+pip install satvu[http-httpx2]
 pip install satvu[http-requests]
 pip install satvu[http-urllib3]
 ```

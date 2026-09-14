@@ -1,17 +1,59 @@
-"""Tests for HttpxAdapter."""
+"""Tests for the shared httpx/httpx2 adapter implementation."""
 
 import httpx
+import httpx2
 import pook
 import pytest
 
-from satvu.http import is_ok
+from satvu.http import (
+    ConnectionTimeoutError,
+    NetworkError,
+    ProxyError,
+    ReadTimeoutError,
+    SSLError,
+    is_err,
+    is_ok,
+)
+from satvu.http.httpx2_adapter import Httpx2Adapter
 from satvu.http.httpx_adapter import HttpxAdapter
+
+BACKENDS = [
+    pytest.param((HttpxAdapter, httpx), id="httpx"),
+    pytest.param((Httpx2Adapter, httpx2), id="httpx2"),
+]
+
+# (exception name on the httpx/httpx2 module, message, expected SDK error)
+TRANSPORT_ERRORS = [
+    ("ConnectTimeout", "boom", ConnectionTimeoutError),
+    ("ReadTimeout", "boom", ReadTimeoutError),
+    ("PoolTimeout", "boom", ReadTimeoutError),
+    ("ProxyError", "boom", ProxyError),
+    ("ConnectError", "SSL: certificate verify failed", SSLError),
+    ("ConnectError", "connection refused", NetworkError),
+    ("ReadError", "boom", NetworkError),
+]
+
+
+@pytest.fixture(params=BACKENDS)
+def backend(request):
+    """(adapter class, module) pair for each backend sharing HttpxAdapterBase."""
+    return request.param
 
 
 @pytest.fixture
-def adapter():
-    """Create an HttpxAdapter instance for testing."""
-    return HttpxAdapter(base_url="https://api.example.com")
+def adapter_cls(backend):
+    return backend[0]
+
+
+@pytest.fixture
+def http_module(backend):
+    return backend[1]
+
+
+@pytest.fixture
+def adapter(adapter_cls):
+    """Create an adapter instance for testing."""
+    return adapter_cls(base_url="https://api.example.com")
 
 
 @pook.on
@@ -182,9 +224,9 @@ def test_follow_redirects_false(adapter):
 
 
 @pook.on
-def test_absolute_url_ignores_base_url():
+def test_absolute_url_ignores_base_url(adapter_cls):
     """Test that absolute URLs ignore the base_url."""
-    adapter = HttpxAdapter(base_url="https://api.example.com")
+    adapter = adapter_cls(base_url="https://api.example.com")
 
     pook.get("https://other-api.example.com/data").reply(200).json({"ok": True})
 
@@ -195,13 +237,13 @@ def test_absolute_url_ignores_base_url():
     assert response.status_code == 200
 
 
-def test_custom_client():
-    """Test using a custom httpx.Client instance."""
-    custom_client = httpx.Client(
+def test_custom_client(adapter_cls, http_module):
+    """Test using a custom Client instance."""
+    custom_client = http_module.Client(
         base_url="https://custom.example.com", headers={"X-Custom": "header"}
     )
 
-    adapter = HttpxAdapter(client=custom_client)
+    adapter = adapter_cls(client=custom_client)
 
     pook.activate()
     pook.get("https://custom.example.com/test").header("X-Custom", "header").reply(
@@ -223,9 +265,9 @@ def test_custom_client():
     pook.off()
 
 
-def test_adapter_cleanup():
+def test_adapter_cleanup(adapter_cls):
     """Test that adapter closes client when it owns it."""
-    adapter = HttpxAdapter(base_url="https://api.example.com")
+    adapter = adapter_cls(base_url="https://api.example.com")
 
     # Manually trigger cleanup
     assert adapter._owns_client is True
@@ -234,3 +276,28 @@ def test_adapter_cleanup():
     # Client should be closed (attempting to use it will raise an error)
     with pytest.raises(RuntimeError, match="close"):
         adapter.client.get("/test")
+
+
+@pytest.mark.parametrize(("exc_name", "message", "expected"), TRANSPORT_ERRORS)
+def test_transport_error_mapping(
+    adapter, http_module, monkeypatch, exc_name, message, expected
+):
+    """
+    Each transport exception maps onto its SDK error, for both modules.
+
+    httpx2's exception classes are distinct objects from httpx's, so this guards the
+    module-injected isinstance chain in translate_transport_error().
+    """
+    exc = getattr(http_module, exc_name)(message)
+
+    def raise_exc(**kwargs):
+        raise exc
+
+    monkeypatch.setattr(adapter.client, "request", raise_exc)
+
+    result = adapter.request("GET", "/boom")
+
+    assert is_err(result), f"Expected Err but got: {result}"
+    error = result.error()
+    assert type(error) is expected
+    assert error.original_error is exc

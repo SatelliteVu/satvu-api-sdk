@@ -55,6 +55,7 @@ standard = ["appdirs>=1.4.4"]
 http-urllib3 = ["urllib3>=2.0.0"]
 http-requests = ["requests>=2.32.0"]
 http-httpx = ["httpx>=0.28.1"]
+http-httpx2 = ["httpx2>=2.0.0"]
 
 [build-system]
 requires = [
@@ -73,6 +74,7 @@ dev = [
     "fawltydeps>=0.20.0",
     "freezegun>=1.5.5",
     "httpx>=0.28.1",
+    "httpx2>=2.0.0",
     "hypothesis>=6.148.2",
     "hypothesis-jsonschema>=0.23.1",
     "jsonschema>=4.25.1",
@@ -217,7 +219,7 @@ message = "Select the scope of this change:"
 choices = [
     {value = "core", name = "core:     SDK core (SDKClient, base functionality)"},
     {value = "auth", name = "auth:     Authentication (AuthService, tokens)"},
-    {value = "http", name = "http:     HTTP adapters (httpx, requests, urllib3, stdlib)"},
+    {value = "http", name = "http:     HTTP adapters (httpx, httpx2, requests, urllib3, stdlib)"},
     {value = "catalog", name = "catalog:  Catalog API service"},
     {value = "cos", name = "cos:      COS API service"},
     {value = "id", name = "id:       ID API service"},

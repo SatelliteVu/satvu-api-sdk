@@ -145,7 +145,6 @@ class TestHttpStatusError:
     def test_construction(self):
         """HttpStatusError stores response details."""
         err = HttpStatusError(
-            "Bad Request",
             status_code=400,
             url="https://api.example.com/endpoint",
             response_body=b'{"error": "invalid"}',
@@ -158,11 +157,11 @@ class TestHttpStatusError:
 
     def test_error_type(self):
         """error_type() returns correct identifier."""
-        assert HttpStatusError("test", 400).error_type() == "HttpStatusError"
+        assert HttpStatusError(400).error_type() == "HttpStatusError"
 
     def test_context_includes_status_code(self):
         """Context includes status code."""
-        err = HttpStatusError("test", 500)
+        err = HttpStatusError(500)
         assert err.context.get("status_code") == 500
 
 
@@ -171,36 +170,50 @@ class TestClientError:
 
     def test_construction_400(self):
         """ClientError accepts 400 status."""
-        err = ClientError("Bad Request", 400)
+        err = ClientError(400)
         assert err.status_code == 400
 
     def test_construction_404(self):
         """ClientError accepts 404 status."""
-        err = ClientError("Not Found", 404)
+        err = ClientError(404)
         assert err.status_code == 404
 
     def test_construction_499(self):
         """ClientError accepts 499 status."""
-        err = ClientError("Client Error", 499)
+        err = ClientError(499)
         assert err.status_code == 499
 
     def test_rejects_non_4xx(self):
         """ClientError rejects non-4xx status codes."""
         with pytest.raises(ValueError, match="4xx status code"):
-            ClientError("Server Error", 500)
+            ClientError(500)
 
         with pytest.raises(ValueError, match="4xx status code"):
-            ClientError("OK", 200)
+            ClientError(200)
 
     def test_error_type(self):
         """error_type() returns correct identifier."""
-        assert ClientError("test", 400).error_type() == "ClientError"
+        assert ClientError(400).error_type() == "ClientError"
 
     def test_inheritance(self):
         """ClientError inherits from HttpStatusError and HttpError."""
-        err = ClientError("test", 400)
+        err = ClientError(400)
         assert isinstance(err, HttpStatusError)
         assert isinstance(err, HttpError)
+
+    def test_message_construction(self):
+        """ClientError accepts 400 status."""
+        assert ClientError(400, response_body=None).message == 'ClientError: 400'
+
+        assert ClientError(400, response_body=b'\xff').message == 'ClientError: 400'
+
+        assert ClientError(400, response_body=b'You messed up').message == 'ClientError: 400 You messed up'
+
+        assert ClientError(400, response_body=b'{"detail": "You messed up", "foo": "bar"}').message == 'ClientError: 400 You messed up'
+
+        assert ClientError(400, response_body=b'{"foo": "bar"}').message == 'ClientError: 400 {"foo": "bar"}'
+
+
 
 
 class TestServerError:
@@ -208,30 +221,30 @@ class TestServerError:
 
     def test_construction_500(self):
         """ServerError accepts 500 status."""
-        err = ServerError("Internal Server Error", 500)
+        err = ServerError(500)
         assert err.status_code == 500
 
     def test_construction_503(self):
         """ServerError accepts 503 status."""
-        err = ServerError("Service Unavailable", 503)
+        err = ServerError(503)
         assert err.status_code == 503
 
     def test_construction_599(self):
         """ServerError accepts 599 status."""
-        err = ServerError("Server Error", 599)
+        err = ServerError(599)
         assert err.status_code == 599
 
     def test_rejects_non_5xx(self):
         """ServerError rejects non-5xx status codes."""
         with pytest.raises(ValueError, match="5xx status code"):
-            ServerError("Client Error", 400)
+            ServerError(400)
 
         with pytest.raises(ValueError, match="5xx status code"):
-            ServerError("OK", 200)
+            ServerError(200)
 
     def test_error_type(self):
         """error_type() returns correct identifier."""
-        assert ServerError("test", 500).error_type() == "ServerError"
+        assert ServerError(500).error_type() == "ServerError"
 
 
 class TestJsonDecodeError:
@@ -322,8 +335,8 @@ class TestErrorHierarchy:
             ReadTimeoutError("test"),
             SSLError("test"),
             ProxyError("test"),
-            ClientError("test", 400),
-            ServerError("test", 500),
+            ClientError(400),
+            ServerError(500),
             JsonDecodeError("test"),
             TextDecodeError("test"),
             RequestValidationError("test"),
@@ -333,15 +346,15 @@ class TestErrorHierarchy:
 
     def test_status_errors_inherit_from_http_status_error(self):
         """Status errors inherit from HttpStatusError."""
-        assert isinstance(ClientError("test", 400), HttpStatusError)
-        assert isinstance(ServerError("test", 500), HttpStatusError)
+        assert isinstance(ClientError(400), HttpStatusError)
+        assert isinstance(ServerError(500), HttpStatusError)
 
     def test_errors_are_exceptions(self):
         """All error types can be raised as exceptions."""
         errors = [
             NetworkError("network"),
-            ClientError("client", 400),
-            ServerError("server", 500),
+            ClientError(400),
+            ServerError(500),
             JsonDecodeError("json"),
         ]
         for err in errors:

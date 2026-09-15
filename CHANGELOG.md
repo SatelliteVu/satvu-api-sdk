@@ -1,3 +1,10 @@
+# [0.11.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.10.2...v0.11.0) (2026-09-15)
+
+
+### Features
+
+* **http:** add httpx2 backend
+
 ## [0.10.2](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.10.1...v0.10.2) (2026-09-02)
 
 ## [0.10.2.20260911.0847] - 2026-09-11

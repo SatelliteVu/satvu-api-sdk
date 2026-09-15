@@ -35,7 +35,9 @@ from .test_schemas import (
 )
 
 
-@pytest.mark.parametrize("backend", ["stdlib", "httpx", "urllib3", "requests"])
+@pytest.mark.parametrize(
+    "backend", ["stdlib", "httpx", "httpx2", "urllib3", "requests"]
+)
 class TestResellerService:
     """Property-based tests for ResellerService."""
 

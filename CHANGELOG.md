@@ -1,5 +1,33 @@
 # [0.11.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.10.2...v0.11.0) (2026-09-15)
 
+## [0.11.0.20260930.1511] - 2026-09-30
+
+### fix(id): update 6 endpoints
+
+#### GET /webhooks/events
+* api operation id `get-webhook-events` removed and replaced with `list-webhook-events`
+
+
+#### POST webhook:company-kyc-status-update-v0
+* api operation id `company_kyc_status_update_v0company_kyc_status_update_v0_post` removed and replaced with `company-kyc-status-update-v0`
+
+
+#### POST webhook:end-user-kyc-status-update-v0
+* api operation id `end_user_kyc_status_update_v0end_user_kyc_status_update_v0_post` removed and replaced with `end-user-kyc-status-update-v0`
+
+
+#### POST webhook:tasking-order-expired-v2
+* api operation id `tasking_order_expired_v2tasking_order_expired_v2_post` removed and replaced with `tasking-order-expired-v2`
+
+
+#### POST webhook:tasking-order-fulfilled-v2
+* api operation id `tasking_order_fulfilled_v2tasking_order_fulfilled_v2_post` removed and replaced with `tasking-order-fulfilled-v2`
+
+
+#### POST webhook:tasking-order-fulfilled-v3
+* api operation id `tasking_order_fulfilled_v3tasking_order_fulfilled_v3_post` removed and replaced with `tasking-order-fulfilled-v3`
+
+
 ## [0.11.0.20260930.1440] - 2026-09-30
 
 ### feat(id): update components

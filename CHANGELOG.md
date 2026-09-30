@@ -1,5 +1,17 @@
 # [0.11.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.10.2...v0.11.0) (2026-09-15)
 
+## [0.11.0.20260930.1440] - 2026-09-30
+
+### feat(id): update components
+
+####  
+* webhook `company-kyc-status-update-v0` added
+* webhook `end-user-kyc-status-update-v0` added
+* webhook `tasking-order-expired-v2` added
+* webhook `tasking-order-fulfilled-v2` added
+* webhook `tasking-order-fulfilled-v3` added
+
+
 
 ### Features
 

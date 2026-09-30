@@ -651,9 +651,9 @@ class TestIdService:
         ],
     )
     @given(response_data=get_response_strategy("/webhooks/events", "get", "200"))
-    def test_get_webhook_events_200(self, backend, response_data):
+    def test_list_webhook_events_200(self, backend, response_data):
         """
-        Test get_webhook_events with 200 response.
+        Test list_webhook_events with 200 response.
         """
         path = "/webhooks/events"
         url = f"{self.base_url}{path}"
@@ -662,7 +662,7 @@ class TestIdService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.id.get_webhook_events()
+        result = self.sdk.id.list_webhook_events()
         assert result is not None
         assert isinstance(result, list)
 

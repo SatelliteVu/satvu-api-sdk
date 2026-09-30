@@ -293,7 +293,7 @@ class IdService(SDKClient):
             return parse_response(response.json().unwrap(), WebhookResponse)
         return response.json().unwrap()
 
-    def get_webhook_events(
+    def list_webhook_events(
         self,
         timeout: int | None = None,
     ) -> list[NotificationDescription]:

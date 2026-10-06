@@ -1,0 +1,156 @@
+{
+  "generated_at": "2026-10-06T13:28:50+00:00",
+  "duration_s": 2454,
+  "scan_id": "c481680b-a056-4f95-8301-42f63d7c7e30",
+  "mode": "scan",
+  "scan_prefix": "",
+  "scope": [],
+  "revision": {
+    "versioned": true,
+    "branch": "main",
+    "dirty": false
+  },
+  "revision_source": "self-reported",
+  "model": null,
+  "effort": "medium",
+  "run_shape": {
+    "requested_effort": "medium",
+    "collapsed": null,
+    "source": "coverage.json",
+    "diff_files": null,
+    "diff_lines": null,
+    "pre_existing": 0,
+    "scope_files": null,
+    "empty_diff": false,
+    "empty_scope": false,
+    "researchers_dispatched": 50,
+    "verification_runs": 1,
+    "skipped_components": [
+      {
+        "name": "github-workflows",
+        "paths": [
+          ".github"
+        ],
+        "reason": "CI workflow/dependabot config, not application code; low-value for a code-focused security review"
+      },
+      {
+        "name": "docs",
+        "paths": [
+          "docs"
+        ],
+        "reason": "Markdown documentation only, no executable code"
+      },
+      {
+        "name": "services-test-infra",
+        "paths": [
+          "src/satvu/services/conftest.py",
+          "src/satvu/services/example_cache.py",
+          "src/satvu/services/schema_conformance.py"
+        ],
+        "reason": "Test fixtures/pytest conftest and request-body conformance checks used only by the generated test suite, excluded from the shipped wheel, not production runtime code"
+      }
+    ],
+    "pruned_buckets": [
+      {
+        "group": "dev-scripts",
+        "lens": "memory-and-unsafe"
+      },
+      {
+        "group": "wallet-service",
+        "lens": "memory-and-unsafe"
+      },
+      {
+        "group": "policy-service",
+        "lens": "memory-and-unsafe"
+      },
+      {
+        "group": "reseller-service",
+        "lens": "memory-and-unsafe"
+      },
+      {
+        "group": "otm-service-api",
+        "lens": "memory-and-unsafe"
+      },
+      {
+        "group": "catalog-service-api",
+        "lens": "memory-and-unsafe"
+      },
+      {
+        "group": "catalog-service-models",
+        "lens": "memory-and-unsafe"
+      },
+      {
+        "group": "id-service",
+        "lens": "memory-and-unsafe"
+      },
+      {
+        "group": "http-adapters",
+        "lens": "memory-and-unsafe"
+      },
+      {
+        "group": "response-parsing",
+        "lens": "memory-and-unsafe"
+      },
+      {
+        "group": "otm-service-models",
+        "lens": "memory-and-unsafe"
+      },
+      {
+        "group": "sdk-core-auth",
+        "lens": "memory-and-unsafe"
+      },
+      {
+        "group": "examples",
+        "lens": "memory-and-unsafe"
+      },
+      {
+        "group": "dagger-ci",
+        "lens": "memory-and-unsafe"
+      },
+      {
+        "group": "cos-service",
+        "lens": "memory-and-unsafe"
+      },
+      {
+        "group": "sdk-builder-generator",
+        "lens": "memory-and-unsafe"
+      }
+    ],
+    "completeness_check_outcome": "checked",
+    "unaccounted_top_level_dirs": [],
+    "inventory_fallback": null,
+    "top_level_dir_count": 6,
+    "target_files": 482,
+    "component_cap": 24,
+    "research_coverage": {
+      "files": 451,
+      "read": 356,
+      "not_reached": 95,
+      "unaccounted": 0,
+      "outside_components": 31,
+      "capped": false
+    }
+  },
+  "findings": {
+    "total": 12,
+    "critical": 0,
+    "high": 0,
+    "medium": 9,
+    "low": 3
+  },
+  "verification": {
+    "status": "verified",
+    "candidates": 46,
+    "candidates_deduped": 21,
+    "panel_votes": 63,
+    "panel_reviewed_findings": 12,
+    "panel_quorum_findings": 12,
+    "unreviewed_candidate_sites": 0,
+    "incomplete_panel_candidates": 0,
+    "attested_findings": 0,
+    "reason": null,
+    "reason_kind": null,
+    "researchers_dispatched": 50,
+    "researchers_returned": 50
+  }
+}

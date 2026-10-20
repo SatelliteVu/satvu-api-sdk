@@ -30,7 +30,7 @@ def to_pydantic_model_field(prop: PropertyProtocol) -> str:
     Returns a string representation of the property as a Pydantic model field.
 
     Returns:
-        A string like: `field_name: FieldType = Field(..., description="...", alias="...")`
+        A string like: `field_name: FieldType = pydantic.Field(..., description="...", alias="...")`
     """
     # Append underscore to field names that shadow BaseModel attributes
     # to avoid Pydantic warnings (e.g., "schema" -> "schema_")
@@ -53,7 +53,7 @@ def to_pydantic_model_field(prop: PropertyProtocol) -> str:
             union_type_string = unwrap_code(
                 union_prop.get_type_string(no_optional=True)
             )
-            annotated = f'Annotated[{union_type_string}, Field(discriminator="{discriminator_name}")]'
+            annotated = f'Annotated[{union_type_string}, pydantic.Field(discriminator="{discriminator_name}")]'
             if isinstance(prop, ListProperty):
                 type_string = f"list[{annotated}]"
             else:
@@ -69,14 +69,14 @@ def to_pydantic_model_field(prop: PropertyProtocol) -> str:
     # For const (literal) properties, default to the value of the constant
     if isinstance(prop, ConstProperty):
         default = unwrap_code(prop.value.python_code)
-        return f'{field_start} = Field(default={default}, description={description}, alias="{alias}")'
+        return f'{field_start} = pydantic.Field(default={default}, description={description}, alias="{alias}")'
 
     if prop.default is not None:
         default = unwrap_code(prop.default.python_code)
-        return f'{field_start} = Field(default={default}, description={description}, alias="{alias}")'
+        return f'{field_start} = pydantic.Field(default={default}, description={description}, alias="{alias}")'
 
     elif not prop.required:
-        return f'{field_start} = Field(default=None, description={description}, alias="{alias}")'
+        return f'{field_start} = pydantic.Field(default=None, description={description}, alias="{alias}")'
 
     else:
-        return f'{field_start} = Field(..., description={description}, alias="{alias}")'
+        return f'{field_start} = pydantic.Field(..., description={description}, alias="{alias}")'

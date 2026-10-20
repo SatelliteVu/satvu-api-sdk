@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.is_null_predicate_op import IsNullPredicateOp
 
@@ -30,7 +30,7 @@ if TYPE_CHECKING:
     from ..models.timestamp_instant import TimestampInstant
 
 
-class IsNullPredicate(BaseModel):
+class IsNullPredicate(pydantic.BaseModel):
     """
     Attributes:
         args (list[Union['AndOrExpression', 'ArithmeticExpression', 'BboxLiteral', 'BinaryComparisonPredicate',
@@ -65,9 +65,9 @@ class IsNullPredicate(BaseModel):
             float,
             str,
         ]
-    ] = Field(..., description=None, alias="args")
-    op: IsNullPredicateOp = Field(..., description=None, alias="op")
+    ] = pydantic.Field(..., description=None, alias="args")
+    op: IsNullPredicateOp = pydantic.Field(..., description=None, alias="op")
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

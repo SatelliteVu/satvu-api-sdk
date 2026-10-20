@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.modify_feasibility_request_properties import (
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from ..models.point import Point
 
 
-class ModifyFeasibilityRequest(BaseModel):
+class ModifyFeasibilityRequest(pydantic.BaseModel):
     """Payload for modify feasibility request.
     Only supports Standard orders. Assured orders cannot be modified.
     All fields are optional - unspecified fields will be sourced from the existing order.
@@ -28,20 +28,22 @@ class ModifyFeasibilityRequest(BaseModel):
                 geometry.
     """
 
-    type_: Literal["Feature"] = Field(default="Feature", description=None, alias="type")
-    properties: ModifyFeasibilityRequestProperties = Field(
+    type_: Literal["Feature"] = pydantic.Field(
+        default="Feature", description=None, alias="type"
+    )
+    properties: ModifyFeasibilityRequestProperties = pydantic.Field(
         ...,
         description="""Properties for modify feasibility request.
 All fields are optional - unspecified fields will be sourced from the existing order.
 Only supports Standard product (Assured orders do not support modifications).""",
         alias="properties",
     )
-    geometry: Union[Point, None] = Field(
+    geometry: Union[Point, None] = pydantic.Field(
         default=None,
         description="""The geometry of the modified order. If not provided, uses the existing order geometry.""",
         alias="geometry",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

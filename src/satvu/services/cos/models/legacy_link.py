@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class LegacyLink(BaseModel):
+class LegacyLink(pydantic.BaseModel):
     """Related resources and navigation links (legacy STAC v0.9 format).
 
     Attributes:
@@ -16,11 +16,11 @@ class LegacyLink(BaseModel):
         title (None | str):
     """
 
-    href: str = Field(..., description=None, alias="href")
-    rel: str = Field(..., description=None, alias="rel")
-    type_: None | str = Field(default=None, description=None, alias="type")
-    title: None | str = Field(default=None, description=None, alias="title")
+    href: str = pydantic.Field(..., description=None, alias="href")
+    rel: str = pydantic.Field(..., description=None, alias="rel")
+    type_: None | str = pydantic.Field(default=None, description=None, alias="type")
+    title: None | str = pydantic.Field(default=None, description=None, alias="title")
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

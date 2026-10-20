@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.kyc_status import KYCStatus
 
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from ..models.user_search import UserSearch
 
 
-class SearchUsers(BaseModel):
+class SearchUsers(pydantic.BaseModel):
     """
     Attributes:
         limit (Union[None, int]): The number of results to return per page. Default: 100.
@@ -22,21 +22,21 @@ class SearchUsers(BaseModel):
         kyc_status (Union['KYCStatus', list['KYCStatus'], None]): The KYC status of the user.
     """
 
-    limit: Union[None, int] = Field(
+    limit: Union[None, int] = pydantic.Field(
         default=100,
         description="""The number of results to return per page.""",
         alias="limit",
     )
-    token: None | str = Field(
+    token: None | str = pydantic.Field(
         default=None, description="""The pagination token.""", alias="token"
     )
-    search: Union[UserSearch, list[UserSearch], None] = Field(
+    search: Union[UserSearch, list[UserSearch], None] = pydantic.Field(
         default=None, description="""Search criteria.""", alias="search"
     )
-    kyc_status: Union[KYCStatus, list[KYCStatus], None] = Field(
+    kyc_status: Union[KYCStatus, list[KYCStatus], None] = pydantic.Field(
         default=None, description="""The KYC status of the user.""", alias="kyc_status"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

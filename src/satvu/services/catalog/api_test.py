@@ -26,20 +26,20 @@ from satvu.services.catalog.models.acquisition_item import AcquisitionItem
 from satvu.services.catalog.models.acquisition_queryables import AcquisitionQueryables
 from satvu.services.catalog.models.catalog import Catalog
 from satvu.services.catalog.models.collection import Collection
+from satvu.services.catalog.models.collection_search_json_input import (
+    CollectionSearchJsonInput,
+)
 from satvu.services.catalog.models.collections import Collections
 from satvu.services.catalog.models.conformance import Conformance
 from satvu.services.catalog.models.feature import Feature
 from satvu.services.catalog.models.feature_collection import FeatureCollection
-from satvu.services.catalog.models.post_collection_search_input import (
-    PostCollectionSearchInput,
-)
-from satvu.services.catalog.models.post_search_input import PostSearchInput
 from satvu.services.catalog.models.primary_feature_collection import (
     PrimaryFeatureCollection,
 )
 from satvu.services.catalog.models.primary_item import PrimaryItem
 from satvu.services.catalog.models.primary_queryables import PrimaryQueryables
 from satvu.services.catalog.models.queryables import Queryables
+from satvu.services.catalog.models.search_json_input import SearchJsonInput
 from satvu.services.catalog.models.search_response import SearchResponse
 from satvu.services.catalog.models.surface_brightness_temperature_feature_collection import (
     SurfaceBrightnessTemperatureFeatureCollection,
@@ -154,9 +154,9 @@ class TestCatalogService:
     @given(
         response_data=get_response_strategy("/{contract_id}/collections", "get", "200")
     )
-    def test_get_collections_200(self, backend, response_data):
+    def test_list_collections_200(self, backend, response_data):
         """
-        Test get_collections with 200 response.
+        Test list_collections with 200 response.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/collections"
@@ -166,7 +166,7 @@ class TestCatalogService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.catalog.get_collections(contract_id=contract_id)
+        result = self.sdk.catalog.list_collections(contract_id=contract_id)
         assert result is not None
         assert isinstance(result, Collections)
 
@@ -182,9 +182,9 @@ class TestCatalogService:
     @given(
         response_data=get_response_strategy("/{contract_id}/collections", "get", "429")
     )
-    def test_get_collections_429_error(self, backend, response_data):
+    def test_list_collections_429_error(self, backend, response_data):
         """
-        Test get_collections with 429 error response.
+        Test list_collections with 429 error response.
 
         HTTP 429 errors raise ClientError.
         """
@@ -197,7 +197,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.catalog.get_collections(contract_id=contract_id)
+            self.sdk.catalog.list_collections(contract_id=contract_id)
         assert exc_info.value.status_code == 429
 
     @settings(
@@ -317,9 +317,9 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/items", "get", "200"
         )
     )
-    def test_get_item_collection_200(self, backend, response_data):
+    def test_list_collection_items_200(self, backend, response_data):
         """
-        Test get_item_collection with 200 response.
+        Test list_collection_items with 200 response.
         """
         contract_id = uuid4()
         collection_id = uuid4()
@@ -330,7 +330,7 @@ class TestCatalogService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.catalog.get_item_collection(
+        result = self.sdk.catalog.list_collection_items(
             contract_id=contract_id, collection_id=collection_id
         )
         assert result is not None
@@ -347,12 +347,47 @@ class TestCatalogService:
     )
     @given(
         response_data=get_response_strategy(
+            "/{contract_id}/collections/{collection_id}/items", "get", "400"
+        )
+    )
+    def test_list_collection_items_400_error(self, backend, response_data):
+        """
+        Test list_collection_items with 400 error response.
+
+        HTTP 400 errors raise ClientError.
+        """
+        contract_id = uuid4()
+        collection_id = uuid4()
+        path = f"/{contract_id}/collections/{collection_id}/items"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.get(url).reply(400).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        with pytest.raises(ClientError) as exc_info:
+            self.sdk.catalog.list_collection_items(
+                contract_id=contract_id, collection_id=collection_id
+            )
+        assert exc_info.value.status_code == 400
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
             "/{contract_id}/collections/{collection_id}/items", "get", "429"
         )
     )
-    def test_get_item_collection_429_error(self, backend, response_data):
+    def test_list_collection_items_429_error(self, backend, response_data):
         """
-        Test get_item_collection with 429 error response.
+        Test list_collection_items with 429 error response.
 
         HTTP 429 errors raise ClientError.
         """
@@ -366,7 +401,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.catalog.get_item_collection(
+            self.sdk.catalog.list_collection_items(
                 contract_id=contract_id, collection_id=collection_id
             )
         assert exc_info.value.status_code == 429
@@ -385,9 +420,9 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/queryables", "get", "200"
         )
     )
-    def test_get_collection_queryables_200(self, backend, response_data):
+    def test_list_collection_queryables_200(self, backend, response_data):
         """
-        Test get_collection_queryables with 200 response.
+        Test list_collection_queryables with 200 response.
         """
         contract_id = uuid4()
         collection_id = uuid4()
@@ -398,7 +433,7 @@ class TestCatalogService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.catalog.get_collection_queryables(
+        result = self.sdk.catalog.list_collection_queryables(
             contract_id=contract_id, collection_id=collection_id
         )
         assert result is not None
@@ -418,9 +453,9 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/queryables", "get", "404"
         )
     )
-    def test_get_collection_queryables_404_error(self, backend, response_data):
+    def test_list_collection_queryables_404_error(self, backend, response_data):
         """
-        Test get_collection_queryables with 404 error response.
+        Test list_collection_queryables with 404 error response.
 
         HTTP 404 errors raise ClientError.
         """
@@ -434,7 +469,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.catalog.get_collection_queryables(
+            self.sdk.catalog.list_collection_queryables(
                 contract_id=contract_id, collection_id=collection_id
             )
         assert exc_info.value.status_code == 404
@@ -453,9 +488,9 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/queryables", "get", "429"
         )
     )
-    def test_get_collection_queryables_429_error(self, backend, response_data):
+    def test_list_collection_queryables_429_error(self, backend, response_data):
         """
-        Test get_collection_queryables with 429 error response.
+        Test list_collection_queryables with 429 error response.
 
         HTTP 429 errors raise ClientError.
         """
@@ -469,7 +504,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.catalog.get_collection_queryables(
+            self.sdk.catalog.list_collection_queryables(
                 contract_id=contract_id, collection_id=collection_id
             )
         assert exc_info.value.status_code == 429
@@ -592,9 +627,9 @@ class TestCatalogService:
     @given(
         response_data=get_response_strategy("/{contract_id}/conformance", "get", "200")
     )
-    def test_conformance_200(self, backend, response_data):
+    def test_list_conformance_classes_200(self, backend, response_data):
         """
-        Test conformance with 200 response.
+        Test list_conformance_classes with 200 response.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/conformance"
@@ -604,7 +639,7 @@ class TestCatalogService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.catalog.conformance(contract_id=contract_id)
+        result = self.sdk.catalog.list_conformance_classes(contract_id=contract_id)
         assert result is not None
         assert isinstance(result, Conformance)
 
@@ -620,9 +655,9 @@ class TestCatalogService:
     @given(
         response_data=get_response_strategy("/{contract_id}/conformance", "get", "429")
     )
-    def test_conformance_429_error(self, backend, response_data):
+    def test_list_conformance_classes_429_error(self, backend, response_data):
         """
-        Test conformance with 429 error response.
+        Test list_conformance_classes with 429 error response.
 
         HTTP 429 errors raise ClientError.
         """
@@ -635,7 +670,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.catalog.conformance(contract_id=contract_id)
+            self.sdk.catalog.list_conformance_classes(contract_id=contract_id)
         assert exc_info.value.status_code == 429
 
     @settings(
@@ -650,9 +685,9 @@ class TestCatalogService:
     @given(
         response_data=get_response_strategy("/{contract_id}/queryables", "get", "200")
     )
-    def test_queryables_200(self, backend, response_data):
+    def test_list_queryables_200(self, backend, response_data):
         """
-        Test queryables with 200 response.
+        Test list_queryables with 200 response.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/queryables"
@@ -662,7 +697,7 @@ class TestCatalogService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.catalog.queryables(contract_id=contract_id)
+        result = self.sdk.catalog.list_queryables(contract_id=contract_id)
         assert result is not None
         assert isinstance(result, Queryables)
 
@@ -678,9 +713,9 @@ class TestCatalogService:
     @given(
         response_data=get_response_strategy("/{contract_id}/queryables", "get", "429")
     )
-    def test_queryables_429_error(self, backend, response_data):
+    def test_list_queryables_429_error(self, backend, response_data):
         """
-        Test queryables with 429 error response.
+        Test list_queryables with 429 error response.
 
         HTTP 429 errors raise ClientError.
         """
@@ -693,7 +728,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.catalog.queryables(contract_id=contract_id)
+            self.sdk.catalog.list_queryables(contract_id=contract_id)
         assert exc_info.value.status_code == 429
 
     @settings(
@@ -706,9 +741,9 @@ class TestCatalogService:
         ],
     )
     @given(response_data=get_response_strategy("/{contract_id}/search", "get", "200"))
-    def test_get_search_200(self, backend, response_data):
+    def test_search_text_200(self, backend, response_data):
         """
-        Test get_search with 200 response.
+        Test search_text with 200 response.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/search"
@@ -718,7 +753,7 @@ class TestCatalogService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.catalog.get_search(contract_id=contract_id)
+        result = self.sdk.catalog.search_text(contract_id=contract_id)
         assert result is not None
         assert isinstance(result, FeatureCollection)
 
@@ -732,9 +767,9 @@ class TestCatalogService:
         ],
     )
     @given(response_data=get_response_strategy("/{contract_id}/search", "get", "400"))
-    def test_get_search_400_error(self, backend, response_data):
+    def test_search_text_400_error(self, backend, response_data):
         """
-        Test get_search with 400 error response.
+        Test search_text with 400 error response.
 
         HTTP 400 errors raise ClientError.
         """
@@ -747,7 +782,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.catalog.get_search(contract_id=contract_id)
+            self.sdk.catalog.search_text(contract_id=contract_id)
         assert exc_info.value.status_code == 400
 
     @settings(
@@ -760,9 +795,9 @@ class TestCatalogService:
         ],
     )
     @given(response_data=get_response_strategy("/{contract_id}/search", "get", "429"))
-    def test_get_search_429_error(self, backend, response_data):
+    def test_search_text_429_error(self, backend, response_data):
         """
-        Test get_search with 429 error response.
+        Test search_text with 429 error response.
 
         HTTP 429 errors raise ClientError.
         """
@@ -775,7 +810,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.catalog.get_search(contract_id=contract_id)
+            self.sdk.catalog.search_text(contract_id=contract_id)
         assert exc_info.value.status_code == 429
 
     @settings(
@@ -791,9 +826,9 @@ class TestCatalogService:
         response_data=get_response_strategy("/{contract_id}/search", "post", "200"),
         body_data=get_request_body_strategy("/{contract_id}/search", "post"),
     )
-    def test_post_search_200(self, backend, response_data, body_data):
+    def test_search_json_200(self, backend, response_data, body_data):
         """
-        Test post_search with 200 response.
+        Test search_json with 200 response.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/search"
@@ -802,9 +837,9 @@ class TestCatalogService:
         pook.on()
         mock = pook.post(url)
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
-        body_adapter = TypeAdapter(Union[None, PostSearchInput])
+        body_adapter = TypeAdapter(Union[None, SearchJsonInput])
         body = body_adapter.validate_python(body_data)
-        result = self.sdk.catalog.post_search(contract_id=contract_id, body=body)
+        result = self.sdk.catalog.search_json(contract_id=contract_id, body=body)
         assert_request_body_matches_input(mock, body_data, "POST /{contract_id}/search")
         assert_request_body_conforms(
             mock,
@@ -828,11 +863,11 @@ class TestCatalogService:
         response_data=get_response_strategy("/{contract_id}/search", "post", "200"),
         body_data=get_request_body_strategy("/{contract_id}/search", "post"),
     )
-    def test_post_search_minimal_body_sends_only_what_was_set(
+    def test_search_json_minimal_body_sends_only_what_was_set(
         self, backend, response_data, body_data
     ):
         """
-        Test post_search sends no field the caller left unset.
+        Test search_json sends no field the caller left unset.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/search"
@@ -844,10 +879,10 @@ class TestCatalogService:
         pook.on()
         mock = pook.post(url)
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
-        body_adapter = TypeAdapter(Union[None, PostSearchInput])
+        body_adapter = TypeAdapter(Union[None, SearchJsonInput])
         body = body_adapter.validate_python(body_data)
         with suppress(Exception):
-            self.sdk.catalog.post_search(contract_id=contract_id, body=body)
+            self.sdk.catalog.search_json(contract_id=contract_id, body=body)
         assert_request_body_matches_input(mock, body_data, "POST /{contract_id}/search")
         assert_request_body_conforms(
             mock,
@@ -869,9 +904,9 @@ class TestCatalogService:
         response_data=get_response_strategy("/{contract_id}/search", "post", "400"),
         body_data=get_request_body_strategy("/{contract_id}/search", "post"),
     )
-    def test_post_search_400_error(self, backend, response_data, body_data):
+    def test_search_json_400_error(self, backend, response_data, body_data):
         """
-        Test post_search with 400 error response.
+        Test search_json with 400 error response.
 
         HTTP 400 errors raise ClientError.
         """
@@ -883,10 +918,10 @@ class TestCatalogService:
         pook.post(url).reply(400).json(response_data).header(
             "Content-Type", "application/json"
         )
-        body_adapter = TypeAdapter(Union[None, PostSearchInput])
+        body_adapter = TypeAdapter(Union[None, SearchJsonInput])
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.catalog.post_search(contract_id=contract_id, body=body)
+            self.sdk.catalog.search_json(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 400
 
     @settings(
@@ -902,9 +937,9 @@ class TestCatalogService:
         response_data=get_response_strategy("/{contract_id}/search", "post", "429"),
         body_data=get_request_body_strategy("/{contract_id}/search", "post"),
     )
-    def test_post_search_429_error(self, backend, response_data, body_data):
+    def test_search_json_429_error(self, backend, response_data, body_data):
         """
-        Test post_search with 429 error response.
+        Test search_json with 429 error response.
 
         HTTP 429 errors raise ClientError.
         """
@@ -916,10 +951,10 @@ class TestCatalogService:
         pook.post(url).reply(429).json(response_data).header(
             "Content-Type", "application/json"
         )
-        body_adapter = TypeAdapter(Union[None, PostSearchInput])
+        body_adapter = TypeAdapter(Union[None, SearchJsonInput])
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.catalog.post_search(contract_id=contract_id, body=body)
+            self.sdk.catalog.search_json(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 429
 
     @settings(
@@ -936,9 +971,9 @@ class TestCatalogService:
             "/{contract_id}/collections/acquisition/items", "get", "200"
         )
     )
-    def test_get_acquisition_items_200(self, backend, response_data):
+    def test_list_acquisition_items_200(self, backend, response_data):
         """
-        Test get_acquisition_items with 200 response.
+        Test list_acquisition_items with 200 response.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/collections/acquisition/items"
@@ -948,9 +983,41 @@ class TestCatalogService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.catalog.get_acquisition_items(contract_id=contract_id)
+        result = self.sdk.catalog.list_acquisition_items(contract_id=contract_id)
         assert result is not None
         assert isinstance(result, AcquisitionFeatureCollection)
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
+            "/{contract_id}/collections/acquisition/items", "get", "400"
+        )
+    )
+    def test_list_acquisition_items_400_error(self, backend, response_data):
+        """
+        Test list_acquisition_items with 400 error response.
+
+        HTTP 400 errors raise ClientError.
+        """
+        contract_id = uuid4()
+        path = f"/{contract_id}/collections/acquisition/items"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.get(url).reply(400).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        with pytest.raises(ClientError) as exc_info:
+            self.sdk.catalog.list_acquisition_items(contract_id=contract_id)
+        assert exc_info.value.status_code == 400
 
     @settings(
         max_examples=10,
@@ -966,9 +1033,9 @@ class TestCatalogService:
             "/{contract_id}/collections/acquisition/items", "get", "429"
         )
     )
-    def test_get_acquisition_items_429_error(self, backend, response_data):
+    def test_list_acquisition_items_429_error(self, backend, response_data):
         """
-        Test get_acquisition_items with 429 error response.
+        Test list_acquisition_items with 429 error response.
 
         HTTP 429 errors raise ClientError.
         """
@@ -981,7 +1048,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.catalog.get_acquisition_items(contract_id=contract_id)
+            self.sdk.catalog.list_acquisition_items(contract_id=contract_id)
         assert exc_info.value.status_code == 429
 
     @settings(
@@ -1101,9 +1168,9 @@ class TestCatalogService:
             "/{contract_id}/collections/acquisition/queryables", "get", "200"
         )
     )
-    def test_get_acquisition_queryables_200(self, backend, response_data):
+    def test_list_acquisition_queryables_200(self, backend, response_data):
         """
-        Test get_acquisition_queryables with 200 response.
+        Test list_acquisition_queryables with 200 response.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/collections/acquisition/queryables"
@@ -1113,7 +1180,7 @@ class TestCatalogService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.catalog.get_acquisition_queryables(contract_id=contract_id)
+        result = self.sdk.catalog.list_acquisition_queryables(contract_id=contract_id)
         assert result is not None
         assert isinstance(result, AcquisitionQueryables)
 
@@ -1131,9 +1198,9 @@ class TestCatalogService:
             "/{contract_id}/collections/acquisition/queryables", "get", "429"
         )
     )
-    def test_get_acquisition_queryables_429_error(self, backend, response_data):
+    def test_list_acquisition_queryables_429_error(self, backend, response_data):
         """
-        Test get_acquisition_queryables with 429 error response.
+        Test list_acquisition_queryables with 429 error response.
 
         HTTP 429 errors raise ClientError.
         """
@@ -1146,7 +1213,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.catalog.get_acquisition_queryables(contract_id=contract_id)
+            self.sdk.catalog.list_acquisition_queryables(contract_id=contract_id)
         assert exc_info.value.status_code == 429
 
     @settings(
@@ -1163,9 +1230,9 @@ class TestCatalogService:
             "/{contract_id}/collections/primary/items", "get", "200"
         )
     )
-    def test_get_primary_items_200(self, backend, response_data):
+    def test_list_primary_items_200(self, backend, response_data):
         """
-        Test get_primary_items with 200 response.
+        Test list_primary_items with 200 response.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/collections/primary/items"
@@ -1175,9 +1242,41 @@ class TestCatalogService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.catalog.get_primary_items(contract_id=contract_id)
+        result = self.sdk.catalog.list_primary_items(contract_id=contract_id)
         assert result is not None
         assert isinstance(result, PrimaryFeatureCollection)
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
+            "/{contract_id}/collections/primary/items", "get", "400"
+        )
+    )
+    def test_list_primary_items_400_error(self, backend, response_data):
+        """
+        Test list_primary_items with 400 error response.
+
+        HTTP 400 errors raise ClientError.
+        """
+        contract_id = uuid4()
+        path = f"/{contract_id}/collections/primary/items"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.get(url).reply(400).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        with pytest.raises(ClientError) as exc_info:
+            self.sdk.catalog.list_primary_items(contract_id=contract_id)
+        assert exc_info.value.status_code == 400
 
     @settings(
         max_examples=10,
@@ -1193,9 +1292,9 @@ class TestCatalogService:
             "/{contract_id}/collections/primary/items", "get", "429"
         )
     )
-    def test_get_primary_items_429_error(self, backend, response_data):
+    def test_list_primary_items_429_error(self, backend, response_data):
         """
-        Test get_primary_items with 429 error response.
+        Test list_primary_items with 429 error response.
 
         HTTP 429 errors raise ClientError.
         """
@@ -1208,7 +1307,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.catalog.get_primary_items(contract_id=contract_id)
+            self.sdk.catalog.list_primary_items(contract_id=contract_id)
         assert exc_info.value.status_code == 429
 
     @settings(
@@ -1324,9 +1423,9 @@ class TestCatalogService:
             "/{contract_id}/collections/primary/queryables", "get", "200"
         )
     )
-    def test_get_primary_queryables_200(self, backend, response_data):
+    def test_list_primary_queryables_200(self, backend, response_data):
         """
-        Test get_primary_queryables with 200 response.
+        Test list_primary_queryables with 200 response.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/collections/primary/queryables"
@@ -1336,7 +1435,7 @@ class TestCatalogService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.catalog.get_primary_queryables(contract_id=contract_id)
+        result = self.sdk.catalog.list_primary_queryables(contract_id=contract_id)
         assert result is not None
         assert isinstance(result, PrimaryQueryables)
 
@@ -1354,9 +1453,9 @@ class TestCatalogService:
             "/{contract_id}/collections/primary/queryables", "get", "429"
         )
     )
-    def test_get_primary_queryables_429_error(self, backend, response_data):
+    def test_list_primary_queryables_429_error(self, backend, response_data):
         """
-        Test get_primary_queryables with 429 error response.
+        Test list_primary_queryables with 429 error response.
 
         HTTP 429 errors raise ClientError.
         """
@@ -1369,7 +1468,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.catalog.get_primary_queryables(contract_id=contract_id)
+            self.sdk.catalog.list_primary_queryables(contract_id=contract_id)
         assert exc_info.value.status_code == 429
 
     @settings(
@@ -1388,9 +1487,11 @@ class TestCatalogService:
             "200",
         )
     )
-    def test_get_surface_brightness_temperature_items_200(self, backend, response_data):
+    def test_list_surface_brightness_temperature_items_200(
+        self, backend, response_data
+    ):
         """
-        Test get_surface_brightness_temperature_items with 200 response.
+        Test list_surface_brightness_temperature_items with 200 response.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/collections/surface-brightness-temperature/items"
@@ -1400,7 +1501,7 @@ class TestCatalogService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.catalog.get_surface_brightness_temperature_items(
+        result = self.sdk.catalog.list_surface_brightness_temperature_items(
             contract_id=contract_id
         )
         assert result is not None
@@ -1419,14 +1520,52 @@ class TestCatalogService:
         response_data=get_response_strategy(
             "/{contract_id}/collections/surface-brightness-temperature/items",
             "get",
-            "429",
+            "400",
         )
     )
-    def test_get_surface_brightness_temperature_items_429_error(
+    def test_list_surface_brightness_temperature_items_400_error(
         self, backend, response_data
     ):
         """
-        Test get_surface_brightness_temperature_items with 429 error response.
+        Test list_surface_brightness_temperature_items with 400 error response.
+
+        HTTP 400 errors raise ClientError.
+        """
+        contract_id = uuid4()
+        path = f"/{contract_id}/collections/surface-brightness-temperature/items"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.get(url).reply(400).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        with pytest.raises(ClientError) as exc_info:
+            self.sdk.catalog.list_surface_brightness_temperature_items(
+                contract_id=contract_id
+            )
+        assert exc_info.value.status_code == 400
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
+            "/{contract_id}/collections/surface-brightness-temperature/items",
+            "get",
+            "429",
+        )
+    )
+    def test_list_surface_brightness_temperature_items_429_error(
+        self, backend, response_data
+    ):
+        """
+        Test list_surface_brightness_temperature_items with 429 error response.
 
         HTTP 429 errors raise ClientError.
         """
@@ -1439,7 +1578,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.catalog.get_surface_brightness_temperature_items(
+            self.sdk.catalog.list_surface_brightness_temperature_items(
                 contract_id=contract_id
             )
         assert exc_info.value.status_code == 429
@@ -1579,11 +1718,11 @@ class TestCatalogService:
             "200",
         )
     )
-    def test_get_surface_brightness_temperature_queryables_200(
+    def test_list_surface_brightness_temperature_queryables_200(
         self, backend, response_data
     ):
         """
-        Test get_surface_brightness_temperature_queryables with 200 response.
+        Test list_surface_brightness_temperature_queryables with 200 response.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/collections/surface-brightness-temperature/queryables"
@@ -1593,7 +1732,7 @@ class TestCatalogService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.catalog.get_surface_brightness_temperature_queryables(
+        result = self.sdk.catalog.list_surface_brightness_temperature_queryables(
             contract_id=contract_id
         )
         assert result is not None
@@ -1615,11 +1754,11 @@ class TestCatalogService:
             "429",
         )
     )
-    def test_get_surface_brightness_temperature_queryables_429_error(
+    def test_list_surface_brightness_temperature_queryables_429_error(
         self, backend, response_data
     ):
         """
-        Test get_surface_brightness_temperature_queryables with 429 error response.
+        Test list_surface_brightness_temperature_queryables with 429 error response.
 
         HTTP 429 errors raise ClientError.
         """
@@ -1632,7 +1771,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.catalog.get_surface_brightness_temperature_queryables(
+            self.sdk.catalog.list_surface_brightness_temperature_queryables(
                 contract_id=contract_id
             )
         assert exc_info.value.status_code == 429
@@ -1651,9 +1790,9 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/search", "get", "200"
         )
     )
-    def test_get_collection_search_200(self, backend, response_data):
+    def test_collection_search_text_200(self, backend, response_data):
         """
-        Test get_collection_search with 200 response.
+        Test collection_search_text with 200 response.
         """
         contract_id = uuid4()
         collection_id = uuid4()
@@ -1664,7 +1803,7 @@ class TestCatalogService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.catalog.get_collection_search(
+        result = self.sdk.catalog.collection_search_text(
             contract_id=contract_id, collection_id=collection_id
         )
         assert result is not None
@@ -1684,9 +1823,9 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/search", "get", "429"
         )
     )
-    def test_get_collection_search_429_error(self, backend, response_data):
+    def test_collection_search_text_429_error(self, backend, response_data):
         """
-        Test get_collection_search with 429 error response.
+        Test collection_search_text with 429 error response.
 
         HTTP 429 errors raise ClientError.
         """
@@ -1700,7 +1839,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.catalog.get_collection_search(
+            self.sdk.catalog.collection_search_text(
                 contract_id=contract_id, collection_id=collection_id
             )
         assert exc_info.value.status_code == 429
@@ -1722,9 +1861,9 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/search", "post"
         ),
     )
-    def test_post_collection_search_200(self, backend, response_data, body_data):
+    def test_collection_search_json_200(self, backend, response_data, body_data):
         """
-        Test post_collection_search with 200 response.
+        Test collection_search_json with 200 response.
         """
         contract_id = uuid4()
         collection_id = uuid4()
@@ -1734,9 +1873,9 @@ class TestCatalogService:
         pook.on()
         mock = pook.post(url)
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
-        body_adapter = TypeAdapter(Union[None, PostCollectionSearchInput])
+        body_adapter = TypeAdapter(Union[None, CollectionSearchJsonInput])
         body = body_adapter.validate_python(body_data)
-        result = self.sdk.catalog.post_collection_search(
+        result = self.sdk.catalog.collection_search_json(
             contract_id=contract_id, collection_id=collection_id, body=body
         )
         assert_request_body_matches_input(
@@ -1770,11 +1909,11 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/search", "post"
         ),
     )
-    def test_post_collection_search_minimal_body_sends_only_what_was_set(
+    def test_collection_search_json_minimal_body_sends_only_what_was_set(
         self, backend, response_data, body_data
     ):
         """
-        Test post_collection_search sends no field the caller left unset.
+        Test collection_search_json sends no field the caller left unset.
         """
         contract_id = uuid4()
         collection_id = uuid4()
@@ -1790,10 +1929,10 @@ class TestCatalogService:
         pook.on()
         mock = pook.post(url)
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
-        body_adapter = TypeAdapter(Union[None, PostCollectionSearchInput])
+        body_adapter = TypeAdapter(Union[None, CollectionSearchJsonInput])
         body = body_adapter.validate_python(body_data)
         with suppress(Exception):
-            self.sdk.catalog.post_collection_search(
+            self.sdk.catalog.collection_search_json(
                 contract_id=contract_id, collection_id=collection_id, body=body
             )
         assert_request_body_matches_input(
@@ -1825,9 +1964,9 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/search", "post"
         ),
     )
-    def test_post_collection_search_429_error(self, backend, response_data, body_data):
+    def test_collection_search_json_429_error(self, backend, response_data, body_data):
         """
-        Test post_collection_search with 429 error response.
+        Test collection_search_json with 429 error response.
 
         HTTP 429 errors raise ClientError.
         """
@@ -1840,10 +1979,10 @@ class TestCatalogService:
         pook.post(url).reply(429).json(response_data).header(
             "Content-Type", "application/json"
         )
-        body_adapter = TypeAdapter(Union[None, PostCollectionSearchInput])
+        body_adapter = TypeAdapter(Union[None, CollectionSearchJsonInput])
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.catalog.post_collection_search(
+            self.sdk.catalog.collection_search_json(
                 contract_id=contract_id, collection_id=collection_id, body=body
             )
         assert exc_info.value.status_code == 429
@@ -1858,11 +1997,173 @@ class TestCatalogService:
         ],
     )
     @given(
+        page1_data=get_response_strategy(
+            "/{contract_id}/collections/{collection_id}/items", "get", "200"
+        ),
+        page2_data=get_response_strategy(
+            "/{contract_id}/collections/{collection_id}/items", "get", "200"
+        ),
+    )
+    def test_list_collection_items_iter_pagination(
+        self, backend, page1_data, page2_data
+    ):
+        """Test list_collection_items_iter follows next links correctly."""
+        page1_data = {**page1_data}
+        page2_data = {**page2_data}
+        contract_id = str(uuid4())
+        collection_id = str(uuid4())
+        path = f"/{contract_id}/collections/{collection_id}/items"
+        url = f"{self.base_url}{path}"
+        page1_data["links"] = [
+            {
+                "rel": "next",
+                "href": f"{url}?token=abc123",
+                "method": "GET",
+                "title": "next",
+                "type": "application/json",
+            }
+        ]
+        page2_data["links"] = []
+        pook.reset()
+        pook.on()
+        pook.get(url).times(1).reply(200).json(page1_data).header(
+            "Content-Type", "application/json"
+        )
+        pook.get(url).times(1).reply(200).json(page2_data).header(
+            "Content-Type", "application/json"
+        )
+        pages = list(
+            self.sdk.catalog.list_collection_items_iter(
+                contract_id=contract_id, collection_id=collection_id
+            )
+        )
+        assert len(pages) == 2
+
+    @settings(
+        max_examples=3,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        page1_data=get_response_strategy(
+            "/{contract_id}/collections/{collection_id}/items", "get", "200"
+        ),
+        page2_data=get_response_strategy(
+            "/{contract_id}/collections/{collection_id}/items", "get", "200"
+        ),
+        page3_data=get_response_strategy(
+            "/{contract_id}/collections/{collection_id}/items", "get", "200"
+        ),
+    )
+    def test_list_collection_items_iter_max_pages(
+        self, backend, page1_data, page2_data, page3_data
+    ):
+        """Test list_collection_items_iter respects max_pages limit."""
+        page1_data = {**page1_data}
+        page2_data = {**page2_data}
+        page3_data = {**page3_data}
+        contract_id = str(uuid4())
+        collection_id = str(uuid4())
+        path = f"/{contract_id}/collections/{collection_id}/items"
+        url = f"{self.base_url}{path}"
+        page1_data["links"] = [
+            {
+                "rel": "next",
+                "href": f"{url}?token=token1",
+                "method": "GET",
+                "title": "next",
+                "type": "application/json",
+            }
+        ]
+        page2_data["links"] = [
+            {
+                "rel": "next",
+                "href": f"{url}?token=token2",
+                "method": "GET",
+                "title": "next",
+                "type": "application/json",
+            }
+        ]
+        page3_data["links"] = []
+        pook.reset()
+        pook.on()
+        pook.get(url).times(1).reply(200).json(page1_data).header(
+            "Content-Type", "application/json"
+        )
+        pook.get(url).times(1).reply(200).json(page2_data).header(
+            "Content-Type", "application/json"
+        )
+        pook.get(url).times(1).reply(200).json(page3_data).header(
+            "Content-Type", "application/json"
+        )
+        pages = list(
+            self.sdk.catalog.list_collection_items_iter(
+                contract_id=contract_id, collection_id=collection_id, max_pages=2
+            )
+        )
+        assert len(pages) == 2
+
+    @settings(
+        max_examples=3,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        page_data=get_response_strategy(
+            "/{contract_id}/collections/{collection_id}/items", "get", "200"
+        )
+    )
+    def test_list_collection_items_iter_no_next_link(self, backend, page_data):
+        """Test list_collection_items_iter terminates when no next link present."""
+        page_data = {**page_data}
+        contract_id = str(uuid4())
+        collection_id = str(uuid4())
+        path = f"/{contract_id}/collections/{collection_id}/items"
+        url = f"{self.base_url}{path}"
+        page_data["links"] = [
+            {
+                "rel": "self",
+                "href": url,
+                "method": "GET",
+                "title": "self",
+                "type": "application/json",
+            }
+        ]
+        pook.reset()
+        pook.on()
+        pook.get(url).times(1).reply(200).json(page_data).header(
+            "Content-Type", "application/json"
+        )
+        pages = list(
+            self.sdk.catalog.list_collection_items_iter(
+                contract_id=contract_id, collection_id=collection_id
+            )
+        )
+        assert len(pages) == 1
+
+    @settings(
+        max_examples=3,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
         page1_data=get_response_strategy("/{contract_id}/search", "get", "200"),
         page2_data=get_response_strategy("/{contract_id}/search", "get", "200"),
     )
-    def test_get_search_iter_pagination(self, backend, page1_data, page2_data):
-        """Test get_search_iter follows next links correctly."""
+    def test_search_text_iter_pagination(self, backend, page1_data, page2_data):
+        """Test search_text_iter follows next links correctly."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         contract_id = str(uuid4())
@@ -1886,7 +2187,7 @@ class TestCatalogService:
         pook.get(url).times(1).reply(200).json(page2_data).header(
             "Content-Type", "application/json"
         )
-        pages = list(self.sdk.catalog.get_search_iter(contract_id=contract_id))
+        pages = list(self.sdk.catalog.search_text_iter(contract_id=contract_id))
         assert len(pages) == 2
 
     @settings(
@@ -1903,10 +2204,10 @@ class TestCatalogService:
         page2_data=get_response_strategy("/{contract_id}/search", "get", "200"),
         page3_data=get_response_strategy("/{contract_id}/search", "get", "200"),
     )
-    def test_get_search_iter_max_pages(
+    def test_search_text_iter_max_pages(
         self, backend, page1_data, page2_data, page3_data
     ):
-        """Test get_search_iter respects max_pages limit."""
+        """Test search_text_iter respects max_pages limit."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         page3_data = {**page3_data}
@@ -1944,7 +2245,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.catalog.get_search_iter(contract_id=contract_id, max_pages=2)
+            self.sdk.catalog.search_text_iter(contract_id=contract_id, max_pages=2)
         )
         assert len(pages) == 2
 
@@ -1958,8 +2259,8 @@ class TestCatalogService:
         ],
     )
     @given(page_data=get_response_strategy("/{contract_id}/search", "get", "200"))
-    def test_get_search_iter_no_next_link(self, backend, page_data):
-        """Test get_search_iter terminates when no next link present."""
+    def test_search_text_iter_no_next_link(self, backend, page_data):
+        """Test search_text_iter terminates when no next link present."""
         page_data = {**page_data}
         contract_id = str(uuid4())
         path = f"/{contract_id}/search"
@@ -1978,7 +2279,7 @@ class TestCatalogService:
         pook.get(url).times(1).reply(200).json(page_data).header(
             "Content-Type", "application/json"
         )
-        pages = list(self.sdk.catalog.get_search_iter(contract_id=contract_id))
+        pages = list(self.sdk.catalog.search_text_iter(contract_id=contract_id))
         assert len(pages) == 1
 
     @settings(
@@ -1994,8 +2295,8 @@ class TestCatalogService:
         page1_data=get_response_strategy("/{contract_id}/search", "post", "200"),
         page2_data=get_response_strategy("/{contract_id}/search", "post", "200"),
     )
-    def test_post_search_iter_pagination(self, backend, page1_data, page2_data):
-        """Test post_search_iter follows next links correctly."""
+    def test_search_json_iter_pagination(self, backend, page1_data, page2_data):
+        """Test search_json_iter follows next links correctly."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         contract_id = str(uuid4())
@@ -2019,9 +2320,9 @@ class TestCatalogService:
         pook.post(url).times(1).reply(200).json(page2_data).header(
             "Content-Type", "application/json"
         )
-        body = PostSearchInput()
+        body = SearchJsonInput()
         pages = list(
-            self.sdk.catalog.post_search_iter(body=body, contract_id=contract_id)
+            self.sdk.catalog.search_json_iter(body=body, contract_id=contract_id)
         )
         assert len(pages) == 2
 
@@ -2039,10 +2340,10 @@ class TestCatalogService:
         page2_data=get_response_strategy("/{contract_id}/search", "post", "200"),
         page3_data=get_response_strategy("/{contract_id}/search", "post", "200"),
     )
-    def test_post_search_iter_max_pages(
+    def test_search_json_iter_max_pages(
         self, backend, page1_data, page2_data, page3_data
     ):
-        """Test post_search_iter respects max_pages limit."""
+        """Test search_json_iter respects max_pages limit."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         page3_data = {**page3_data}
@@ -2079,9 +2380,9 @@ class TestCatalogService:
         pook.post(url).times(1).reply(200).json(page3_data).header(
             "Content-Type", "application/json"
         )
-        body = PostSearchInput()
+        body = SearchJsonInput()
         pages = list(
-            self.sdk.catalog.post_search_iter(
+            self.sdk.catalog.search_json_iter(
                 body=body, contract_id=contract_id, max_pages=2
             )
         )
@@ -2097,8 +2398,8 @@ class TestCatalogService:
         ],
     )
     @given(page_data=get_response_strategy("/{contract_id}/search", "post", "200"))
-    def test_post_search_iter_no_next_link(self, backend, page_data):
-        """Test post_search_iter terminates when no next link present."""
+    def test_search_json_iter_no_next_link(self, backend, page_data):
+        """Test search_json_iter terminates when no next link present."""
         page_data = {**page_data}
         contract_id = str(uuid4())
         path = f"/{contract_id}/search"
@@ -2117,9 +2418,9 @@ class TestCatalogService:
         pook.post(url).times(1).reply(200).json(page_data).header(
             "Content-Type", "application/json"
         )
-        body = PostSearchInput()
+        body = SearchJsonInput()
         pages = list(
-            self.sdk.catalog.post_search_iter(body=body, contract_id=contract_id)
+            self.sdk.catalog.search_json_iter(body=body, contract_id=contract_id)
         )
         assert len(pages) == 1
 
@@ -2140,10 +2441,10 @@ class TestCatalogService:
             "/{contract_id}/collections/acquisition/items", "get", "200"
         ),
     )
-    def test_get_acquisition_items_iter_pagination(
+    def test_list_acquisition_items_iter_pagination(
         self, backend, page1_data, page2_data
     ):
-        """Test get_acquisition_items_iter follows next links correctly."""
+        """Test list_acquisition_items_iter follows next links correctly."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         contract_id = str(uuid4())
@@ -2168,7 +2469,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.catalog.get_acquisition_items_iter(contract_id=contract_id)
+            self.sdk.catalog.list_acquisition_items_iter(contract_id=contract_id)
         )
         assert len(pages) == 2
 
@@ -2192,10 +2493,10 @@ class TestCatalogService:
             "/{contract_id}/collections/acquisition/items", "get", "200"
         ),
     )
-    def test_get_acquisition_items_iter_max_pages(
+    def test_list_acquisition_items_iter_max_pages(
         self, backend, page1_data, page2_data, page3_data
     ):
-        """Test get_acquisition_items_iter respects max_pages limit."""
+        """Test list_acquisition_items_iter respects max_pages limit."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         page3_data = {**page3_data}
@@ -2233,7 +2534,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.catalog.get_acquisition_items_iter(
+            self.sdk.catalog.list_acquisition_items_iter(
                 contract_id=contract_id, max_pages=2
             )
         )
@@ -2253,8 +2554,8 @@ class TestCatalogService:
             "/{contract_id}/collections/acquisition/items", "get", "200"
         )
     )
-    def test_get_acquisition_items_iter_no_next_link(self, backend, page_data):
-        """Test get_acquisition_items_iter terminates when no next link present."""
+    def test_list_acquisition_items_iter_no_next_link(self, backend, page_data):
+        """Test list_acquisition_items_iter terminates when no next link present."""
         page_data = {**page_data}
         contract_id = str(uuid4())
         path = f"/{contract_id}/collections/acquisition/items"
@@ -2274,7 +2575,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.catalog.get_acquisition_items_iter(contract_id=contract_id)
+            self.sdk.catalog.list_acquisition_items_iter(contract_id=contract_id)
         )
         assert len(pages) == 1
 
@@ -2295,8 +2596,8 @@ class TestCatalogService:
             "/{contract_id}/collections/primary/items", "get", "200"
         ),
     )
-    def test_get_primary_items_iter_pagination(self, backend, page1_data, page2_data):
-        """Test get_primary_items_iter follows next links correctly."""
+    def test_list_primary_items_iter_pagination(self, backend, page1_data, page2_data):
+        """Test list_primary_items_iter follows next links correctly."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         contract_id = str(uuid4())
@@ -2320,7 +2621,7 @@ class TestCatalogService:
         pook.get(url).times(1).reply(200).json(page2_data).header(
             "Content-Type", "application/json"
         )
-        pages = list(self.sdk.catalog.get_primary_items_iter(contract_id=contract_id))
+        pages = list(self.sdk.catalog.list_primary_items_iter(contract_id=contract_id))
         assert len(pages) == 2
 
     @settings(
@@ -2343,10 +2644,10 @@ class TestCatalogService:
             "/{contract_id}/collections/primary/items", "get", "200"
         ),
     )
-    def test_get_primary_items_iter_max_pages(
+    def test_list_primary_items_iter_max_pages(
         self, backend, page1_data, page2_data, page3_data
     ):
-        """Test get_primary_items_iter respects max_pages limit."""
+        """Test list_primary_items_iter respects max_pages limit."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         page3_data = {**page3_data}
@@ -2384,7 +2685,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.catalog.get_primary_items_iter(
+            self.sdk.catalog.list_primary_items_iter(
                 contract_id=contract_id, max_pages=2
             )
         )
@@ -2404,8 +2705,8 @@ class TestCatalogService:
             "/{contract_id}/collections/primary/items", "get", "200"
         )
     )
-    def test_get_primary_items_iter_no_next_link(self, backend, page_data):
-        """Test get_primary_items_iter terminates when no next link present."""
+    def test_list_primary_items_iter_no_next_link(self, backend, page_data):
+        """Test list_primary_items_iter terminates when no next link present."""
         page_data = {**page_data}
         contract_id = str(uuid4())
         path = f"/{contract_id}/collections/primary/items"
@@ -2424,7 +2725,7 @@ class TestCatalogService:
         pook.get(url).times(1).reply(200).json(page_data).header(
             "Content-Type", "application/json"
         )
-        pages = list(self.sdk.catalog.get_primary_items_iter(contract_id=contract_id))
+        pages = list(self.sdk.catalog.list_primary_items_iter(contract_id=contract_id))
         assert len(pages) == 1
 
     @settings(
@@ -2448,10 +2749,10 @@ class TestCatalogService:
             "200",
         ),
     )
-    def test_get_surface_brightness_temperature_items_iter_pagination(
+    def test_list_surface_brightness_temperature_items_iter_pagination(
         self, backend, page1_data, page2_data
     ):
-        """Test get_surface_brightness_temperature_items_iter follows next links correctly."""
+        """Test list_surface_brightness_temperature_items_iter follows next links correctly."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         contract_id = str(uuid4())
@@ -2476,7 +2777,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.catalog.get_surface_brightness_temperature_items_iter(
+            self.sdk.catalog.list_surface_brightness_temperature_items_iter(
                 contract_id=contract_id
             )
         )
@@ -2508,10 +2809,10 @@ class TestCatalogService:
             "200",
         ),
     )
-    def test_get_surface_brightness_temperature_items_iter_max_pages(
+    def test_list_surface_brightness_temperature_items_iter_max_pages(
         self, backend, page1_data, page2_data, page3_data
     ):
-        """Test get_surface_brightness_temperature_items_iter respects max_pages limit."""
+        """Test list_surface_brightness_temperature_items_iter respects max_pages limit."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         page3_data = {**page3_data}
@@ -2549,7 +2850,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.catalog.get_surface_brightness_temperature_items_iter(
+            self.sdk.catalog.list_surface_brightness_temperature_items_iter(
                 contract_id=contract_id, max_pages=2
             )
         )
@@ -2571,10 +2872,10 @@ class TestCatalogService:
             "200",
         )
     )
-    def test_get_surface_brightness_temperature_items_iter_no_next_link(
+    def test_list_surface_brightness_temperature_items_iter_no_next_link(
         self, backend, page_data
     ):
-        """Test get_surface_brightness_temperature_items_iter terminates when no next link present."""
+        """Test list_surface_brightness_temperature_items_iter terminates when no next link present."""
         page_data = {**page_data}
         contract_id = str(uuid4())
         path = f"/{contract_id}/collections/surface-brightness-temperature/items"
@@ -2594,7 +2895,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.catalog.get_surface_brightness_temperature_items_iter(
+            self.sdk.catalog.list_surface_brightness_temperature_items_iter(
                 contract_id=contract_id
             )
         )
@@ -2617,10 +2918,10 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/search", "get", "200"
         ),
     )
-    def test_get_collection_search_iter_pagination(
+    def test_collection_search_text_iter_pagination(
         self, backend, page1_data, page2_data
     ):
-        """Test get_collection_search_iter follows next links correctly."""
+        """Test collection_search_text_iter follows next links correctly."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         contract_id = str(uuid4())
@@ -2646,7 +2947,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.catalog.get_collection_search_iter(
+            self.sdk.catalog.collection_search_text_iter(
                 contract_id=contract_id, collection_id=collection_id
             )
         )
@@ -2672,10 +2973,10 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/search", "get", "200"
         ),
     )
-    def test_get_collection_search_iter_max_pages(
+    def test_collection_search_text_iter_max_pages(
         self, backend, page1_data, page2_data, page3_data
     ):
-        """Test get_collection_search_iter respects max_pages limit."""
+        """Test collection_search_text_iter respects max_pages limit."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         page3_data = {**page3_data}
@@ -2714,7 +3015,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.catalog.get_collection_search_iter(
+            self.sdk.catalog.collection_search_text_iter(
                 contract_id=contract_id, collection_id=collection_id, max_pages=2
             )
         )
@@ -2734,8 +3035,8 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/search", "get", "200"
         )
     )
-    def test_get_collection_search_iter_no_next_link(self, backend, page_data):
-        """Test get_collection_search_iter terminates when no next link present."""
+    def test_collection_search_text_iter_no_next_link(self, backend, page_data):
+        """Test collection_search_text_iter terminates when no next link present."""
         page_data = {**page_data}
         contract_id = str(uuid4())
         collection_id = str(uuid4())
@@ -2756,7 +3057,7 @@ class TestCatalogService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.catalog.get_collection_search_iter(
+            self.sdk.catalog.collection_search_text_iter(
                 contract_id=contract_id, collection_id=collection_id
             )
         )
@@ -2779,10 +3080,10 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/search", "post", "200"
         ),
     )
-    def test_post_collection_search_iter_pagination(
+    def test_collection_search_json_iter_pagination(
         self, backend, page1_data, page2_data
     ):
-        """Test post_collection_search_iter follows next links correctly."""
+        """Test collection_search_json_iter follows next links correctly."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         contract_id = str(uuid4())
@@ -2807,9 +3108,9 @@ class TestCatalogService:
         pook.post(url).times(1).reply(200).json(page2_data).header(
             "Content-Type", "application/json"
         )
-        body = PostCollectionSearchInput()
+        body = CollectionSearchJsonInput()
         pages = list(
-            self.sdk.catalog.post_collection_search_iter(
+            self.sdk.catalog.collection_search_json_iter(
                 body=body, contract_id=contract_id, collection_id=collection_id
             )
         )
@@ -2835,10 +3136,10 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/search", "post", "200"
         ),
     )
-    def test_post_collection_search_iter_max_pages(
+    def test_collection_search_json_iter_max_pages(
         self, backend, page1_data, page2_data, page3_data
     ):
-        """Test post_collection_search_iter respects max_pages limit."""
+        """Test collection_search_json_iter respects max_pages limit."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         page3_data = {**page3_data}
@@ -2876,9 +3177,9 @@ class TestCatalogService:
         pook.post(url).times(1).reply(200).json(page3_data).header(
             "Content-Type", "application/json"
         )
-        body = PostCollectionSearchInput()
+        body = CollectionSearchJsonInput()
         pages = list(
-            self.sdk.catalog.post_collection_search_iter(
+            self.sdk.catalog.collection_search_json_iter(
                 body=body,
                 contract_id=contract_id,
                 collection_id=collection_id,
@@ -2901,8 +3202,8 @@ class TestCatalogService:
             "/{contract_id}/collections/{collection_id}/search", "post", "200"
         )
     )
-    def test_post_collection_search_iter_no_next_link(self, backend, page_data):
-        """Test post_collection_search_iter terminates when no next link present."""
+    def test_collection_search_json_iter_no_next_link(self, backend, page_data):
+        """Test collection_search_json_iter terminates when no next link present."""
         page_data = {**page_data}
         contract_id = str(uuid4())
         collection_id = str(uuid4())
@@ -2922,9 +3223,9 @@ class TestCatalogService:
         pook.post(url).times(1).reply(200).json(page_data).header(
             "Content-Type", "application/json"
         )
-        body = PostCollectionSearchInput()
+        body = CollectionSearchJsonInput()
         pages = list(
-            self.sdk.catalog.post_collection_search_iter(
+            self.sdk.catalog.collection_search_json_iter(
                 body=body, contract_id=contract_id, collection_id=collection_id
             )
         )

@@ -1509,6 +1509,44 @@ class TestOtmService:
     )
     @given(
         response_data=get_response_strategy(
+            "/{contract_id}/tasking/feasibilities/", "post", "503"
+        ),
+        body_data=get_request_body_strategy(
+            "/{contract_id}/tasking/feasibilities/", "post"
+        ),
+    )
+    def test_create_feasibility_request_503_error(
+        self, backend, response_data, body_data
+    ):
+        """
+        Test create_feasibility_request with 503 error response.
+
+        HTTP 503 errors raise ServerError.
+        """
+        contract_id = uuid4()
+        path = f"/{contract_id}/tasking/feasibilities/"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.post(url).reply(503).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        body = FeasibilityRequest.model_validate(body_data)
+        with pytest.raises(ServerError) as exc_info:
+            self.sdk.otm.create_feasibility_request(contract_id=contract_id, body=body)
+        assert exc_info.value.status_code == 503
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
             "/{contract_id}/tasking/feasibilities/{id}", "get", "200"
         )
     )
@@ -1962,6 +2000,47 @@ class TestOtmService:
                 contract_id=contract_id, order_id=order_id, body=body
             )
         assert exc_info.value.status_code == 422
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
+            "/{contract_id}/tasking/feasibilities/orders/{order_id}", "post", "503"
+        ),
+        body_data=get_request_body_strategy(
+            "/{contract_id}/tasking/feasibilities/orders/{order_id}", "post"
+        ),
+    )
+    def test_create_order_feasibility_request_503_error(
+        self, backend, response_data, body_data
+    ):
+        """
+        Test create_order_feasibility_request with 503 error response.
+
+        HTTP 503 errors raise ServerError.
+        """
+        contract_id = uuid4()
+        order_id = uuid4()
+        path = f"/{contract_id}/tasking/feasibilities/orders/{order_id}"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.post(url).reply(503).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        body = ModifyFeasibilityRequest.model_validate(body_data)
+        with pytest.raises(ServerError) as exc_info:
+            self.sdk.otm.create_order_feasibility_request(
+                contract_id=contract_id, order_id=order_id, body=body
+            )
+        assert exc_info.value.status_code == 503
 
     @settings(
         max_examples=10,
@@ -3058,6 +3137,45 @@ class TestOtmService:
                 contract_id=contract_id, series_id=series_id, body=body
             )
         assert exc_info.value.status_code == 400
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
+            "/{contract_id}/tasking/series/{series_id}", "patch", "403"
+        ),
+        body_data=get_request_body_strategy(
+            "/{contract_id}/tasking/series/{series_id}", "patch"
+        ),
+    )
+    def test_edit_series_403_error(self, backend, response_data, body_data):
+        """
+        Test edit_series with 403 error response.
+
+        HTTP 403 errors raise ClientError.
+        """
+        contract_id = uuid4()
+        series_id = uuid4()
+        path = f"/{contract_id}/tasking/series/{series_id}"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.patch(url).reply(403).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        body = EditSeriesProperties.model_validate(body_data)
+        with pytest.raises(ClientError) as exc_info:
+            self.sdk.otm.edit_series(
+                contract_id=contract_id, series_id=series_id, body=body
+            )
+        assert exc_info.value.status_code == 403
 
     @settings(
         max_examples=10,

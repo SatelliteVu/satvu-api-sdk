@@ -5,10 +5,10 @@ from __future__ import annotations
 
 from typing import Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class QueryableProperty(BaseModel):
+class QueryableProperty(pydantic.BaseModel):
     """
     Attributes:
         enum (Union[None, list[str]]): Allowed values.
@@ -17,19 +17,19 @@ class QueryableProperty(BaseModel):
         type_ (Union[None, str]): The type of the property.
     """
 
-    enum: Union[None, list[str]] = Field(
+    enum: Union[None, list[str]] = pydantic.Field(
         default=None, description="""Allowed values.""", alias="enum"
     )
-    format_: Union[None, str] = Field(
+    format_: Union[None, str] = pydantic.Field(
         default=None, description="""The format of the property.""", alias="format"
     )
-    title: Union[None, str] = Field(
+    title: Union[None, str] = pydantic.Field(
         default=None, description="""The title of the property.""", alias="title"
     )
-    type_: Union[None, str] = Field(
+    type_: Union[None, str] = pydantic.Field(
         default=None, description="""The type of the property.""", alias="type"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

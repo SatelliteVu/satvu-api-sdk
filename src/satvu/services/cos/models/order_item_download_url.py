@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class OrderItemDownloadUrl(BaseModel):
+class OrderItemDownloadUrl(pydantic.BaseModel):
     """Response payload for an order item download
 
     Attributes:
@@ -14,15 +14,15 @@ class OrderItemDownloadUrl(BaseModel):
         ttl (int): The time-to-live for the presigned download URL until it expires.
     """
 
-    url: str = Field(
+    url: str = pydantic.Field(
         ..., description="""The presigned download URL for the item.""", alias="url"
     )
-    ttl: int = Field(
+    ttl: int = pydantic.Field(
         ...,
         description="""The time-to-live for the presigned download URL until it expires.""",
         alias="ttl",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

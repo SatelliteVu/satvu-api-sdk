@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class FilterFields(BaseModel):
+class FilterFields(pydantic.BaseModel):
     """
     Attributes:
         status (list[str] | None | str):
@@ -14,16 +14,16 @@ class FilterFields(BaseModel):
         max_off_nadir (int | list[int] | None):
     """
 
-    status: list[str] | None | str = Field(
+    status: list[str] | None | str = pydantic.Field(
         default=None, description=None, alias="status"
     )
-    min_off_nadir: int | list[int] | None = Field(
+    min_off_nadir: int | list[int] | None = pydantic.Field(
         default=None, description=None, alias="min_off_nadir"
     )
-    max_off_nadir: int | list[int] | None = Field(
+    max_off_nadir: int | list[int] | None = pydantic.Field(
         default=None, description=None, alias="max_off_nadir"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

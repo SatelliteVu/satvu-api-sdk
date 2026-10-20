@@ -6,12 +6,12 @@ from __future__ import annotations
 import datetime
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.product import Product
 
 
-class TaskingOrderExpiredPayloadV2(BaseModel):
+class TaskingOrderExpiredPayloadV2(pydantic.BaseModel):
     """
     Attributes:
         order_id (str): Order ID
@@ -23,28 +23,28 @@ class TaskingOrderExpiredPayloadV2(BaseModel):
         status (Literal['expired']):  Default: 'expired'.
     """
 
-    order_id: str = Field(..., description="""Order ID""", alias="order_id")
-    contract_id: str = Field(
+    order_id: str = pydantic.Field(..., description="""Order ID""", alias="order_id")
+    contract_id: str = pydantic.Field(
         ...,
         description="""Contract ID with which the order is associated""",
         alias="contract_id",
     )
-    acquisition_window: list[datetime.datetime] = Field(
+    acquisition_window: list[datetime.datetime] = pydantic.Field(
         ...,
         description="""Requested datetime range of the order""",
         alias="acquisition_window",
     )
-    product: Product = Field(..., description=None, alias="product")
-    user_id: str = Field(
+    product: Product = pydantic.Field(..., description=None, alias="product")
+    user_id: str = pydantic.Field(
         ..., description="""Auth0 user ID of owner of order""", alias="user_id"
     )
-    order_name: None | str = Field(
+    order_name: None | str = pydantic.Field(
         default=None, description="""Order Name""", alias="order_name"
     )
-    status: Literal["expired"] = Field(
+    status: Literal["expired"] = pydantic.Field(
         default="expired", description=None, alias="status"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

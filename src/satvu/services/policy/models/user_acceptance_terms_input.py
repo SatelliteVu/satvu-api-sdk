@@ -3,21 +3,21 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class UserAcceptanceTermsInput(BaseModel):
+class UserAcceptanceTermsInput(pydantic.BaseModel):
     """
     Attributes:
         accepted (bool): Terms and Conditions have been accepted
         token (str): User access token
     """
 
-    accepted: bool = Field(
+    accepted: bool = pydantic.Field(
         ..., description="""Terms and Conditions have been accepted""", alias="accepted"
     )
-    token: str = Field(..., description="""User access token""", alias="token")
+    token: str = pydantic.Field(..., description="""User access token""", alias="token")
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

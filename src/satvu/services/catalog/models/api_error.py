@@ -5,20 +5,20 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.error import Error
 
 
-class ApiError(BaseModel):
+class ApiError(pydantic.BaseModel):
     """
     Attributes:
         errors (list[Error]):
     """
 
-    errors: list[Error] = Field(..., description=None, alias="errors")
+    errors: list[Error] = pydantic.Field(..., description=None, alias="errors")
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

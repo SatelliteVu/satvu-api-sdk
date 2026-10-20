@@ -3,17 +3,17 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class PropertyRef(BaseModel):
+class PropertyRef(pydantic.BaseModel):
     """
     Attributes:
         property_ (str):
     """
 
-    property_: str = Field(..., description=None, alias="property")
+    property_: str = pydantic.Field(..., description=None, alias="property")
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

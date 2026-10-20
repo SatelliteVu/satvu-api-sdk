@@ -5,10 +5,10 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class PolygonGeometry(BaseModel):
+class PolygonGeometry(pydantic.BaseModel):
     """GeoJSON Polygon geometry.
 
     Represents a polygon with an outer ring and optional holes.
@@ -21,13 +21,15 @@ class PolygonGeometry(BaseModel):
             type_ (Literal['Polygon']):  Default: 'Polygon'.
     """
 
-    coordinates: list[list[list[float | int]]] = Field(
+    coordinates: list[list[list[float | int]]] = pydantic.Field(
         ...,
         description="""The coordinates of the polygon. First ring is outer, rest are holes.""",
         alias="coordinates",
     )
-    type_: Literal["Polygon"] = Field(default="Polygon", description=None, alias="type")
+    type_: Literal["Polygon"] = pydantic.Field(
+        default="Polygon", description=None, alias="type"
+    )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

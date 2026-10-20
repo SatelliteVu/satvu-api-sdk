@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class SeriesPrice(BaseModel):
+class SeriesPrice(pydantic.BaseModel):
     """Price breakdown for a series, calculated at creation time.
 
     Attributes:
@@ -24,55 +24,55 @@ class SeriesPrice(BaseModel):
         total_price_series (int): Total price across all planned orders (total_price_order × total_order_count).
     """
 
-    currency: str = Field(
+    currency: str = pydantic.Field(
         ..., description="""ISO 4217 currency code.""", alias="currency"
     )
-    base: int = Field(
+    base: int = pydantic.Field(
         ...,
         description="""Base price per order in smallest currency unit.""",
         alias="base",
     )
-    addon_withhold: int = Field(
+    addon_withhold: int = pydantic.Field(
         ...,
         description="""Withhold addon price per order in smallest currency unit.""",
         alias="addon:withhold",
     )
-    licence_level: int = Field(
+    licence_level: int = pydantic.Field(
         ...,
         description="""Licence level addon price per order in smallest currency unit.""",
         alias="licence_level",
     )
-    total_price_order: int = Field(
+    total_price_order: int = pydantic.Field(
         ...,
         description="""Total price per order (base + addons) in smallest currency unit.""",
         alias="total_price_order",
     )
-    total_uplift_order: int = Field(
+    total_uplift_order: int = pydantic.Field(
         ...,
         description="""Total addon uplift per order (addon:withhold + licence_level) in smallest currency unit.""",
         alias="total_uplift_order",
     )
-    total_order_count: int = Field(
+    total_order_count: int = pydantic.Field(
         ...,
         description="""Total number of orders in the series.""",
         alias="total_order_count",
     )
-    total_base_price_series: int = Field(
+    total_base_price_series: int = pydantic.Field(
         ...,
         description="""Total base price across all planned orders (base × total_order_count).""",
         alias="total_base_price_series",
     )
-    total_uplift_series: int = Field(
+    total_uplift_series: int = pydantic.Field(
         ...,
         description="""Total addon uplift across all planned orders (total_uplift_order × total_order_count).""",
         alias="total_uplift_series",
     )
-    total_price_series: int = Field(
+    total_price_series: int = pydantic.Field(
         ...,
         description="""Total price across all planned orders (total_price_order × total_order_count).""",
         alias="total_price_series",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

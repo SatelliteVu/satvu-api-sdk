@@ -6,7 +6,7 @@ from __future__ import annotations
 import datetime
 from typing import TYPE_CHECKING, Literal, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.day_night_mode import DayNightMode
 from ..models.order_status import OrderStatus
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from ..models.status_history_entry import StatusHistoryEntry
 
 
-class StoredAssuredOrderRequestProperties(BaseModel):
+class StoredAssuredOrderRequestProperties(pydantic.BaseModel):
     """Feature properties model for assured priority stored order
 
     Attributes:
@@ -49,78 +49,80 @@ class StoredAssuredOrderRequestProperties(BaseModel):
             newest first.
     """
 
-    product: Literal["assured"] = Field(
+    product: Literal["assured"] = pydantic.Field(
         default="assured", description="""Assured Priority.""", alias="product"
     )
-    datetime_: str = Field(
+    datetime_: str = pydantic.Field(
         ...,
         description="""The closed date-time interval of the tasking order request.""",
         alias="datetime",
     )
-    signature: str = Field(..., description="""Signature token.""", alias="signature")
-    status: OrderStatus = Field(..., description=None, alias="status")
-    created_at: datetime.datetime = Field(
+    signature: str = pydantic.Field(
+        ..., description="""Signature token.""", alias="signature"
+    )
+    status: OrderStatus = pydantic.Field(..., description=None, alias="status")
+    created_at: datetime.datetime = pydantic.Field(
         ...,
         description="""The datetime at which the order was created.""",
         alias="created_at",
     )
-    updated_at: datetime.datetime = Field(
+    updated_at: datetime.datetime = pydantic.Field(
         ...,
         description="""The datetime at which the order was last updated.""",
         alias="updated_at",
     )
-    stac_item_id: None | str = Field(
+    stac_item_id: None | str = pydantic.Field(
         default=None,
         description="""The item id of the STAC item that fulfilled the order, if the order has been fulfilled.""",
         alias="stac:item_id",
     )
-    stac_datetime: datetime.datetime | None = Field(
+    stac_datetime: datetime.datetime | None = pydantic.Field(
         default=None,
         description="""The acquisition datetime of the STAC item that fulfilled the order, if the order has been fulfilled.""",
         alias="stac:datetime",
     )
-    stac_metadata: dict | None = Field(
+    stac_metadata: dict | None = pydantic.Field(
         default=None,
         description="""STAC item metadata including presigned asset URLs for high-resolution imagery, if the order has been fulfilled and high-res assets are available.""",
         alias="stac:metadata",
     )
-    satvu_day_night_mode: Union[None, DayNightMode] = Field(
+    satvu_day_night_mode: Union[None, DayNightMode] = pydantic.Field(
         default=None, description=None, alias="satvu:day_night_mode"
     )
-    max_cloud_cover: Union[None, int] = Field(
+    max_cloud_cover: Union[None, int] = pydantic.Field(
         default=25,
         description="""The max threshold of acceptable cloud coverage. Measured in percent.""",
         alias="max_cloud_cover",
     )
-    min_off_nadir: Union[None, int] = Field(
+    min_off_nadir: Union[None, int] = pydantic.Field(
         default=0,
         description="""The minimum angle from the sensor between nadir and the scene center. Measured in decimal degrees.""",
         alias="min_off_nadir",
     )
-    max_off_nadir: Union[None, int] = Field(
+    max_off_nadir: Union[None, int] = pydantic.Field(
         default=30,
         description="""The maximum angle from the sensor between nadir and the scene center. Measured in decimal degrees. Must be larger than `min_off_nadir`.""",
         alias="max_off_nadir",
     )
-    licence_level: None | str = Field(
+    licence_level: None | str = pydantic.Field(
         default=None,
         description="""The optional licence level for the order. Licence levels are specific to the contract. If not specified, the option will be set to the licence with the smallest uplift in the relevant contract.""",
         alias="licence_level",
     )
-    addon_withhold: None | str = Field(
+    addon_withhold: None | str = pydantic.Field(
         default=None,
         description="""The optional ISO8601 string describing the duration that an order will be withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set to the default specified in the relevant contract.""",
         alias="addon:withhold",
     )
-    name: None | str = Field(
+    name: None | str = pydantic.Field(
         default=None, description="""The name of the order.""", alias="name"
     )
-    status_history: Union[None, list[StatusHistoryEntry]] = Field(
+    status_history: Union[None, list[StatusHistoryEntry]] = pydantic.Field(
         default=None,
         description="""Chronological history of status changes for this order, newest first.""",
         alias="status_history",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

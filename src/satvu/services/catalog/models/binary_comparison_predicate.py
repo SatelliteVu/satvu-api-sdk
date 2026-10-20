@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.binary_comparison_predicate_op import BinaryComparisonPredicateOp
 
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from ..models.timestamp_instant import TimestampInstant
 
 
-class BinaryComparisonPredicate(BaseModel):
+class BinaryComparisonPredicate(pydantic.BaseModel):
     """
     Attributes:
         args (list[Union['ArithmeticExpression', 'DateInstant', 'PropertyRef', 'TimestampInstant', bool, float, str]]):
@@ -33,9 +33,9 @@ class BinaryComparisonPredicate(BaseModel):
             float,
             str,
         ]
-    ] = Field(..., description=None, alias="args")
-    op: BinaryComparisonPredicateOp = Field(..., description=None, alias="op")
+    ] = pydantic.Field(..., description=None, alias="args")
+    op: BinaryComparisonPredicateOp = pydantic.Field(..., description=None, alias="op")
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

@@ -5,13 +5,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.structured_error import StructuredError
 
 
-class StructuredErrorResponse(BaseModel):
+class StructuredErrorResponse(pydantic.BaseModel):
     """Response envelope wrapping a :class:`StructuredError`.
 
     Attributes:
@@ -22,7 +22,7 @@ class StructuredErrorResponse(BaseModel):
             string-parsing a free-text message.
     """
 
-    error: StructuredError = Field(
+    error: StructuredError = pydantic.Field(
         ...,
         description="""Machine-readable error body carrying a code, message, and context.
 
@@ -32,6 +32,6 @@ string-parsing a free-text message.""",
         alias="error",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

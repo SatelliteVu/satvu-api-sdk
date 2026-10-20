@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Annotated, Literal, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.line_string import LineString
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from ..models.polygon import Polygon
 
 
-class GeometryCollection(BaseModel):
+class GeometryCollection(pydantic.BaseModel):
     """GeometryCollection Model
 
     Attributes:
@@ -26,7 +26,7 @@ class GeometryCollection(BaseModel):
         bbox (list[float] | None):
     """
 
-    type_: Literal["GeometryCollection"] = Field(
+    type_: Literal["GeometryCollection"] = pydantic.Field(
         default="GeometryCollection", description=None, alias="type"
     )
     geometries: list[
@@ -40,11 +40,13 @@ class GeometryCollection(BaseModel):
                 Point,
                 Polygon,
             ],
-            Field(discriminator="type_"),
+            pydantic.Field(discriminator="type_"),
         ]
-    ] = Field(..., description=None, alias="geometries")
-    bbox: list[float] | None = Field(default=None, description=None, alias="bbox")
+    ] = pydantic.Field(..., description=None, alias="geometries")
+    bbox: list[float] | None = pydantic.Field(
+        default=None, description=None, alias="bbox"
+    )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

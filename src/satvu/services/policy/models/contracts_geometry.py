@@ -5,10 +5,10 @@ from __future__ import annotations
 
 from typing import Any, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class ContractsGeometry(BaseModel):
+class ContractsGeometry(pydantic.BaseModel):
     """Allowed geographical area of the contract
 
     Attributes:
@@ -16,13 +16,15 @@ class ContractsGeometry(BaseModel):
         type_ (Union[None, str]):
     """
 
-    coordinates: Union[None, Any] = Field(
+    coordinates: Union[None, Any] = pydantic.Field(
         default=None,
         description="""Value of any type, including null""",
         alias="coordinates",
     )
-    type_: Union[None, str] = Field(default=None, description=None, alias="type")
+    type_: Union[None, str] = pydantic.Field(
+        default=None, description=None, alias="type"
+    )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

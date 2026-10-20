@@ -73,9 +73,9 @@ class TestResellerService:
         response_data=get_response_strategy("/user", "post", "201"),
         body_data=get_request_body_strategy("/user", "post"),
     )
-    def test_create_users_201(self, backend, response_data, body_data):
+    def test_create_end_user_201(self, backend, response_data, body_data):
         """
-        Test create_users with 201 response.
+        Test create_end_user with 201 response.
         """
         path = "/user"
         url = f"{self.base_url}{path}"
@@ -85,7 +85,7 @@ class TestResellerService:
         mock.reply(201).json(response_data).header("Content-Type", "application/json")
         body_adapter = TypeAdapter(list[CreateUser])
         body = body_adapter.validate_python(body_data)
-        result = self.sdk.reseller.create_users(items=body)
+        result = self.sdk.reseller.create_end_user(items=body)
         assert_request_body_matches_input(mock, body_data, "POST /user")
         assert_request_body_conforms(
             mock, get_request_body_schema("/user", "post"), "POST /user", body_data
@@ -106,11 +106,11 @@ class TestResellerService:
         response_data=get_response_strategy("/user", "post", "201"),
         body_data=get_request_body_strategy("/user", "post"),
     )
-    def test_create_users_minimal_body_sends_only_what_was_set(
+    def test_create_end_user_minimal_body_sends_only_what_was_set(
         self, backend, response_data, body_data
     ):
         """
-        Test create_users sends no field the caller left unset.
+        Test create_end_user sends no field the caller left unset.
         """
         path = "/user"
         url = f"{self.base_url}{path}"
@@ -124,7 +124,7 @@ class TestResellerService:
         body_adapter = TypeAdapter(list[CreateUser])
         body = body_adapter.validate_python(body_data)
         with suppress(Exception):
-            self.sdk.reseller.create_users(items=body)
+            self.sdk.reseller.create_end_user(items=body)
         assert_request_body_matches_input(mock, body_data, "POST /user")
         assert_request_body_conforms(
             mock, get_request_body_schema("/user", "post"), "POST /user", body_data
@@ -143,9 +143,9 @@ class TestResellerService:
         response_data=get_response_strategy("/user", "post", "422"),
         body_data=get_request_body_strategy("/user", "post"),
     )
-    def test_create_users_422_error(self, backend, response_data, body_data):
+    def test_create_end_user_422_error(self, backend, response_data, body_data):
         """
-        Test create_users with 422 error response.
+        Test create_end_user with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -159,7 +159,7 @@ class TestResellerService:
         body_adapter = TypeAdapter(list[CreateUser])
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.reseller.create_users(items=body)
+            self.sdk.reseller.create_end_user(items=body)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -172,9 +172,9 @@ class TestResellerService:
         ],
     )
     @given(response_data=get_response_strategy("/users", "get", "200"))
-    def test_get_users_200(self, backend, response_data):
+    def test_list_end_users_200(self, backend, response_data):
         """
-        Test get_users with 200 response.
+        Test list_end_users with 200 response.
         """
         path = "/users"
         url = f"{self.base_url}{path}"
@@ -183,7 +183,7 @@ class TestResellerService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.reseller.get_users()
+        result = self.sdk.reseller.list_end_users()
         assert result is not None
         assert isinstance(result, GetUsers)
 
@@ -197,9 +197,9 @@ class TestResellerService:
         ],
     )
     @given(response_data=get_response_strategy("/users", "get", "422"))
-    def test_get_users_422_error(self, backend, response_data):
+    def test_list_end_users_422_error(self, backend, response_data):
         """
-        Test get_users with 422 error response.
+        Test list_end_users with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -211,7 +211,7 @@ class TestResellerService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.reseller.get_users()
+            self.sdk.reseller.list_end_users()
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -224,9 +224,9 @@ class TestResellerService:
         ],
     )
     @given(response_data=get_response_strategy("/companies", "get", "200"))
-    def test_get_companies_200(self, backend, response_data):
+    def test_list_end_user_companies_200(self, backend, response_data):
         """
-        Test get_companies with 200 response.
+        Test list_end_user_companies with 200 response.
         """
         path = "/companies"
         url = f"{self.base_url}{path}"
@@ -235,7 +235,7 @@ class TestResellerService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.reseller.get_companies()
+        result = self.sdk.reseller.list_end_user_companies()
         assert result is not None
         assert isinstance(result, GetCompanies)
 
@@ -249,9 +249,9 @@ class TestResellerService:
         ],
     )
     @given(response_data=get_response_strategy("/companies", "get", "422"))
-    def test_get_companies_422_error(self, backend, response_data):
+    def test_list_end_user_companies_422_error(self, backend, response_data):
         """
-        Test get_companies with 422 error response.
+        Test list_end_user_companies with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -263,7 +263,7 @@ class TestResellerService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.reseller.get_companies()
+            self.sdk.reseller.list_end_user_companies()
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -279,9 +279,9 @@ class TestResellerService:
         response_data=get_response_strategy("/search/users", "post", "200"),
         body_data=get_request_body_strategy("/search/users", "post"),
     )
-    def test_search_users_200(self, backend, response_data, body_data):
+    def test_search_end_users_200(self, backend, response_data, body_data):
         """
-        Test search_users with 200 response.
+        Test search_end_users with 200 response.
         """
         path = "/search/users"
         url = f"{self.base_url}{path}"
@@ -290,7 +290,7 @@ class TestResellerService:
         mock = pook.post(url)
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = SearchUsers.model_validate(body_data)
-        result = self.sdk.reseller.search_users(body=body)
+        result = self.sdk.reseller.search_end_users(body=body)
         assert_request_body_matches_input(mock, body_data, "POST /search/users")
         assert_request_body_conforms(
             mock,
@@ -314,11 +314,11 @@ class TestResellerService:
         response_data=get_response_strategy("/search/users", "post", "200"),
         body_data=get_request_body_strategy("/search/users", "post"),
     )
-    def test_search_users_minimal_body_sends_only_what_was_set(
+    def test_search_end_users_minimal_body_sends_only_what_was_set(
         self, backend, response_data, body_data
     ):
         """
-        Test search_users sends no field the caller left unset.
+        Test search_end_users sends no field the caller left unset.
         """
         path = "/search/users"
         url = f"{self.base_url}{path}"
@@ -331,7 +331,7 @@ class TestResellerService:
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = SearchUsers.model_validate(body_data)
         with suppress(Exception):
-            self.sdk.reseller.search_users(body=body)
+            self.sdk.reseller.search_end_users(body=body)
         assert_request_body_matches_input(mock, body_data, "POST /search/users")
         assert_request_body_conforms(
             mock,
@@ -353,9 +353,9 @@ class TestResellerService:
         response_data=get_response_strategy("/search/users", "post", "422"),
         body_data=get_request_body_strategy("/search/users", "post"),
     )
-    def test_search_users_422_error(self, backend, response_data, body_data):
+    def test_search_end_users_422_error(self, backend, response_data, body_data):
         """
-        Test search_users with 422 error response.
+        Test search_end_users with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -368,7 +368,7 @@ class TestResellerService:
         )
         body = SearchUsers.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.reseller.search_users(body=body)
+            self.sdk.reseller.search_end_users(body=body)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -384,9 +384,9 @@ class TestResellerService:
         response_data=get_response_strategy("/search/companies", "post", "200"),
         body_data=get_request_body_strategy("/search/companies", "post"),
     )
-    def test_search_companies_200(self, backend, response_data, body_data):
+    def test_search_end_user_companies_200(self, backend, response_data, body_data):
         """
-        Test search_companies with 200 response.
+        Test search_end_user_companies with 200 response.
         """
         path = "/search/companies"
         url = f"{self.base_url}{path}"
@@ -395,7 +395,7 @@ class TestResellerService:
         mock = pook.post(url)
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = SearchCompanies.model_validate(body_data)
-        result = self.sdk.reseller.search_companies(body=body)
+        result = self.sdk.reseller.search_end_user_companies(body=body)
         assert_request_body_matches_input(mock, body_data, "POST /search/companies")
         assert_request_body_conforms(
             mock,
@@ -419,11 +419,11 @@ class TestResellerService:
         response_data=get_response_strategy("/search/companies", "post", "200"),
         body_data=get_request_body_strategy("/search/companies", "post"),
     )
-    def test_search_companies_minimal_body_sends_only_what_was_set(
+    def test_search_end_user_companies_minimal_body_sends_only_what_was_set(
         self, backend, response_data, body_data
     ):
         """
-        Test search_companies sends no field the caller left unset.
+        Test search_end_user_companies sends no field the caller left unset.
         """
         path = "/search/companies"
         url = f"{self.base_url}{path}"
@@ -436,7 +436,7 @@ class TestResellerService:
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = SearchCompanies.model_validate(body_data)
         with suppress(Exception):
-            self.sdk.reseller.search_companies(body=body)
+            self.sdk.reseller.search_end_user_companies(body=body)
         assert_request_body_matches_input(mock, body_data, "POST /search/companies")
         assert_request_body_conforms(
             mock,
@@ -458,9 +458,11 @@ class TestResellerService:
         response_data=get_response_strategy("/search/companies", "post", "422"),
         body_data=get_request_body_strategy("/search/companies", "post"),
     )
-    def test_search_companies_422_error(self, backend, response_data, body_data):
+    def test_search_end_user_companies_422_error(
+        self, backend, response_data, body_data
+    ):
         """
-        Test search_companies with 422 error response.
+        Test search_end_user_companies with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -473,7 +475,7 @@ class TestResellerService:
         )
         body = SearchCompanies.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.reseller.search_companies(body=body)
+            self.sdk.reseller.search_end_user_companies(body=body)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -489,8 +491,8 @@ class TestResellerService:
         page1_data=get_response_strategy("/users", "get", "200"),
         page2_data=get_response_strategy("/users", "get", "200"),
     )
-    def test_get_users_iter_pagination(self, backend, page1_data, page2_data):
-        """Test get_users_iter follows next links correctly."""
+    def test_list_end_users_iter_pagination(self, backend, page1_data, page2_data):
+        """Test list_end_users_iter follows next links correctly."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         path = "/users".format()
@@ -513,7 +515,7 @@ class TestResellerService:
         pook.get(url).times(1).reply(200).json(page2_data).header(
             "Content-Type", "application/json"
         )
-        pages = list(self.sdk.reseller.get_users_iter())
+        pages = list(self.sdk.reseller.list_end_users_iter())
         assert len(pages) == 2
 
     @settings(
@@ -530,10 +532,10 @@ class TestResellerService:
         page2_data=get_response_strategy("/users", "get", "200"),
         page3_data=get_response_strategy("/users", "get", "200"),
     )
-    def test_get_users_iter_max_pages(
+    def test_list_end_users_iter_max_pages(
         self, backend, page1_data, page2_data, page3_data
     ):
-        """Test get_users_iter respects max_pages limit."""
+        """Test list_end_users_iter respects max_pages limit."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         page3_data = {**page3_data}
@@ -569,7 +571,7 @@ class TestResellerService:
         pook.get(url).times(1).reply(200).json(page3_data).header(
             "Content-Type", "application/json"
         )
-        pages = list(self.sdk.reseller.get_users_iter(max_pages=2))
+        pages = list(self.sdk.reseller.list_end_users_iter(max_pages=2))
         assert len(pages) == 2
 
     @settings(
@@ -582,8 +584,8 @@ class TestResellerService:
         ],
     )
     @given(page_data=get_response_strategy("/users", "get", "200"))
-    def test_get_users_iter_no_next_link(self, backend, page_data):
-        """Test get_users_iter terminates when no next link present."""
+    def test_list_end_users_iter_no_next_link(self, backend, page_data):
+        """Test list_end_users_iter terminates when no next link present."""
         page_data = {**page_data}
         path = "/users".format()
         url = f"{self.base_url}{path}"
@@ -601,7 +603,7 @@ class TestResellerService:
         pook.get(url).times(1).reply(200).json(page_data).header(
             "Content-Type", "application/json"
         )
-        pages = list(self.sdk.reseller.get_users_iter())
+        pages = list(self.sdk.reseller.list_end_users_iter())
         assert len(pages) == 1
 
     @settings(
@@ -617,8 +619,10 @@ class TestResellerService:
         page1_data=get_response_strategy("/companies", "get", "200"),
         page2_data=get_response_strategy("/companies", "get", "200"),
     )
-    def test_get_companies_iter_pagination(self, backend, page1_data, page2_data):
-        """Test get_companies_iter follows next links correctly."""
+    def test_list_end_user_companies_iter_pagination(
+        self, backend, page1_data, page2_data
+    ):
+        """Test list_end_user_companies_iter follows next links correctly."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         path = "/companies".format()
@@ -641,7 +645,7 @@ class TestResellerService:
         pook.get(url).times(1).reply(200).json(page2_data).header(
             "Content-Type", "application/json"
         )
-        pages = list(self.sdk.reseller.get_companies_iter())
+        pages = list(self.sdk.reseller.list_end_user_companies_iter())
         assert len(pages) == 2
 
     @settings(
@@ -658,10 +662,10 @@ class TestResellerService:
         page2_data=get_response_strategy("/companies", "get", "200"),
         page3_data=get_response_strategy("/companies", "get", "200"),
     )
-    def test_get_companies_iter_max_pages(
+    def test_list_end_user_companies_iter_max_pages(
         self, backend, page1_data, page2_data, page3_data
     ):
-        """Test get_companies_iter respects max_pages limit."""
+        """Test list_end_user_companies_iter respects max_pages limit."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         page3_data = {**page3_data}
@@ -697,7 +701,7 @@ class TestResellerService:
         pook.get(url).times(1).reply(200).json(page3_data).header(
             "Content-Type", "application/json"
         )
-        pages = list(self.sdk.reseller.get_companies_iter(max_pages=2))
+        pages = list(self.sdk.reseller.list_end_user_companies_iter(max_pages=2))
         assert len(pages) == 2
 
     @settings(
@@ -710,8 +714,8 @@ class TestResellerService:
         ],
     )
     @given(page_data=get_response_strategy("/companies", "get", "200"))
-    def test_get_companies_iter_no_next_link(self, backend, page_data):
-        """Test get_companies_iter terminates when no next link present."""
+    def test_list_end_user_companies_iter_no_next_link(self, backend, page_data):
+        """Test list_end_user_companies_iter terminates when no next link present."""
         page_data = {**page_data}
         path = "/companies".format()
         url = f"{self.base_url}{path}"
@@ -729,7 +733,7 @@ class TestResellerService:
         pook.get(url).times(1).reply(200).json(page_data).header(
             "Content-Type", "application/json"
         )
-        pages = list(self.sdk.reseller.get_companies_iter())
+        pages = list(self.sdk.reseller.list_end_user_companies_iter())
         assert len(pages) == 1
 
     @settings(
@@ -745,8 +749,8 @@ class TestResellerService:
         page1_data=get_response_strategy("/search/users", "post", "200"),
         page2_data=get_response_strategy("/search/users", "post", "200"),
     )
-    def test_search_users_iter_pagination(self, backend, page1_data, page2_data):
-        """Test search_users_iter follows next links correctly."""
+    def test_search_end_users_iter_pagination(self, backend, page1_data, page2_data):
+        """Test search_end_users_iter follows next links correctly."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         path = "/search/users".format()
@@ -770,7 +774,7 @@ class TestResellerService:
             "Content-Type", "application/json"
         )
         body = SearchUsers()
-        pages = list(self.sdk.reseller.search_users_iter(body=body))
+        pages = list(self.sdk.reseller.search_end_users_iter(body=body))
         assert len(pages) == 2
 
     @settings(
@@ -787,10 +791,10 @@ class TestResellerService:
         page2_data=get_response_strategy("/search/users", "post", "200"),
         page3_data=get_response_strategy("/search/users", "post", "200"),
     )
-    def test_search_users_iter_max_pages(
+    def test_search_end_users_iter_max_pages(
         self, backend, page1_data, page2_data, page3_data
     ):
-        """Test search_users_iter respects max_pages limit."""
+        """Test search_end_users_iter respects max_pages limit."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         page3_data = {**page3_data}
@@ -827,7 +831,7 @@ class TestResellerService:
             "Content-Type", "application/json"
         )
         body = SearchUsers()
-        pages = list(self.sdk.reseller.search_users_iter(body=body, max_pages=2))
+        pages = list(self.sdk.reseller.search_end_users_iter(body=body, max_pages=2))
         assert len(pages) == 2
 
     @settings(
@@ -840,8 +844,8 @@ class TestResellerService:
         ],
     )
     @given(page_data=get_response_strategy("/search/users", "post", "200"))
-    def test_search_users_iter_no_next_link(self, backend, page_data):
-        """Test search_users_iter terminates when no next link present."""
+    def test_search_end_users_iter_no_next_link(self, backend, page_data):
+        """Test search_end_users_iter terminates when no next link present."""
         page_data = {**page_data}
         path = "/search/users".format()
         url = f"{self.base_url}{path}"
@@ -860,7 +864,7 @@ class TestResellerService:
             "Content-Type", "application/json"
         )
         body = SearchUsers()
-        pages = list(self.sdk.reseller.search_users_iter(body=body))
+        pages = list(self.sdk.reseller.search_end_users_iter(body=body))
         assert len(pages) == 1
 
     @settings(
@@ -876,8 +880,10 @@ class TestResellerService:
         page1_data=get_response_strategy("/search/companies", "post", "200"),
         page2_data=get_response_strategy("/search/companies", "post", "200"),
     )
-    def test_search_companies_iter_pagination(self, backend, page1_data, page2_data):
-        """Test search_companies_iter follows next links correctly."""
+    def test_search_end_user_companies_iter_pagination(
+        self, backend, page1_data, page2_data
+    ):
+        """Test search_end_user_companies_iter follows next links correctly."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         path = "/search/companies".format()
@@ -901,7 +907,7 @@ class TestResellerService:
             "Content-Type", "application/json"
         )
         body = SearchCompanies()
-        pages = list(self.sdk.reseller.search_companies_iter(body=body))
+        pages = list(self.sdk.reseller.search_end_user_companies_iter(body=body))
         assert len(pages) == 2
 
     @settings(
@@ -918,10 +924,10 @@ class TestResellerService:
         page2_data=get_response_strategy("/search/companies", "post", "200"),
         page3_data=get_response_strategy("/search/companies", "post", "200"),
     )
-    def test_search_companies_iter_max_pages(
+    def test_search_end_user_companies_iter_max_pages(
         self, backend, page1_data, page2_data, page3_data
     ):
-        """Test search_companies_iter respects max_pages limit."""
+        """Test search_end_user_companies_iter respects max_pages limit."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         page3_data = {**page3_data}
@@ -958,7 +964,9 @@ class TestResellerService:
             "Content-Type", "application/json"
         )
         body = SearchCompanies()
-        pages = list(self.sdk.reseller.search_companies_iter(body=body, max_pages=2))
+        pages = list(
+            self.sdk.reseller.search_end_user_companies_iter(body=body, max_pages=2)
+        )
         assert len(pages) == 2
 
     @settings(
@@ -971,8 +979,8 @@ class TestResellerService:
         ],
     )
     @given(page_data=get_response_strategy("/search/companies", "post", "200"))
-    def test_search_companies_iter_no_next_link(self, backend, page_data):
-        """Test search_companies_iter terminates when no next link present."""
+    def test_search_end_user_companies_iter_no_next_link(self, backend, page_data):
+        """Test search_end_user_companies_iter terminates when no next link present."""
         page_data = {**page_data}
         path = "/search/companies".format()
         url = f"{self.base_url}{path}"
@@ -991,5 +999,5 @@ class TestResellerService:
             "Content-Type", "application/json"
         )
         body = SearchCompanies()
-        pages = list(self.sdk.reseller.search_companies_iter(body=body))
+        pages = list(self.sdk.reseller.search_end_user_companies_iter(body=body))
         assert len(pages) == 1

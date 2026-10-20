@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class ErrorResponse(BaseModel):
+class ErrorResponse(pydantic.BaseModel):
     """Standard error response for custom HTTP exceptions.
 
     Used when raising HTTPException with a string detail message.
@@ -15,8 +15,8 @@ class ErrorResponse(BaseModel):
             detail (str):
     """
 
-    detail: str = Field(..., description=None, alias="detail")
+    detail: str = pydantic.Field(..., description=None, alias="detail")
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

@@ -3,25 +3,25 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class Link(BaseModel):
+class Link(pydantic.BaseModel):
     """
     Attributes:
         href (str): The link in the format of a URL.
         rel (str): The relationship between the current document and the linked document.
     """
 
-    href: str = Field(
+    href: str = pydantic.Field(
         ..., description="""The link in the format of a URL.""", alias="href"
     )
-    rel: str = Field(
+    rel: str = pydantic.Field(
         ...,
         description="""The relationship between the current document and the linked document.""",
         alias="rel",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class OrderPricing(BaseModel):
+class OrderPricing(pydantic.BaseModel):
     """Detailed pricing breakdown for a satellite imagery order, including base price and license uplifts.
 
     Attributes:
@@ -20,30 +20,30 @@ class OrderPricing(BaseModel):
             currency e.g. pence, cents.
     """
 
-    currency: str = Field(
+    currency: str = pydantic.Field(
         ..., description="""The currency of the order.""", alias="currency"
     )
-    base: int = Field(
+    base: int = pydantic.Field(
         ...,
         description="""The base price of the order in minor units of the currency e.g. pence, cents.""",
         alias="base",
     )
-    licence_level: int = Field(
+    licence_level: int = pydantic.Field(
         ...,
         description="""The price of the order due to the licence level uplift in minor units of the currency e.g. pence, cents.""",
         alias="licence_level",
     )
-    total: int = Field(
+    total: int = pydantic.Field(
         ...,
         description="""The total price of the order in minor units of the currency e.g. pence, cents. This is the sum of the base and licence level prices.""",
         alias="total",
     )
-    total_uplift: int = Field(
+    total_uplift: int = pydantic.Field(
         ...,
         description="""The sum of all uplifts, including licencing, applied to the order in minor units of the currency e.g. pence, cents.""",
         alias="total_uplift",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

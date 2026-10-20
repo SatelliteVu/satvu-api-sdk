@@ -6,7 +6,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.assured_feasibility_response_properties import (
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from ..models.point import Point
 
 
-class AssuredFeasibilityResponseFeature(BaseModel):
+class AssuredFeasibilityResponseFeature(pydantic.BaseModel):
     """Object representing an assured feasibility response.
 
     Attributes:
@@ -26,18 +26,24 @@ class AssuredFeasibilityResponseFeature(BaseModel):
         signature (str): Signature token.
     """
 
-    type_: Literal["Feature"] = Field(default="Feature", description=None, alias="type")
-    geometry: Point = Field(..., description="""Point Model""", alias="geometry")
-    properties: AssuredFeasibilityResponseProperties = Field(
+    type_: Literal["Feature"] = pydantic.Field(
+        default="Feature", description=None, alias="type"
+    )
+    geometry: Point = pydantic.Field(
+        ..., description="""Point Model""", alias="geometry"
+    )
+    properties: AssuredFeasibilityResponseProperties = pydantic.Field(
         ...,
         description="""Properties of the assured priority feasibility response.""",
         alias="properties",
     )
-    id: UUID = Field(
+    id: UUID = pydantic.Field(
         ..., description="""The ID of the feasibility request.""", alias="id"
     )
-    signature: str = Field(..., description="""Signature token.""", alias="signature")
+    signature: str = pydantic.Field(
+        ..., description="""Signature token.""", alias="signature"
+    )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

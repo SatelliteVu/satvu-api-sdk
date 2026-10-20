@@ -5,13 +5,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.get_order_response import GetOrderResponse
 
 
-class OrderModificationPrice(BaseModel):
+class OrderModificationPrice(pydantic.BaseModel):
     """Response model for order modification price estimates.
 
     Shows the complete before/after state of an order including all
@@ -29,13 +29,13 @@ class OrderModificationPrice(BaseModel):
             updated_order (GetOrderResponse): Payload for get order response.
     """
 
-    original_order: GetOrderResponse = Field(
+    original_order: GetOrderResponse = pydantic.Field(
         ..., description="""Payload for get order response.""", alias="original_order"
     )
-    updated_order: GetOrderResponse = Field(
+    updated_order: GetOrderResponse = pydantic.Field(
         ..., description="""Payload for get order response.""", alias="updated_order"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

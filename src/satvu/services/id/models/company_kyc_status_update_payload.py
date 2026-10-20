@@ -5,12 +5,12 @@ from __future__ import annotations
 
 import datetime
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.kyc_status import KycStatus
 
 
-class CompanyKYCStatusUpdatePayload(BaseModel):
+class CompanyKYCStatusUpdatePayload(pydantic.BaseModel):
     """
     Attributes:
         company_name (str): Company name
@@ -22,30 +22,32 @@ class CompanyKYCStatusUpdatePayload(BaseModel):
         user_id (str): Auth0 user ID of an associated reseller
     """
 
-    company_name: str = Field(..., description="""Company name""", alias="company_name")
-    company_id: str = Field(
+    company_name: str = pydantic.Field(
+        ..., description="""Company name""", alias="company_name"
+    )
+    company_id: str = pydantic.Field(
         ..., description="""Unique identifier of end company.""", alias="company_id"
     )
-    company_country: str = Field(
+    company_country: str = pydantic.Field(
         ...,
         description="""Country that end company resides in.""",
         alias="company_country",
     )
-    kyc_status: KycStatus = Field(..., description=None, alias="kyc_status")
-    kyc_status_last_updated: datetime.datetime = Field(
+    kyc_status: KycStatus = pydantic.Field(..., description=None, alias="kyc_status")
+    kyc_status_last_updated: datetime.datetime = pydantic.Field(
         ...,
         description="""Datetime when KYC status of end company was last updated.""",
         alias="kyc_status_last_updated",
     )
-    company_created_at: datetime.datetime = Field(
+    company_created_at: datetime.datetime = pydantic.Field(
         ...,
         description="""Creation datetime of end company.""",
         alias="company_created_at",
     )
-    user_id: str = Field(
+    user_id: str = pydantic.Field(
         ..., description="""Auth0 user ID of an associated reseller""", alias="user_id"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

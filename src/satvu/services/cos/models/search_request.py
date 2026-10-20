@@ -5,10 +5,10 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class SearchRequest(BaseModel):
+class SearchRequest(pydantic.BaseModel):
     """
     Attributes:
         token (None | str): Pagination token.
@@ -16,16 +16,16 @@ class SearchRequest(BaseModel):
         order_ids (list[UUID] | None): A list of IDs.
     """
 
-    token: None | str = Field(
+    token: None | str = pydantic.Field(
         default=None, description="""Pagination token.""", alias="token"
     )
-    limit: int | None = Field(
+    limit: int | None = pydantic.Field(
         default=25, description="""Number of items to return per page.""", alias="limit"
     )
-    order_ids: list[UUID] | None = Field(
+    order_ids: list[UUID] | None = pydantic.Field(
         default=None, description="""A list of IDs.""", alias="order_ids"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

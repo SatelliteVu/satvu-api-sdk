@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class Link1(BaseModel):
+class Link1(pydantic.BaseModel):
     """STAC Link object.
 
     Links are used to express relationships between STAC objects
@@ -19,25 +19,25 @@ class Link1(BaseModel):
             title (None | str): A human readable title to be used in rendered displays of the link.
     """
 
-    href: str = Field(
+    href: str = pydantic.Field(
         ..., description="""The URL to the linked resource.""", alias="href"
     )
-    rel: str = Field(
+    rel: str = pydantic.Field(
         ...,
         description="""The relationship type (e.g., 'self', 'root', 'parent', 'collection').""",
         alias="rel",
     )
-    type_: None | str = Field(
+    type_: None | str = pydantic.Field(
         default=None,
         description="""The media type of the linked resource.""",
         alias="type",
     )
-    title: None | str = Field(
+    title: None | str = pydantic.Field(
         default=None,
         description="""A human readable title to be used in rendered displays of the link.""",
         alias="title",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

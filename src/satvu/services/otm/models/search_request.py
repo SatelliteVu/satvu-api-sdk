@@ -6,7 +6,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Union
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.collections import Collections
 
@@ -22,7 +22,7 @@ if TYPE_CHECKING:
     from ..models.sort_entities import SortEntities
 
 
-class SearchRequest(BaseModel):
+class SearchRequest(pydantic.BaseModel):
     """
     Attributes:
         token (None | str): The pagination token.
@@ -44,37 +44,39 @@ class SearchRequest(BaseModel):
         sort_by (list[SortEntities] | None): Sort the order in which results are returned.
     """
 
-    token: None | str = Field(
+    token: None | str = pydantic.Field(
         default=None, description="""The pagination token.""", alias="token"
     )
-    limit: int | None = Field(
+    limit: int | None = pydantic.Field(
         default=25,
         description="""The number of items to return per page.""",
         alias="limit",
     )
-    collections: list[Collections] | None = Field(
+    collections: list[Collections] | None = pydantic.Field(
         default=None, description="""A list of collection types.""", alias="collections"
     )
-    ids: list[UUID] | None = Field(
+    ids: list[UUID] | None = pydantic.Field(
         default=None, description="""A list of IDs.""", alias="ids"
     )
-    series_ids: list[UUID] | None = Field(
+    series_ids: list[UUID] | None = pydantic.Field(
         default=None,
         description="""Filter results by series IDs. Only orders belonging to these series are returned.""",
         alias="series_ids",
     )
-    datetime_: None | str = Field(default=None, description=None, alias="datetime")
-    created_at: None | str = Field(
+    datetime_: None | str = pydantic.Field(
+        default=None, description=None, alias="datetime"
+    )
+    created_at: None | str = pydantic.Field(
         default=None,
         description="""The datetime interval during which the entity was created.""",
         alias="created_at",
     )
-    updated_at: None | str = Field(
+    updated_at: None | str = pydantic.Field(
         default=None,
         description="""The datetime interval during which the entity was last updated.""",
         alias="updated_at",
     )
-    properties: Union[FilterFields, None] = Field(
+    properties: Union[FilterFields, None] = pydantic.Field(
         default=None,
         description="""Allowed properties to filter a search. Filterable string fields allow one value or a list of values resulting in an equality or 'IN' comparison respectively. For numeric fields, one value similarly achieves an equality operation. A tuple of 2 values can also be provided to search inclusively between a range.""",
         alias="properties",
@@ -88,17 +90,17 @@ class SearchRequest(BaseModel):
         Point,
         Polygon,
         None,
-    ] = Field(
+    ] = pydantic.Field(
         default=None,
         description="""A GeoJSON geometry to filter for. Items are returned if the geometry of the item intersects with the geometry provided.""",
         alias="intersects",
     )
-    sort_by: list[SortEntities] | None = Field(
+    sort_by: list[SortEntities] | None = pydantic.Field(
         default=None,
         description="""Sort the order in which results are returned.""",
         alias="sort_by",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

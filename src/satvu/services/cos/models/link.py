@@ -5,12 +5,12 @@ from __future__ import annotations
 
 from typing import Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.method import Method
 
 
-class Link(BaseModel):
+class Link(pydantic.BaseModel):
     """Navigation link to related resources with support for pagination and API navigation.
 
     Attributes:
@@ -25,40 +25,40 @@ class Link(BaseModel):
             original request and be sent combined in the next request. Default: False.
     """
 
-    href: str = Field(
+    href: str = pydantic.Field(
         ...,
         description="""The actual link in the format of an URL. Relative and absolute links are both allowed.""",
         alias="href",
     )
-    rel: str = Field(
+    rel: str = pydantic.Field(
         ...,
         description="""Relationship between the current document and the linked document.""",
         alias="rel",
     )
-    type_: str = Field(
+    type_: str = pydantic.Field(
         ..., description="""Media type of the referenced entity.""", alias="type"
     )
-    title: None | str = Field(
+    title: None | str = pydantic.Field(
         default=None,
         description="""A human readable title to be used in rendered displays of the link.""",
         alias="title",
     )
-    method: Union[None, Method] = Field(
+    method: Union[None, Method] = pydantic.Field(
         default=Method.GET,
         description="""The HTTP method of the request.""",
         alias="method",
     )
-    body: dict | None = Field(
+    body: dict | None = pydantic.Field(
         default=None,
         description="""A JSON object containing fields/values that must be included in the body of the next request.""",
         alias="body",
     )
-    merge: Union[None, bool] = Field(
+    merge: Union[None, bool] = pydantic.Field(
         default=False,
         description="""If `true`, the headers/body fields in the `next` link must be merged into the original request and be sent combined in the next request.""",
         alias="merge",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

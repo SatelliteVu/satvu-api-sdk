@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class PriceInformation(BaseModel):
+class PriceInformation(pydantic.BaseModel):
     """
     Attributes:
         currency (str): The currency of the order.
@@ -21,35 +21,35 @@ class PriceInformation(BaseModel):
             the currency e.g. pence, cents.
     """
 
-    currency: str = Field(
+    currency: str = pydantic.Field(
         ..., description="""The currency of the order.""", alias="currency"
     )
-    base: int = Field(
+    base: int = pydantic.Field(
         ...,
         description="""The base price of the order in minor units of the currency e.g. pence, cents.""",
         alias="base",
     )
-    final: bool = Field(
+    final: bool = pydantic.Field(
         ...,
         description="""Whether the price is final. When the `baseprice` query parameter is true, this will be false as the price may change at order submission time after the required licence level has been accounted for.""",
         alias="final",
     )
-    licence_level: int | None = Field(
+    licence_level: int | None = pydantic.Field(
         default=None,
         description="""The price of the order due to the licence level uplift in minor units of the currency e.g. pence, cents.""",
         alias="licence_level",
     )
-    total: int | None = Field(
+    total: int | None = pydantic.Field(
         default=None,
         description="""The total price of the order in minor units of the currency e.g. pence, cents. This is the sum of the base and licence level prices.""",
         alias="total",
     )
-    total_uplift: int | None = Field(
+    total_uplift: int | None = pydantic.Field(
         default=None,
         description="""The sum of all uplifts, including licencing, applied to the order in minor units of the currency e.g. pence, cents.""",
         alias="total_uplift",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

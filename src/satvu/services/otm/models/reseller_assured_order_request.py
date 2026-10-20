@@ -6,13 +6,13 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.assured_order_request_properties import AssuredOrderRequestProperties
 
 
-class ResellerAssuredOrderRequest(BaseModel):
+class ResellerAssuredOrderRequest(pydantic.BaseModel):
     """Payload for reseller assured order request.
 
     Attributes:
@@ -20,13 +20,13 @@ class ResellerAssuredOrderRequest(BaseModel):
         reseller_end_user_id (UUID):
     """
 
-    properties: AssuredOrderRequestProperties = Field(
+    properties: AssuredOrderRequestProperties = pydantic.Field(
         ..., description=None, alias="properties"
     )
-    reseller_end_user_id: UUID = Field(
+    reseller_end_user_id: UUID = pydantic.Field(
         ..., description=None, alias="reseller_end_user_id"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

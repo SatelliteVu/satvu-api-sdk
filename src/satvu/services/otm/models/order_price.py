@@ -6,7 +6,7 @@ from __future__ import annotations
 import datetime
 from typing import TYPE_CHECKING, Literal, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.assured_feasibility_fields_with_addons import (
@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from ..models.standard_order_fields_with_addons import StandardOrderFieldsWithAddons
 
 
-class OrderPrice(BaseModel):
+class OrderPrice(pydantic.BaseModel):
     """
     Attributes:
         type_ (Literal['Feature']):
@@ -28,22 +28,26 @@ class OrderPrice(BaseModel):
         price (PriceInformation): Pricing information.
     """
 
-    type_: Literal["Feature"] = Field(default="Feature", description=None, alias="type")
-    geometry: Point = Field(..., description="""Point Model""", alias="geometry")
+    type_: Literal["Feature"] = pydantic.Field(
+        default="Feature", description=None, alias="type"
+    )
+    geometry: Point = pydantic.Field(
+        ..., description="""Point Model""", alias="geometry"
+    )
     properties: Union[
         AssuredFeasibilityFieldsWithAddons, StandardOrderFieldsWithAddons
-    ] = Field(
+    ] = pydantic.Field(
         ...,
         description="""A map of additional metadata about the requested image.""",
         alias="properties",
     )
-    created_at: datetime.datetime = Field(
+    created_at: datetime.datetime = pydantic.Field(
         ..., description="""The current UTC time.""", alias="created_at"
     )
-    price: PriceInformation = Field(
+    price: PriceInformation = pydantic.Field(
         ..., description="""Pricing information.""", alias="price"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

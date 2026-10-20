@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class NotificationDescription(BaseModel):
+class NotificationDescription(pydantic.BaseModel):
     """
     Attributes:
         topic (str): Notification topic.
@@ -14,12 +14,16 @@ class NotificationDescription(BaseModel):
         description (str): Description of notification type.
     """
 
-    topic: str = Field(..., description="""Notification topic.""", alias="topic")
-    name: str = Field(..., description="""Name of notification type.""", alias="name")
-    description: str = Field(
+    topic: str = pydantic.Field(
+        ..., description="""Notification topic.""", alias="topic"
+    )
+    name: str = pydantic.Field(
+        ..., description="""Name of notification type.""", alias="name"
+    )
+    description: str = pydantic.Field(
         ..., description="""Description of notification type.""", alias="description"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

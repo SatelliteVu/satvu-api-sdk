@@ -10,7 +10,7 @@ Stores entire OpenAPI spec as operations with helper functions for access.
 from satvu.services.example_cache import get_cached_example_strategy
 
 # Spec hash for example cache invalidation
-_SPEC_HASH = "prod-99d79807423d05fd77b50cf7d821181ef0e909df"
+_SPEC_HASH = "prod-e4cef1e30a6f4ccf409c422b748e78eed8689a06"
 
 # Component schemas for $ref resolution (cleaned for JSON Schema draft-07)
 _COMPONENTS = {
@@ -84,7 +84,7 @@ _COMPONENTS = {
                 "contract "
                 "start "
                 "date.",
-                "examples": [None, "09-2026"],
+                "examples": [None, "10-2026"],
                 "title": "Billing Cycle",
             },
             "credit_available": {
@@ -303,7 +303,7 @@ _OPERATIONS = {
                                     "contract "
                                     "start "
                                     "date.",
-                                    "examples": [None, "09-2026"],
+                                    "examples": [None, "10-2026"],
                                     "title": "Billing Cycle",
                                 },
                                 "credit_available": {
@@ -554,7 +554,7 @@ _OPERATIONS = {
                                     "contract "
                                     "start "
                                     "date.",
-                                    "examples": [None, "09-2026"],
+                                    "examples": [None, "10-2026"],
                                     "title": "Billing Cycle",
                                 },
                                 "credit_available": {
@@ -741,7 +741,7 @@ _OPERATIONS = {
                             "contract "
                             "start "
                             "date.",
-                            "examples": [None, "09-2026"],
+                            "examples": [None, "10-2026"],
                             "title": "Billing Cycle",
                         },
                         "credit_available": {
@@ -926,7 +926,7 @@ _OPERATIONS = {
                                     "contract "
                                     "start "
                                     "date.",
-                                    "examples": [None, "09-2026"],
+                                    "examples": [None, "10-2026"],
                                     "title": "Billing Cycle",
                                 },
                                 "credit_available": {

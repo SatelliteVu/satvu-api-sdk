@@ -3,22 +3,22 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class BatchBalanceResponse(BaseModel):
+class BatchBalanceResponse(pydantic.BaseModel):
     """Response body for batch credit balance queries.
 
     Attributes:
         balances (dict): Mapping of contract IDs to their credit balances.
     """
 
-    balances: dict = Field(
+    balances: dict = pydantic.Field(
         ...,
         description="""Mapping of contract IDs to their credit balances.""",
         alias="balances",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

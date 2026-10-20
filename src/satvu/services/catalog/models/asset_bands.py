@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.asset_bands_nodata_type_1 import AssetBandsNodataType1
 from ..models.data_type_of_the_band import DataTypeOfTheBand
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from ..models.asset_bands_statistics import AssetBandsStatistics
 
 
-class AssetBands(BaseModel):
+class AssetBands(pydantic.BaseModel):
     """Bands
 
     Attributes:
@@ -29,39 +29,39 @@ class AssetBands(BaseModel):
         unit (Union[None, str]): Unit denomination of the pixel value
     """
 
-    bits_per_sample: Union[None, int] = Field(
+    bits_per_sample: Union[None, int] = pydantic.Field(
         default=None,
         description="""The actual number of bits used for this band""",
         alias="bits_per_sample",
     )
-    data_type: Union[None, DataTypeOfTheBand] = Field(
+    data_type: Union[None, DataTypeOfTheBand] = pydantic.Field(
         default=None, description="""Data type of the band""", alias="data_type"
     )
-    nodata: Union[None, Union[AssetBandsNodataType1, float]] = Field(
+    nodata: Union[None, Union[AssetBandsNodataType1, float]] = pydantic.Field(
         default=None, description="""No data pixel value""", alias="nodata"
     )
-    offset: Union[None, float] = Field(
+    offset: Union[None, float] = pydantic.Field(
         default=None,
         description="""Number to be added to the pixel value to transform into the value""",
         alias="offset",
     )
-    sampling: Union[None, PixelSamplingInTheBand] = Field(
+    sampling: Union[None, PixelSamplingInTheBand] = pydantic.Field(
         default=None, description="""Pixel sampling in the band""", alias="sampling"
     )
-    scale: Union[None, float] = Field(
+    scale: Union[None, float] = pydantic.Field(
         default=None,
         description="""Multiplicator factor of the pixel value to transform into the value""",
         alias="scale",
     )
-    statistics: Union[None, AssetBandsStatistics] = Field(
+    statistics: Union[None, AssetBandsStatistics] = pydantic.Field(
         default=None, description="""Statistics""", alias="statistics"
     )
-    unit: Union[None, str] = Field(
+    unit: Union[None, str] = pydantic.Field(
         default=None,
         description="""Unit denomination of the pixel value""",
         alias="unit",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

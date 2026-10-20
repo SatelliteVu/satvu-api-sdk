@@ -5,10 +5,10 @@ from __future__ import annotations
 
 from typing import Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class Error(BaseModel):
+class Error(pydantic.BaseModel):
     """
     Attributes:
         id (str): A unique identifier for the type of error.
@@ -16,20 +16,20 @@ class Error(BaseModel):
         field (Union[None, str]): The field that failed validation, for 'ValidationError' errors only.
     """
 
-    id: str = Field(
+    id: str = pydantic.Field(
         ..., description="""A unique identifier for the type of error.""", alias="id"
     )
-    message: str = Field(
+    message: str = pydantic.Field(
         ...,
         description="""An error message describing what went wrong.""",
         alias="message",
     )
-    field: Union[None, str] = Field(
+    field: Union[None, str] = pydantic.Field(
         default=None,
         description="""The field that failed validation, for 'ValidationError' errors only.""",
         alias="field",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class StacLink(BaseModel):
+class StacLink(pydantic.BaseModel):
     """Related resources and navigation links for the imagery item.
 
     Attributes:
@@ -16,15 +16,15 @@ class StacLink(BaseModel):
         title (None | str): A human readable title to be used in rendered displays of the link. Default: ''.
     """
 
-    href: str = Field(..., description=None, alias="href")
-    rel: str = Field(..., description=None, alias="rel")
-    type_: None | str = Field(default=None, description=None, alias="type")
-    title: None | str = Field(
+    href: str = pydantic.Field(..., description=None, alias="href")
+    rel: str = pydantic.Field(..., description=None, alias="rel")
+    type_: None | str = pydantic.Field(default=None, description=None, alias="type")
+    title: None | str = pydantic.Field(
         default="",
         description="""A human readable title to be used in rendered displays of the link.""",
         alias="title",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

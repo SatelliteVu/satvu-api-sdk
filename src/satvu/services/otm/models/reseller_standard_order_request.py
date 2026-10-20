@@ -6,7 +6,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.point import Point
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     )
 
 
-class ResellerStandardOrderRequest(BaseModel):
+class ResellerStandardOrderRequest(pydantic.BaseModel):
     """Payload for reseller standard order request.
 
     Attributes:
@@ -25,15 +25,19 @@ class ResellerStandardOrderRequest(BaseModel):
         reseller_end_user_id (UUID):
     """
 
-    type_: Literal["Feature"] = Field(default="Feature", description=None, alias="type")
-    geometry: Point = Field(..., description="""Point Model""", alias="geometry")
-    properties: StandardOrderRequestProperties = Field(
+    type_: Literal["Feature"] = pydantic.Field(
+        default="Feature", description=None, alias="type"
+    )
+    geometry: Point = pydantic.Field(
+        ..., description="""Point Model""", alias="geometry"
+    )
+    properties: StandardOrderRequestProperties = pydantic.Field(
         ..., description=None, alias="properties"
     )
-    reseller_end_user_id: UUID = Field(
+    reseller_end_user_id: UUID = pydantic.Field(
         ..., description=None, alias="reseller_end_user_id"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

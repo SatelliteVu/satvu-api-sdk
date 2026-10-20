@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.get_user import GetUser
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from ..models.response_context import ResponseContext
 
 
-class GetUsers(BaseModel):
+class GetUsers(pydantic.BaseModel):
     """Represents response to GET users request
 
     Attributes:
@@ -22,20 +22,20 @@ class GetUsers(BaseModel):
         context (ResponseContext): Contextual information for pagination responses
     """
 
-    users: list[GetUser] = Field(
+    users: list[GetUser] = pydantic.Field(
         ...,
         description="""All end users associated with the reseller.""",
         alias="users",
     )
-    links: list[Link] = Field(
+    links: list[Link] = pydantic.Field(
         ..., description="""Links to previous and/or next page.""", alias="links"
     )
-    context: ResponseContext = Field(
+    context: ResponseContext = pydantic.Field(
         ...,
         description="""Contextual information for pagination responses""",
         alias="context",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

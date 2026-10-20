@@ -5,10 +5,10 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class PointGeometry(BaseModel):
+class PointGeometry(pydantic.BaseModel):
     """GeoJSON Point geometry.
 
     Represents a single point location in WGS84 coordinates (longitude, latitude).
@@ -18,13 +18,15 @@ class PointGeometry(BaseModel):
             type_ (Literal['Point']):  Default: 'Point'.
     """
 
-    coordinates: list[float | int] = Field(
+    coordinates: list[float | int] = pydantic.Field(
         ...,
         description="""The coordinates of the point as [longitude, latitude].""",
         alias="coordinates",
     )
-    type_: Literal["Point"] = Field(default="Point", description=None, alias="type")
+    type_: Literal["Point"] = pydantic.Field(
+        default="Point", description=None, alias="type"
+    )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

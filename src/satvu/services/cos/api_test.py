@@ -344,9 +344,9 @@ class TestCosService:
         ],
     )
     @given(response_data=get_response_strategy("/{contract_id}/", "get", "200"))
-    def test_query_orders_200(self, backend, response_data):
+    def test_list_orders_200(self, backend, response_data):
         """
-        Test query_orders with 200 response.
+        Test list_orders with 200 response.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/"
@@ -356,7 +356,7 @@ class TestCosService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.cos.query_orders(contract_id=contract_id)
+        result = self.sdk.cos.list_orders(contract_id=contract_id)
         assert result is not None
         assert isinstance(result, OrderPage)
 
@@ -370,9 +370,9 @@ class TestCosService:
         ],
     )
     @given(response_data=get_response_strategy("/{contract_id}/", "get", "422"))
-    def test_query_orders_422_error(self, backend, response_data):
+    def test_list_orders_422_error(self, backend, response_data):
         """
-        Test query_orders with 422 error response.
+        Test list_orders with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -385,7 +385,7 @@ class TestCosService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.cos.query_orders(contract_id=contract_id)
+            self.sdk.cos.list_orders(contract_id=contract_id)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -401,9 +401,9 @@ class TestCosService:
         response_data=get_response_strategy("/{contract_id}/", "post", "201"),
         body_data=get_request_body_strategy("/{contract_id}/", "post"),
     )
-    def test_submit_order_201(self, backend, response_data, body_data):
+    def test_create_order_201(self, backend, response_data, body_data):
         """
-        Test submit_order with 201 response.
+        Test create_order with 201 response.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/"
@@ -416,7 +416,7 @@ class TestCosService:
             Union[OrderSubmissionPayload, ResellerSubmissionOrderPayload]
         )
         body = body_adapter.validate_python(body_data)
-        result = self.sdk.cos.submit_order(contract_id=contract_id, body=body)
+        result = self.sdk.cos.create_order(contract_id=contract_id, body=body)
         assert_request_body_matches_input(mock, body_data, "POST /{contract_id}/")
         assert_request_body_conforms(
             mock,
@@ -442,11 +442,11 @@ class TestCosService:
         response_data=get_response_strategy("/{contract_id}/", "post", "201"),
         body_data=get_request_body_strategy("/{contract_id}/", "post"),
     )
-    def test_submit_order_minimal_body_sends_only_what_was_set(
+    def test_create_order_minimal_body_sends_only_what_was_set(
         self, backend, response_data, body_data
     ):
         """
-        Test submit_order sends no field the caller left unset.
+        Test create_order sends no field the caller left unset.
         """
         contract_id = uuid4()
         path = f"/{contract_id}/"
@@ -463,7 +463,7 @@ class TestCosService:
         )
         body = body_adapter.validate_python(body_data)
         with suppress(Exception):
-            self.sdk.cos.submit_order(contract_id=contract_id, body=body)
+            self.sdk.cos.create_order(contract_id=contract_id, body=body)
         assert_request_body_matches_input(mock, body_data, "POST /{contract_id}/")
         assert_request_body_conforms(
             mock,
@@ -485,9 +485,9 @@ class TestCosService:
         response_data=get_response_strategy("/{contract_id}/", "post", "400"),
         body_data=get_request_body_strategy("/{contract_id}/", "post"),
     )
-    def test_submit_order_400_error(self, backend, response_data, body_data):
+    def test_create_order_400_error(self, backend, response_data, body_data):
         """
-        Test submit_order with 400 error response.
+        Test create_order with 400 error response.
 
         HTTP 400 errors raise ClientError.
         """
@@ -504,7 +504,7 @@ class TestCosService:
         )
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.cos.submit_order(contract_id=contract_id, body=body)
+            self.sdk.cos.create_order(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 400
 
     @settings(
@@ -520,9 +520,9 @@ class TestCosService:
         response_data=get_response_strategy("/{contract_id}/", "post", "402"),
         body_data=get_request_body_strategy("/{contract_id}/", "post"),
     )
-    def test_submit_order_402_error(self, backend, response_data, body_data):
+    def test_create_order_402_error(self, backend, response_data, body_data):
         """
-        Test submit_order with 402 error response.
+        Test create_order with 402 error response.
 
         HTTP 402 errors raise ClientError.
         """
@@ -539,7 +539,7 @@ class TestCosService:
         )
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.cos.submit_order(contract_id=contract_id, body=body)
+            self.sdk.cos.create_order(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 402
 
     @settings(
@@ -555,9 +555,9 @@ class TestCosService:
         response_data=get_response_strategy("/{contract_id}/", "post", "403"),
         body_data=get_request_body_strategy("/{contract_id}/", "post"),
     )
-    def test_submit_order_403_error(self, backend, response_data, body_data):
+    def test_create_order_403_error(self, backend, response_data, body_data):
         """
-        Test submit_order with 403 error response.
+        Test create_order with 403 error response.
 
         HTTP 403 errors raise ClientError.
         """
@@ -574,7 +574,7 @@ class TestCosService:
         )
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.cos.submit_order(contract_id=contract_id, body=body)
+            self.sdk.cos.create_order(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 403
 
     @settings(
@@ -590,9 +590,9 @@ class TestCosService:
         response_data=get_response_strategy("/{contract_id}/", "post", "422"),
         body_data=get_request_body_strategy("/{contract_id}/", "post"),
     )
-    def test_submit_order_422_error(self, backend, response_data, body_data):
+    def test_create_order_422_error(self, backend, response_data, body_data):
         """
-        Test submit_order with 422 error response.
+        Test create_order with 422 error response.
 
         HTTP 422 errors raise ClientError.
         """
@@ -609,7 +609,7 @@ class TestCosService:
         )
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.cos.submit_order(contract_id=contract_id, body=body)
+            self.sdk.cos.create_order(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -625,9 +625,9 @@ class TestCosService:
         response_data=get_response_strategy("/{contract_id}/", "post", "500"),
         body_data=get_request_body_strategy("/{contract_id}/", "post"),
     )
-    def test_submit_order_500_error(self, backend, response_data, body_data):
+    def test_create_order_500_error(self, backend, response_data, body_data):
         """
-        Test submit_order with 500 error response.
+        Test create_order with 500 error response.
 
         HTTP 500 errors raise ServerError.
         """
@@ -644,7 +644,7 @@ class TestCosService:
         )
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ServerError) as exc_info:
-            self.sdk.cos.submit_order(contract_id=contract_id, body=body)
+            self.sdk.cos.create_order(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 500
 
     @settings(
@@ -1151,8 +1151,8 @@ class TestCosService:
         page1_data=get_response_strategy("/{contract_id}/", "get", "200"),
         page2_data=get_response_strategy("/{contract_id}/", "get", "200"),
     )
-    def test_query_orders_iter_pagination(self, backend, page1_data, page2_data):
-        """Test query_orders_iter follows next links correctly."""
+    def test_list_orders_iter_pagination(self, backend, page1_data, page2_data):
+        """Test list_orders_iter follows next links correctly."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         contract_id = uuid4()
@@ -1176,7 +1176,7 @@ class TestCosService:
         pook.get(url).times(1).reply(200).json(page2_data).header(
             "Content-Type", "application/json"
         )
-        pages = list(self.sdk.cos.query_orders_iter(contract_id=contract_id))
+        pages = list(self.sdk.cos.list_orders_iter(contract_id=contract_id))
         assert len(pages) == 2
 
     @settings(
@@ -1193,10 +1193,10 @@ class TestCosService:
         page2_data=get_response_strategy("/{contract_id}/", "get", "200"),
         page3_data=get_response_strategy("/{contract_id}/", "get", "200"),
     )
-    def test_query_orders_iter_max_pages(
+    def test_list_orders_iter_max_pages(
         self, backend, page1_data, page2_data, page3_data
     ):
-        """Test query_orders_iter respects max_pages limit."""
+        """Test list_orders_iter respects max_pages limit."""
         page1_data = {**page1_data}
         page2_data = {**page2_data}
         page3_data = {**page3_data}
@@ -1234,7 +1234,7 @@ class TestCosService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.cos.query_orders_iter(contract_id=contract_id, max_pages=2)
+            self.sdk.cos.list_orders_iter(contract_id=contract_id, max_pages=2)
         )
         assert len(pages) == 2
 
@@ -1248,8 +1248,8 @@ class TestCosService:
         ],
     )
     @given(page_data=get_response_strategy("/{contract_id}/", "get", "200"))
-    def test_query_orders_iter_no_next_link(self, backend, page_data):
-        """Test query_orders_iter terminates when no next link present."""
+    def test_list_orders_iter_no_next_link(self, backend, page_data):
+        """Test list_orders_iter terminates when no next link present."""
         page_data = {**page_data}
         contract_id = uuid4()
         path = f"/{contract_id}/"
@@ -1268,7 +1268,7 @@ class TestCosService:
         pook.get(url).times(1).reply(200).json(page_data).header(
             "Content-Type", "application/json"
         )
-        pages = list(self.sdk.cos.query_orders_iter(contract_id=contract_id))
+        pages = list(self.sdk.cos.list_orders_iter(contract_id=contract_id))
         assert len(pages) == 1
 
     @settings(

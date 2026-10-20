@@ -5,10 +5,10 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class LineString(BaseModel):
+class LineString(pydantic.BaseModel):
     """LineString Model
 
     Attributes:
@@ -17,12 +17,16 @@ class LineString(BaseModel):
         bbox (list[float] | None):
     """
 
-    type_: Literal["LineString"] = Field(
+    type_: Literal["LineString"] = pydantic.Field(
         default="LineString", description=None, alias="type"
     )
-    coordinates: list[list[float]] = Field(..., description=None, alias="coordinates")
-    bbox: list[float] | None = Field(default=None, description=None, alias="bbox")
+    coordinates: list[list[float]] = pydantic.Field(
+        ..., description=None, alias="coordinates"
+    )
+    bbox: list[float] | None = pydantic.Field(
+        default=None, description=None, alias="bbox"
+    )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.assured_feasibility_fields import AssuredFeasibilityFields
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from ..models.standard_request_properties import StandardRequestProperties
 
 
-class FeasibilityRequest(BaseModel):
+class FeasibilityRequest(pydantic.BaseModel):
     """Payload for feasibility request.
 
     Attributes:
@@ -23,14 +23,20 @@ class FeasibilityRequest(BaseModel):
             the requested image.
     """
 
-    type_: Literal["Feature"] = Field(default="Feature", description=None, alias="type")
-    geometry: Point = Field(..., description="""Point Model""", alias="geometry")
-    properties: Union[AssuredFeasibilityFields, StandardRequestProperties] = Field(
-        ...,
-        description="""A map of additional metadata about the requested image.""",
-        alias="properties",
+    type_: Literal["Feature"] = pydantic.Field(
+        default="Feature", description=None, alias="type"
+    )
+    geometry: Point = pydantic.Field(
+        ..., description="""Point Model""", alias="geometry"
+    )
+    properties: Union[AssuredFeasibilityFields, StandardRequestProperties] = (
+        pydantic.Field(
+            ...,
+            description="""A map of additional metadata about the requested image.""",
+            alias="properties",
+        )
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

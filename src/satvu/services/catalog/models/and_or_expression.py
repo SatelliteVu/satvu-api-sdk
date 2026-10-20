@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.and_or_expression_op import AndOrExpressionOp
 
@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from ..models.not_expression import NotExpression
 
 
-class AndOrExpression(BaseModel):
+class AndOrExpression(pydantic.BaseModel):
     """
     Attributes:
         args (list[Union['AndOrExpression', 'BinaryComparisonPredicate', 'IsBetweenPredicate', 'IsInListPredicate',
@@ -37,9 +37,9 @@ class AndOrExpression(BaseModel):
             NotExpression,
             bool,
         ]
-    ] = Field(..., description=None, alias="args")
-    op: AndOrExpressionOp = Field(..., description=None, alias="op")
+    ] = pydantic.Field(..., description=None, alias="args")
+    op: AndOrExpressionOp = pydantic.Field(..., description=None, alias="op")
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

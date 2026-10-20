@@ -36,7 +36,7 @@ class ResellerService(SDKClient):
             max_retry_after_seconds=max_retry_after_seconds,
         )
 
-    def create_users(
+    def create_end_user(
         self,
         items: list[CreateUser],
         timeout: int | None = None,
@@ -77,7 +77,7 @@ class ResellerService(SDKClient):
             return parse_response(response.json().unwrap(), list[CreateUserResponse])
         return response.json().unwrap()
 
-    def get_users(
+    def list_end_users(
         self,
         limit: Union[None, int] = 100,
         token: None | str = None,
@@ -120,7 +120,7 @@ class ResellerService(SDKClient):
             return parse_response(response.json().unwrap(), GetUsers)
         return response.json().unwrap()
 
-    def get_users_iter(
+    def list_end_users_iter(
         self,
         limit: Union[None, int] = 100,
         max_pages: int | None = None,
@@ -139,7 +139,7 @@ class ResellerService(SDKClient):
 
         Example:
             ```python
-            for page in sdk.reseller.get_users_iter(
+            for page in sdk.reseller.list_end_users_iter(
                 max_pages=10
             ):
                 for item in page.users:
@@ -153,7 +153,7 @@ class ResellerService(SDKClient):
             if max_pages and page_count >= max_pages:
                 break
 
-            response = self.get_users(
+            response = self.list_end_users(
                 limit=limit,
                 token=token,
             )
@@ -165,7 +165,7 @@ class ResellerService(SDKClient):
             if not token:
                 break
 
-    def get_companies(
+    def list_end_user_companies(
         self,
         limit: Union[None, int] = 100,
         token: None | str = None,
@@ -209,7 +209,7 @@ class ResellerService(SDKClient):
             return parse_response(response.json().unwrap(), GetCompanies)
         return response.json().unwrap()
 
-    def get_companies_iter(
+    def list_end_user_companies_iter(
         self,
         limit: Union[None, int] = 100,
         max_pages: int | None = None,
@@ -229,7 +229,7 @@ class ResellerService(SDKClient):
 
         Example:
             ```python
-            for page in sdk.reseller.get_companies_iter(
+            for page in sdk.reseller.list_end_user_companies_iter(
                 max_pages=10
             ):
                 for item in page.companies:
@@ -243,7 +243,7 @@ class ResellerService(SDKClient):
             if max_pages and page_count >= max_pages:
                 break
 
-            response = self.get_companies(
+            response = self.list_end_user_companies(
                 limit=limit,
                 token=token,
             )
@@ -255,7 +255,7 @@ class ResellerService(SDKClient):
             if not token:
                 break
 
-    def search_users(
+    def search_end_users(
         self,
         body: SearchUsers,
         extra_body: dict[str, Any] | None = None,
@@ -300,7 +300,7 @@ class ResellerService(SDKClient):
             return parse_response(response.json().unwrap(), GetUsers)
         return response.json().unwrap()
 
-    def search_users_iter(
+    def search_end_users_iter(
         self,
         body: SearchUsers,
         extra_body: dict[str, Any] | None = None,
@@ -320,7 +320,7 @@ class ResellerService(SDKClient):
 
         Example:
             ```python
-            for page in sdk.reseller.search_users_iter(
+            for page in sdk.reseller.search_end_users_iter(
                 body=...,
                 max_pages=10
             ):
@@ -336,7 +336,7 @@ class ResellerService(SDKClient):
                 break
 
             body_with_token = body.model_copy(update={"token": token})
-            response = self.search_users(
+            response = self.search_end_users(
                 body=body_with_token,
                 extra_body=extra_body,
             )
@@ -348,7 +348,7 @@ class ResellerService(SDKClient):
             if not token:
                 break
 
-    def search_companies(
+    def search_end_user_companies(
         self,
         body: SearchCompanies,
         extra_body: dict[str, Any] | None = None,
@@ -393,7 +393,7 @@ class ResellerService(SDKClient):
             return parse_response(response.json().unwrap(), GetCompanies)
         return response.json().unwrap()
 
-    def search_companies_iter(
+    def search_end_user_companies_iter(
         self,
         body: SearchCompanies,
         extra_body: dict[str, Any] | None = None,
@@ -413,7 +413,7 @@ class ResellerService(SDKClient):
 
         Example:
             ```python
-            for page in sdk.reseller.search_companies_iter(
+            for page in sdk.reseller.search_end_user_companies_iter(
                 body=...,
                 max_pages=10
             ):
@@ -429,7 +429,7 @@ class ResellerService(SDKClient):
                 break
 
             body_with_token = body.model_copy(update={"token": token})
-            response = self.search_companies(
+            response = self.search_end_user_companies(
                 body=body_with_token,
                 extra_body=extra_body,
             )

@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.feature_collection_order import FeatureCollectionOrder
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from ..models.response_context import ResponseContext
 
 
-class OrderPage(BaseModel):
+class OrderPage(pydantic.BaseModel):
     """Response payload for querying orders
 
     Attributes:
@@ -26,20 +26,22 @@ class OrderPage(BaseModel):
         context (ResponseContext): Context about the response.
     """
 
-    orders: list[Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]] = Field(
-        ...,
-        description="""A list of existing orders owned by the user.""",
-        alias="orders",
+    orders: list[Union[FeatureCollectionOrder, ResellerFeatureCollectionOrder]] = (
+        pydantic.Field(
+            ...,
+            description="""A list of existing orders owned by the user.""",
+            alias="orders",
+        )
     )
-    links: list[Link] = Field(
+    links: list[Link] = pydantic.Field(
         ...,
         description="""A list of links to next and/or previous pages of the query.""",
         alias="links",
     )
-    context: ResponseContext = Field(
+    context: ResponseContext = pydantic.Field(
         ..., description="""Context about the response.""", alias="context"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

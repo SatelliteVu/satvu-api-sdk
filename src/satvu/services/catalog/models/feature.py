@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.feature_properties import FeatureProperties
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from ..models.link import Link
 
 
-class Feature(BaseModel):
+class Feature(pydantic.BaseModel):
     """
     Attributes:
         bbox (list[float]): Bounding Box of the asset represented by the Item.
@@ -36,12 +36,12 @@ class Feature(BaseModel):
         stac_extensions (Union[None, list[str]]): A list of extensions the Item implements.
     """
 
-    bbox: list[float] = Field(
+    bbox: list[float] = pydantic.Field(
         ...,
         description="""Bounding Box of the asset represented by the Item.""",
         alias="bbox",
     )
-    collection: str = Field(
+    collection: str = pydantic.Field(
         ...,
         description="""The ID of the Collection the Item references to.""",
         alias="collection",
@@ -54,41 +54,41 @@ class Feature(BaseModel):
         GeoJSONMultiPolygon,
         GeoJSONPoint,
         GeoJSONPolygon,
-    ] = Field(
+    ] = pydantic.Field(
         ...,
         description="""Search for items by performing intersection between their geometry and a provided GeoJSON geometry.""",
         alias="geometry",
     )
-    id: str = Field(
+    id: str = pydantic.Field(
         ...,
         description="""The identifier of the Item, unique within the Collection that contains the Item.""",
         alias="id",
     )
-    links: list[Link] = Field(
+    links: list[Link] = pydantic.Field(
         ...,
         description="""A list of link objects to resources and related URLs.""",
         alias="links",
     )
-    properties: FeatureProperties = Field(
+    properties: FeatureProperties = pydantic.Field(
         ..., description="""Properties of the Item""", alias="properties"
     )
-    stac_version: str = Field(
+    stac_version: str = pydantic.Field(
         ...,
         description="""The STAC version the Item implements.""",
         alias="stac_version",
     )
-    type_: str = Field(..., description="""Feature.""", alias="type")
-    assets: Union[None, dict] = Field(
+    type_: str = pydantic.Field(..., description="""Feature.""", alias="type")
+    assets: Union[None, dict] = pydantic.Field(
         default=None,
         description="""Mapping of asset objects that can be downloaded, each with a unique key.""",
         alias="assets",
     )
-    stac_extensions: Union[None, list[str]] = Field(
+    stac_extensions: Union[None, list[str]] = pydantic.Field(
         default=None,
         description="""A list of extensions the Item implements.""",
         alias="stac_extensions",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

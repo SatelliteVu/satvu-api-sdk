@@ -6,12 +6,12 @@ from __future__ import annotations
 import datetime
 from typing import Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.day_night_mode import DayNightMode
 
 
-class EditOrderProperties(BaseModel):
+class EditOrderProperties(pydantic.BaseModel):
     """Properties that can be edited in an order.
 
     All fields are optional - only provided fields will be updated.
@@ -40,50 +40,50 @@ class EditOrderProperties(BaseModel):
                 for Standard orders in Created/Staged states.
     """
 
-    licence_level: None | str = Field(
+    licence_level: None | str = pydantic.Field(
         default=None,
         description="""The optional licence level for the order. Licence levels are specific to the contract. If not specified, the option will be set to the licence with the smallest uplift in the relevant contract.""",
         alias="licence_level",
     )
-    addon_withhold: None | str = Field(
+    addon_withhold: None | str = pydantic.Field(
         default=None,
         description="""The optional ISO8601 string describing the duration that an order will be withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set to the default specified in the relevant contract.""",
         alias="addon:withhold",
     )
-    name: None | str = Field(
+    name: None | str = pydantic.Field(
         default=None, description="""The name of the order.""", alias="name"
     )
-    start_time: datetime.datetime | None = Field(
+    start_time: datetime.datetime | None = pydantic.Field(
         default=None,
         description="""The start of the tasking window. Only editable for Standard orders in Created/Staged states.""",
         alias="start_time",
     )
-    end_time: datetime.datetime | None = Field(
+    end_time: datetime.datetime | None = pydantic.Field(
         default=None,
         description="""The end of the tasking window. Only editable for Standard orders in Created/Staged states.""",
         alias="end_time",
     )
-    satvu_day_night_mode: Union[DayNightMode, None] = Field(
+    satvu_day_night_mode: Union[DayNightMode, None] = pydantic.Field(
         default=None,
         description="""The mode of data capture. Only editable for Standard orders in Created/Staged states.""",
         alias="satvu:day_night_mode",
     )
-    max_cloud_cover: int | None = Field(
+    max_cloud_cover: int | None = pydantic.Field(
         default=None,
         description="""The max threshold of acceptable cloud coverage where the lower limit is capped to 25%. Only editable for Standard orders in Created/Staged states.""",
         alias="max_cloud_cover",
     )
-    min_off_nadir: int | None = Field(
+    min_off_nadir: int | None = pydantic.Field(
         default=None,
         description="""The minimum angle from the sensor between nadir and the scene center. Only editable for Standard orders in Created/Staged states.""",
         alias="min_off_nadir",
     )
-    max_off_nadir: int | None = Field(
+    max_off_nadir: int | None = pydantic.Field(
         default=None,
         description="""The maximum angle from the sensor between nadir and the scene center. Only editable for Standard orders in Created/Staged states.""",
         alias="max_off_nadir",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

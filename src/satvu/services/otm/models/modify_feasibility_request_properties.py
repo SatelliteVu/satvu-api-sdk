@@ -5,12 +5,12 @@ from __future__ import annotations
 
 from typing import Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.day_night_mode import DayNightMode
 
 
-class ModifyFeasibilityRequestProperties(BaseModel):
+class ModifyFeasibilityRequestProperties(pydantic.BaseModel):
     """Properties for modify feasibility request.
     All fields are optional - unspecified fields will be sourced from the existing order.
     Only supports Standard product (Assured orders do not support modifications).
@@ -27,32 +27,32 @@ class ModifyFeasibilityRequestProperties(BaseModel):
                 decimal degrees. Must be larger than `min_off_nadir`.
     """
 
-    datetime_: None | str = Field(
+    datetime_: None | str = pydantic.Field(
         default=None,
         description="""The closed date-time interval of the modified tasking order request. Start date can be in the past, end date can be less than 7 days in the future, but minimum 7-day window must be maintained.""",
         alias="datetime",
     )
-    satvu_day_night_mode: Union[DayNightMode, None] = Field(
+    satvu_day_night_mode: Union[DayNightMode, None] = pydantic.Field(
         default=None,
         description="""The mode of data capture.""",
         alias="satvu:day_night_mode",
     )
-    max_cloud_cover: int | None = Field(
+    max_cloud_cover: int | None = pydantic.Field(
         default=None,
         description="""The max threshold of acceptable cloud coverage where the lower limit is capped to 25%. Measured in percent.""",
         alias="max_cloud_cover",
     )
-    min_off_nadir: int | None = Field(
+    min_off_nadir: int | None = pydantic.Field(
         default=None,
         description="""The minimum angle from the sensor between nadir and the scene center. Measured in decimal degrees.""",
         alias="min_off_nadir",
     )
-    max_off_nadir: int | None = Field(
+    max_off_nadir: int | None = pydantic.Field(
         default=None,
         description="""The maximum angle from the sensor between nadir and the scene center. Measured in decimal degrees. Must be larger than `min_off_nadir`.""",
         alias="max_off_nadir",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

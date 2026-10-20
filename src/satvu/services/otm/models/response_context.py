@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class ResponseContext(BaseModel):
+class ResponseContext(pydantic.BaseModel):
     """Context about the response.
 
     Attributes:
@@ -15,16 +15,16 @@ class ResponseContext(BaseModel):
         returned (int): Number of returned items in page.
     """
 
-    limit: int = Field(
+    limit: int = pydantic.Field(
         ..., description="""Applied per page item limit.""", alias="limit"
     )
-    matched: int = Field(
+    matched: int = pydantic.Field(
         ..., description="""Total number of results.""", alias="matched"
     )
-    returned: int = Field(
+    returned: int = pydantic.Field(
         ..., description="""Number of returned items in page.""", alias="returned"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

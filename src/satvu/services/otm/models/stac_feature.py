@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.link_1 import Link1
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from ..models.polygon_geometry import PolygonGeometry
 
 
-class StacFeature(BaseModel):
+class StacFeature(pydantic.BaseModel):
     """STAC Feature (Item).
 
     A STAC Item is a GeoJSON Feature with additional STAC-specific fields.
@@ -34,51 +34,53 @@ class StacFeature(BaseModel):
             stac_extensions (Union[None, list[str]]): A list of STAC extensions the Item implements.
     """
 
-    id: str = Field(
+    id: str = pydantic.Field(
         ..., description="""The unique identifier for this item.""", alias="id"
     )
-    collection: str = Field(
+    collection: str = pydantic.Field(
         ...,
         description="""The ID of the STAC Collection this item belongs to.""",
         alias="collection",
     )
-    bbox: list[float | int] = Field(
+    bbox: list[float | int] = pydantic.Field(
         ...,
         description="""The bounding box of the asset represented by this item.""",
         alias="bbox",
     )
-    properties: dict = Field(
+    properties: dict = pydantic.Field(
         ...,
         description="""A map of additional metadata for the item.""",
         alias="properties",
     )
-    type_: Literal["Feature"] = Field(default="Feature", description=None, alias="type")
-    stac_version: Union[None, str] = Field(
+    type_: Literal["Feature"] = pydantic.Field(
+        default="Feature", description=None, alias="type"
+    )
+    stac_version: Union[None, str] = pydantic.Field(
         default="1.0.0",
         description="""The STAC version the Item implements.""",
         alias="stac_version",
     )
-    geometry: Union[PointGeometry, PolygonGeometry, None] = Field(
+    geometry: Union[PointGeometry, PolygonGeometry, None] = pydantic.Field(
         default=None,
         description="""Defines the full footprint of the asset represented by this item.""",
         alias="geometry",
     )
-    links: Union[None, list[Link1]] = Field(
+    links: Union[None, list[Link1]] = pydantic.Field(
         default=None,
         description="""A list of link objects to resources and related URLs.""",
         alias="links",
     )
-    assets: Union[None, dict] = Field(
+    assets: Union[None, dict] = pydantic.Field(
         default=None,
         description="""A map of asset objects that can be downloaded, each with a unique key.""",
         alias="assets",
     )
-    stac_extensions: Union[None, list[str]] = Field(
+    stac_extensions: Union[None, list[str]] = pydantic.Field(
         default=None,
         description="""A list of STAC extensions the Item implements.""",
         alias="stac_extensions",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

@@ -5,12 +5,12 @@ from __future__ import annotations
 
 from typing import Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.geo_json_multi_point_type import GeoJSONMultiPointType
 
 
-class GeoJSONMultiPoint(BaseModel):
+class GeoJSONMultiPoint(pydantic.BaseModel):
     """
     Attributes:
         type_ ('GeoJSONMultiPointType'):
@@ -18,10 +18,14 @@ class GeoJSONMultiPoint(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type_: GeoJSONMultiPointType = Field(..., description=None, alias="type")
-    coordinates: list[list[float]] = Field(..., description=None, alias="coordinates")
-    bbox: Union[None, list[float]] = Field(default=None, description=None, alias="bbox")
+    type_: GeoJSONMultiPointType = pydantic.Field(..., description=None, alias="type")
+    coordinates: list[list[float]] = pydantic.Field(
+        ..., description=None, alias="coordinates"
+    )
+    bbox: Union[None, list[float]] = pydantic.Field(
+        default=None, description=None, alias="bbox"
+    )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

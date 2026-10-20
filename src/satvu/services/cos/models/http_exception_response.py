@@ -3,17 +3,17 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class HttpExceptionResponse(BaseModel):
+class HttpExceptionResponse(pydantic.BaseModel):
     """
     Attributes:
         detail (str):
     """
 
-    detail: str = Field(..., description=None, alias="detail")
+    detail: str = pydantic.Field(..., description=None, alias="detail")
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

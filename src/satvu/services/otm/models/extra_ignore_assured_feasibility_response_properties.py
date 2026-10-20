@@ -6,13 +6,13 @@ from __future__ import annotations
 import datetime
 from typing import TYPE_CHECKING, Literal, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.price import Price
 
 
-class ExtraIgnoreAssuredFeasibilityResponseProperties(BaseModel):
+class ExtraIgnoreAssuredFeasibilityResponseProperties(pydantic.BaseModel):
     """
     Attributes:
         product (Literal['assured']): Assured Priority.
@@ -34,58 +34,58 @@ class ExtraIgnoreAssuredFeasibilityResponseProperties(BaseModel):
             decimal degrees.
     """
 
-    product: Literal["assured"] = Field(
+    product: Literal["assured"] = pydantic.Field(
         default="assured", description="""Assured Priority.""", alias="product"
     )
-    datetime_: str = Field(
+    datetime_: str = pydantic.Field(
         ...,
         description="""The closed date-time interval of the response.""",
         alias="datetime",
     )
-    created_at: datetime.datetime = Field(
+    created_at: datetime.datetime = pydantic.Field(
         ...,
         description="""The datetime at which the feasibility response was created.""",
         alias="created_at",
     )
-    updated_at: datetime.datetime = Field(
+    updated_at: datetime.datetime = pydantic.Field(
         ...,
         description="""The datetime at which the feasibility response was last updated.""",
         alias="updated_at",
     )
-    price: Union[Price, None] = Field(
+    price: Union[Price, None] = pydantic.Field(
         default=None, description="""Pricing information.""", alias="price"
     )
-    min_sun_el: float | None = Field(
+    min_sun_el: float | None = pydantic.Field(
         default=None,
         description="""The minimum sun elevation angle of the pass. Measured in decimal degrees from the horizontal.""",
         alias="min_sun_el",
     )
-    max_sun_el: float | None = Field(
+    max_sun_el: float | None = pydantic.Field(
         default=None,
         description="""The maximum sun elevation angle of the pass. Measured in decimal degrees from the horizontal.""",
         alias="max_sun_el",
     )
-    min_gsd: float | None = Field(
+    min_gsd: float | None = pydantic.Field(
         default=None,
         description="""The minimum ground sample distance value of the pass. Measured in metres representing the square root of the area of the pixel size projected onto the earth.""",
         alias="min_gsd",
     )
-    max_gsd: float | None = Field(
+    max_gsd: float | None = pydantic.Field(
         default=None,
         description="""The maximum ground sample distance value of the pass. Measured in metres representing the square root of the area of the pixel size projected onto the earth.""",
         alias="max_gsd",
     )
-    min_off_nadir: float | None = Field(
+    min_off_nadir: float | None = pydantic.Field(
         default=None,
         description="""The minimum angle from the sensor between nadir and the scene center. Measured in decimal degrees.""",
         alias="min_off_nadir",
     )
-    max_off_nadir: float | None = Field(
+    max_off_nadir: float | None = pydantic.Field(
         default=None,
         description="""The maximum angle from the sensor between nadir and the scene center. Measured in decimal degrees.""",
         alias="max_off_nadir",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

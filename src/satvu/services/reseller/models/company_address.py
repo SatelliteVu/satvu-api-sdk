@@ -3,12 +3,12 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.country_code import CountryCode
 
 
-class CompanyAddress(BaseModel):
+class CompanyAddress(pydantic.BaseModel):
     """
     Attributes:
         country_code ('CountryCode'): 2-digit country code of company.
@@ -16,18 +16,18 @@ class CompanyAddress(BaseModel):
         street (None | str): The street of the company.
     """
 
-    country_code: CountryCode = Field(
+    country_code: CountryCode = pydantic.Field(
         ..., description="""2-digit country code of company.""", alias="country_code"
     )
-    postcode: None | str = Field(
+    postcode: None | str = pydantic.Field(
         default=None,
         description="""The postcode/zip code of the company.""",
         alias="postcode",
     )
-    street: None | str = Field(
+    street: None | str = pydantic.Field(
         default=None, description="""The street of the company.""", alias="street"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

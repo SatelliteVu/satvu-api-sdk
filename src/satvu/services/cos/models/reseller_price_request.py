@@ -5,10 +5,10 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class ResellerPriceRequest(BaseModel):
+class ResellerPriceRequest(pydantic.BaseModel):
     """Request payload for calculating order price as a reseller
 
     Attributes:
@@ -20,25 +20,25 @@ class ResellerPriceRequest(BaseModel):
             be provided unless the `baseprice` query parameter is set to true.
     """
 
-    reseller_end_user_id: UUID = Field(
+    reseller_end_user_id: UUID = pydantic.Field(
         ...,
         description="""The ID of the end user for whom the order is placed for.""",
         alias="reseller_end_user_id",
     )
-    item_id: list[str] | str = Field(
+    item_id: list[str] | str = pydantic.Field(
         ...,
         description="""The acquisition item ID(s) from the STAC catalog. Note: Only acquisition items are accepted. SBT, Primary, and Visual products cannot be ordered directly.""",
         alias="item_id",
     )
-    name: None | str = Field(
+    name: None | str = pydantic.Field(
         default=None, description="""The optional name of the order""", alias="name"
     )
-    licence_level: None | str = Field(
+    licence_level: None | str = pydantic.Field(
         default=None,
         description="""The licence level for the order. Licence levels are specific to the contract. Must be provided unless the `baseprice` query parameter is set to true.""",
         alias="licence_level",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

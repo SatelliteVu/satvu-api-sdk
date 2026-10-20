@@ -5,12 +5,12 @@ from __future__ import annotations
 
 import datetime
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.kyc_status import KycStatus
 
 
-class EndUserKYCStatusUpdatePayload(BaseModel):
+class EndUserKYCStatusUpdatePayload(pydantic.BaseModel):
     """
     Attributes:
         reseller_end_user_email (str): Email address of end user.
@@ -22,36 +22,36 @@ class EndUserKYCStatusUpdatePayload(BaseModel):
         user_id (str): Auth0 user ID of an associated reseller
     """
 
-    reseller_end_user_email: str = Field(
+    reseller_end_user_email: str = pydantic.Field(
         ...,
         description="""Email address of end user.""",
         alias="reseller_end_user_email",
     )
-    reseller_end_user_id: str = Field(
+    reseller_end_user_id: str = pydantic.Field(
         ...,
         description="""Unique identifier of reseller end user.""",
         alias="reseller_end_user_id",
     )
-    kyc_status: KycStatus = Field(..., description=None, alias="kyc_status")
-    kyc_status_last_updated: datetime.datetime = Field(
+    kyc_status: KycStatus = pydantic.Field(..., description=None, alias="kyc_status")
+    kyc_status_last_updated: datetime.datetime = pydantic.Field(
         ...,
         description="""Datetime when KYC status of end user was last updated.""",
         alias="kyc_status_last_updated",
     )
-    reseller_end_user_company_id: str = Field(
+    reseller_end_user_company_id: str = pydantic.Field(
         ...,
         description="""Unique identifier of reseller end user company.""",
         alias="reseller_end_user_company_id",
     )
-    reseller_end_user_created_at: datetime.datetime = Field(
+    reseller_end_user_created_at: datetime.datetime = pydantic.Field(
         ...,
         description="""Creation datetime of reseller end user.""",
         alias="reseller_end_user_created_at",
     )
-    user_id: str = Field(
+    user_id: str = pydantic.Field(
         ..., description="""Auth0 user ID of an associated reseller""", alias="user_id"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

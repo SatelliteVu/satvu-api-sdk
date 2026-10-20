@@ -3,17 +3,17 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class ListActiveContractsInput(BaseModel):
+class ListActiveContractsInput(pydantic.BaseModel):
     """
     Attributes:
         token (str): User access token
     """
 
-    token: str = Field(..., description="""User access token""", alias="token")
+    token: str = pydantic.Field(..., description="""User access token""", alias="token")
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

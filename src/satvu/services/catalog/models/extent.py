@@ -5,14 +5,14 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.spatial_extent import SpatialExtent
     from ..models.temporal_extent import TemporalExtent
 
 
-class Extent(BaseModel):
+class Extent(pydantic.BaseModel):
     """Spatial and temporal extents.
 
     Attributes:
@@ -20,17 +20,17 @@ class Extent(BaseModel):
         temporal (TemporalExtent): Potential temporal extents covered by the Collection.
     """
 
-    spatial: SpatialExtent = Field(
+    spatial: SpatialExtent = pydantic.Field(
         ...,
         description="""Potential spatial extents covered by the Collection.""",
         alias="spatial",
     )
-    temporal: TemporalExtent = Field(
+    temporal: TemporalExtent = pydantic.Field(
         ...,
         description="""Potential temporal extents covered by the Collection.""",
         alias="temporal",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

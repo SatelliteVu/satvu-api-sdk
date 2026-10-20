@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Annotated, Literal, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.link import Link
@@ -36,7 +36,7 @@ if TYPE_CHECKING:
     )
 
 
-class SearchResponse(BaseModel):
+class SearchResponse(pydantic.BaseModel):
     """
     Attributes:
         type_ (Literal['FeatureCollection']):
@@ -49,7 +49,7 @@ class SearchResponse(BaseModel):
         links (list[Link]): A list of links to next and/or previous pages of the search.
     """
 
-    type_: Literal["FeatureCollection"] = Field(
+    type_: Literal["FeatureCollection"] = pydantic.Field(
         default="FeatureCollection", description=None, alias="type"
     )
     features: list[
@@ -64,22 +64,22 @@ class SearchResponse(BaseModel):
                 SearchResponseFeatureStandardFeasibilityResponse,
                 SearchResponseFeatureStandardOrderRequest,
             ],
-            Field(discriminator="feature_type"),
+            pydantic.Field(discriminator="feature_type"),
         ]
-    ] = Field(
+    ] = pydantic.Field(
         ...,
         description="""A list of features that match the search filters.""",
         alias="features",
     )
-    context: ResponseContext = Field(
+    context: ResponseContext = pydantic.Field(
         ..., description="""Context about the response.""", alias="context"
     )
-    links: list[Link] = Field(
+    links: list[Link] = pydantic.Field(
         ...,
         description="""A list of links to next and/or previous pages of the search.""",
         alias="links",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

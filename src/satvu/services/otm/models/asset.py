@@ -5,10 +5,10 @@ from __future__ import annotations
 
 from typing import Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class Asset(BaseModel):
+class Asset(pydantic.BaseModel):
     """STAC Asset object.
 
     An Asset is a file associated with a STAC Item that can be downloaded
@@ -22,24 +22,26 @@ class Asset(BaseModel):
             description (None | str): A description of the asset.
     """
 
-    href: str = Field(..., description="""The URI to the asset object.""", alias="href")
-    type_: str = Field(
+    href: str = pydantic.Field(
+        ..., description="""The URI to the asset object.""", alias="href"
+    )
+    type_: str = pydantic.Field(
         ..., description="""The media type of the asset.""", alias="type"
     )
-    roles: Union[None, list[str]] = Field(
+    roles: Union[None, list[str]] = pydantic.Field(
         default=None,
         description="""The semantic roles of the asset (e.g., 'thumbnail', 'data', 'metadata').""",
         alias="roles",
     )
-    title: None | str = Field(
+    title: None | str = pydantic.Field(
         default=None,
         description="""A human readable title for the asset.""",
         alias="title",
     )
-    description: None | str = Field(
+    description: None | str = pydantic.Field(
         default=None, description="""A description of the asset.""", alias="description"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

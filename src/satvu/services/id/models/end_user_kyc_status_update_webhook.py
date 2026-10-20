@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.end_user_kyc_status_update_payload import (
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     )
 
 
-class EndUserKYCStatusUpdateWebhook(BaseModel):
+class EndUserKYCStatusUpdateWebhook(pydantic.BaseModel):
     """Envelope delivered when an end user's KYC status changes.
 
     Attributes:
@@ -22,14 +22,18 @@ class EndUserKYCStatusUpdateWebhook(BaseModel):
         data (EndUserKYCStatusUpdatePayload):
     """
 
-    type_: str = Field(..., description="""Event topic identifier""", alias="type")
-    timestamp: int = Field(
+    type_: str = pydantic.Field(
+        ..., description="""Event topic identifier""", alias="type"
+    )
+    timestamp: int = pydantic.Field(
         ...,
         description="""UTC Unix timestamp (seconds) at which the event was emitted""",
         alias="timestamp",
     )
-    data: EndUserKYCStatusUpdatePayload = Field(..., description=None, alias="data")
+    data: EndUserKYCStatusUpdatePayload = pydantic.Field(
+        ..., description=None, alias="data"
+    )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

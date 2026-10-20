@@ -3,17 +3,17 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class DateInstant(BaseModel):
+class DateInstant(pydantic.BaseModel):
     """
     Attributes:
         date (str):
     """
 
-    date: str = Field(..., description=None, alias="date")
+    date: str = pydantic.Field(..., description=None, alias="date")
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

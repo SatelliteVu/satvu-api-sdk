@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.link import Link
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from ..models.stored_feasibility_request import StoredFeasibilityRequest
 
 
-class StoredFeasibilityFeatureCollection(BaseModel):
+class StoredFeasibilityFeatureCollection(pydantic.BaseModel):
     """Payload for list stored feasibility requests response.
 
     Attributes:
@@ -23,19 +23,19 @@ class StoredFeasibilityFeatureCollection(BaseModel):
         context (ResponseContext): Context about the response.
     """
 
-    type_: Literal["FeatureCollection"] = Field(
+    type_: Literal["FeatureCollection"] = pydantic.Field(
         default="FeatureCollection", description=None, alias="type"
     )
-    features: list[StoredFeasibilityRequest] = Field(
+    features: list[StoredFeasibilityRequest] = pydantic.Field(
         ..., description="""List of stored feasibility requests.""", alias="features"
     )
-    links: list[Link] = Field(
+    links: list[Link] = pydantic.Field(
         ..., description="""Links to previous and/or next page.""", alias="links"
     )
-    context: ResponseContext = Field(
+    context: ResponseContext = pydantic.Field(
         ..., description="""Context about the response.""", alias="context"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

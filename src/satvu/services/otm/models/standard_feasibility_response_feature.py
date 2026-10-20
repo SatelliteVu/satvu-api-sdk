@@ -6,7 +6,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.point import Point
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     )
 
 
-class StandardFeasibilityResponseFeature(BaseModel):
+class StandardFeasibilityResponseFeature(pydantic.BaseModel):
     """Object representing a standard feasibility response.
 
     Attributes:
@@ -25,17 +25,21 @@ class StandardFeasibilityResponseFeature(BaseModel):
         id (UUID): The ID of the feasibility request.
     """
 
-    type_: Literal["Feature"] = Field(default="Feature", description=None, alias="type")
-    geometry: Point = Field(..., description="""Point Model""", alias="geometry")
-    properties: StandardFeasibilityResponseProperties = Field(
+    type_: Literal["Feature"] = pydantic.Field(
+        default="Feature", description=None, alias="type"
+    )
+    geometry: Point = pydantic.Field(
+        ..., description="""Point Model""", alias="geometry"
+    )
+    properties: StandardFeasibilityResponseProperties = pydantic.Field(
         ...,
         description="""Properties of the standard priority feasibility response.""",
         alias="properties",
     )
-    id: UUID = Field(
+    id: UUID = pydantic.Field(
         ..., description="""The ID of the feasibility request.""", alias="id"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

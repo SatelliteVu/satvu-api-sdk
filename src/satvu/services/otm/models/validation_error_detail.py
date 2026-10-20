@@ -5,10 +5,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class ValidationErrorDetail(BaseModel):
+class ValidationErrorDetail(pydantic.BaseModel):
     """Individual validation error detail from Pydantic.
 
     Represents a single validation error with location, message, and context.
@@ -21,12 +21,12 @@ class ValidationErrorDetail(BaseModel):
             ctx (dict | None):
     """
 
-    type_: str = Field(..., description=None, alias="type")
-    loc: list[int | str] = Field(..., description=None, alias="loc")
-    msg: str = Field(..., description=None, alias="msg")
-    input_: Any | None = Field(default=None, description=None, alias="input")
-    ctx: dict | None = Field(default=None, description=None, alias="ctx")
+    type_: str = pydantic.Field(..., description=None, alias="type")
+    loc: list[int | str] = pydantic.Field(..., description=None, alias="loc")
+    msg: str = pydantic.Field(..., description=None, alias="msg")
+    input_: Any | None = pydantic.Field(default=None, description=None, alias="input")
+    ctx: dict | None = pydantic.Field(default=None, description=None, alias="ctx")
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

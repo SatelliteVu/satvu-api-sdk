@@ -7,14 +7,14 @@ import datetime
 from typing import TYPE_CHECKING, Union
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.order_item_price import OrderItemPrice
     from ..models.stac_metadata import StacMetadata
 
 
-class Order(BaseModel):
+class Order(pydantic.BaseModel):
     """
     Attributes:
         item_id (str): The item ID.
@@ -24,22 +24,24 @@ class Order(BaseModel):
         stac_metadata (Union['StacMetadata', None]): Metadata about the item.
     """
 
-    item_id: str = Field(..., description="""The item ID.""", alias="item_id")
-    order_id: UUID = Field(..., description="""The order ID.""", alias="order_id")
-    created_at: datetime.datetime = Field(
+    item_id: str = pydantic.Field(..., description="""The item ID.""", alias="item_id")
+    order_id: UUID = pydantic.Field(
+        ..., description="""The order ID.""", alias="order_id"
+    )
+    created_at: datetime.datetime = pydantic.Field(
         ...,
         description="""The datetime at which the order was created.""",
         alias="created_at",
     )
-    price: OrderItemPrice = Field(
+    price: OrderItemPrice = pydantic.Field(
         ...,
         description="""Price information for an individual imagery item within an order.""",
         alias="price",
     )
-    stac_metadata: Union[StacMetadata, None] = Field(
+    stac_metadata: Union[StacMetadata, None] = pydantic.Field(
         default=None, description="""Metadata about the item.""", alias="stac_metadata"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

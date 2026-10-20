@@ -13,6 +13,9 @@ from satvu.services.catalog.models.acquisition_item import AcquisitionItem
 from satvu.services.catalog.models.acquisition_queryables import AcquisitionQueryables
 from satvu.services.catalog.models.catalog import Catalog
 from satvu.services.catalog.models.collection import Collection
+from satvu.services.catalog.models.collection_search_json_input import (
+    CollectionSearchJsonInput,
+)
 from satvu.services.catalog.models.collections import Collections
 from satvu.services.catalog.models.conformance import Conformance
 from satvu.services.catalog.models.feature import Feature
@@ -28,18 +31,14 @@ from satvu.services.catalog.models.geo_json_multi_point import GeoJSONMultiPoint
 from satvu.services.catalog.models.geo_json_multi_polygon import GeoJSONMultiPolygon
 from satvu.services.catalog.models.geo_json_point import GeoJSONPoint
 from satvu.services.catalog.models.geo_json_polygon import GeoJSONPolygon
-from satvu.services.catalog.models.post_collection_search_input import (
-    PostCollectionSearchInput,
-)
-from satvu.services.catalog.models.post_search_input import PostSearchInput
 from satvu.services.catalog.models.primary_feature_collection import (
     PrimaryFeatureCollection,
 )
 from satvu.services.catalog.models.primary_item import PrimaryItem
 from satvu.services.catalog.models.primary_queryables import PrimaryQueryables
 from satvu.services.catalog.models.queryables import Queryables
+from satvu.services.catalog.models.search_json_input import SearchJsonInput
 from satvu.services.catalog.models.search_response import SearchResponse
-from satvu.services.catalog.models.stac_geometry import StacGeometry
 from satvu.services.catalog.models.surface_brightness_temperature_feature_collection import (
     SurfaceBrightnessTemperatureFeatureCollection,
 )
@@ -109,7 +108,7 @@ class CatalogService(SDKClient):
             return parse_response(response.json().unwrap(), Catalog)
         return response.json().unwrap()
 
-    def get_collections(
+    def list_collections(
         self,
         contract_id: str,
         timeout: int | None = None,
@@ -182,21 +181,60 @@ class CatalogService(SDKClient):
             return parse_response(response.json().unwrap(), Collection)
         return response.json().unwrap()
 
-    def get_item_collection(
+    def list_collection_items(
         self,
         contract_id: str,
         collection_id: str,
+        bbox: Union[None, list[float]] = None,
+        collections: Union[None, list[str]] = None,
+        datetime_: None | str = None,
+        filter_: Union[None, dict] = None,
+        ids: Union[None, list[str]] = None,
+        intersects: Union[
+            None,
+            Union[
+                "GeoJSONGeometryCollection",
+                "GeoJSONLineString",
+                "GeoJSONMultiLineString",
+                "GeoJSONMultiPoint",
+                "GeoJSONMultiPolygon",
+                "GeoJSONPoint",
+                "GeoJSONPolygon",
+            ],
+        ] = None,
+        limit: int | None = None,
+        sortby: Union[None, list[str]] = None,
+        token: Union[None, str] = None,
         timeout: int | None = None,
     ) -> SearchResponse:
         """
         Get Item Collection
 
-        Retrieves the entire dataset, represented as a Feature Collection, corresponding to a specified
-        Collection ID.
+        Retrieves the items of a Collection as a Feature Collection, optionally filtered by the supported
+        search parameters (bbox, datetime, filter, etc.).
 
         Args:
             contract_id (str): Contract identifier for scoped access
             collection_id (str): Collection ID. Example: collection.
+            bbox (Union[None, list[float]]): Comma separated list of floats representing a bounding
+                box. Only features that have a geometry that intersects the bounding box are selected.
+                Example: -90,-45,90,45.
+            collections (Union[None, list[str]]): Comma separated list of Collection IDs to include in
+                the search for items. Only Item objects in one of the provided collections will be
+                searched. Example: collection1,collection2.
+            datetime_ (None | str): Single date+time, or a range ('/') separator, formatted to RFC3339
+                section 5.6. Use double dots for open ranges. Example: 1985-04-12T23:20:50.52Z/...
+            filter_ (Union[None, dict]): Filters using Common Query Language (CQL2).
+            ids (Union[None, list[str]]): Comma separated list of Item IDs to return. Example:
+                item1,item2.
+            intersects (Union[None, Union['GeoJSONGeometryCollection', 'GeoJSONLineString',
+                'GeoJSONMultiLineString', 'GeoJSONMultiPoint', 'GeoJSONMultiPolygon', 'GeoJSONPoint',
+                'GeoJSONPolygon']]): Search for items by performing intersection between their geometry
+                and a provided GeoJSON geometry.
+            limit (int | None): The maximum number of results to return per page. Example: 10.
+            sortby (Union[None, list[str]]): An array of property names, prefixed by either '+' for
+                ascending or '-' for descending. If no prefix is provided, '-' is assumed.
+            token (Union[None, str]): The pagination token.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -204,9 +242,22 @@ class CatalogService(SDKClient):
             SearchResponse
         """
 
+        params = {
+            "bbox": bbox,
+            "collections": collections,
+            "datetime": datetime_,
+            "filter": filter_,
+            "ids": ids,
+            "intersects": intersects,
+            "limit": limit,
+            "sortby": sortby,
+            "token": token,
+        }
+
         result = self.make_request(
             method="get",
             url=f"/{contract_id}/collections/{collection_id}/items",
+            params=params,
             timeout=timeout,
         )
 
@@ -220,7 +271,102 @@ class CatalogService(SDKClient):
             return parse_response(response.json().unwrap(), SearchResponse)
         return response.json().unwrap()
 
-    def get_collection_queryables(
+    def list_collection_items_iter(
+        self,
+        contract_id: str,
+        collection_id: str,
+        bbox: Union[None, list[float]] = None,
+        collections: Union[None, list[str]] = None,
+        datetime_: None | str = None,
+        filter_: Union[None, dict] = None,
+        ids: Union[None, list[str]] = None,
+        intersects: Union[
+            None,
+            Union[
+                "GeoJSONGeometryCollection",
+                "GeoJSONLineString",
+                "GeoJSONMultiLineString",
+                "GeoJSONMultiPoint",
+                "GeoJSONMultiPolygon",
+                "GeoJSONPoint",
+                "GeoJSONPolygon",
+            ],
+        ] = None,
+        limit: int | None = None,
+        sortby: Union[None, list[str]] = None,
+        max_pages: int | None = None,
+    ) -> Generator[SearchResponse, None, None]:
+        """
+        Get Item Collection (Paginated Iterator)
+
+        Automatically handles pagination by following STAC links.
+
+        Args:
+            contract_id (str): Contract identifier for scoped access
+            collection_id (str): Collection ID. Example: collection.
+            bbox (Union[None, list[float]]): Comma separated list of floats representing a bounding
+            box. Only features that have a geometry that intersects the bounding box are selected.
+            Example: -90,-45,90,45.
+            collections (Union[None, list[str]]): Comma separated list of Collection IDs to include in
+            the search for items. Only Item objects in one of the provided collections will be
+            searched. Example: collection1,collection2.
+            datetime_ (None | str): Single date+time, or a range ('/') separator, formatted to RFC3339
+            section 5.6. Use double dots for open ranges. Example: 1985-04-12T23:20:50.52Z/...
+            filter_ (Union[None, dict]): Filters using Common Query Language (CQL2).
+            ids (Union[None, list[str]]): Comma separated list of Item IDs to return. Example:
+            item1,item2.
+            intersects (Union[None, Union['GeoJSONGeometryCollection', 'GeoJSONLineString',
+            'GeoJSONMultiLineString', 'GeoJSONMultiPoint', 'GeoJSONMultiPolygon', 'GeoJSONPoint',
+            'GeoJSONPolygon']]): Search for items by performing intersection between their geometry
+            and a provided GeoJSON geometry.
+            limit (int | None): The maximum number of results to return per page. Example: 10.
+            sortby (Union[None, list[str]]): An array of property names, prefixed by either '+' for
+            ascending or '-' for descending. If no prefix is provided, '-' is assumed.
+            max_pages: Stop after fetching this many pages (default: unlimited)
+
+        Yields:
+            Response pages from paginated results
+
+        Example:
+            ```python
+            for page in sdk.catalog.list_collection_items_iter(
+                contract_id=...,
+                collection_id=...,
+                max_pages=10
+            ):
+                for item in page.features:
+                    print(item)
+            ```
+        """
+        token = None
+        page_count = 0
+
+        while True:
+            if max_pages and page_count >= max_pages:
+                break
+
+            response = self.list_collection_items(
+                contract_id=contract_id,
+                collection_id=collection_id,
+                bbox=bbox,
+                collections=collections,
+                datetime_=datetime_,
+                filter_=filter_,
+                ids=ids,
+                intersects=intersects,
+                limit=limit,
+                sortby=sortby,
+                token=token,
+            )
+            page_count += 1
+
+            yield response
+
+            token = self.extract_next_token(response)
+            if not token:
+                break
+
+    def list_collection_queryables(
         self,
         contract_id: str,
         collection_id: str,
@@ -298,7 +444,7 @@ class CatalogService(SDKClient):
             return parse_response(response.json().unwrap(), Feature)
         return response.json().unwrap()
 
-    def conformance(
+    def list_conformance_classes(
         self,
         contract_id: str,
         timeout: int | None = None,
@@ -333,7 +479,7 @@ class CatalogService(SDKClient):
             return parse_response(response.json().unwrap(), Conformance)
         return response.json().unwrap()
 
-    def queryables(
+    def list_queryables(
         self,
         contract_id: str,
         timeout: int | None = None,
@@ -369,7 +515,7 @@ class CatalogService(SDKClient):
             return parse_response(response.json().unwrap(), Queryables)
         return response.json().unwrap()
 
-    def get_search(
+    def search_text(
         self,
         contract_id: str,
         bbox: Union[None, list[float]] = None,
@@ -490,7 +636,7 @@ class CatalogService(SDKClient):
             return parse_response(response.json().unwrap(), FeatureCollection)
         return response.json().unwrap()
 
-    def get_search_iter(
+    def search_text_iter(
         self,
         contract_id: str,
         bbox: Union[None, list[float]] = None,
@@ -546,7 +692,7 @@ class CatalogService(SDKClient):
 
         Example:
             ```python
-            for page in sdk.catalog.get_search_iter(
+            for page in sdk.catalog.search_text_iter(
                 contract_id=...,
                 max_pages=10
             ):
@@ -561,7 +707,7 @@ class CatalogService(SDKClient):
             if max_pages and page_count >= max_pages:
                 break
 
-            response = self.get_search(
+            response = self.search_text(
                 contract_id=contract_id,
                 bbox=bbox,
                 collections=collections,
@@ -581,9 +727,9 @@ class CatalogService(SDKClient):
             if not token:
                 break
 
-    def post_search(
+    def search_json(
         self,
-        body: Union[None, PostSearchInput],
+        body: Union[None, SearchJsonInput],
         contract_id: str,
         extra_body: dict[str, Any] | None = None,
         timeout: int | None = None,
@@ -629,7 +775,7 @@ class CatalogService(SDKClient):
 
         Args:
             contract_id (str): Contract identifier for scoped access
-            body (Union[None, PostSearchInput]):
+            body (Union[None, SearchJsonInput]):
             extra_body: Optional dict deep-merged into the request body after
                 serialisation. Use this to pass fields added to the API after this
                 SDK version shipped. Nested dicts merge recursively; lists and
@@ -666,9 +812,9 @@ class CatalogService(SDKClient):
             return parse_response(response.json().unwrap(), FeatureCollection)
         return response.json().unwrap()
 
-    def post_search_iter(
+    def search_json_iter(
         self,
-        body: Union[None, PostSearchInput],
+        body: Union[None, SearchJsonInput],
         contract_id: str,
         extra_body: dict[str, Any] | None = None,
         max_pages: int | None = None,
@@ -679,7 +825,7 @@ class CatalogService(SDKClient):
         Automatically handles pagination by following STAC links.
 
         Args:
-            body (Union[None, PostSearchInput]):
+            body (Union[None, SearchJsonInput]):
             contract_id (str): Contract identifier for scoped access
             max_pages: Stop after fetching this many pages (default: unlimited)
 
@@ -688,7 +834,7 @@ class CatalogService(SDKClient):
 
         Example:
             ```python
-            for page in sdk.catalog.post_search_iter(
+            for page in sdk.catalog.search_json_iter(
                 body=...,
                 contract_id=...,
                 max_pages=10
@@ -705,7 +851,7 @@ class CatalogService(SDKClient):
                 break
 
             body_with_token = body.model_copy(update={"token": token}) if body else None
-            response = self.post_search(
+            response = self.search_json(
                 body=body_with_token,
                 contract_id=contract_id,
                 extra_body=extra_body,
@@ -718,7 +864,7 @@ class CatalogService(SDKClient):
             if not token:
                 break
 
-    def get_acquisition_items(
+    def list_acquisition_items(
         self,
         contract_id: str,
         bbox: Union[None, list[float]] = None,
@@ -726,7 +872,18 @@ class CatalogService(SDKClient):
         datetime_: None | str = None,
         filter_: Union[None, dict] = None,
         ids: Union[None, list[str]] = None,
-        intersects: Union[None, StacGeometry] = None,
+        intersects: Union[
+            None,
+            Union[
+                "GeoJSONGeometryCollection",
+                "GeoJSONLineString",
+                "GeoJSONMultiLineString",
+                "GeoJSONMultiPoint",
+                "GeoJSONMultiPolygon",
+                "GeoJSONPoint",
+                "GeoJSONPolygon",
+            ],
+        ] = None,
         limit: int | None = None,
         sortby: Union[None, list[str]] = None,
         token: Union[None, str] = None,
@@ -750,8 +907,10 @@ class CatalogService(SDKClient):
             filter_ (Union[None, dict]): Filters using Common Query Language (CQL2).
             ids (Union[None, list[str]]): Comma separated list of Item IDs to return. Example:
                 item1,item2.
-            intersects (Union[None, StacGeometry]): Searches items by performing intersection between
-                their geometry and provided GeoJSON geometry.
+            intersects (Union[None, Union['GeoJSONGeometryCollection', 'GeoJSONLineString',
+                'GeoJSONMultiLineString', 'GeoJSONMultiPoint', 'GeoJSONMultiPolygon', 'GeoJSONPoint',
+                'GeoJSONPolygon']]): Search for items by performing intersection between their geometry
+                and a provided GeoJSON geometry.
             limit (int | None): The maximum number of results to return per page. Example: 10.
             sortby (Union[None, list[str]]): An array of property names, prefixed by either '+' for
                 ascending or '-' for descending. If no prefix is provided, '-' is assumed.
@@ -794,7 +953,7 @@ class CatalogService(SDKClient):
             )
         return response.json().unwrap()
 
-    def get_acquisition_items_iter(
+    def list_acquisition_items_iter(
         self,
         contract_id: str,
         bbox: Union[None, list[float]] = None,
@@ -802,7 +961,18 @@ class CatalogService(SDKClient):
         datetime_: None | str = None,
         filter_: Union[None, dict] = None,
         ids: Union[None, list[str]] = None,
-        intersects: Union[None, StacGeometry] = None,
+        intersects: Union[
+            None,
+            Union[
+                "GeoJSONGeometryCollection",
+                "GeoJSONLineString",
+                "GeoJSONMultiLineString",
+                "GeoJSONMultiPoint",
+                "GeoJSONMultiPolygon",
+                "GeoJSONPoint",
+                "GeoJSONPolygon",
+            ],
+        ] = None,
         limit: int | None = None,
         sortby: Union[None, list[str]] = None,
         max_pages: int | None = None,
@@ -825,8 +995,10 @@ class CatalogService(SDKClient):
             filter_ (Union[None, dict]): Filters using Common Query Language (CQL2).
             ids (Union[None, list[str]]): Comma separated list of Item IDs to return. Example:
             item1,item2.
-            intersects (Union[None, StacGeometry]): Searches items by performing intersection between
-            their geometry and provided GeoJSON geometry.
+            intersects (Union[None, Union['GeoJSONGeometryCollection', 'GeoJSONLineString',
+            'GeoJSONMultiLineString', 'GeoJSONMultiPoint', 'GeoJSONMultiPolygon', 'GeoJSONPoint',
+            'GeoJSONPolygon']]): Search for items by performing intersection between their geometry
+            and a provided GeoJSON geometry.
             limit (int | None): The maximum number of results to return per page. Example: 10.
             sortby (Union[None, list[str]]): An array of property names, prefixed by either '+' for
             ascending or '-' for descending. If no prefix is provided, '-' is assumed.
@@ -837,7 +1009,7 @@ class CatalogService(SDKClient):
 
         Example:
             ```python
-            for page in sdk.catalog.get_acquisition_items_iter(
+            for page in sdk.catalog.list_acquisition_items_iter(
                 contract_id=...,
                 max_pages=10
             ):
@@ -852,7 +1024,7 @@ class CatalogService(SDKClient):
             if max_pages and page_count >= max_pages:
                 break
 
-            response = self.get_acquisition_items(
+            response = self.list_acquisition_items(
                 contract_id=contract_id,
                 bbox=bbox,
                 collections=collections,
@@ -909,7 +1081,7 @@ class CatalogService(SDKClient):
             return parse_response(response.json().unwrap(), AcquisitionItem)
         return response.json().unwrap()
 
-    def get_acquisition_queryables(
+    def list_acquisition_queryables(
         self,
         contract_id: str,
         timeout: int | None = None,
@@ -945,7 +1117,7 @@ class CatalogService(SDKClient):
             return parse_response(response.json().unwrap(), AcquisitionQueryables)
         return response.json().unwrap()
 
-    def get_primary_items(
+    def list_primary_items(
         self,
         contract_id: str,
         bbox: Union[None, list[float]] = None,
@@ -953,7 +1125,18 @@ class CatalogService(SDKClient):
         datetime_: None | str = None,
         filter_: Union[None, dict] = None,
         ids: Union[None, list[str]] = None,
-        intersects: Union[None, StacGeometry] = None,
+        intersects: Union[
+            None,
+            Union[
+                "GeoJSONGeometryCollection",
+                "GeoJSONLineString",
+                "GeoJSONMultiLineString",
+                "GeoJSONMultiPoint",
+                "GeoJSONMultiPolygon",
+                "GeoJSONPoint",
+                "GeoJSONPolygon",
+            ],
+        ] = None,
         limit: int | None = None,
         sortby: Union[None, list[str]] = None,
         token: Union[None, str] = None,
@@ -977,8 +1160,10 @@ class CatalogService(SDKClient):
             filter_ (Union[None, dict]): Filters using Common Query Language (CQL2).
             ids (Union[None, list[str]]): Comma separated list of Item IDs to return. Example:
                 item1,item2.
-            intersects (Union[None, StacGeometry]): Searches items by performing intersection between
-                their geometry and provided GeoJSON geometry.
+            intersects (Union[None, Union['GeoJSONGeometryCollection', 'GeoJSONLineString',
+                'GeoJSONMultiLineString', 'GeoJSONMultiPoint', 'GeoJSONMultiPolygon', 'GeoJSONPoint',
+                'GeoJSONPolygon']]): Search for items by performing intersection between their geometry
+                and a provided GeoJSON geometry.
             limit (int | None): The maximum number of results to return per page. Example: 10.
             sortby (Union[None, list[str]]): An array of property names, prefixed by either '+' for
                 ascending or '-' for descending. If no prefix is provided, '-' is assumed.
@@ -1019,7 +1204,7 @@ class CatalogService(SDKClient):
             return parse_response(response.json().unwrap(), PrimaryFeatureCollection)
         return response.json().unwrap()
 
-    def get_primary_items_iter(
+    def list_primary_items_iter(
         self,
         contract_id: str,
         bbox: Union[None, list[float]] = None,
@@ -1027,7 +1212,18 @@ class CatalogService(SDKClient):
         datetime_: None | str = None,
         filter_: Union[None, dict] = None,
         ids: Union[None, list[str]] = None,
-        intersects: Union[None, StacGeometry] = None,
+        intersects: Union[
+            None,
+            Union[
+                "GeoJSONGeometryCollection",
+                "GeoJSONLineString",
+                "GeoJSONMultiLineString",
+                "GeoJSONMultiPoint",
+                "GeoJSONMultiPolygon",
+                "GeoJSONPoint",
+                "GeoJSONPolygon",
+            ],
+        ] = None,
         limit: int | None = None,
         sortby: Union[None, list[str]] = None,
         max_pages: int | None = None,
@@ -1050,8 +1246,10 @@ class CatalogService(SDKClient):
             filter_ (Union[None, dict]): Filters using Common Query Language (CQL2).
             ids (Union[None, list[str]]): Comma separated list of Item IDs to return. Example:
             item1,item2.
-            intersects (Union[None, StacGeometry]): Searches items by performing intersection between
-            their geometry and provided GeoJSON geometry.
+            intersects (Union[None, Union['GeoJSONGeometryCollection', 'GeoJSONLineString',
+            'GeoJSONMultiLineString', 'GeoJSONMultiPoint', 'GeoJSONMultiPolygon', 'GeoJSONPoint',
+            'GeoJSONPolygon']]): Search for items by performing intersection between their geometry
+            and a provided GeoJSON geometry.
             limit (int | None): The maximum number of results to return per page. Example: 10.
             sortby (Union[None, list[str]]): An array of property names, prefixed by either '+' for
             ascending or '-' for descending. If no prefix is provided, '-' is assumed.
@@ -1062,7 +1260,7 @@ class CatalogService(SDKClient):
 
         Example:
             ```python
-            for page in sdk.catalog.get_primary_items_iter(
+            for page in sdk.catalog.list_primary_items_iter(
                 contract_id=...,
                 max_pages=10
             ):
@@ -1077,7 +1275,7 @@ class CatalogService(SDKClient):
             if max_pages and page_count >= max_pages:
                 break
 
-            response = self.get_primary_items(
+            response = self.list_primary_items(
                 contract_id=contract_id,
                 bbox=bbox,
                 collections=collections,
@@ -1134,7 +1332,7 @@ class CatalogService(SDKClient):
             return parse_response(response.json().unwrap(), PrimaryItem)
         return response.json().unwrap()
 
-    def get_primary_queryables(
+    def list_primary_queryables(
         self,
         contract_id: str,
         timeout: int | None = None,
@@ -1170,7 +1368,7 @@ class CatalogService(SDKClient):
             return parse_response(response.json().unwrap(), PrimaryQueryables)
         return response.json().unwrap()
 
-    def get_surface_brightness_temperature_items(
+    def list_surface_brightness_temperature_items(
         self,
         contract_id: str,
         bbox: Union[None, list[float]] = None,
@@ -1178,7 +1376,18 @@ class CatalogService(SDKClient):
         datetime_: None | str = None,
         filter_: Union[None, dict] = None,
         ids: Union[None, list[str]] = None,
-        intersects: Union[None, StacGeometry] = None,
+        intersects: Union[
+            None,
+            Union[
+                "GeoJSONGeometryCollection",
+                "GeoJSONLineString",
+                "GeoJSONMultiLineString",
+                "GeoJSONMultiPoint",
+                "GeoJSONMultiPolygon",
+                "GeoJSONPoint",
+                "GeoJSONPolygon",
+            ],
+        ] = None,
         limit: int | None = None,
         sortby: Union[None, list[str]] = None,
         token: Union[None, str] = None,
@@ -1203,8 +1412,10 @@ class CatalogService(SDKClient):
             filter_ (Union[None, dict]): Filters using Common Query Language (CQL2).
             ids (Union[None, list[str]]): Comma separated list of Item IDs to return. Example:
                 item1,item2.
-            intersects (Union[None, StacGeometry]): Searches items by performing intersection between
-                their geometry and provided GeoJSON geometry.
+            intersects (Union[None, Union['GeoJSONGeometryCollection', 'GeoJSONLineString',
+                'GeoJSONMultiLineString', 'GeoJSONMultiPoint', 'GeoJSONMultiPolygon', 'GeoJSONPoint',
+                'GeoJSONPolygon']]): Search for items by performing intersection between their geometry
+                and a provided GeoJSON geometry.
             limit (int | None): The maximum number of results to return per page. Example: 10.
             sortby (Union[None, list[str]]): An array of property names, prefixed by either '+' for
                 ascending or '-' for descending. If no prefix is provided, '-' is assumed.
@@ -1247,7 +1458,7 @@ class CatalogService(SDKClient):
             )
         return response.json().unwrap()
 
-    def get_surface_brightness_temperature_items_iter(
+    def list_surface_brightness_temperature_items_iter(
         self,
         contract_id: str,
         bbox: Union[None, list[float]] = None,
@@ -1255,7 +1466,18 @@ class CatalogService(SDKClient):
         datetime_: None | str = None,
         filter_: Union[None, dict] = None,
         ids: Union[None, list[str]] = None,
-        intersects: Union[None, StacGeometry] = None,
+        intersects: Union[
+            None,
+            Union[
+                "GeoJSONGeometryCollection",
+                "GeoJSONLineString",
+                "GeoJSONMultiLineString",
+                "GeoJSONMultiPoint",
+                "GeoJSONMultiPolygon",
+                "GeoJSONPoint",
+                "GeoJSONPolygon",
+            ],
+        ] = None,
         limit: int | None = None,
         sortby: Union[None, list[str]] = None,
         max_pages: int | None = None,
@@ -1278,8 +1500,10 @@ class CatalogService(SDKClient):
             filter_ (Union[None, dict]): Filters using Common Query Language (CQL2).
             ids (Union[None, list[str]]): Comma separated list of Item IDs to return. Example:
             item1,item2.
-            intersects (Union[None, StacGeometry]): Searches items by performing intersection between
-            their geometry and provided GeoJSON geometry.
+            intersects (Union[None, Union['GeoJSONGeometryCollection', 'GeoJSONLineString',
+            'GeoJSONMultiLineString', 'GeoJSONMultiPoint', 'GeoJSONMultiPolygon', 'GeoJSONPoint',
+            'GeoJSONPolygon']]): Search for items by performing intersection between their geometry
+            and a provided GeoJSON geometry.
             limit (int | None): The maximum number of results to return per page. Example: 10.
             sortby (Union[None, list[str]]): An array of property names, prefixed by either '+' for
             ascending or '-' for descending. If no prefix is provided, '-' is assumed.
@@ -1290,7 +1514,7 @@ class CatalogService(SDKClient):
 
         Example:
             ```python
-            for page in sdk.catalog.get_surface_brightness_temperature_items_iter(
+            for page in sdk.catalog.list_surface_brightness_temperature_items_iter(
                 contract_id=...,
                 max_pages=10
             ):
@@ -1305,7 +1529,7 @@ class CatalogService(SDKClient):
             if max_pages and page_count >= max_pages:
                 break
 
-            response = self.get_surface_brightness_temperature_items(
+            response = self.list_surface_brightness_temperature_items(
                 contract_id=contract_id,
                 bbox=bbox,
                 collections=collections,
@@ -1365,7 +1589,7 @@ class CatalogService(SDKClient):
             )
         return response.json().unwrap()
 
-    def get_surface_brightness_temperature_queryables(
+    def list_surface_brightness_temperature_queryables(
         self,
         contract_id: str,
         timeout: int | None = None,
@@ -1403,7 +1627,7 @@ class CatalogService(SDKClient):
             )
         return response.json().unwrap()
 
-    def get_collection_search(
+    def collection_search_text(
         self,
         contract_id: str,
         collection_id: str,
@@ -1495,7 +1719,7 @@ class CatalogService(SDKClient):
             return parse_response(response.json().unwrap(), SearchResponse)
         return response.json().unwrap()
 
-    def get_collection_search_iter(
+    def collection_search_text_iter(
         self,
         contract_id: str,
         collection_id: str,
@@ -1526,7 +1750,7 @@ class CatalogService(SDKClient):
 
         Example:
             ```python
-            for page in sdk.catalog.get_collection_search_iter(
+            for page in sdk.catalog.collection_search_text_iter(
                 contract_id=...,
                 collection_id=...,
                 max_pages=10
@@ -1542,7 +1766,7 @@ class CatalogService(SDKClient):
             if max_pages and page_count >= max_pages:
                 break
 
-            response = self.get_collection_search(
+            response = self.collection_search_text(
                 contract_id=contract_id,
                 collection_id=collection_id,
                 bbox=bbox,
@@ -1559,9 +1783,9 @@ class CatalogService(SDKClient):
             if not token:
                 break
 
-    def post_collection_search(
+    def collection_search_json(
         self,
-        body: Union[None, PostCollectionSearchInput],
+        body: Union[None, CollectionSearchJsonInput],
         contract_id: str,
         collection_id: str,
         extra_body: dict[str, Any] | None = None,
@@ -1609,7 +1833,7 @@ class CatalogService(SDKClient):
         Args:
             contract_id (str): Contract ID for access control
             collection_id (str): Collection ID to search within
-            body (Union[None, PostCollectionSearchInput]):
+            body (Union[None, CollectionSearchJsonInput]):
             extra_body: Optional dict deep-merged into the request body after
                 serialisation. Use this to pass fields added to the API after this
                 SDK version shipped. Nested dicts merge recursively; lists and
@@ -1646,9 +1870,9 @@ class CatalogService(SDKClient):
             return parse_response(response.json().unwrap(), SearchResponse)
         return response.json().unwrap()
 
-    def post_collection_search_iter(
+    def collection_search_json_iter(
         self,
-        body: Union[None, PostCollectionSearchInput],
+        body: Union[None, CollectionSearchJsonInput],
         contract_id: str,
         collection_id: str,
         extra_body: dict[str, Any] | None = None,
@@ -1660,7 +1884,7 @@ class CatalogService(SDKClient):
         Automatically handles pagination by following STAC links.
 
         Args:
-            body (Union[None, PostCollectionSearchInput]):
+            body (Union[None, CollectionSearchJsonInput]):
             contract_id (str): Contract ID for access control
             collection_id (str): Collection ID to search within
             max_pages: Stop after fetching this many pages (default: unlimited)
@@ -1670,7 +1894,7 @@ class CatalogService(SDKClient):
 
         Example:
             ```python
-            for page in sdk.catalog.post_collection_search_iter(
+            for page in sdk.catalog.collection_search_json_iter(
                 body=...,
                 contract_id=...,
                 collection_id=...,
@@ -1688,7 +1912,7 @@ class CatalogService(SDKClient):
                 break
 
             body_with_token = body.model_copy(update={"token": token}) if body else None
-            response = self.post_collection_search(
+            response = self.collection_search_json(
                 body=body_with_token,
                 contract_id=contract_id,
                 collection_id=collection_id,

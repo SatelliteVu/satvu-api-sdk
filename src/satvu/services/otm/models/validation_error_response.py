@@ -5,13 +5,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.validation_error_detail import ValidationErrorDetail
 
 
-class ValidationErrorResponse(BaseModel):
+class ValidationErrorResponse(pydantic.BaseModel):
     """Validation error response for Pydantic validation failures.
 
     Returned by FastAPI when request validation fails (422 status).
@@ -21,8 +21,10 @@ class ValidationErrorResponse(BaseModel):
             detail (list[ValidationErrorDetail]):
     """
 
-    detail: list[ValidationErrorDetail] = Field(..., description=None, alias="detail")
+    detail: list[ValidationErrorDetail] = pydantic.Field(
+        ..., description=None, alias="detail"
+    )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

@@ -5,26 +5,28 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.contracts_addon_option import ContractsAddonOption
 
 
-class ContractsAddon(BaseModel):
+class ContractsAddon(pydantic.BaseModel):
     """
     Attributes:
         name (str): Name of the addon option. Example: Withhold.
         options (list[ContractsAddonOption]): List of options available with this addon.
     """
 
-    name: str = Field(..., description="""Name of the addon option.""", alias="name")
-    options: list[ContractsAddonOption] = Field(
+    name: str = pydantic.Field(
+        ..., description="""Name of the addon option.""", alias="name"
+    )
+    options: list[ContractsAddonOption] = pydantic.Field(
         ...,
         description="""List of options available with this addon.""",
         alias="options",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

@@ -5,21 +5,23 @@ from __future__ import annotations
 
 from typing import Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class TermsUserTermsAccepted(BaseModel):
+class TermsUserTermsAccepted(pydantic.BaseModel):
     """
     Attributes:
         accepted (Union[None, bool]):
         user_id (Union[None, str]):
     """
 
-    accepted: Union[None, bool] = Field(
+    accepted: Union[None, bool] = pydantic.Field(
         default=None, description=None, alias="accepted"
     )
-    user_id: Union[None, str] = Field(default=None, description=None, alias="user_id")
+    user_id: Union[None, str] = pydantic.Field(
+        default=None, description=None, alias="user_id"
+    )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

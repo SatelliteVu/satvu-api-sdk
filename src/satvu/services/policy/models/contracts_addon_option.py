@@ -5,10 +5,10 @@ from __future__ import annotations
 
 from typing import Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class ContractsAddonOption(BaseModel):
+class ContractsAddonOption(pydantic.BaseModel):
     """
     Attributes:
         label (str): Label assigned to addon option. Example: Withhold - 3 days.
@@ -18,22 +18,26 @@ class ContractsAddonOption(BaseModel):
         eula_type (Union[None, str]): The EULA type. Only provided for 'Licence' addons. Example: Standard.
     """
 
-    label: str = Field(
+    label: str = pydantic.Field(
         ..., description="""Label assigned to addon option.""", alias="label"
     )
-    uplift: int = Field(
+    uplift: int = pydantic.Field(
         ...,
         description="""Coefficient that base price is multiplied by in percent.""",
         alias="uplift",
     )
-    value: str = Field(..., description="""Value of the addon option.""", alias="value")
-    default: Union[None, bool] = Field(default=None, description=None, alias="default")
-    eula_type: Union[None, str] = Field(
+    value: str = pydantic.Field(
+        ..., description="""Value of the addon option.""", alias="value"
+    )
+    default: Union[None, bool] = pydantic.Field(
+        default=None, description=None, alias="default"
+    )
+    eula_type: Union[None, str] = pydantic.Field(
         default=None,
         description="""The EULA type. Only provided for 'Licence' addons.""",
         alias="eula_type",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

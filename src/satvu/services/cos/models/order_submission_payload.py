@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class OrderSubmissionPayload(BaseModel):
+class OrderSubmissionPayload(pydantic.BaseModel):
     """Request payload for submitting an order.
 
     Attributes:
@@ -16,20 +16,20 @@ class OrderSubmissionPayload(BaseModel):
         name (None | str): The optional name of the order
     """
 
-    item_id: list[str] | str = Field(
+    item_id: list[str] | str = pydantic.Field(
         ...,
         description="""The acquisition item ID(s) from the STAC catalog. Note: Only acquisition items are accepted. SBT, Primary, and Visual products cannot be ordered directly.""",
         alias="item_id",
     )
-    licence_level: str = Field(
+    licence_level: str = pydantic.Field(
         ...,
         description="""The licence level for the order. Licence levels are specific to the contract.""",
         alias="licence_level",
     )
-    name: None | str = Field(
+    name: None | str = pydantic.Field(
         default=None, description="""The optional name of the order""", alias="name"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

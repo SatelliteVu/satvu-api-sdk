@@ -5,12 +5,12 @@ from __future__ import annotations
 
 from typing import Literal, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.day_night_mode import DayNightMode
 
 
-class StandardPriceRequestProperties(BaseModel):
+class StandardPriceRequestProperties(pydantic.BaseModel):
     """
     Attributes:
         datetime_ (str): The closed date-time interval of the tasking order request.
@@ -28,43 +28,43 @@ class StandardPriceRequestProperties(BaseModel):
         product (Literal['standard']): Standard Priority. Default: 'standard'.
     """
 
-    datetime_: str = Field(
+    datetime_: str = pydantic.Field(
         ...,
         description="""The closed date-time interval of the tasking order request.""",
         alias="datetime",
     )
-    licence_level: None | str = Field(
+    licence_level: None | str = pydantic.Field(
         default=None,
         description="""The optional licence level for the order. Licence levels are specific to the contract.""",
         alias="licence_level",
     )
-    addon_withhold: None | str = Field(
+    addon_withhold: None | str = pydantic.Field(
         default=None,
         description="""The optional ISO8601 string describing the duration that an order will be withheld from the public catalog. Withhold options are specific to the contract.""",
         alias="addon:withhold",
     )
-    satvu_day_night_mode: Union[None, DayNightMode] = Field(
+    satvu_day_night_mode: Union[None, DayNightMode] = pydantic.Field(
         default=None, description=None, alias="satvu:day_night_mode"
     )
-    max_cloud_cover: Union[None, int] = Field(
+    max_cloud_cover: Union[None, int] = pydantic.Field(
         default=25,
         description="""The max threshold of acceptable cloud coverage where the lower limit is capped to 25%. Measured in percent.""",
         alias="max_cloud_cover",
     )
-    min_off_nadir: Union[None, int] = Field(
+    min_off_nadir: Union[None, int] = pydantic.Field(
         default=0,
         description="""The minimum angle from the sensor between nadir and the scene center. Measured in decimal degrees.""",
         alias="min_off_nadir",
     )
-    max_off_nadir: Union[None, int] = Field(
+    max_off_nadir: Union[None, int] = pydantic.Field(
         default=30,
         description="""The maximum angle from the sensor between nadir and the scene center. Measured in decimal degrees. Must be larger than `min_off_nadir`.""",
         alias="max_off_nadir",
     )
-    product: Literal["standard"] = Field(
+    product: Literal["standard"] = pydantic.Field(
         default="standard", description="""Standard Priority.""", alias="product"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

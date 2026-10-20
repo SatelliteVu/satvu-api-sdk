@@ -3,21 +3,21 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class Conformance(BaseModel):
+class Conformance(pydantic.BaseModel):
     """
     Attributes:
         conforms_to (list[str]): A list of all conformance classes implemented.
     """
 
-    conforms_to: list[str] = Field(
+    conforms_to: list[str] = pydantic.Field(
         ...,
         description="""A list of all conformance classes implemented.""",
         alias="conformsTo",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

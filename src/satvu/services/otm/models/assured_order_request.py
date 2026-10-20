@@ -5,22 +5,22 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.assured_order_request_properties import AssuredOrderRequestProperties
 
 
-class AssuredOrderRequest(BaseModel):
+class AssuredOrderRequest(pydantic.BaseModel):
     """
     Attributes:
         properties (AssuredOrderRequestProperties):
     """
 
-    properties: AssuredOrderRequestProperties = Field(
+    properties: AssuredOrderRequestProperties = pydantic.Field(
         ..., description=None, alias="properties"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

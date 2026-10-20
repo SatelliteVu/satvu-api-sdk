@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class StructuredError(BaseModel):
+class StructuredError(pydantic.BaseModel):
     """Machine-readable error body carrying a code, message, and context.
 
     Used for validation failures where the frontend needs the specific values
@@ -19,10 +19,10 @@ class StructuredError(BaseModel):
             details (dict):
     """
 
-    code: str = Field(..., description=None, alias="code")
-    message: str = Field(..., description=None, alias="message")
-    details: dict = Field(..., description=None, alias="details")
+    code: str = pydantic.Field(..., description=None, alias="code")
+    message: str = pydantic.Field(..., description=None, alias="message")
+    details: dict = pydantic.Field(..., description=None, alias="details")
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

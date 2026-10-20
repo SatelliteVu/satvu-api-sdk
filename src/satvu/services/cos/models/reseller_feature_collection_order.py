@@ -7,14 +7,14 @@ import datetime
 from typing import TYPE_CHECKING, Literal
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.feature_order import FeatureOrder
     from ..models.order_pricing import OrderPricing
 
 
-class ResellerFeatureCollectionOrder(BaseModel):
+class ResellerFeatureCollectionOrder(pydantic.BaseModel):
     """
     Attributes:
         id (UUID): The order ID.
@@ -32,48 +32,48 @@ class ResellerFeatureCollectionOrder(BaseModel):
             orders created before licensing was introduced.
     """
 
-    id: UUID = Field(..., description="""The order ID.""", alias="id")
-    features: list[FeatureOrder] = Field(
+    id: UUID = pydantic.Field(..., description="""The order ID.""", alias="id")
+    features: list[FeatureOrder] = pydantic.Field(
         ..., description="""An array of Item objects.""", alias="features"
     )
-    owned_by: str = Field(
+    owned_by: str = pydantic.Field(
         ..., description="""The owner of the order.""", alias="owned_by"
     )
-    created_at: datetime.datetime = Field(
+    created_at: datetime.datetime = pydantic.Field(
         ...,
         description="""The datetime at which the order was created.""",
         alias="created_at",
     )
-    contract_id: UUID = Field(
+    contract_id: UUID = pydantic.Field(
         ..., description="""The contract ID.""", alias="contract_id"
     )
-    price: OrderPricing = Field(
+    price: OrderPricing = pydantic.Field(
         ...,
         description="""Detailed pricing breakdown for a satellite imagery order, including base price and license uplifts.""",
         alias="price",
     )
-    reseller_end_user_id: None | UUID = Field(
+    reseller_end_user_id: None | UUID = pydantic.Field(
         default=None,
         description="""The ID of the end user for whom the order is placed for.""",
         alias="reseller_end_user_id",
     )
-    type_: Literal["FeatureCollection"] = Field(
+    type_: Literal["FeatureCollection"] = pydantic.Field(
         default="FeatureCollection", description=None, alias="type"
     )
-    name: None | str = Field(
+    name: None | str = pydantic.Field(
         default=None, description="""The name of the order.""", alias="name"
     )
-    updated_at: datetime.datetime | None = Field(
+    updated_at: datetime.datetime | None = pydantic.Field(
         default=None,
         description="""The datetime at which the order was updated.""",
         alias="updated_at",
     )
-    licence_level: None | str = Field(
+    licence_level: None | str = pydantic.Field(
         default=None,
         description="""Licence level applied to the order. Licences are contract-specific. Nullable for orders created before licensing was introduced.""",
         alias="licence_level",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

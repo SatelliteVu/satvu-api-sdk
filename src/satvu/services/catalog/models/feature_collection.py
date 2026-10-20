@@ -5,14 +5,14 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.feature import Feature
     from ..models.link import Link
 
 
-class FeatureCollection(BaseModel):
+class FeatureCollection(pydantic.BaseModel):
     """
     Attributes:
         features (list[Feature]): A list of Feature objects.
@@ -22,24 +22,24 @@ class FeatureCollection(BaseModel):
         type_ (str): FeatureCollection. Example: FeatureCollection.
     """
 
-    features: list[Feature] = Field(
+    features: list[Feature] = pydantic.Field(
         ..., description="""A list of Feature objects.""", alias="features"
     )
-    links: list[Link] = Field(
+    links: list[Link] = pydantic.Field(
         ..., description="""A list of references to other documents.""", alias="links"
     )
-    number_matched: int = Field(
+    number_matched: int = pydantic.Field(
         ...,
         description="""Number of features matching the request filter.""",
         alias="numberMatched",
     )
-    number_returned: int = Field(
+    number_returned: int = pydantic.Field(
         ...,
         description="""Number of features in current page.""",
         alias="numberReturned",
     )
-    type_: str = Field(..., description="""FeatureCollection.""", alias="type")
+    type_: str = pydantic.Field(..., description="""FeatureCollection.""", alias="type")
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

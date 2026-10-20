@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.and_or_expression import AndOrExpression
@@ -25,7 +25,7 @@ if TYPE_CHECKING:
     from ..models.sort_by_element import SortByElement
 
 
-class PostSearchInput(BaseModel):
+class SearchJsonInput(pydantic.BaseModel):
     """
     Attributes:
         bbox (Union[None, list[float]]): Array of floats representing a bounding box. Only features that have a geometry
@@ -46,17 +46,17 @@ class PostSearchInput(BaseModel):
         token (Union[None, str]): The pagination token.
     """
 
-    bbox: Union[None, list[float]] = Field(
+    bbox: Union[None, list[float]] = pydantic.Field(
         default=None,
         description="""Array of floats representing a bounding box. Only features that have a geometry that intersects the bounding box are selected.""",
         alias="bbox",
     )
-    collections: Union[None, list[str]] = Field(
+    collections: Union[None, list[str]] = pydantic.Field(
         default=None,
         description="""Array of Collection IDs to include in the search for items. Only Item objects in one of the provided collections will be searched.""",
         alias="collections",
     )
-    datetime_: None | str = Field(
+    datetime_: None | str = pydantic.Field(
         default=None,
         description="""Single date+time, or a range ('/') separator, formatted to RFC3339 section 5.6. Use double dots for open ranges.""",
         alias="datetime",
@@ -73,12 +73,12 @@ class PostSearchInput(BaseModel):
             NotExpression,
             bool,
         ],
-    ] = Field(
+    ] = pydantic.Field(
         default=None,
         description="""Filter using Common Query Language (CQL2).""",
         alias="filter",
     )
-    ids: Union[None, list[str]] = Field(
+    ids: Union[None, list[str]] = pydantic.Field(
         default=None, description="""Array of Item IDs to return.""", alias="ids"
     )
     intersects: Union[
@@ -92,25 +92,25 @@ class PostSearchInput(BaseModel):
             GeoJSONPoint,
             GeoJSONPolygon,
         ],
-    ] = Field(
+    ] = pydantic.Field(
         default=None,
         description="""Search for items by performing intersection between their geometry and a provided GeoJSON geometry.""",
         alias="intersects",
     )
-    limit: int | None = Field(
+    limit: int | None = pydantic.Field(
         default=None,
         description="""The maximum number of results to return per page.""",
         alias="limit",
     )
-    sortby: Union[None, list[SortByElement]] = Field(
+    sortby: Union[None, list[SortByElement]] = pydantic.Field(
         default=None,
         description="""An array of objects containing a property name and sort direction.""",
         alias="sortby",
     )
-    token: Union[None, str] = Field(
+    token: Union[None, str] = pydantic.Field(
         default=None, description="""The pagination token.""", alias="token"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

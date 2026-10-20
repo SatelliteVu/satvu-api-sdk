@@ -5,13 +5,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.company_address import CompanyAddress
 
 
-class CreateUser(BaseModel):
+class CreateUser(pydantic.BaseModel):
     """Represents payload to create a user
 
     Attributes:
@@ -21,19 +21,19 @@ class CreateUser(BaseModel):
         company_address (CompanyAddress):
     """
 
-    user_email: str = Field(
+    user_email: str = pydantic.Field(
         ..., description="""The email address of the user.""", alias="user_email"
     )
-    user_name: str = Field(
+    user_name: str = pydantic.Field(
         ..., description="""The full name of the user.""", alias="user_name"
     )
-    company_name: str = Field(
+    company_name: str = pydantic.Field(
         ..., description="""The name of the company.""", alias="company_name"
     )
-    company_address: CompanyAddress = Field(
+    company_address: CompanyAddress = pydantic.Field(
         ..., description=None, alias="company_address"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

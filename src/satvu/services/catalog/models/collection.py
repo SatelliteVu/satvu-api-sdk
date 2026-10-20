@@ -5,14 +5,14 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.extent import Extent
     from ..models.link import Link
 
 
-class Collection(BaseModel):
+class Collection(pydantic.BaseModel):
     """
     Attributes:
         description (str): The description of the Collection. Example: This is a Collection.
@@ -27,43 +27,43 @@ class Collection(BaseModel):
         title (Union[None, str]): The title of the Collection. Example: Example Collection.
     """
 
-    description: str = Field(
+    description: str = pydantic.Field(
         ..., description="""The description of the Collection.""", alias="description"
     )
-    extent: Extent = Field(
+    extent: Extent = pydantic.Field(
         ..., description="""Spatial and temporal extents.""", alias="extent"
     )
-    id: str = Field(
+    id: str = pydantic.Field(
         ...,
         description="""The identifier of the Collection, unique across the Catalog.""",
         alias="id",
     )
-    license_: str = Field(
+    license_: str = pydantic.Field(
         ..., description="""The Collection's license.""", alias="license"
     )
-    links: list[Link] = Field(
+    links: list[Link] = pydantic.Field(
         ..., description="""A list of references to other documents.""", alias="links"
     )
-    stac_version: str = Field(
+    stac_version: str = pydantic.Field(
         ...,
         description="""The STAC version the Collection implements.""",
         alias="stac_version",
     )
-    type_: str = Field(..., description="""Collection.""", alias="type")
-    keywords: Union[None, list[str]] = Field(
+    type_: str = pydantic.Field(..., description="""Collection.""", alias="type")
+    keywords: Union[None, list[str]] = pydantic.Field(
         default=None,
         description="""A list of keywords describing the Collection.""",
         alias="keywords",
     )
-    stac_extensions: Union[None, list[str]] = Field(
+    stac_extensions: Union[None, list[str]] = pydantic.Field(
         default=None,
         description="""A list of extension identifiers the Collection implements.""",
         alias="stac_extensions",
     )
-    title: Union[None, str] = Field(
+    title: Union[None, str] = pydantic.Field(
         default=None, description="""The title of the Collection.""", alias="title"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

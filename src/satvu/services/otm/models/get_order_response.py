@@ -6,7 +6,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal, Union
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.get_assured_order_properties import GetAssuredOrderProperties
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from ..models.price import Price
 
 
-class GetOrderResponse(BaseModel):
+class GetOrderResponse(pydantic.BaseModel):
     """Payload for get order response.
 
     Attributes:
@@ -31,25 +31,33 @@ class GetOrderResponse(BaseModel):
         series_id (None | UUID): ID of the recurring order series this order belongs to.
     """
 
-    type_: Literal["Feature"] = Field(default="Feature", description=None, alias="type")
-    geometry: Point = Field(..., description="""Point Model""", alias="geometry")
-    properties: Union[GetAssuredOrderProperties, GetStandardOrderProperties] = Field(
-        ...,
-        description="""A map of additional metadata about the requested image.""",
-        alias="properties",
+    type_: Literal["Feature"] = pydantic.Field(
+        default="Feature", description=None, alias="type"
     )
-    id: UUID = Field(..., description="""Order ID.""", alias="id")
-    links: list[Link] = Field(
+    geometry: Point = pydantic.Field(
+        ..., description="""Point Model""", alias="geometry"
+    )
+    properties: Union[GetAssuredOrderProperties, GetStandardOrderProperties] = (
+        pydantic.Field(
+            ...,
+            description="""A map of additional metadata about the requested image.""",
+            alias="properties",
+        )
+    )
+    id: UUID = pydantic.Field(..., description="""Order ID.""", alias="id")
+    links: list[Link] = pydantic.Field(
         ..., description="""A list of related links for the order.""", alias="links"
     )
-    contract_id: UUID = Field(..., description="""Contract ID.""", alias="contract_id")
-    price: Price = Field(..., description=None, alias="price")
-    series_id: None | UUID = Field(
+    contract_id: UUID = pydantic.Field(
+        ..., description="""Contract ID.""", alias="contract_id"
+    )
+    price: Price = pydantic.Field(..., description=None, alias="price")
+    series_id: None | UUID = pydantic.Field(
         default=None,
         description="""ID of the recurring order series this order belongs to.""",
         alias="series_id",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

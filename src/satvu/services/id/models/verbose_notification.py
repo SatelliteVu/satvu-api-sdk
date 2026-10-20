@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.notification_category import NotificationCategory
 
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from ..models.notification_settings import NotificationSettings
 
 
-class VerboseNotification(BaseModel):
+class VerboseNotification(pydantic.BaseModel):
     """
     Attributes:
         category (Union['NotificationCategory', None]): Category for notification topic
@@ -21,17 +21,17 @@ class VerboseNotification(BaseModel):
             topic.
     """
 
-    category: Union[NotificationCategory, None] = Field(
+    category: Union[NotificationCategory, None] = pydantic.Field(
         default=None,
         description="""Category for notification topic""",
         alias="category",
     )
-    settings: list[NotificationSettings] | None = Field(
+    settings: list[NotificationSettings] | None = pydantic.Field(
         default=None,
         description="""Configuration of notification settings related to a specific topic.""",
         alias="settings",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.geo_json_geometry_collection_type import GeoJSONGeometryCollectionType
 
@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from ..models.geo_json_polygon import GeoJSONPolygon
 
 
-class GeoJSONGeometryCollection(BaseModel):
+class GeoJSONGeometryCollection(pydantic.BaseModel):
     """
     Attributes:
         type_ ('GeoJSONGeometryCollectionType'):
@@ -26,7 +26,9 @@ class GeoJSONGeometryCollection(BaseModel):
             'GeoJSONMultiPolygon', 'GeoJSONPoint', 'GeoJSONPolygon']]):
     """
 
-    type_: GeoJSONGeometryCollectionType = Field(..., description=None, alias="type")
+    type_: GeoJSONGeometryCollectionType = pydantic.Field(
+        ..., description=None, alias="type"
+    )
     geometries: list[
         Union[
             GeoJSONLineString,
@@ -36,8 +38,8 @@ class GeoJSONGeometryCollection(BaseModel):
             GeoJSONPoint,
             GeoJSONPolygon,
         ]
-    ] = Field(..., description=None, alias="geometries")
+    ] = pydantic.Field(..., description=None, alias="geometries")
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

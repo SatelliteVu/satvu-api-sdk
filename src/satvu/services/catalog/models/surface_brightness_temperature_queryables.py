@@ -5,10 +5,10 @@ from __future__ import annotations
 
 from typing import Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class SurfaceBrightnessTemperatureQueryables(BaseModel):
+class SurfaceBrightnessTemperatureQueryables(pydantic.BaseModel):
     """
     Attributes:
         id (Union[None, str]):
@@ -18,14 +18,20 @@ class SurfaceBrightnessTemperatureQueryables(BaseModel):
         type_ (Union[None, str]):
     """
 
-    id: Union[None, str] = Field(default=None, description=None, alias="$id")
-    schema_: Union[None, str] = Field(default=None, description=None, alias="$schema")
-    properties: Union[None, dict] = Field(
+    id: Union[None, str] = pydantic.Field(default=None, description=None, alias="$id")
+    schema_: Union[None, str] = pydantic.Field(
+        default=None, description=None, alias="$schema"
+    )
+    properties: Union[None, dict] = pydantic.Field(
         default=None, description=None, alias="properties"
     )
-    title: Union[None, str] = Field(default=None, description=None, alias="title")
-    type_: Union[None, str] = Field(default=None, description=None, alias="type")
+    title: Union[None, str] = pydantic.Field(
+        default=None, description=None, alias="title"
+    )
+    type_: Union[None, str] = pydantic.Field(
+        default=None, description=None, alias="type"
+    )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class ListResponseContext(BaseModel):
+class ListResponseContext(pydantic.BaseModel):
     """
     Attributes:
         per_page (int): Applied per page webhook limit.
@@ -14,16 +14,16 @@ class ListResponseContext(BaseModel):
         returned (int): Number of returned webhooks in page.
     """
 
-    per_page: int = Field(
+    per_page: int = pydantic.Field(
         ..., description="""Applied per page webhook limit.""", alias="per_page"
     )
-    matched: int = Field(
+    matched: int = pydantic.Field(
         ..., description="""Total number of results.""", alias="matched"
     )
-    returned: int = Field(
+    returned: int = pydantic.Field(
         ..., description="""Number of returned webhooks in page.""", alias="returned"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

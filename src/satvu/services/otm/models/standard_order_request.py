@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.point import Point
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     )
 
 
-class StandardOrderRequest(BaseModel):
+class StandardOrderRequest(pydantic.BaseModel):
     """Payload for standard order request.
 
     Attributes:
@@ -23,12 +23,16 @@ class StandardOrderRequest(BaseModel):
         properties (StandardOrderRequestProperties):
     """
 
-    type_: Literal["Feature"] = Field(default="Feature", description=None, alias="type")
-    geometry: Point = Field(..., description="""Point Model""", alias="geometry")
-    properties: StandardOrderRequestProperties = Field(
+    type_: Literal["Feature"] = pydantic.Field(
+        default="Feature", description=None, alias="type"
+    )
+    geometry: Point = pydantic.Field(
+        ..., description="""Point Model""", alias="geometry"
+    )
+    properties: StandardOrderRequestProperties = pydantic.Field(
         ..., description=None, alias="properties"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

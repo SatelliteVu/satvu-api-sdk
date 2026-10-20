@@ -5,12 +5,12 @@ from __future__ import annotations
 
 from typing import Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.geo_json_point_type import GeoJSONPointType
 
 
-class GeoJSONPoint(BaseModel):
+class GeoJSONPoint(pydantic.BaseModel):
     """
     Attributes:
         type_ ('GeoJSONPointType'):
@@ -18,10 +18,14 @@ class GeoJSONPoint(BaseModel):
         bbox (Union[None, list[float]]):
     """
 
-    type_: GeoJSONPointType = Field(..., description=None, alias="type")
-    coordinates: list[float] = Field(..., description=None, alias="coordinates")
-    bbox: Union[None, list[float]] = Field(default=None, description=None, alias="bbox")
+    type_: GeoJSONPointType = pydantic.Field(..., description=None, alias="type")
+    coordinates: list[float] = pydantic.Field(
+        ..., description=None, alias="coordinates"
+    )
+    bbox: Union[None, list[float]] = pydantic.Field(
+        default=None, description=None, alias="bbox"
+    )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

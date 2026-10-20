@@ -3,17 +3,17 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class TimestampInstant(BaseModel):
+class TimestampInstant(pydantic.BaseModel):
     """
     Attributes:
         timestamp (str):
     """
 
-    timestamp: str = Field(..., description=None, alias="timestamp")
+    timestamp: str = pydantic.Field(..., description=None, alias="timestamp")
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

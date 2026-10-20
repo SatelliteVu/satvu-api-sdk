@@ -5,10 +5,10 @@ from __future__ import annotations
 
 from typing import Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class Queryables(BaseModel):
+class Queryables(pydantic.BaseModel):
     """
     Attributes:
         id (str): The URL of the endpoint.
@@ -18,22 +18,26 @@ class Queryables(BaseModel):
         title (Union[None, str]): The title of the queryables schema.
     """
 
-    id: str = Field(..., description="""The URL of the endpoint.""", alias="$id")
-    schema_: str = Field(
+    id: str = pydantic.Field(
+        ..., description="""The URL of the endpoint.""", alias="$id"
+    )
+    schema_: str = pydantic.Field(
         ..., description="""The schema of the response.""", alias="$schema"
     )
-    type_: str = Field(..., description="""The type of the resource.""", alias="type")
-    properties: Union[None, dict] = Field(
+    type_: str = pydantic.Field(
+        ..., description="""The type of the resource.""", alias="type"
+    )
+    properties: Union[None, dict] = pydantic.Field(
         default=None,
         description="""A map of queryable properties to use as search filters.""",
         alias="properties",
     )
-    title: Union[None, str] = Field(
+    title: Union[None, str] = pydantic.Field(
         default=None,
         description="""The title of the queryables schema.""",
         alias="title",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

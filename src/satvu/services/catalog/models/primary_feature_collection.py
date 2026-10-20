@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.primary_feature_collection_type import PrimaryFeatureCollectionType
 
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from ..models.primary_item import PrimaryItem
 
 
-class PrimaryFeatureCollection(BaseModel):
+class PrimaryFeatureCollection(pydantic.BaseModel):
     """
     Attributes:
         features (Union[None, list[PrimaryItem]]):
@@ -24,22 +24,22 @@ class PrimaryFeatureCollection(BaseModel):
         type_ (Union[None, 'PrimaryFeatureCollectionType']):
     """
 
-    features: Union[None, list[PrimaryItem]] = Field(
+    features: Union[None, list[PrimaryItem]] = pydantic.Field(
         default=None, description=None, alias="features"
     )
-    links: Union[None, list[Link]] = Field(
+    links: Union[None, list[Link]] = pydantic.Field(
         default=None, description=None, alias="links"
     )
-    number_matched: Union[None, int] = Field(
+    number_matched: Union[None, int] = pydantic.Field(
         default=None, description=None, alias="numberMatched"
     )
-    number_returned: Union[None, int] = Field(
+    number_returned: Union[None, int] = pydantic.Field(
         default=None, description=None, alias="numberReturned"
     )
-    type_: Union[None, PrimaryFeatureCollectionType] = Field(
+    type_: Union[None, PrimaryFeatureCollectionType] = pydantic.Field(
         default=None, description=None, alias="type"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

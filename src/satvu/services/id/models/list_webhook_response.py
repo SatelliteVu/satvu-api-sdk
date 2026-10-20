@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.link import Link
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from ..models.webhook_response import WebhookResponse
 
 
-class ListWebhookResponse(BaseModel):
+class ListWebhookResponse(pydantic.BaseModel):
     """
     Attributes:
         webhooks (list[WebhookResponse]): List of webhooks.
@@ -21,14 +21,16 @@ class ListWebhookResponse(BaseModel):
         links (list[Link]): Links to previous and/or next page.
     """
 
-    webhooks: list[WebhookResponse] = Field(
+    webhooks: list[WebhookResponse] = pydantic.Field(
         ..., description="""List of webhooks.""", alias="webhooks"
     )
-    context: ListResponseContext = Field(..., description=None, alias="context")
-    links: list[Link] = Field(
+    context: ListResponseContext = pydantic.Field(
+        ..., description=None, alias="context"
+    )
+    links: list[Link] = pydantic.Field(
         ..., description="""Links to previous and/or next page.""", alias="links"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

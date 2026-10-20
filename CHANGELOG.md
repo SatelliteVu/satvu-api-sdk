@@ -1,3 +1,10 @@
+## [0.11.1](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.11.0...v0.11.1) (2026-10-20)
+
+
+### Bug Fixes
+
+* **builder:** qualify pydantic names so spec schemas cannot shadow them
+
 # [0.11.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.10.2...v0.11.0) (2026-09-15)
 
 ## [0.11.0.20260930.1511] - 2026-09-30

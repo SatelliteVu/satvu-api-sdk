@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.generic_item_type import GenericItemType
 
@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from ..models.link import Link
 
 
-class GenericItem(BaseModel):
+class GenericItem(pydantic.BaseModel):
     """
     Attributes:
         assets (dict):
@@ -38,9 +38,9 @@ class GenericItem(BaseModel):
         stac_extensions (Union[None, list[str]]):
     """
 
-    assets: dict = Field(..., description=None, alias="assets")
-    bbox: list[float] = Field(..., description=None, alias="bbox")
-    collection: str = Field(..., description=None, alias="collection")
+    assets: dict = pydantic.Field(..., description=None, alias="assets")
+    bbox: list[float] = pydantic.Field(..., description=None, alias="bbox")
+    collection: str = pydantic.Field(..., description=None, alias="collection")
     geometry: Union[
         GeoJSONGeometryCollection,
         GeoJSONLineString,
@@ -49,22 +49,22 @@ class GenericItem(BaseModel):
         GeoJSONMultiPolygon,
         GeoJSONPoint,
         GeoJSONPolygon,
-    ] = Field(
+    ] = pydantic.Field(
         ...,
         description="""Search for items by performing intersection between their geometry and a provided GeoJSON geometry.""",
         alias="geometry",
     )
-    id: str = Field(..., description=None, alias="id")
-    links: list[Link] = Field(..., description=None, alias="links")
-    stac_version: str = Field(..., description=None, alias="stac_version")
-    type_: GenericItemType = Field(..., description=None, alias="type")
-    properties: Union[None, GenericItemProperties] = Field(
+    id: str = pydantic.Field(..., description=None, alias="id")
+    links: list[Link] = pydantic.Field(..., description=None, alias="links")
+    stac_version: str = pydantic.Field(..., description=None, alias="stac_version")
+    type_: GenericItemType = pydantic.Field(..., description=None, alias="type")
+    properties: Union[None, GenericItemProperties] = pydantic.Field(
         default=None, description=None, alias="properties"
     )
-    stac_extensions: Union[None, list[str]] = Field(
+    stac_extensions: Union[None, list[str]] = pydantic.Field(
         default=None, description=None, alias="stac_extensions"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

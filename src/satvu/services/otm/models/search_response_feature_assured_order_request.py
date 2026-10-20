@@ -6,7 +6,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal, Union
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.link import Link
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from ..models.search_assured_order_properties import SearchAssuredOrderProperties
 
 
-class SearchResponseFeatureAssuredOrderRequest(BaseModel):
+class SearchResponseFeatureAssuredOrderRequest(pydantic.BaseModel):
     """
     Attributes:
         type_ (Literal['Feature']):
@@ -30,41 +30,45 @@ class SearchResponseFeatureAssuredOrderRequest(BaseModel):
         feature_type (Literal['order-request-assured']):  Default: 'order-request-assured'.
     """
 
-    type_: Literal["Feature"] = Field(default="Feature", description=None, alias="type")
-    geometry: Union[Point, None] = Field(..., description=None, alias="geometry")
-    properties: Union[SearchAssuredOrderProperties, None] = Field(
+    type_: Literal["Feature"] = pydantic.Field(
+        default="Feature", description=None, alias="type"
+    )
+    geometry: Union[Point, None] = pydantic.Field(
+        ..., description=None, alias="geometry"
+    )
+    properties: Union[SearchAssuredOrderProperties, None] = pydantic.Field(
         ..., description=None, alias="properties"
     )
-    id: UUID = Field(
+    id: UUID = pydantic.Field(
         ...,
         description="""ID of an item associated with the search parameters.""",
         alias="id",
     )
-    contract_id: UUID = Field(
+    contract_id: UUID = pydantic.Field(
         ...,
         description="""Contract ID associated with the search.""",
         alias="contract_id",
     )
-    collection: str = Field(
+    collection: str = pydantic.Field(
         ...,
         description="""Name of collection associated with the search result item.""",
         alias="collection",
     )
-    price: Price = Field(..., description=None, alias="price")
-    links: Union[None, list[Link]] = Field(
+    price: Price = pydantic.Field(..., description=None, alias="price")
+    links: Union[None, list[Link]] = pydantic.Field(
         default=None,
         description="""A list of links to the STAC item that fulfilled the order, if applicable.""",
         alias="links",
     )
-    series_id: None | UUID = Field(
+    series_id: None | UUID = pydantic.Field(
         default=None,
         description="""ID of the recurring order series this order belongs to.""",
         alias="series_id",
     )
-    feature_type: Literal["order-request-assured"] = Field(
+    feature_type: Literal["order-request-assured"] = pydantic.Field(
         default="order-request-assured", description=None, alias="feature_type"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

@@ -5,10 +5,10 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class MultiPolygon(BaseModel):
+class MultiPolygon(pydantic.BaseModel):
     """MultiPolygon Model
 
     Attributes:
@@ -17,14 +17,16 @@ class MultiPolygon(BaseModel):
         bbox (list[float] | None):
     """
 
-    type_: Literal["MultiPolygon"] = Field(
+    type_: Literal["MultiPolygon"] = pydantic.Field(
         default="MultiPolygon", description=None, alias="type"
     )
-    coordinates: list[list[list[list[float]]]] = Field(
+    coordinates: list[list[list[list[float]]]] = pydantic.Field(
         ..., description=None, alias="coordinates"
     )
-    bbox: list[float] | None = Field(default=None, description=None, alias="bbox")
+    bbox: list[float] | None = pydantic.Field(
+        default=None, description=None, alias="bbox"
+    )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

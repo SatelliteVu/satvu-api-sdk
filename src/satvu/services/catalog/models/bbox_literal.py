@@ -5,17 +5,17 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class BboxLiteral(BaseModel):
+class BboxLiteral(pydantic.BaseModel):
     """
     Attributes:
         bbox (Any):
     """
 
-    bbox: Any = Field(..., description=None, alias="bbox")
+    bbox: Any = pydantic.Field(..., description=None, alias="bbox")
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

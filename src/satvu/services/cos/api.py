@@ -139,7 +139,7 @@ class CosService(SDKClient):
             )
         return response.json().unwrap()
 
-    def query_orders(
+    def list_orders(
         self,
         contract_id: UUID,
         limit: Union[None, int] = 25,
@@ -172,7 +172,7 @@ class CosService(SDKClient):
             return parse_response(response.json().unwrap(), OrderPage)
         return response.json().unwrap()
 
-    def query_orders_iter(
+    def list_orders_iter(
         self,
         contract_id: UUID,
         limit: Union[None, int] = 25,
@@ -193,7 +193,7 @@ class CosService(SDKClient):
 
         Example:
             ```python
-            for page in sdk.cos.query_orders_iter(
+            for page in sdk.cos.list_orders_iter(
                 contract_id=...,
                 max_pages=10
             ):
@@ -206,7 +206,7 @@ class CosService(SDKClient):
         while True:
             if max_pages and page_count >= max_pages:
                 break
-            response = self.query_orders(
+            response = self.list_orders(
                 contract_id=contract_id, limit=limit, token=token
             )
             page_count += 1
@@ -215,7 +215,7 @@ class CosService(SDKClient):
             if not token:
                 break
 
-    def submit_order(
+    def create_order(
         self,
         body: Union["OrderSubmissionPayload", "ResellerSubmissionOrderPayload"],
         contract_id: UUID,

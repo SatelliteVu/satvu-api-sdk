@@ -3,17 +3,17 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class ClientID(BaseModel):
+class ClientID(pydantic.BaseModel):
     """
     Attributes:
         client_id (str):
     """
 
-    client_id: str = Field(..., description=None, alias="client_id")
+    client_id: str = pydantic.Field(..., description=None, alias="client_id")
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

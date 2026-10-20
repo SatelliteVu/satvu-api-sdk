@@ -5,14 +5,14 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.point import Point
     from ..models.stored_series_properties import StoredSeriesProperties
 
 
-class StoredSeriesResponse(BaseModel):
+class StoredSeriesResponse(pydantic.BaseModel):
     """Response body for a stored recurring tasking series.
 
     Attributes:
@@ -20,19 +20,27 @@ class StoredSeriesResponse(BaseModel):
         geometry (Point): Point Model
         properties (StoredSeriesProperties): Properties returned in a series response.
         bbox (list[float] | None):
-        id (int | None | str):
+        id (float | int | None | str):
     """
 
-    type_: Literal["Feature"] = Field(default="Feature", description=None, alias="type")
-    geometry: Point = Field(..., description="""Point Model""", alias="geometry")
-    properties: StoredSeriesProperties = Field(
+    type_: Literal["Feature"] = pydantic.Field(
+        default="Feature", description=None, alias="type"
+    )
+    geometry: Point = pydantic.Field(
+        ..., description="""Point Model""", alias="geometry"
+    )
+    properties: StoredSeriesProperties = pydantic.Field(
         ...,
         description="""Properties returned in a series response.""",
         alias="properties",
     )
-    bbox: list[float] | None = Field(default=None, description=None, alias="bbox")
-    id: int | None | str = Field(default=None, description=None, alias="id")
+    bbox: list[float] | None = pydantic.Field(
+        default=None, description=None, alias="bbox"
+    )
+    id: float | int | None | str = pydantic.Field(
+        default=None, description=None, alias="id"
+    )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

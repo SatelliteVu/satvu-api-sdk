@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class ContractsProductSummary(BaseModel):
+class ContractsProductSummary(pydantic.BaseModel):
     """
     Attributes:
         code (str): Product code Example: PRODUCT.
@@ -15,14 +15,16 @@ class ContractsProductSummary(BaseModel):
             product. Example: 8.
     """
 
-    code: str = Field(..., description="""Product code""", alias="code")
-    currency: str = Field(..., description="""Product currency""", alias="currency")
-    assured_tasking_window_days: int | None = Field(
+    code: str = pydantic.Field(..., description="""Product code""", alias="code")
+    currency: str = pydantic.Field(
+        ..., description="""Product currency""", alias="currency"
+    )
+    assured_tasking_window_days: int | None = pydantic.Field(
         default=None,
         description="""Assured tasking window in days. Only present for the ASSURED_PRIORITY product.""",
         alias="assured_tasking_window_days",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.surface_brightness_temperature_item_collection import (
     SurfaceBrightnessTemperatureItemCollection,
@@ -28,7 +28,7 @@ if TYPE_CHECKING:
     )
 
 
-class SurfaceBrightnessTemperatureItem(BaseModel):
+class SurfaceBrightnessTemperatureItem(pydantic.BaseModel):
     """
     Attributes:
         assets (dict):
@@ -45,9 +45,9 @@ class SurfaceBrightnessTemperatureItem(BaseModel):
         stac_extensions (Union[None, list[str]]):
     """
 
-    assets: dict = Field(..., description=None, alias="assets")
-    bbox: list[float] = Field(..., description=None, alias="bbox")
-    collection: SurfaceBrightnessTemperatureItemCollection = Field(
+    assets: dict = pydantic.Field(..., description=None, alias="assets")
+    bbox: list[float] = pydantic.Field(..., description=None, alias="bbox")
+    collection: SurfaceBrightnessTemperatureItemCollection = pydantic.Field(
         ..., description=None, alias="collection"
     )
     geometry: Union[
@@ -58,24 +58,24 @@ class SurfaceBrightnessTemperatureItem(BaseModel):
         GeoJSONMultiPolygon,
         GeoJSONPoint,
         GeoJSONPolygon,
-    ] = Field(
+    ] = pydantic.Field(
         ...,
         description="""Search for items by performing intersection between their geometry and a provided GeoJSON geometry.""",
         alias="geometry",
     )
-    id: str = Field(..., description=None, alias="id")
-    links: list[Link] = Field(..., description=None, alias="links")
-    stac_version: str = Field(..., description=None, alias="stac_version")
-    type_: SurfaceBrightnessTemperatureItemType = Field(
+    id: str = pydantic.Field(..., description=None, alias="id")
+    links: list[Link] = pydantic.Field(..., description=None, alias="links")
+    stac_version: str = pydantic.Field(..., description=None, alias="stac_version")
+    type_: SurfaceBrightnessTemperatureItemType = pydantic.Field(
         ..., description=None, alias="type"
     )
-    properties: Union[None, SurfaceBrightnessTemperatureItemProperties] = Field(
-        default=None, description=None, alias="properties"
+    properties: Union[None, SurfaceBrightnessTemperatureItemProperties] = (
+        pydantic.Field(default=None, description=None, alias="properties")
     )
-    stac_extensions: Union[None, list[str]] = Field(
+    stac_extensions: Union[None, list[str]] = pydantic.Field(
         default=None, description=None, alias="stac_extensions"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

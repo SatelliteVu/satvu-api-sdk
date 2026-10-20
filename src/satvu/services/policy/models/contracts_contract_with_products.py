@@ -6,7 +6,7 @@ from __future__ import annotations
 import datetime
 from typing import TYPE_CHECKING, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.contracts_addon import ContractsAddon
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from ..models.contracts_product_summary import ContractsProductSummary
 
 
-class ContractsContractWithProducts(BaseModel):
+class ContractsContractWithProducts(pydantic.BaseModel):
     """
     Attributes:
         active (bool): Whether the contract is active Example: True.
@@ -31,49 +31,51 @@ class ContractsContractWithProducts(BaseModel):
         satellite_access (Union[None, list[str]]): Satellite access for the contract
     """
 
-    active: bool = Field(
+    active: bool = pydantic.Field(
         ..., description="""Whether the contract is active""", alias="active"
     )
-    addons: list[ContractsAddon] = Field(
+    addons: list[ContractsAddon] = pydantic.Field(
         ..., description="""Addons associated with this contract""", alias="addons"
     )
-    allowed_geographical_area: ContractsGeometry = Field(
+    allowed_geographical_area: ContractsGeometry = pydantic.Field(
         ...,
         description="""Allowed geographical area of the contract""",
         alias="allowed_geographical_area",
     )
-    contract_id: str = Field(..., description="""Contract ID""", alias="contract_id")
-    end_date: datetime.date | None = Field(
+    contract_id: str = pydantic.Field(
+        ..., description="""Contract ID""", alias="contract_id"
+    )
+    end_date: datetime.date | None = pydantic.Field(
         ..., description="""Contract end date""", alias="end_date"
     )
-    geographical_summary: str = Field(
+    geographical_summary: str = pydantic.Field(
         ...,
         description="""Descriptive summary of a contract's geographical area""",
         alias="geographical_summary",
     )
-    name: str = Field(..., description="""Contract name""", alias="name")
-    products: list[ContractsProductSummary] = Field(
+    name: str = pydantic.Field(..., description="""Contract name""", alias="name")
+    products: list[ContractsProductSummary] = pydantic.Field(
         ...,
         description="""List of products the contract has access to""",
         alias="products",
     )
-    reseller: bool = Field(
+    reseller: bool = pydantic.Field(
         ...,
         description="""Whether the contract is marked for reselling""",
         alias="reseller",
     )
-    start_date: datetime.date | None = Field(
+    start_date: datetime.date | None = pydantic.Field(
         ..., description="""Contract start date""", alias="start_date"
     )
-    credit_limit: Union[None, int] = Field(
+    credit_limit: Union[None, int] = pydantic.Field(
         default=None, description=None, alias="credit_limit"
     )
-    satellite_access: Union[None, list[str]] = Field(
+    satellite_access: Union[None, list[str]] = pydantic.Field(
         default=None,
         description="""Satellite access for the contract""",
         alias="satellite_access",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

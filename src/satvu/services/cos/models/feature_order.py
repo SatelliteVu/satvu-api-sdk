@@ -6,7 +6,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal, Union
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.order import Order
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from ..models.polygon_geometry import PolygonGeometry
 
 
-class FeatureOrder(BaseModel):
+class FeatureOrder(pydantic.BaseModel):
     """
     Attributes:
         id (str | UUID): The unique identifier of the feature.
@@ -24,21 +24,23 @@ class FeatureOrder(BaseModel):
         properties (Union['Order', None]): A map of additional metadata for the feature.
     """
 
-    id: str | UUID = Field(
+    id: str | UUID = pydantic.Field(
         ..., description="""The unique identifier of the feature.""", alias="id"
     )
-    type_: Literal["Feature"] = Field(default="Feature", description=None, alias="type")
-    geometry: Union[PointGeometry, PolygonGeometry, None] = Field(
+    type_: Literal["Feature"] = pydantic.Field(
+        default="Feature", description=None, alias="type"
+    )
+    geometry: Union[PointGeometry, PolygonGeometry, None] = pydantic.Field(
         default=None,
         description="""Defines the full footprint of the asset represented by this feature.""",
         alias="geometry",
     )
-    properties: Union[Order, None] = Field(
+    properties: Union[Order, None] = pydantic.Field(
         default=None,
         description="""A map of additional metadata for the feature.""",
         alias="properties",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

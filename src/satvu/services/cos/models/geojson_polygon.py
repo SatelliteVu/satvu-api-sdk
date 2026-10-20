@@ -5,21 +5,23 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class GeojsonPolygon(BaseModel):
+class GeojsonPolygon(pydantic.BaseModel):
     """
     Attributes:
         type_ (Literal['Polygon']):
         coordinates (list[list[list[float]]]):
     """
 
-    type_: Literal["Polygon"] = Field(default="Polygon", description=None, alias="type")
-    coordinates: list[list[list[float]]] = Field(
+    type_: Literal["Polygon"] = pydantic.Field(
+        default="Polygon", description=None, alias="type"
+    )
+    coordinates: list[list[list[float]]] = pydantic.Field(
         ..., description=None, alias="coordinates"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

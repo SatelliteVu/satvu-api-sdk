@@ -3,20 +3,20 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class OrderEditPayload(BaseModel):
+class OrderEditPayload(pydantic.BaseModel):
     """Request payload for editing an order.
 
     Attributes:
         name (None | str): The optional name of the order
     """
 
-    name: None | str = Field(
+    name: None | str = pydantic.Field(
         default=None, description="""The optional name of the order""", alias="name"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

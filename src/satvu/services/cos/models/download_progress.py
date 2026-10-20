@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class DownloadProgress(BaseModel):
+class DownloadProgress(pydantic.BaseModel):
     """Progress information for an in-flight download bundling job.
 
     Attributes:
@@ -14,17 +14,17 @@ class DownloadProgress(BaseModel):
         done (int): The number of files the bundler has already packaged.
     """
 
-    total: int = Field(
+    total: int = pydantic.Field(
         ...,
         description="""The total number of files the bundler is packaging.""",
         alias="total",
     )
-    done: int = Field(
+    done: int = pydantic.Field(
         ...,
         description="""The number of files the bundler has already packaged.""",
         alias="done",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

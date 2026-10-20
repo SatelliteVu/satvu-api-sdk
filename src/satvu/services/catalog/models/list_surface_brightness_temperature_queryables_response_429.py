@@ -3,21 +3,21 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class GetPrimaryItemsResponse429(BaseModel):
+class ListSurfaceBrightnessTemperatureQueryablesResponse429(pydantic.BaseModel):
     """
     Attributes:
         code (str): Error code Example: TooManyRequests.
         description (str): Error description Example: Rate limit exceeded. Please try again later..
     """
 
-    code: str = Field(..., description="""Error code""", alias="code")
-    description: str = Field(
+    code: str = pydantic.Field(..., description="""Error code""", alias="code")
+    description: str = pydantic.Field(
         ..., description="""Error description""", alias="description"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

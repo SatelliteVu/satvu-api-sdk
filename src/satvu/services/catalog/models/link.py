@@ -5,10 +5,10 @@ from __future__ import annotations
 
 from typing import Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class Link(BaseModel):
+class Link(pydantic.BaseModel):
     """
     Attributes:
         href (str): The actual link in the format of an URL. Example: http://example.com.
@@ -22,38 +22,38 @@ class Link(BaseModel):
         type_ (Union[None, str]): Media type of the referenced entity. Example: application/geo+json.
     """
 
-    href: str = Field(
+    href: str = pydantic.Field(
         ..., description="""The actual link in the format of an URL.""", alias="href"
     )
-    method: str = Field(
+    method: str = pydantic.Field(
         ...,
         description="""The HTTP method of the request, either GET or POST.""",
         alias="method",
     )
-    rel: str = Field(
+    rel: str = pydantic.Field(
         ...,
         description="""The relationship between the current document and the linked document.""",
         alias="rel",
     )
-    body: Union[None, dict] = Field(
+    body: Union[None, dict] = pydantic.Field(
         default=None,
         description="""A JSON object containing fields/values that must be included in the body of the next request.""",
         alias="body",
     )
-    merge: bool | None = Field(
+    merge: bool | None = pydantic.Field(
         default=None,
         description="""If true, the body fields in the next link must be merged into the original request and be sent combined in the next request.""",
         alias="merge",
     )
-    title: Union[None, str] = Field(
+    title: Union[None, str] = pydantic.Field(
         default=None, description="""The title of the link.""", alias="title"
     )
-    type_: Union[None, str] = Field(
+    type_: Union[None, str] = pydantic.Field(
         default=None,
         description="""Media type of the referenced entity.""",
         alias="type",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

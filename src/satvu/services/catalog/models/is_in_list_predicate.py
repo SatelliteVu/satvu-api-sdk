@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.is_in_list_predicate_op import IsInListPredicateOp
 
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from ..models.timestamp_instant import TimestampInstant
 
 
-class IsInListPredicate(BaseModel):
+class IsInListPredicate(pydantic.BaseModel):
     """
     Attributes:
         args (list[Union['ArithmeticExpression', 'DateInstant', 'PropertyRef', 'TimestampInstant', bool, float,
@@ -45,9 +45,9 @@ class IsInListPredicate(BaseModel):
             ],
             str,
         ]
-    ] = Field(..., description=None, alias="args")
-    op: IsInListPredicateOp = Field(..., description=None, alias="op")
+    ] = pydantic.Field(..., description=None, alias="args")
+    op: IsInListPredicateOp = pydantic.Field(..., description=None, alias="op")
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

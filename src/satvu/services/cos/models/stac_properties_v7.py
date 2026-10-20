@@ -6,7 +6,7 @@ from __future__ import annotations
 import datetime
 from typing import TYPE_CHECKING, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 from ..models.satvu_filter import SatvuFilter
 
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from ..models.polygon import Polygon
 
 
-class StacPropertiesV7(BaseModel):
+class StacPropertiesV7(pydantic.BaseModel):
     """Metadata properties for satellite imagery (legacy v0.7 format for historical orders).
 
     Attributes:
@@ -47,115 +47,115 @@ class StacPropertiesV7(BaseModel):
         satvu_sensitivity (float | None): Modelled one-sigma brightness temperature temporal noise at 300 K in kelvin
     """
 
-    datetime_: datetime.datetime = Field(
+    datetime_: datetime.datetime = pydantic.Field(
         ..., description="""Acquisition datetime""", alias="datetime"
     )
-    created: datetime.datetime = Field(
+    created: datetime.datetime = pydantic.Field(
         ..., description="""Time at which this STAC item was created""", alias="created"
     )
-    created_at: datetime.datetime = Field(
+    created_at: datetime.datetime = pydantic.Field(
         ...,
         description="""Time at which this STAC item was created (deprecated - use 'created')""",
         alias="created_at",
     )
-    gsd: float = Field(
+    gsd: float = pydantic.Field(
         ...,
         description="""Ground Sampling Distance. Distance in metres between two consecutive pixel centers measured on the ground""",
         alias="gsd",
     )
-    platform: str = Field(
+    platform: str = pydantic.Field(
         ..., description="""Platform name. E.g. Hotsat-1""", alias="platform"
     )
-    processing_software: dict = Field(
+    processing_software: dict = pydantic.Field(
         ..., description=None, alias="processing:software"
     )
-    proj_epsg: int = Field(
+    proj_epsg: int = pydantic.Field(
         ...,
         description="""EPSG code. Defines the geographic coordinate system""",
         alias="proj:epsg",
     )
-    proj_shape: list[int] = Field(
+    proj_shape: list[int] = pydantic.Field(
         ...,
         description="""Number of pixels in Y and X directions for the default grid""",
         alias="proj:shape",
     )
-    view_azimuth: float = Field(
+    view_azimuth: float = pydantic.Field(
         ...,
         description="""Viewing azimuth angle. The angle between the scene centre and true north. Measured clockwise from north in degrees.""",
         alias="view:azimuth",
     )
-    view_off_nadir: float = Field(
+    view_off_nadir: float = pydantic.Field(
         ...,
         description="""The angle between satellite nadir and the scene center. Measured in degrees.""",
         alias="view:off_nadir",
     )
-    view_sun_azimuth: float = Field(
+    view_sun_azimuth: float = pydantic.Field(
         ...,
         description="""Sun azimuth angle. The angle between truth north and the sun at the scene centre. Measured clockwise in degrees.""",
         alias="view:sun_azimuth",
     )
-    view_sun_elevation: float = Field(
+    view_sun_elevation: float = pydantic.Field(
         ...,
         description="""Sun elevation angle. The angle from the tangent of the scene center to the sun""",
         alias="view:sun_elevation",
     )
-    eo_cloud_cover: float | None = Field(
+    eo_cloud_cover: float | None = pydantic.Field(
         default=None, description="""Estimate of cloud cover""", alias="eo:cloud_cover"
     )
-    proj_bbox: list[float] | None = Field(
+    proj_bbox: list[float] | None = pydantic.Field(
         default=None, description=None, alias="proj:bbox"
     )
-    proj_geometry: Union[Polygon, None] = Field(
+    proj_geometry: Union[Polygon, None] = pydantic.Field(
         default=None,
         description="""Defines the projected footprint.""",
         alias="proj:geometry",
     )
-    proj_transform: list[float] | None = Field(
+    proj_transform: list[float] | None = pydantic.Field(
         default=None,
         description="""The affine transformation coefficients for the default grid""",
         alias="proj:transform",
     )
-    satvu_filter: Union[SatvuFilter, None] = Field(
+    satvu_filter: Union[SatvuFilter, None] = pydantic.Field(
         default=None,
         description="""Filter used for earth view acquisition""",
         alias="satvu:filter",
     )
-    satvu_geometric_calibration: bool | None = Field(
+    satvu_geometric_calibration: bool | None = pydantic.Field(
         default=None,
         description="""Flag indiciating if refined geometric processing was applied""",
         alias="satvu:geometric_calibration",
     )
-    satvu_radiometric_calibration: bool | None = Field(
+    satvu_radiometric_calibration: bool | None = pydantic.Field(
         default=None,
         description="""Flag indicating if radiometric calibration parameters are available""",
         alias="satvu:radiometric_calibration",
     )
-    satvu_atmospheric_model: bool | None = Field(
+    satvu_atmospheric_model: bool | None = pydantic.Field(
         default=None,
         description="""Flag indicating if atmospheric model parameters are available""",
         alias="satvu:atmospheric_model",
     )
-    satvu_atmospheric_model_transmission: float | None = Field(
+    satvu_atmospheric_model_transmission: float | None = pydantic.Field(
         default=None,
         description="""Atmospheric model transmission""",
         alias="satvu:atmospheric_model_transmission",
     )
-    satvu_atmospheric_model_upwelling: float | None = Field(
+    satvu_atmospheric_model_upwelling: float | None = pydantic.Field(
         default=None,
         description="""Model upwelling radiance term""",
         alias="satvu:atmospheric_model_upwelling",
     )
-    satvu_atmospheric_model_downwelling: float | None = Field(
+    satvu_atmospheric_model_downwelling: float | None = pydantic.Field(
         default=None,
         description="""Model downwelling radiance term""",
         alias="satvu:atmospheric_model_downwelling",
     )
-    satvu_sensitivity: float | None = Field(
+    satvu_sensitivity: float | None = pydantic.Field(
         default=None,
         description="""Modelled one-sigma brightness temperature temporal noise at 300 K in kelvin""",
         alias="satvu:sensitivity",
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

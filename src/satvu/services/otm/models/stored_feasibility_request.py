@@ -6,7 +6,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal, Union
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.assured_stored_feasibility_request_properties import (
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     )
 
 
-class StoredFeasibilityRequest(BaseModel):
+class StoredFeasibilityRequest(pydantic.BaseModel):
     """Object representing a stored feasibility request.
 
     Attributes:
@@ -32,24 +32,32 @@ class StoredFeasibilityRequest(BaseModel):
         contract_id (UUID): Contract ID.
     """
 
-    type_: Literal["Feature"] = Field(default="Feature", description=None, alias="type")
-    geometry: Point = Field(..., description="""Point Model""", alias="geometry")
+    type_: Literal["Feature"] = pydantic.Field(
+        default="Feature", description=None, alias="type"
+    )
+    geometry: Point = pydantic.Field(
+        ..., description="""Point Model""", alias="geometry"
+    )
     properties: Union[
         AssuredStoredFeasibilityRequestProperties,
         StandardStoredFeasibilityRequestProperties,
-    ] = Field(
+    ] = pydantic.Field(
         ...,
         description="""A map of additional metadata about the requested image.""",
         alias="properties",
     )
-    id: UUID = Field(..., description="""Feasibility Request ID.""", alias="id")
-    links: list[Link] = Field(
+    id: UUID = pydantic.Field(
+        ..., description="""Feasibility Request ID.""", alias="id"
+    )
+    links: list[Link] = pydantic.Field(
         ...,
         description="""A list of related links for the feasibility request.""",
         alias="links",
     )
-    contract_id: UUID = Field(..., description="""Contract ID.""", alias="contract_id")
+    contract_id: UUID = pydantic.Field(
+        ..., description="""Contract ID.""", alias="contract_id"
+    )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 if TYPE_CHECKING:
     from ..models.link import Link
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from ..models.stored_series_response import StoredSeriesResponse
 
 
-class ListSeriesResponse(BaseModel):
+class ListSeriesResponse(pydantic.BaseModel):
     """Paginated list of series.
 
     Attributes:
@@ -24,20 +24,22 @@ class ListSeriesResponse(BaseModel):
         bbox (list[float] | None):
     """
 
-    type_: Literal["FeatureCollection"] = Field(
+    type_: Literal["FeatureCollection"] = pydantic.Field(
         default="FeatureCollection", description=None, alias="type"
     )
-    features: list[StoredSeriesResponse] = Field(
+    features: list[StoredSeriesResponse] = pydantic.Field(
         ..., description="""List of series.""", alias="features"
     )
-    links: list[Link] = Field(
+    links: list[Link] = pydantic.Field(
         ..., description="""Links to previous and/or next page.""", alias="links"
     )
-    context: ResponseContext = Field(
+    context: ResponseContext = pydantic.Field(
         ..., description="""Context about the response.""", alias="context"
     )
-    bbox: list[float] | None = Field(default=None, description=None, alias="bbox")
+    bbox: list[float] | None = pydantic.Field(
+        default=None, description=None, alias="bbox"
+    )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

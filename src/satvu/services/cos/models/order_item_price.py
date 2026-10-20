@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
 
-class OrderItemPrice(BaseModel):
+class OrderItemPrice(pydantic.BaseModel):
     """Price information for an individual imagery item within an order.
 
     Attributes:
@@ -14,15 +14,15 @@ class OrderItemPrice(BaseModel):
         currency (str): The currency of the order.
     """
 
-    item_price: int = Field(
+    item_price: int = pydantic.Field(
         ...,
         description="""The price of the image in minor units of the currency e.g. pence, cents.""",
         alias="item_price",
     )
-    currency: str = Field(
+    currency: str = pydantic.Field(
         ..., description="""The currency of the order.""", alias="currency"
     )
 
-    model_config = ConfigDict(
+    model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )

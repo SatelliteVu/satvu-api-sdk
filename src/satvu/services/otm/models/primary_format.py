@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class PrimaryFormat(str, Enum):
+class PrimaryFormat(StrEnum):
     GEOTIFF = "geotiff"
     NITF = "nitf"
 

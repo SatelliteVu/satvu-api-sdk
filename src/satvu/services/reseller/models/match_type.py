@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class MatchType(str, Enum):
+class MatchType(StrEnum):
     EXACT = "exact"
     PARTIAL = "partial"
 

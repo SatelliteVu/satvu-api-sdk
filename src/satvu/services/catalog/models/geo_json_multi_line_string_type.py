@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class GeoJSONMultiLineStringType(str, Enum):
+class GeoJSONMultiLineStringType(StrEnum):
     MULTILINESTRING = "MultiLineString"
 
     def __str__(self) -> str:

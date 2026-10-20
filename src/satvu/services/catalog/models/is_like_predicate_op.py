@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class IsLikePredicateOp(str, Enum):
+class IsLikePredicateOp(StrEnum):
     LIKE = "like"
 
     def __str__(self) -> str:

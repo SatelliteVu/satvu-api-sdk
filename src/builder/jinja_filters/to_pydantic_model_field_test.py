@@ -1,6 +1,6 @@
 """Tests for the Pydantic model field Jinja filter."""
 
-from enum import Enum
+from enum import StrEnum
 from types import SimpleNamespace
 from typing import cast
 
@@ -11,7 +11,7 @@ from openapi_python_client.parser.properties.protocol import PropertyProtocol
 from builder.jinja_filters.to_pydantic_model_field import to_pydantic_model_field
 
 
-class Field(str, Enum):
+class Field(StrEnum):
     NAME = "name"
 
 

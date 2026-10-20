@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class IsBetweenPredicateOp(str, Enum):
+class IsBetweenPredicateOp(StrEnum):
     BETWEEN = "between"
 
     def __str__(self) -> str:

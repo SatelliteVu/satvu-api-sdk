@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class PrimaryItemCollection(str, Enum):
+class PrimaryItemCollection(StrEnum):
     PRIMARY = "primary"
 
     def __str__(self) -> str:

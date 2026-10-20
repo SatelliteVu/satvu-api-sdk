@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class PixelSamplingInTheBand(str, Enum):
+class PixelSamplingInTheBand(StrEnum):
     AREA = "area"
     POINT = "point"
 

@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class SurfaceBrightnessTemperatureItemType(str, Enum):
+class SurfaceBrightnessTemperatureItemType(StrEnum):
     FEATURE = "Feature"
 
     def __str__(self) -> str:

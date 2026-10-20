@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class DownloadOrderPrimaryFormatsItem(str, Enum):
+class DownloadOrderPrimaryFormatsItem(StrEnum):
     GEOTIFF = "geotiff"
     NITF = "nitf"
 

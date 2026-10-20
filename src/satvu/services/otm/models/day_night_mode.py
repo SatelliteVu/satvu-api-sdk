@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class DayNightMode(str, Enum):
+class DayNightMode(StrEnum):
     DAY = "day"
     DAY_NIGHT = "day-night"
     NIGHT = "night"

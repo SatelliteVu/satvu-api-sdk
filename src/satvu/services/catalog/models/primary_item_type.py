@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class PrimaryItemType(str, Enum):
+class PrimaryItemType(StrEnum):
     FEATURE = "Feature"
 
     def __str__(self) -> str:

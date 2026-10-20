@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class IsInListPredicateOp(str, Enum):
+class IsInListPredicateOp(StrEnum):
     IN = "in"
 
     def __str__(self) -> str:

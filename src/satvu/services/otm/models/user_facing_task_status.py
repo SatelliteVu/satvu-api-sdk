@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class UserFacingTaskStatus(str, Enum):
+class UserFacingTaskStatus(StrEnum):
     FAILED = "failed"
     FULFILLED = "fulfilled"
     IN_PROGRESS = "in progress"

@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class FeasibilityRequestStatus(str, Enum):
+class FeasibilityRequestStatus(StrEnum):
     FAILED = "failed"
     FEASIBLE = "feasible"
     NOT_FEASIBLE = "not feasible"

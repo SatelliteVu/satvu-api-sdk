@@ -9,7 +9,7 @@ authors = [
     { name = "James Harrison", email = "james.harrison@satellitevu.com" },
     { name = "Zhelini Raveendran", email = "zhelini.raveendran@satellitevu.com" },
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 keywords = [
     "satellite",
     "imagery",
@@ -30,17 +30,18 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Image Processing",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
     "Programming Language :: Python :: 3 :: Only",
     "Typing :: Typed",
     "Operating System :: OS Independent",
     "Framework :: Pydantic :: 2",
 ]
 dependencies = [
-    "pydantic>=2.11.7",
+    "pydantic>=2.14.0",
 ]
 
 [project.urls]
@@ -60,7 +61,7 @@ http-httpx2 = ["httpx2>=2.0.0"]
 [build-system]
 requires = [
     "hatchling",
-    "openapi-python-client>=0.29.1; python_version >= '3.11'",
+    "openapi-python-client>=0.29.1",
     "httpx>=0.28.1",
     "attr>=0.3.2",
     "hypothesis>=6.0.0",
@@ -81,7 +82,7 @@ dev = [
     "mdformat>=1.0.0",
     "mdformat-gfm>=1.0.0",
     "mdformat-ruff>=0.1.3",
-    "openapi-python-client>=0.29.1; python_version >= '3.11'",
+    "openapi-python-client>=0.29.1",
     "pookx>=2.2.0",
     "pyright>=1.1.407",
     "pytest>=8.3.4",
@@ -113,7 +114,7 @@ include = ["/src"]
 build-sdk = "uv run python -m builder all"
 
 [tool.ruff]
-target-version = "py310"
+target-version = "py311"
 line-length = 88
 
 [tool.ruff.lint]
@@ -139,22 +140,12 @@ exclude = [
     "**/node_modules/",
     "src/builder/patches.py",
 ]
-# The default has to cover third-party code: openapi-python-client needs 3.11+, and at
-# 3.10 its StrEnum bases resolve to Unknown, producing false positives at every call
-# site. An executionEnvironment rooted at .venv does not fix that — pyright skips roots
-# under `exclude`.
 pythonVersion = "3.11"
 reportMissingImports = true
 reportMissingTypeStubs = false
 typeCheckingMode = "basic"
 venv = ".venv"
 venvPath = "."
-
-# Only src/satvu ships, and it supports 3.10 (see requires-python), so check it there —
-# that is what catches 3.11-only syntax leaking into generated code.
-[[tool.pyright.executionEnvironments]]
-pythonVersion = "3.10"
-root = "src/satvu"
 
 [tool.fawltydeps]
 code = [

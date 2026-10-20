@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class SortableField(str, Enum):
+class SortableField(StrEnum):
     STATUS = "status"
 
     def __str__(self) -> str:

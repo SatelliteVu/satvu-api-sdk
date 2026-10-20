@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class SatvuCloudConfidence(str, Enum):
+class SatvuCloudConfidence(StrEnum):
     HIGH = "high"
     LOW = "low"
 

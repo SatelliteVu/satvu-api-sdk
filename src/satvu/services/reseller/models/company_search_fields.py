@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class CompanySearchFields(str, Enum):
+class CompanySearchFields(StrEnum):
     ID = "id"
     NAME = "name"
 

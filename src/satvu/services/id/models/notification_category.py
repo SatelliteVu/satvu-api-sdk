@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class NotificationCategory(str, Enum):
+class NotificationCategory(StrEnum):
     TASKING = "tasking"
 
     def __str__(self) -> str:

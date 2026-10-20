@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class GeoJSONGeometryCollectionType(str, Enum):
+class GeoJSONGeometryCollectionType(StrEnum):
     GEOMETRYCOLLECTION = "GeometryCollection"
 
     def __str__(self) -> str:

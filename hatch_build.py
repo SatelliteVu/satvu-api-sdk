@@ -12,14 +12,12 @@ from hatchling.builders.hooks.plugin.interface import (  # type: ignore[import-n
 ROOT_DIR = Path(__file__).parent
 sys.path.insert(0, str(ROOT_DIR / "src"))
 
+from builder.build import build  # noqa: E402
+
 # Environment variable to control test generation during builds
 # Default: False (don't generate tests - they're excluded from wheel anyway)
 # Set SATVU_GENERATE_TESTS=1 to generate tests (e.g., when running test suite)
 GENERATE_TESTS_ENV_VAR = "SATVU_GENERATE_TESTS"
-
-# The builder's openapi-python-client dependency requires 3.11+, while the published SDK
-# supports 3.10 (see requires-python), so it is absent from 3.10 build environments.
-GENERATOR_MIN_PYTHON = (3, 11)
 
 
 class CustomBuildHook(BuildHookInterface):
@@ -27,18 +25,6 @@ class CustomBuildHook(BuildHookInterface):
 
     def initialize(self, version, build_data):
         """Run the SDK builder before packaging."""
-        if sys.version_info < GENERATOR_MIN_PYTHON:
-            version_required = ".".join(str(part) for part in GENERATOR_MIN_PYTHON)
-            print(
-                f"  [BUILD] Skipping SDK generation: needs Python {version_required}+. "
-                "Packaging the generated code committed to src/satvu/services."
-            )
-            return
-
-        # Imported here rather than at module scope so this hook stays importable on
-        # Python versions that cannot install the generator.
-        from builder.build import build
-
         # Check if test generation is requested via environment variable
         # Accepts "1", "true", "yes" (case-insensitive)
         generate_tests = os.environ.get(GENERATE_TESTS_ENV_VAR, "").lower() in (

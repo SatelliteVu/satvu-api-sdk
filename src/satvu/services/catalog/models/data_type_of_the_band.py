@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class DataTypeOfTheBand(str, Enum):
+class DataTypeOfTheBand(StrEnum):
     CFLOAT32 = "cfloat32"
     CFLOAT64 = "cfloat64"
     CINT16 = "cint16"

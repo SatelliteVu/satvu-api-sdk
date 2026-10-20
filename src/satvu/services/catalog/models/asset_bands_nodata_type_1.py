@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class AssetBandsNodataType1(str, Enum):
+class AssetBandsNodataType1(StrEnum):
     INF = "inf"
     NAN = "nan"
     VALUE_2 = "-inf"

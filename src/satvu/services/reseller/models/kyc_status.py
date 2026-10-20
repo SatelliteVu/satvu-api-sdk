@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class KYCStatus(str, Enum):
+class KYCStatus(StrEnum):
     FAILED = "Failed"
     NOT_COMPLETED = "Not completed"
     PASSED = "Passed"

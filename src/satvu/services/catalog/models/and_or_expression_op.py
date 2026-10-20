@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class AndOrExpressionOp(str, Enum):
+class AndOrExpressionOp(StrEnum):
     AND = "and"
     OR = "or"
 

@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class OrderStatus(str, Enum):
+class OrderStatus(StrEnum):
     CANCELLED = "cancelled"
     EXPIRED = "expired"
     FAILED = "failed"

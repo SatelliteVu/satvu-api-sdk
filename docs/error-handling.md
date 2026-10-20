@@ -84,7 +84,7 @@ if is_err(result):
         print("Network connectivity issue")
 ```
 
-## Pattern Matching (Python 3.10+)
+## Pattern Matching
 
 ```python
 if is_err(result):

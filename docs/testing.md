@@ -271,7 +271,7 @@ Available backends: `stdlib`, `httpx`, `httpx2`, `urllib3`, `requests`
 ### CI/CD with Dagger
 
 ```bash
-# Run tests (Python 3.13, with coverage)
+# Run tests (Python 3.14, with coverage)
 dagger call -v test
 
 # Run tests without coverage (faster)

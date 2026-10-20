@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class GenericItemType(str, Enum):
+class GenericItemType(StrEnum):
     FEATURE = "Feature"
 
     def __str__(self) -> str:

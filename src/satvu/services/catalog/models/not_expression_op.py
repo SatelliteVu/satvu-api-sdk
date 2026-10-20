@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class NotExpressionOp(str, Enum):
+class NotExpressionOp(StrEnum):
     NOT = "not"
 
     def __str__(self) -> str:

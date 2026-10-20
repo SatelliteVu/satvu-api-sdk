@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class ArithmeticExpressionOp(str, Enum):
+class ArithmeticExpressionOp(StrEnum):
     DIV = "div"
     VALUE_0 = "+"
     VALUE_1 = "-"

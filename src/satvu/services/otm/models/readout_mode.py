@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class ReadoutMode(str, Enum):
+class ReadoutMode(StrEnum):
     ITR = "ITR"
     IWR = "IWR"
 

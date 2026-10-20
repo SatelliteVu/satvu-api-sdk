@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class BinaryComparisonPredicateOp(str, Enum):
+class BinaryComparisonPredicateOp(StrEnum):
     VALUE_0 = "="
     VALUE_1 = "<>"
     VALUE_2 = "<"

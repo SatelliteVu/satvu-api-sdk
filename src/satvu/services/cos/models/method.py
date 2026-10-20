@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class Method(str, Enum):
+class Method(StrEnum):
     GET = "GET"
     POST = "POST"
 

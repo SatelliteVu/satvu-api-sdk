@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class GeoJSONMultiPointType(str, Enum):
+class GeoJSONMultiPointType(StrEnum):
     MULTIPOINT = "MultiPoint"
 
     def __str__(self) -> str:

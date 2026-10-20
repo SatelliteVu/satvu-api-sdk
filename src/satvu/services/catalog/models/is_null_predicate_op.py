@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class IsNullPredicateOp(str, Enum):
+class IsNullPredicateOp(StrEnum):
     ISNULL = "isNull"
 
     def __str__(self) -> str:

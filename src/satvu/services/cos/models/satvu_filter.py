@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class SatvuFilter(str, Enum):
+class SatvuFilter(StrEnum):
     DAY = "day"
     NIGHT = "night"
 

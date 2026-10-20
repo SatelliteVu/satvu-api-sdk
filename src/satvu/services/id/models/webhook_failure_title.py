@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class WebhookFailureTitle(str, Enum):
+class WebhookFailureTitle(StrEnum):
     HTTP_STATUS_ERROR = "HTTP Status Error"
     TIMEOUT = "Timeout"
     UNREACHABLE = "Unreachable"

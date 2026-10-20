@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class GeoJSONMultiPolygonType(str, Enum):
+class GeoJSONMultiPolygonType(StrEnum):
     MULTIPOLYGON = "MultiPolygon"
 
     def __str__(self) -> str:

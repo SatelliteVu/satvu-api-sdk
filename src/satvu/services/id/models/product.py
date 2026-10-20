@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class Product(str, Enum):
+class Product(StrEnum):
     ASSURED = "assured"
     STANDARD = "standard"
 

@@ -6,7 +6,7 @@ Thank you for your interest in contributing to the SatVu API SDK!
 
 ### Requirements
 
-- Python 3.10+
+- Python 3.11+
 - [uv](https://docs.astral.sh/uv/)
 
 ### Getting Started

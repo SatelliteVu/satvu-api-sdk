@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class Filter(str, Enum):
+class Filter(StrEnum):
     DAY = "DAY"
     NIGHT = "NIGHT"
 

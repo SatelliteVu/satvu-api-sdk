@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class PrimaryFeatureCollectionType(str, Enum):
+class PrimaryFeatureCollectionType(StrEnum):
     FEATURECOLLECTION = "FeatureCollection"
 
     def __str__(self) -> str:

@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class GeoJSONLineStringType(str, Enum):
+class GeoJSONLineStringType(StrEnum):
     LINESTRING = "LineString"
 
     def __str__(self) -> str:

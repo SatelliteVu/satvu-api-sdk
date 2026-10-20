@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class Collections(str, Enum):
+class Collections(StrEnum):
     FEASIBILITY_REQUESTS = "feasibility_requests"
     FEASIBILITY_RESPONSES = "feasibility_responses"
     ORDERS = "orders"

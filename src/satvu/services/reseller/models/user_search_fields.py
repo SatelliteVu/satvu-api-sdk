@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class UserSearchFields(str, Enum):
+class UserSearchFields(StrEnum):
     COMPANY_NAME = "company_name"
     USER_EMAIL = "user_email"
     USER_ID = "user_id"

@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class Collection(str, Enum):
+class Collection(StrEnum):
     PRIMARY = "primary"
     SURFACE_BRIGHTNESS_TEMPERATURE = "surface-brightness-temperature"
 

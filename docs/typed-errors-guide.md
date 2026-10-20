@@ -189,7 +189,7 @@ data = final_result.unwrap()
 
 ## Pattern Matching
 
-For Python 3.10+, you can use structural pattern matching:
+You can use structural pattern matching:
 
 ```python
 result = adapter.request("GET", "https://api.example.com/data")

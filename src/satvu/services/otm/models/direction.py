@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class Direction(str, Enum):
+class Direction(StrEnum):
     ASC = "asc"
     DESC = "desc"
 

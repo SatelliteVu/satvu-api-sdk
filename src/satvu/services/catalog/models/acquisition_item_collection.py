@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class AcquisitionItemCollection(str, Enum):
+class AcquisitionItemCollection(StrEnum):
     ACQUISITION = "acquisition"
 
     def __str__(self) -> str:

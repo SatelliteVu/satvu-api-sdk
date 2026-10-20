@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class AcquisitionItemType(str, Enum):
+class AcquisitionItemType(StrEnum):
     FEATURE = "Feature"
 
     def __str__(self) -> str:

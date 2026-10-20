@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is an auto-generated Python SDK for SatVu's APIs. The SDK is generated from OpenAPI specifications using a custom builder that wraps openapi-python-client. The project supports multiple SatVu APIs (catalog, cos, id, policy, otm, reseller, wallet) through a unified SDK interface.
 
-**Requirements:** Python >= 3.10
+**Requirements:** Python >= 3.11
 
 ## Development Commands
 

@@ -1,3 +1,15 @@
+# [0.12.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.11.1...v0.12.0) (2026-10-21)
+
+
+### Bug Fixes
+
+* **deps:** bump certifi to 2026.10.19 and uv to 0.13.4
+
+
+### Features
+
+* **core:** drop python 3.10, add 3.14 and 3.15
+
 ## [0.11.1](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.11.0...v0.11.1) (2026-10-20)
 
 

@@ -12,11 +12,14 @@ from typing import Any
 
 from openapi_python_client import Project
 from openapi_python_client.parser.openapi import Endpoint
-from openapi_python_client.parser.responses import Response
-from openapi_python_client.schema import UntrustedString
-from openapi_python_client.schema.openapi_schema_pydantic import Reference
+from openapi_python_client.parser.properties.model_property import ModelProperty
 
 from builder.code_strings import unwrap_code
+from builder.request_models import (
+    collect_request_models,
+    request_model_component,
+    request_model_schema,
+)
 from builder.schema_utils import (
     clean_schema,
     find_recursive_refs,
@@ -24,129 +27,11 @@ from builder.schema_utils import (
     remove_excluded_refs,
     remove_recursive_refs,
 )
-
-
-def extract_response_schema(response: Response) -> dict[str, Any] | None:
-    """
-    Extract raw JSON schema from an openapi-python-client Response object.
-
-    Args:
-        response: Parsed Response from openapi-python-client
-
-    Returns:
-        Raw JSON Schema dict for hypothesis, or None if not extractable
-    """
-    # If response has a Property, extract schema from Property.data
-    # This contains the resolved oai.Schema that was used to generate the Property
-    schema_obj = getattr(response.prop, "data", None)
-    if schema_obj:
-        # Convert oai.Schema Pydantic model to dict with proper aliasing ($ref instead of ref)
-        return schema_obj.model_dump(mode="json", by_alias=True, exclude_none=True)
-
-    # Fallback: try to extract from response.data.content (for inline schemas)
-    if isinstance(response.data, Reference):
-        return None
-
-    if not response.data.content:
-        return None
-
-    media_type = response.data.content.get(UntrustedString("application/json"))
-    if not media_type or not media_type.media_type_schema:
-        return None
-
-    if isinstance(media_type.media_type_schema, Reference):
-        return None
-
-    # Convert oai.Schema Pydantic model to dict with proper aliasing
-    return media_type.media_type_schema.model_dump(
-        mode="json", by_alias=True, exclude_none=True
-    )
-
-
-def extract_request_body_schema(endpoint) -> dict[str, Any] | None:
-    """
-    Extract request body schema from endpoint.
-
-    Args:
-        endpoint: Parsed Endpoint from openapi-python-client
-
-    Returns:
-        Raw JSON Schema dict for hypothesis, or None if no body
-    """
-    if not endpoint.bodies:
-        return None
-
-    body = endpoint.bodies[0]  # Take first body (usually only one)
-
-    # Handle UnionProperty (Union of multiple body models)
-    if type(body.prop).__name__ == "UnionProperty":
-        # Extract schemas from each inner property
-        inner_schemas = []
-        for inner_prop in body.prop.inner_properties:
-            if hasattr(inner_prop, "data"):
-                schema = inner_prop.data.model_dump(
-                    mode="json", by_alias=True, exclude_none=True
-                )
-                inner_schemas.append(schema)
-
-        if inner_schemas:
-            # Return oneOf schema for Union types
-            return {"oneOf": inner_schemas}
-        return None
-
-    # Handle ListProperty (array of items)
-    if type(body.prop).__name__ == "ListProperty":
-        # ListProperty has an inner_property with the item schema
-        if hasattr(body.prop, "inner_property") and hasattr(
-            body.prop.inner_property, "data"
-        ):
-            item_schema = body.prop.inner_property.data.model_dump(
-                mode="json", by_alias=True, exclude_none=True
-            )
-            # Return array schema with items
-            return {"type": "array", "items": item_schema}
-        return None
-
-    # Handle regular ModelProperty
-    if hasattr(body.prop, "data"):
-        schema_obj = body.prop.data
-        return schema_obj.model_dump(mode="json", by_alias=True, exclude_none=True)
-
-    print(
-        f"  [TESTS] Warning: No data attribute on {endpoint.name} body prop "
-        f"(type: {type(body.prop).__name__})"
-    )
-    return None
-
-
-def extract_query_param_schema(param) -> dict[str, Any] | None:
-    """
-    Extract schema for a query parameter.
-
-    Args:
-        param: QueryParameter from openapi-python-client
-
-    Returns:
-        Raw JSON Schema dict for hypothesis, or None if not extractable
-    """
-    # Try to extract schema from parameter's data attribute
-    if hasattr(param, "data") and param.data:
-        return param.data.model_dump(mode="json", by_alias=True, exclude_none=True)
-
-    # Fallback: construct simple schema from python_type
-    # This is a basic fallback for primitives
-    type_mapping = {
-        "str": "string",
-        "int": "integer",
-        "float": "number",
-        "bool": "boolean",
-    }
-
-    python_type = param.python_type
-    if python_type in type_mapping:
-        return {"type": type_mapping[python_type]}
-
-    return None
+from builder.spec_schemas import (
+    extract_query_param_schema,
+    extract_request_body_schema,
+    extract_response_schema,
+)
 
 
 def generate_tests(
@@ -196,6 +81,14 @@ def generate_tests(
     if not endpoints_data:
         return
 
+    request_models = {
+        str(model.class_info.name): {
+            "module": model.class_info.module_name,
+            "schema": _request_model_test_schema(model, components, recursive_refs),
+        }
+        for model in collect_request_models(project)
+    }
+
     # Render and write test files
     _render_test_files(
         api_name=api_name,
@@ -203,6 +96,7 @@ def generate_tests(
         components=components,
         operations=operations,
         endpoints_data=endpoints_data,
+        request_models=request_models,
         base_path=base_path,
         output_dir=output_dir,
         spec_hash=spec_hash,
@@ -212,7 +106,11 @@ def generate_tests(
 
     # Generate example cache for faster test execution
     if spec_hash:
-        _generate_example_cache(api_name, operations, spec_hash)
+        model_schemas = {
+            name: {**info["schema"], "definitions": components}
+            for name, info in request_models.items()
+        }
+        _generate_example_cache(api_name, operations, model_schemas, spec_hash)
 
 
 def _prepare_components(openapi_dict: dict) -> dict[str, Any]:
@@ -257,10 +155,33 @@ def _prepare_schema_for_hypothesis(
     Returns:
         Schema ready for hypothesis-jsonschema
     """
+    cleaned = _clean_for_hypothesis(schema, components, recursive_refs)
+    return {**cleaned, "definitions": components}
+
+
+def _clean_for_hypothesis(
+    schema: dict[str, Any],
+    components: dict[str, Any],
+    recursive_refs: set[str],
+) -> dict[str, Any]:
+    """Apply steps 1-3 of `_prepare_schema_for_hypothesis`, without definitions."""
     cleaned = remove_excluded_refs(clean_schema(schema))
     cleaned = remove_recursive_refs(cleaned, recursive_refs)
-    cleaned = inline_discriminator_tags(cleaned, components)
-    return {**cleaned, "definitions": components}
+    return inline_discriminator_tags(cleaned, components)
+
+
+def _request_model_test_schema(
+    model: ModelProperty,
+    components: dict[str, Any],
+    recursive_refs: set[str],
+) -> dict[str, Any]:
+    """Point at the model's component schema, inlining only models without one."""
+    component = request_model_component(model)
+    if component in components:
+        return {"$ref": f"#/definitions/{component}"}
+    return _clean_for_hypothesis(
+        request_model_schema(model), components, recursive_refs
+    )
 
 
 def _extract_operations(
@@ -411,6 +332,7 @@ def _render_test_files(
     components: dict[str, Any],
     operations: dict,
     endpoints_data: list,
+    request_models: dict[str, dict[str, Any]],
     base_path: str,
     output_dir: Path,
     spec_hash: str = "",
@@ -424,6 +346,8 @@ def _render_test_files(
         components: Component schemas
         operations: Operations dict
         endpoints_data: Endpoint metadata list
+        request_models: Class name -> {module, schema} for every request model; the
+            schema is a $ref into components unless the model was inline
         base_path: API base path
         output_dir: Output directory
         spec_hash: Hash of OpenAPI spec for example caching
@@ -435,6 +359,10 @@ def _render_test_files(
         "api_name": api_name,
         "service_class_name": f"{api_name.capitalize()}Service",
         "endpoints": endpoints_data,
+        "request_models": request_models,
+        "request_model_schemas": {
+            name: info["schema"] for name, info in request_models.items()
+        },
         "spec_version": spec_version,
         "spec_hash": spec_hash,
         "components": components,
@@ -482,7 +410,9 @@ def _format_with_ruff(test_file: Path, schemas_file: Path) -> None:
     )
 
 
-def _generate_example_cache(api_name: str, operations: dict, spec_hash: str) -> None:
+def _generate_example_cache(
+    api_name: str, operations: dict, request_models: dict, spec_hash: str
+) -> None:
     """
     Generate cached examples for hypothesis tests.
 
@@ -492,6 +422,7 @@ def _generate_example_cache(api_name: str, operations: dict, spec_hash: str) -> 
     Args:
         api_name: API identifier (e.g., 'catalog', 'otm')
         operations: Operations dict with schemas
+        request_models: Class name -> schema (with definitions) per request model
         spec_hash: Hash of OpenAPI spec for cache key
     """
     # Import lazily because hypothesis is not a build dependency
@@ -501,6 +432,7 @@ def _generate_example_cache(api_name: str, operations: dict, spec_hash: str) -> 
         generate_examples_cache(
             api_name=api_name,
             operations=operations,
+            request_models=request_models,
             spec_hash=spec_hash,
             num_examples=10,
         )

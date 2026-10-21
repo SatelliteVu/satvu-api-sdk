@@ -1,0 +1,31 @@
+{#- Request model test macro -#}
+{#- Builds every request model from only the fields a caller must pass, and checks -#}
+{#- the exclude_unset dump the SDK sends still carries every spec-required key. -#}
+
+{%- macro request_models_test(request_models) %}
+
+
+@pytest.mark.parametrize(
+    "model",
+    [
+{%- for name in request_models | sort %}
+        {{ name }},
+{%- endfor %}
+    ],
+    ids=lambda model: model.__name__,
+)
+@settings(
+    max_examples=5,
+    deadline=None,
+    suppress_health_check=[HealthCheck.filter_too_much, HealthCheck.too_slow, HealthCheck.data_too_large],
+)
+@given(data=st.data())
+def test_minimal_request_model_dump_keeps_required_keys(model, data):
+    """
+    Test a request model built from its caller-required fields dumps every spec-required key.
+    """
+    schema = get_request_model_schema(model.__name__)
+    body_data = data.draw(get_request_model_strategy(model.__name__))
+
+    assert_minimal_dump_conforms(model, body_data, schema)
+{%- endmacro %}

@@ -59,3 +59,11 @@ class {{ class_name }}(pydantic.BaseModel):
     {% endfor %}
 
     model_config = pydantic.ConfigDict(validate_by_name=True, validate_by_alias=True, extra="allow")
+    {% set always_sent = model.required_properties | always_sent_fields %}
+    {% if always_sent %}
+
+    def model_post_init(self, context: Any, /) -> None:
+        # Required fields the SDK fills in (constants, spec defaults) must survive
+        # model_dump(exclude_unset=True)
+        self.__pydantic_fields_set__ = self.model_fields_set.union({{ always_sent | tojson }})
+    {% endif %}

@@ -22,14 +22,23 @@ side. Two checks run against every captured body:
     and the tighter of the two for this bug class - it fires whether or not the
     spec happens to forbid null at that position.
 
+``assert_minimal_dump_conforms``
+    The opposite direction: a model built from only the fields a caller must
+    pass still dumps every key the spec requires. Constants and defaulted
+    required fields are filled in by the SDK, so ``exclude_unset`` must not
+    strip them.
+
 Excluded from the wheel alongside example_cache.py; this is test-only support
 code and pulls in jsonschema, which is not a runtime dependency.
 """
 
+from collections.abc import Iterator
 from typing import Any
 
+import pytest
 from jsonschema import Draft7Validator
 from jsonschema.exceptions import ValidationError, best_match
+from pydantic import BaseModel
 
 # Sentinel for "this request carried no body", distinct from a body of ``null``.
 _NO_BODY = object()
@@ -86,6 +95,181 @@ def drop_optional_properties(body: Any, schema: dict) -> Any:
         return body
     required = set(schema.get("required", []))
     return {key: value for key, value in body.items() if key in required}
+
+
+def _ref_chain(schema: dict, definitions: dict) -> Iterator[dict]:
+    """Yield each schema on the way through ``$ref`` and single-member ``allOf``."""
+    while True:
+        yield schema
+        if "$ref" in schema:
+            schema = definitions.get(schema["$ref"].rsplit("/", 1)[-1], {})
+        elif len(schema.get("allOf", [])) == 1:
+            schema = schema["allOf"][0]
+        else:
+            return
+
+
+def _resolve(schema: dict, definitions: dict) -> dict:
+    """Follow ``$ref`` (and single-member ``allOf`` wrappers) to the target schema."""
+    *_, target = _ref_chain(schema, definitions)
+    return target
+
+
+def _object_schema(schema: dict, definitions: dict) -> dict | None:
+    """
+    Return the ``properties``/``required`` of a resolved object schema.
+
+    Multi-member ``allOf`` is merged, as the generated model merges it. Returns
+    None for anything that is not an object made of properties.
+    """
+    if "properties" in schema:
+        return schema
+    members = schema.get("allOf") or []
+    if len(members) < 2:
+        return None
+    resolved = [_object_schema(_resolve(m, definitions), definitions) for m in members]
+    objects = [obj for obj in resolved if obj is not None]
+    if len(objects) != len(members):
+        return None
+    return {
+        "properties": {
+            key: value for obj in objects for key, value in obj["properties"].items()
+        },
+        "required": [key for obj in objects for key in obj.get("required", [])],
+    }
+
+
+def _union_member(body: Any, schema: dict, definitions: dict) -> dict | None:
+    """Return the ``oneOf``/``anyOf`` branch ``body`` satisfies, if any."""
+    for branch in schema.get("oneOf") or schema.get("anyOf") or []:
+        if Draft7Validator({**branch, "definitions": definitions}).is_valid(body):
+            return branch
+    return None
+
+
+def _is_union_of_objects(schema: dict, definitions: dict) -> bool:
+    """Whether more than one branch is an object, so its constants pick the variant."""
+    branches = schema.get("oneOf") or schema.get("anyOf") or []
+    objects = [
+        branch
+        for branch in branches
+        if _object_schema(_resolve(branch, definitions), definitions) is not None
+    ]
+    return len(objects) > 1
+
+
+def _sdk_supplies(prop_schema: dict, definitions: dict) -> bool:
+    """
+    Whether the generated field gets a value without the caller passing one.
+
+    A ``const`` anywhere on the ``$ref`` chain becomes a ``Literal`` field, but
+    openapi-python-client drops a ``default`` set on a referenced schema, so a
+    default only counts up to the first ``$ref``.
+    """
+    chain = list(_ref_chain(prop_schema, definitions))
+    if any("const" in step for step in chain):
+        return True
+    for step in chain:
+        if "default" in step:
+            return True
+        if "$ref" in step:
+            return False
+    return False
+
+
+def _reducible_root(body: Any, schema: dict, definitions: dict) -> dict | None:
+    """Return the object schema ``minimal_request_body`` reduces ``body`` against."""
+    schema = _resolve(schema, definitions)
+    member = _union_member(body, schema, definitions)
+    if member is not None:
+        schema = _resolve(member, definitions)
+    return _object_schema(schema, definitions)
+
+
+def minimal_request_body(
+    body: Any, schema: dict, definitions: dict | None = None, *, is_variant=False
+) -> Any:
+    """
+    Reduce a spec-valid body to the fields a caller has to pass, recursively.
+
+    Optional properties go, and so do required ones the SDK can supply itself
+    (``const`` or ``default``) - those are exactly the fields ``exclude_unset``
+    is at risk of stripping. Inside a union of objects the constants stay: they
+    are what tells the variants apart, so a caller passing a dict must set them.
+
+    :param body: A spec-valid request body.
+    :param schema: The schema for ``body``, with ``definitions`` attached at the
+        root.
+    :returns: The reduced body; anything this cannot reason about is untouched.
+    """
+    defs = schema.get("definitions", {}) if definitions is None else definitions
+    schema = _resolve(schema, defs)
+
+    if isinstance(body, list) and isinstance(schema.get("items"), dict):
+        return [minimal_request_body(item, schema["items"], defs) for item in body]
+
+    member = _union_member(body, schema, defs)
+    if member is not None:
+        return minimal_request_body(
+            body, member, defs, is_variant=_is_union_of_objects(schema, defs)
+        )
+
+    obj = _object_schema(schema, defs)
+    if not isinstance(body, dict) or obj is None:
+        return body
+
+    required = set(obj.get("required", []))
+    properties = obj["properties"]
+    return {
+        key: minimal_request_body(value, properties.get(key, {}), defs)
+        for key, value in body.items()
+        if key in required
+        and (is_variant or not _sdk_supplies(properties.get(key, {}), defs))
+    }
+
+
+def assert_minimal_dump_conforms(
+    model: type[BaseModel], body: Any, schema: dict
+) -> None:
+    """
+    Assert a model built from a caller's minimum still dumps a spec-valid body.
+
+    ``body`` is reduced with ``minimal_request_body``, validated into ``model``
+    and dumped exactly as the SDK dumps request bodies. The dump must satisfy
+    ``schema``, so every ``required`` key - at any depth - is on the wire.
+    Stands down when ``body`` does not conform to start with, as above, and
+    skips when the model's schema is not an object this can reduce - passing
+    there would test nothing.
+
+    :param model: The generated request model under test.
+    :param body: A spec-valid body for ``model``, in wire names.
+    :param schema: The model's schema, with ``definitions`` attached.
+    :raises AssertionError: If the dump is missing a required key or otherwise
+        stops conforming.
+    """
+    validator = Draft7Validator(schema)
+    if best_match(validator.iter_errors(body)):
+        return
+
+    if _reducible_root(body, schema, schema.get("definitions", {})) is None:
+        pytest.skip(f"{model.__name__}: schema is not a reducible object")
+
+    minimal = minimal_request_body(body, schema)
+    dumped = model.model_validate(minimal).model_dump(
+        by_alias=True, mode="json", exclude_unset=True
+    )
+    error = best_match(validator.iter_errors(dumped))
+    if error is not None:
+        location = "/".join(str(part) for part in error.absolute_path) or "<root>"
+        raise AssertionError(
+            f"{model.__name__}: a model built from only the caller-required fields "
+            f"dumps a body that does not satisfy its schema.\n"
+            f"  at {location}: {error.message}\n"
+            f"  body given: {_render(minimal)}\n"
+            f"  body dumped: {_render(dumped)}\n"
+            f"  A spec-required field the SDK supplies (a constant or default) "
+            f"was treated as unset and stripped by exclude_unset."
+        )
 
 
 def _render(value: Any) -> str:

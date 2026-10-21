@@ -14,7 +14,8 @@ Cache Format
 Location: .cache/hypothesis-examples/{api_name}-{spec_hash}.json
 
 Cache keys are pipe-separated: {path}|{method}|{type}|{status_or_name}
-Types: response, body, param
+Types: response, body, param. Request models are keyed {class_name}|model|body|request,
+and REQUEST_MODELS_KEY lists the request models examples were attempted for.
 
 Example:
     {
@@ -36,12 +37,17 @@ from hypothesis_jsonschema import from_schema
 # the builder package is installed
 EXAMPLES_CACHE_DIR = Path.cwd() / ".cache" / "hypothesis-examples"
 
+# Written even when every request model fails to generate, so that cache still
+# counts as fresh instead of being rebuilt on every build
+REQUEST_MODELS_KEY = "request_models|model|meta|attempted"
+
 
 def generate_examples_cache(
     api_name: str,
     operations: dict,
     spec_hash: str,
     num_examples: int = 10,
+    request_models: dict[str, dict] | None = None,
 ) -> Path:
     """
     Pre-generate hypothesis examples for all testable operations.
@@ -50,12 +56,14 @@ def generate_examples_cache(
     - Response schemas (per status code)
     - Request body schemas
     - Query parameter schemas
+    - Request model schemas
 
     Args:
         api_name: API identifier (e.g., 'catalog', 'otm')
         operations: Operations dict from test_generator._extract_operations
         spec_hash: Hash of OpenAPI spec (for cache invalidation)
         num_examples: Number of examples to generate per schema
+        request_models: Class name -> schema (with definitions) per request model
 
     Returns:
         Path to cached examples file
@@ -64,8 +72,12 @@ def generate_examples_cache(
 
     cache_file = EXAMPLES_CACHE_DIR / f"{api_name}-{spec_hash}.json"
 
-    # Skip generation if cache already exists for this spec_hash
-    if cache_file.exists():
+    # Skip generation if cache already exists for this spec_hash. A cache whose
+    # REQUEST_MODELS_KEY is missing or lists other models is rebuilt.
+    if cache_file.exists() and (
+        not request_models
+        or _cached_request_models(cache_file) == sorted(request_models)
+    ):
         print(f"  [EXAMPLES] Using existing cache for {api_name} -> {cache_file.name}")
         _prune_stale_caches(cache_file)
         return cache_file
@@ -111,6 +123,14 @@ def generate_examples_cache(
             else:
                 schemas_failed += 1
 
+    for name, schema in (request_models or {}).items():
+        examples = _generate_examples(schema, num_examples)
+        if examples:
+            all_examples[f"{name}|model|body|request"] = examples
+            schemas_processed += 1
+        else:
+            schemas_failed += 1
+
     # Write to cache atomically (prevents corruption from parallel builds)
     with tempfile.NamedTemporaryFile(
         mode="w",
@@ -119,7 +139,8 @@ def generate_examples_cache(
         suffix=".json",
         encoding="utf-8",
     ) as tmp:
-        json.dump(all_examples, tmp, separators=(",", ":"))
+        marker = {REQUEST_MODELS_KEY: sorted(request_models)} if request_models else {}
+        json.dump({**all_examples, **marker}, tmp, separators=(",", ":"))
         tmp_path = Path(tmp.name)
 
     # Atomic rename (replaces existing file safely)
@@ -135,6 +156,14 @@ def generate_examples_cache(
     )
 
     return cache_file
+
+
+def _cached_request_models(cache_file: Path) -> list[str] | None:
+    try:
+        cached = json.loads(cache_file.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    return cached.get(REQUEST_MODELS_KEY) if isinstance(cached, dict) else None
 
 
 def _prune_stale_caches(keep: Path) -> None:

@@ -6,6 +6,8 @@ from openapi_python_client.parser.properties.union import UnionProperty
 from openapi_python_client.strings import in_double_quote_literal, safe_for_docstring
 
 from builder.code_strings import unwrap_code
+from builder.jinja_filters.const_tag_unions import const_tag_for
+from builder.jinja_filters.field_names import field_name
 from builder.patches import _UNION_DISCRIMINATORS
 
 
@@ -25,6 +27,19 @@ def _discriminator_for(
     return None, None
 
 
+def uses_const_tag(props: list[PropertyProtocol]) -> bool:
+    """Whether any field renders a `const_tag` discriminator, so needs its import."""
+    for prop in props:
+        discriminator_name, union_prop = _discriminator_for(prop)
+        if (
+            not discriminator_name
+            and union_prop is not None
+            and const_tag_for(union_prop)
+        ):
+            return True
+    return False
+
+
 def to_pydantic_model_field(prop: PropertyProtocol) -> str:
     """
     Returns a string representation of the property as a Pydantic model field.
@@ -32,11 +47,7 @@ def to_pydantic_model_field(prop: PropertyProtocol) -> str:
     Returns:
         A string like: `field_name: FieldType = pydantic.Field(..., description="...", alias="...")`
     """
-    # Append underscore to field names that shadow BaseModel attributes
-    # to avoid Pydantic warnings (e.g., "schema" -> "schema_")
-    python_name = prop.python_name
-    if python_name == "schema":
-        python_name = "schema_"
+    python_name = field_name(prop.python_name)
 
     type_string = unwrap_code(prop.get_type_string())
 
@@ -49,11 +60,16 @@ def to_pydantic_model_field(prop: PropertyProtocol) -> str:
         # scoring every variant. Spec-level `discriminator:` is captured in
         # patches.py and reapplied here because openapi-python-client drops it.
         discriminator_name, union_prop = _discriminator_for(prop)
+        annotated = None
         if discriminator_name and union_prop is not None:
             union_type_string = unwrap_code(
                 union_prop.get_type_string(no_optional=True)
             )
             annotated = f'Annotated[{union_type_string}, pydantic.Field(discriminator="{discriminator_name}")]'
+        elif union_prop is not None and (const_tag := const_tag_for(union_prop)):
+            annotated = const_tag.type_string()
+
+        if annotated is not None:
             if isinstance(prop, ListProperty):
                 type_string = f"list[{annotated}]"
             else:

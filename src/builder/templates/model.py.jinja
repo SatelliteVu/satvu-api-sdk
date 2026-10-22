@@ -35,6 +35,10 @@ import datetime
 import pydantic
 from typing import Annotated, Any, Literal, TYPE_CHECKING, TypedDict, Union
 from uuid import UUID
+{% if (model.required_properties + model.optional_properties) | uses_const_tag %}
+
+from satvu.shared.discriminators import const_tag
+{% endif %}
 
 {% for relative in model.relative_imports | sort %}
 {{ relative }}

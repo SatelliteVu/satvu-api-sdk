@@ -18,7 +18,7 @@ from openapi_python_client.strings import safe_for_docstring
 
 from builder.code_strings import unwrap_code
 from builder.config import APIS, SPEC_ENV
-from builder.jinja_filters import to_pydantic_model_field
+from builder.jinja_filters import to_pydantic_model_field, uses_const_tag
 from builder.load import load_openapi, spec_content_hash
 from builder.openapi_preprocessor import preprocess_for_sdk_generation
 from builder.pagination_detector import PaginationEndpointDetector
@@ -509,6 +509,7 @@ def build_service(
 
     # Register custom Jinja filters
     project.env.filters["to_pydantic_field"] = to_pydantic_model_field
+    project.env.filters["uses_const_tag"] = uses_const_tag
 
     # Generate using our custom generator (pass openapi_dict for extensions)
     generator = ServiceCodeGenerator(

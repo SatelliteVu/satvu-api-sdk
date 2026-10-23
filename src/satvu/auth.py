@@ -1,12 +1,12 @@
 import os
-from base64 import b64decode
+from base64 import urlsafe_b64decode
 from configparser import ConfigParser, DuplicateSectionError
-from datetime import datetime
 from hashlib import sha1
 from json import loads
 from logging import getLogger
 from pathlib import Path
 from tempfile import NamedTemporaryFile
+from time import time
 from typing import Protocol
 from urllib.parse import urljoin
 
@@ -25,6 +25,10 @@ from satvu.http.errors import ClientError, ServerError
 from satvu.result import Err, Ok, Result, is_err
 
 logger = getLogger(__name__)
+
+# Refresh early so a token can't expire while a long request is still being
+# re-verified by downstream services.
+TOKEN_EXPIRY_MARGIN_SECONDS = 120
 
 
 class AuthError(RuntimeError):
@@ -121,9 +125,11 @@ class AuthService(SDKClient):
         self.cache = token_cache or MemoryCache()
 
     @staticmethod
-    def is_expired_token(token: str) -> bool:
+    def is_expired_token(
+        token: str, margin: float = TOKEN_EXPIRY_MARGIN_SECONDS
+    ) -> bool:
         """
-        Check if a JWT token is expired based on its exp claim.
+        Check if a JWT token is expired, or expires within ``margin`` seconds.
 
         Returns True if the token is expired or malformed (fail-safe).
         """
@@ -131,12 +137,13 @@ class AuthService(SDKClient):
             parts = token.split(".")
             if len(parts) != 3:
                 return True  # Invalid JWT format
-            json_data = b64decode(parts[1] + "==")
+            payload = parts[1]
+            json_data = urlsafe_b64decode(payload + "=" * (-len(payload) % 4))
             claims = loads(json_data)
             if not claims or "exp" not in claims:
                 return True  # No exp claim, treat as expired
             exp = float(claims["exp"])
-            return datetime.fromtimestamp(exp) <= datetime.now()
+            return exp - margin <= time()
         except (ValueError, IndexError, KeyError, TypeError):
             return True  # Any parsing error = treat as expired
 

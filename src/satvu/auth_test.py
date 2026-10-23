@@ -1,37 +1,42 @@
 """Tests for AuthService."""
 # pragma: allowlist secret
 
-from base64 import b64encode
+from base64 import urlsafe_b64encode
 from json import dumps
 
 import pook
 import pytest
 from freezegun import freeze_time
 
-from satvu.auth import AuthError, AuthService, MemoryCache
+from satvu.auth import TOKEN_EXPIRY_MARGIN_SECONDS, AuthError, AuthService, MemoryCache
 from satvu.http import create_http_client
 from satvu.result import is_err, is_ok
 
 # Fixed timestamp for consistent testing
-FIXED_TIMESTAMP = 1640000000  # 2021-12-20 12:13:20 UTC
+FIXED_TIMESTAMP = 1640002400  # 2021-12-20 12:13:20 UTC
 
 
 def create_mock_jwt_token(
-    exp_seconds_from_now: int = 3600, base_time: int = FIXED_TIMESTAMP
+    exp_seconds_from_now: int = 3600,
+    base_time: int = FIXED_TIMESTAMP,
+    sub: str = "test_client_id@clients",
 ) -> str:
     """Create a mock JWT token with specified expiration."""
     # JWT structure: header.payload.signature
     header = (
-        b64encode(dumps({"alg": "RS256", "typ": "JWT"}).encode()).decode().rstrip("=")
+        urlsafe_b64encode(dumps({"alg": "RS256", "typ": "JWT"}).encode())
+        .decode()
+        .rstrip("=")
     )
 
     payload = {
         "exp": base_time + exp_seconds_from_now,
         "iat": base_time,
+        "sub": sub,
         "aud": "https://api.satellitevu.com/",
         "scope": "read:data write:data",
     }
-    payload_b64 = b64encode(dumps(payload).encode()).decode().rstrip("=")
+    payload_b64 = urlsafe_b64encode(dumps(payload).encode()).decode().rstrip("=")
 
     # Mock signature
     signature = "mock_signature"
@@ -126,10 +131,10 @@ def test_token_caching(auth_service):
 
 @freeze_time("2021-12-20 12:13:20")
 @pook.on
-def test_expired_token_refresh(auth_service):
-    """Test that expired tokens are refreshed."""
-    # Create an expired token
-    expired_token = create_mock_jwt_token(exp_seconds_from_now=-100)
+@pytest.mark.parametrize("exp_seconds_from_now", [-100, 30])
+def test_expired_token_refresh(auth_service, exp_seconds_from_now):
+    """Test that expired or nearly-expired tokens are refreshed."""
+    expired_token = create_mock_jwt_token(exp_seconds_from_now=exp_seconds_from_now)
     fresh_token = create_mock_jwt_token(exp_seconds_from_now=3600)
     refresh_token = create_mock_jwt_token(exp_seconds_from_now=7200)
 
@@ -249,7 +254,7 @@ def test_different_scopes_use_different_cache_keys(auth_service):
     # Create tokens with different payloads to make them truly different
     def create_token_with_scope(exp_offset, scope_value):
         header = (
-            b64encode(dumps({"alg": "RS256", "typ": "JWT"}).encode())
+            urlsafe_b64encode(dumps({"alg": "RS256", "typ": "JWT"}).encode())
             .decode()
             .rstrip("=")
         )
@@ -259,7 +264,7 @@ def test_different_scopes_use_different_cache_keys(auth_service):
             "aud": "https://api.satellitevu.com/",
             "scope": scope_value,  # Different scope in payload
         }
-        payload_b64 = b64encode(dumps(payload).encode()).decode().rstrip("=")
+        payload_b64 = urlsafe_b64encode(dumps(payload).encode()).decode().rstrip("=")
         return f"{header}.{payload_b64}.mock_signature_{scope_value}"
 
     token1_access = create_token_with_scope(3600, "read")
@@ -307,14 +312,32 @@ def test_different_scopes_use_different_cache_keys(auth_service):
 
 
 @freeze_time("2021-12-20 12:13:20")
-def test_is_expired_token():
-    """Test token expiration checking."""
-    # Create expired and valid tokens
-    expired = create_mock_jwt_token(exp_seconds_from_now=-100)
-    valid = create_mock_jwt_token(exp_seconds_from_now=3600)
+@pytest.mark.parametrize(
+    ("exp_seconds_from_now", "expected"),
+    [
+        (-100, True),
+        (0, True),
+        (60, True),
+        (TOKEN_EXPIRY_MARGIN_SECONDS, True),
+        (TOKEN_EXPIRY_MARGIN_SECONDS + 1, False),
+        (3600, False),
+    ],
+)
+def test_is_expired_token(exp_seconds_from_now, expected):
+    """Tokens expiring within the refresh margin count as expired."""
+    token = create_mock_jwt_token(exp_seconds_from_now=exp_seconds_from_now)
 
-    assert AuthService.is_expired_token(expired)
-    assert not AuthService.is_expired_token(valid)
+    assert AuthService.is_expired_token(token) is expected
+
+
+@freeze_time("2021-12-20 12:13:20")
+def test_is_expired_token_base64url_payload():
+    """Payloads using base64url-only characters must decode, not count as expired."""
+    token = create_mock_jwt_token(sub="abc?>?~~")
+    payload = token.split(".")[1]
+    assert "-" in payload or "_" in payload
+
+    assert not AuthService.is_expired_token(token)
 
 
 @freeze_time("2021-12-20 12:13:20")

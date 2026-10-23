@@ -39,10 +39,19 @@ jobs:
         uses: actions/checkout@v7
       - name: Ensure cache directory exists
         run: mkdir -p .cache/hypothesis-examples
+      # Restore-only, and paired with --triggered-api=none --spec-env=prod below: PRs
+      # build against the prod specs cached by release runs, never live ones.
+      - name: Restore OpenAPI specs cache
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/*.json
+          key: openapi-specs-${{ github.run_id }}
+          restore-keys: |
+            openapi-specs-
       - name: Test
         uses: dagger/dagger-for-github@v8.4.1
         with:
-          call: build-release
+          call: build-release --triggered-api=none --spec-env=prod
 
   lint:
     name: Lint
@@ -71,6 +80,13 @@ jobs:
         uses: actions/checkout@v7
       - name: Ensure cache directory exists
         run: mkdir -p .cache/hypothesis-examples
+      - name: Restore OpenAPI specs cache
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/*.json
+          key: openapi-specs-${{ github.run_id }}
+          restore-keys: |
+            openapi-specs-
       - name: Restore hypothesis examples cache
         uses: actions/cache/restore@v6
         with:
@@ -81,7 +97,7 @@ jobs:
       - name: Run tests in dagger
         uses: dagger/dagger-for-github@v8.4.1
         with:
-          call: test --python-version=${{ matrix.python-version }} --with-coverage=${{ matrix.python-version == '3.14' }} export --path=.
+          call: test --python-version=${{ matrix.python-version }} --with-coverage=${{ matrix.python-version == '3.14' }} --triggered-api=none --spec-env=prod export --path=.
       - name: Save hypothesis examples cache
         uses: actions/cache/save@v6
         if: always()

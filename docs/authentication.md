@@ -20,7 +20,7 @@ The SDK automatically:
 
 - Fetches an access token on first API call
 - Caches the token in memory
-- Refreshes the token when it expires
+- Refreshes the token shortly (2 minutes) before it expires
 
 ## Token Caching
 

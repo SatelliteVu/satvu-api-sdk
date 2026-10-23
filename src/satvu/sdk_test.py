@@ -1,5 +1,7 @@
 """Tests for the SatVuSDK main entry point."""
 
+import pytest
+
 from satvu.auth import MemoryCache
 from satvu.sdk import SatVuSDK
 
@@ -130,6 +132,24 @@ class TestConfigPropagation:
         )
         assert sdk.catalog.max_retry_attempts == 10
         assert sdk.catalog.max_retry_after_seconds == 600.0
+
+    def test_token_expiry_margin_propagated_to_auth(self):
+        """Token expiry margin is propagated to AuthService."""
+        sdk = SatVuSDK(
+            client_id="test_id",
+            client_secret="test_secret",  # pragma: allowlist secret
+            token_expiry_margin=30,
+        )
+        assert sdk.auth.token_expiry_margin == 30
+
+    def test_invalid_token_expiry_margin_env_fails_on_init(self, monkeypatch):
+        """A bad env value raises at construction, not on the first request."""
+        monkeypatch.setenv("SATVU_TOKEN_EXPIRY_MARGIN_SECONDS", "soon")
+        with pytest.raises(ValueError, match="SATVU_TOKEN_EXPIRY_MARGIN_SECONDS"):
+            SatVuSDK(
+                client_id="test_id",
+                client_secret="test_secret",  # pragma: allowlist secret
+            )
 
     def test_token_cache_propagated_to_auth(self):
         """Token cache is propagated to AuthService."""

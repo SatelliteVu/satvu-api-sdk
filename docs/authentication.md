@@ -20,7 +20,7 @@ The SDK automatically:
 
 - Fetches an access token on first API call
 - Caches the token in memory
-- Refreshes the token when it expires
+- Refreshes the token shortly (2 minutes) before it expires
 
 ## Token Caching
 
@@ -97,6 +97,23 @@ sdk = SatVuSDK(
     client_id=os.environ["SATVU_CLIENT_ID"],
     client_secret=os.environ["SATVU_CLIENT_SECRET"],
     timeout=60,  # Default is 30 seconds
+)
+```
+
+## Token Refresh Margin
+
+Access tokens are refreshed 120 seconds before they expire. Override with the
+`token_expiry_margin` argument (seconds), or the `SATVU_TOKEN_EXPIRY_MARGIN_SECONDS`
+environment variable when no argument is passed:
+
+```python
+import os
+from satvu import SatVuSDK
+
+sdk = SatVuSDK(
+    client_id=os.environ["SATVU_CLIENT_ID"],
+    client_secret=os.environ["SATVU_CLIENT_SECRET"],
+    token_expiry_margin=300,  # Default is 120 seconds
 )
 ```
 

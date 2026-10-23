@@ -1,12 +1,13 @@
 import os
-from base64 import b64decode
+from base64 import urlsafe_b64decode
 from configparser import ConfigParser, DuplicateSectionError
-from datetime import datetime
 from hashlib import sha1
 from json import loads
 from logging import getLogger
+from math import isfinite
 from pathlib import Path
 from tempfile import NamedTemporaryFile
+from time import time
 from typing import Protocol
 from urllib.parse import urljoin
 
@@ -25,6 +26,36 @@ from satvu.http.errors import ClientError, ServerError
 from satvu.result import Err, Ok, Result, is_err
 
 logger = getLogger(__name__)
+
+# Refresh early so a token can't expire while a long request is still being
+# re-verified by downstream services.
+TOKEN_EXPIRY_MARGIN_SECONDS = 120
+TOKEN_EXPIRY_MARGIN_ENV_VAR = "SATVU_TOKEN_EXPIRY_MARGIN_SECONDS"  # nosec B105
+
+
+def resolve_token_expiry_margin(margin: float | None = None) -> float:
+    """
+    Resolve the token refresh margin: explicit value, then the
+    ``SATVU_TOKEN_EXPIRY_MARGIN_SECONDS`` env var, then the default.
+
+    Raises ValueError for non-numeric, negative or non-finite values.
+    """
+    if margin is None:
+        raw = os.environ.get(TOKEN_EXPIRY_MARGIN_ENV_VAR, "").strip()
+        if not raw:
+            return TOKEN_EXPIRY_MARGIN_SECONDS
+        try:
+            margin = float(raw)
+        except ValueError:
+            raise ValueError(
+                f"{TOKEN_EXPIRY_MARGIN_ENV_VAR} must be a number, got {raw!r}"
+            ) from None
+    # nan would compare False everywhere, so a token would never refresh
+    if not isfinite(margin) or margin < 0:
+        raise ValueError(
+            f"Token expiry margin must be a finite number >= 0, got {margin}"
+        )
+    return margin
 
 
 class AuthError(RuntimeError):
@@ -109,6 +140,7 @@ class AuthService(SDKClient):
         token_cache: TokenCache | None = None,
         http_client: HttpClient | None = None,
         timeout: int = 30,
+        token_expiry_margin: float | None = None,
     ):
         super().__init__(
             subdomain="auth",
@@ -119,11 +151,14 @@ class AuthService(SDKClient):
         )
         self.audience = self.build_url("api")
         self.cache = token_cache or MemoryCache()
+        self.token_expiry_margin = resolve_token_expiry_margin(token_expiry_margin)
 
     @staticmethod
-    def is_expired_token(token: str) -> bool:
+    def is_expired_token(
+        token: str, margin: float = TOKEN_EXPIRY_MARGIN_SECONDS
+    ) -> bool:
         """
-        Check if a JWT token is expired based on its exp claim.
+        Check if a JWT token is expired, or expires within ``margin`` seconds.
 
         Returns True if the token is expired or malformed (fail-safe).
         """
@@ -131,12 +166,13 @@ class AuthService(SDKClient):
             parts = token.split(".")
             if len(parts) != 3:
                 return True  # Invalid JWT format
-            json_data = b64decode(parts[1] + "==")
+            payload = parts[1]
+            json_data = urlsafe_b64decode(payload + "=" * (-len(payload) % 4))
             claims = loads(json_data)
             if not claims or "exp" not in claims:
                 return True  # No exp claim, treat as expired
             exp = float(claims["exp"])
-            return datetime.fromtimestamp(exp) <= datetime.now()
+            return exp - margin <= time()
         except (ValueError, IndexError, KeyError, TypeError):
             return True  # Any parsing error = treat as expired
 
@@ -162,7 +198,9 @@ class AuthService(SDKClient):
 
         cached_token = self.cache.load(cache_key.hexdigest())
 
-        if not cached_token or self.is_expired_token(cached_token.access_token):
+        if not cached_token or self.is_expired_token(
+            cached_token.access_token, self.token_expiry_margin
+        ):
             auth_result = self._auth(client_id, client_secret, scopes)
             if is_err(auth_result):
                 return auth_result  # Propagate error

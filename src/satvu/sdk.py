@@ -1,4 +1,4 @@
-from satvu.auth import AuthService, TokenCache
+from satvu.auth import AuthService, TokenCache, resolve_token_expiry_margin
 from satvu.http import HttpClient
 from satvu.services.catalog.api import CatalogService
 from satvu.services.cos.api import CosService
@@ -22,6 +22,7 @@ class SatVuSDK:
         timeout: int = 30,
         max_retry_attempts: int = 5,
         max_retry_after_seconds: float = 300.0,
+        token_expiry_margin: float | None = None,
     ):
         """
         Initialize the SatVuSDK.
@@ -34,6 +35,8 @@ class SatVuSDK:
         :param timeout: request timeout in seconds, defaults to 30 seconds
         :param max_retry_attempts: maximum number of retry attempts, default 5
         :param max_retry_after_seconds: maximum seconds to wait for Retry-After, default 300 seconds
+        :param token_expiry_margin: seconds before expiry to refresh the access token,
+            defaults to the SATVU_TOKEN_EXPIRY_MARGIN_SECONDS env var, else 120 seconds
         """
         self.client_id = client_id
         self.client_secret = client_secret
@@ -43,6 +46,8 @@ class SatVuSDK:
         self.timeout = timeout
         self.max_retry_attempts = max_retry_attempts
         self.max_retry_after_seconds = max_retry_after_seconds
+        # resolved eagerly so a bad env value fails here, not on the first request
+        self.token_expiry_margin = resolve_token_expiry_margin(token_expiry_margin)
 
         # for lazy service initialisation
         self._auth = None
@@ -66,6 +71,7 @@ class SatVuSDK:
                 token_cache=self.token_cache,
                 http_client=self.http_client,
                 timeout=self.timeout,
+                token_expiry_margin=self.token_expiry_margin,
             )
         return self._auth
 

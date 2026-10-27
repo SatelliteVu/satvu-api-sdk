@@ -10,7 +10,7 @@ Stores entire OpenAPI spec as operations with helper functions for access.
 from satvu.services.example_cache import get_cached_example_strategy
 
 # Spec hash for example cache invalidation
-_SPEC_HASH = "prod-ce7fe5f1d581a9f34ec803305527e3134410aa2f"
+_SPEC_HASH = "prod-86b553b9a2e76c0fe7c96ce9e9e4ef0ffb875086"
 
 # Component schemas for $ref resolution (cleaned for JSON Schema draft-07)
 _COMPONENTS = {

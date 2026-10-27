@@ -1,3 +1,10 @@
+## [0.12.1](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.12.0...v0.12.1) (2026-10-27)
+
+
+### Bug Fixes
+
+* **auth:** refresh tokens before expiry
+
 # [0.12.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.11.1...v0.12.0) (2026-10-21)
 
 

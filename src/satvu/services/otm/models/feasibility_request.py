@@ -3,9 +3,11 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, Union
+from typing import TYPE_CHECKING, Annotated, Literal, Union
 
 import pydantic
+
+from satvu.shared.discriminators import const_tag
 
 if TYPE_CHECKING:
     from ..models.assured_feasibility_fields import AssuredFeasibilityFields
@@ -29,12 +31,16 @@ class FeasibilityRequest(pydantic.BaseModel):
     geometry: Point = pydantic.Field(
         ..., description="""Point Model""", alias="geometry"
     )
-    properties: Union[AssuredFeasibilityFields, StandardRequestProperties] = (
-        pydantic.Field(
-            ...,
-            description="""A map of additional metadata about the requested image.""",
-            alias="properties",
-        )
+    properties: Annotated[
+        Union[
+            Annotated[AssuredFeasibilityFields, pydantic.Tag("assured")],
+            Annotated[StandardRequestProperties, pydantic.Tag("standard")],
+        ],
+        pydantic.Discriminator(const_tag("product", default="standard")),
+    ] = pydantic.Field(
+        ...,
+        description="""A map of additional metadata about the requested image.""",
+        alias="properties",
     )
 
     model_config = pydantic.ConfigDict(

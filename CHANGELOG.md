@@ -1,3 +1,10 @@
+## [0.12.2](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.12.1...v0.12.2) (2026-10-30)
+
+
+### Bug Fixes
+
+* **builder:** discriminate unions on shared constant fields
+
 ## [0.12.1](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.12.0...v0.12.1) (2026-10-27)
 
 

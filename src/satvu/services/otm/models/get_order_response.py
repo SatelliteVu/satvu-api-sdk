@@ -3,10 +3,12 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, Union
+from typing import TYPE_CHECKING, Annotated, Literal, Union
 from uuid import UUID
 
 import pydantic
+
+from satvu.shared.discriminators import const_tag
 
 if TYPE_CHECKING:
     from ..models.get_assured_order_properties import GetAssuredOrderProperties
@@ -37,12 +39,16 @@ class GetOrderResponse(pydantic.BaseModel):
     geometry: Point = pydantic.Field(
         ..., description="""Point Model""", alias="geometry"
     )
-    properties: Union[GetAssuredOrderProperties, GetStandardOrderProperties] = (
-        pydantic.Field(
-            ...,
-            description="""A map of additional metadata about the requested image.""",
-            alias="properties",
-        )
+    properties: Annotated[
+        Union[
+            Annotated[GetAssuredOrderProperties, pydantic.Tag("assured")],
+            Annotated[GetStandardOrderProperties, pydantic.Tag("standard")],
+        ],
+        pydantic.Discriminator(const_tag("product", default="standard")),
+    ] = pydantic.Field(
+        ...,
+        description="""A map of additional metadata about the requested image.""",
+        alias="properties",
     )
     id: UUID = pydantic.Field(..., description="""Order ID.""", alias="id")
     links: list[Link] = pydantic.Field(

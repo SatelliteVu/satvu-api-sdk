@@ -4,9 +4,11 @@
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Literal, Union
+from typing import TYPE_CHECKING, Annotated, Literal, Union
 
 import pydantic
+
+from satvu.shared.discriminators import const_tag
 
 if TYPE_CHECKING:
     from ..models.assured_feasibility_fields_with_addons import (
@@ -34,8 +36,12 @@ class OrderPrice(pydantic.BaseModel):
     geometry: Point = pydantic.Field(
         ..., description="""Point Model""", alias="geometry"
     )
-    properties: Union[
-        AssuredFeasibilityFieldsWithAddons, StandardOrderFieldsWithAddons
+    properties: Annotated[
+        Union[
+            Annotated[AssuredFeasibilityFieldsWithAddons, pydantic.Tag("assured")],
+            Annotated[StandardOrderFieldsWithAddons, pydantic.Tag("standard")],
+        ],
+        pydantic.Discriminator(const_tag("product", default="standard")),
     ] = pydantic.Field(
         ...,
         description="""A map of additional metadata about the requested image.""",

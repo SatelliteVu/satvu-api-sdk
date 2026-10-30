@@ -3,10 +3,12 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, Annotated, Union
 from uuid import UUID
 
 import pydantic
+
+from satvu.shared.discriminators import const_tag
 
 from ..models.collections import Collections
 
@@ -82,14 +84,21 @@ class SearchRequest(pydantic.BaseModel):
         alias="properties",
     )
     intersects: Union[
-        GeometryCollection,
-        LineString,
-        MultiLineString,
-        MultiPoint,
-        MultiPolygon,
-        Point,
-        Polygon,
         None,
+        Annotated[
+            Union[
+                Annotated[GeometryCollection, pydantic.Tag("GeometryCollection")],
+                Annotated[LineString, pydantic.Tag("LineString")],
+                Annotated[MultiLineString, pydantic.Tag("MultiLineString")],
+                Annotated[MultiPoint, pydantic.Tag("MultiPoint")],
+                Annotated[MultiPolygon, pydantic.Tag("MultiPolygon")],
+                Annotated[Point, pydantic.Tag("Point")],
+                Annotated[Polygon, pydantic.Tag("Polygon")],
+            ],
+            pydantic.Discriminator(
+                const_tag("type", default=None, python_name="type_")
+            ),
+        ],
     ] = pydantic.Field(
         default=None,
         description="""A GeoJSON geometry to filter for. Items are returned if the geometry of the item intersects with the geometry provided.""",

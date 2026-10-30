@@ -3,10 +3,12 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, Union
+from typing import TYPE_CHECKING, Annotated, Literal, Union
 from uuid import UUID
 
 import pydantic
+
+from satvu.shared.discriminators import const_tag
 
 if TYPE_CHECKING:
     from ..models.assured_stored_feasibility_request_properties import (
@@ -38,9 +40,16 @@ class StoredFeasibilityRequest(pydantic.BaseModel):
     geometry: Point = pydantic.Field(
         ..., description="""Point Model""", alias="geometry"
     )
-    properties: Union[
-        AssuredStoredFeasibilityRequestProperties,
-        StandardStoredFeasibilityRequestProperties,
+    properties: Annotated[
+        Union[
+            Annotated[
+                AssuredStoredFeasibilityRequestProperties, pydantic.Tag("assured")
+            ],
+            Annotated[
+                StandardStoredFeasibilityRequestProperties, pydantic.Tag("standard")
+            ],
+        ],
+        pydantic.Discriminator(const_tag("product", default="standard")),
     ] = pydantic.Field(
         ...,
         description="""A map of additional metadata about the requested image.""",

@@ -1,5 +1,13 @@
 ## [0.12.2](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.12.1...v0.12.2) (2026-10-30)
 
+## [0.12.2.20261102.1753] - 2026-11-02
+
+### feat(otm): update API descriptions
+
+#### Description Updates
+* 3 description(s) modified
+
+
 
 ### Bug Fixes
 

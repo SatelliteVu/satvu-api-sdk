@@ -10,7 +10,7 @@ Stores entire OpenAPI spec as operations with helper functions for access.
 from satvu.services.example_cache import get_cached_example_strategy
 
 # Spec hash for example cache invalidation
-_SPEC_HASH = "prod-344b329f642125be4befb4af9fff8398817b8b42"
+_SPEC_HASH = "prod-60344cd8c3f42df91af52973abeba0409a504a22"
 
 # Component schemas for $ref resolution (cleaned for JSON Schema draft-07)
 _COMPONENTS = {
@@ -1387,7 +1387,12 @@ _COMPONENTS = {
         "title": "FeasibilityResponse",
         "type": "object",
     },
-    "Filter": {"enum": ["DAY", "NIGHT"], "title": "Filter", "type": "string"},
+    "Filter": {
+        "description": "Optical filter for day or night capture.",
+        "enum": ["DAY", "NIGHT"],
+        "title": "Filter",
+        "type": "string",
+    },
     "FilterFields": {
         "additionalProperties": False,
         "properties": {
@@ -1433,6 +1438,7 @@ _COMPONENTS = {
         "type": "object",
     },
     "FullWellCapacitance": {
+        "description": "Detector gain setting, sent to SatOps as an integer.",
         "enum": [0, 1],
         "title": "FullWellCapacitance",
         "type": "integer",
@@ -3234,7 +3240,13 @@ _COMPONENTS = {
         "title": "PriceRequest",
         "type": "object",
     },
-    "ReadoutMode": {"enum": ["IWR", "ITR"], "title": "ReadoutMode", "type": "string"},
+    "ReadoutMode": {
+        "description": "Sensor readout mode: integrate-while-read "
+        "(IWR) or integrate-then-read (ITR).",
+        "enum": ["IWR", "ITR"],
+        "title": "ReadoutMode",
+        "type": "string",
+    },
     "RequestMethod": {
         "enum": ["GET", "POST"],
         "title": "RequestMethod",
@@ -10215,6 +10227,7 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "Filter": {
+                        "description": "Optical filter for day or night capture.",
                         "enum": ["DAY", "NIGHT"],
                         "title": "Filter",
                         "type": "string",
@@ -10280,6 +10293,15 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "FullWellCapacitance": {
+                        "description": "Detector "
+                        "gain "
+                        "setting, "
+                        "sent "
+                        "to "
+                        "SatOps "
+                        "as "
+                        "an "
+                        "integer.",
                         "enum": [0, 1],
                         "title": "FullWellCapacitance",
                         "type": "integer",
@@ -12603,6 +12625,14 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "ReadoutMode": {
+                        "description": "Sensor "
+                        "readout "
+                        "mode: "
+                        "integrate-while-read "
+                        "(IWR) "
+                        "or "
+                        "integrate-then-read "
+                        "(ITR).",
                         "enum": ["IWR", "ITR"],
                         "title": "ReadoutMode",
                         "type": "string",
@@ -20880,6 +20910,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -20945,6 +20976,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -23338,6 +23378,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -31764,6 +31812,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -31829,6 +31878,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -34222,6 +34280,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -42478,6 +42544,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -42543,6 +42610,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -44936,6 +45012,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -53185,6 +53269,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -53250,6 +53335,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -55643,6 +55737,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -63910,6 +64012,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -63975,6 +64078,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -66368,6 +66480,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -74578,6 +74698,7 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "Filter": {
+                        "description": "Optical filter for day or night capture.",
                         "enum": ["DAY", "NIGHT"],
                         "title": "Filter",
                         "type": "string",
@@ -74643,6 +74764,15 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "FullWellCapacitance": {
+                        "description": "Detector "
+                        "gain "
+                        "setting, "
+                        "sent "
+                        "to "
+                        "SatOps "
+                        "as "
+                        "an "
+                        "integer.",
                         "enum": [0, 1],
                         "title": "FullWellCapacitance",
                         "type": "integer",
@@ -76966,6 +77096,14 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "ReadoutMode": {
+                        "description": "Sensor "
+                        "readout "
+                        "mode: "
+                        "integrate-while-read "
+                        "(IWR) "
+                        "or "
+                        "integrate-then-read "
+                        "(ITR).",
                         "enum": ["IWR", "ITR"],
                         "title": "ReadoutMode",
                         "type": "string",
@@ -84976,6 +85114,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -85041,6 +85180,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -87434,6 +87582,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -95746,6 +95902,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -95811,6 +95968,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -98204,6 +98370,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -106460,6 +106634,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -106525,6 +106700,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -108918,6 +109102,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -117162,6 +117354,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -117227,6 +117420,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -119620,6 +119822,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -127842,6 +128052,7 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "Filter": {
+                        "description": "Optical filter for day or night capture.",
                         "enum": ["DAY", "NIGHT"],
                         "title": "Filter",
                         "type": "string",
@@ -127907,6 +128118,15 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "FullWellCapacitance": {
+                        "description": "Detector "
+                        "gain "
+                        "setting, "
+                        "sent "
+                        "to "
+                        "SatOps "
+                        "as "
+                        "an "
+                        "integer.",
                         "enum": [0, 1],
                         "title": "FullWellCapacitance",
                         "type": "integer",
@@ -130230,6 +130450,14 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "ReadoutMode": {
+                        "description": "Sensor "
+                        "readout "
+                        "mode: "
+                        "integrate-while-read "
+                        "(IWR) "
+                        "or "
+                        "integrate-then-read "
+                        "(ITR).",
                         "enum": ["IWR", "ITR"],
                         "title": "ReadoutMode",
                         "type": "string",
@@ -138276,6 +138504,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -138341,6 +138570,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -140734,6 +140972,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -149046,6 +149292,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -149111,6 +149358,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -151504,6 +151760,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -159760,6 +160024,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -159825,6 +160090,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -162218,6 +162492,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -170474,6 +170756,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -170539,6 +170822,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -172932,6 +173224,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -181188,6 +181488,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -181253,6 +181554,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -183646,6 +183956,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -191890,6 +192208,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -191955,6 +192274,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -194348,6 +194676,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -202609,6 +202945,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -202674,6 +203011,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -205067,6 +205413,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -213379,6 +213733,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -213444,6 +213799,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -215837,6 +216201,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -224093,6 +224465,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -224158,6 +224531,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -226551,6 +226933,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -234800,6 +235190,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -234865,6 +235256,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -237258,6 +237658,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -245567,6 +245975,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -245632,6 +246041,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -248025,6 +248443,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -256281,6 +256707,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -256346,6 +256773,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -258739,6 +259175,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -266988,6 +267432,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -267053,6 +267498,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -269446,6 +269900,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -277713,6 +278175,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -277778,6 +278241,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -280171,6 +280643,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -288380,6 +288860,7 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "Filter": {
+                        "description": "Optical filter for day or night capture.",
                         "enum": ["DAY", "NIGHT"],
                         "title": "Filter",
                         "type": "string",
@@ -288445,6 +288926,15 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "FullWellCapacitance": {
+                        "description": "Detector "
+                        "gain "
+                        "setting, "
+                        "sent "
+                        "to "
+                        "SatOps "
+                        "as "
+                        "an "
+                        "integer.",
                         "enum": [0, 1],
                         "title": "FullWellCapacitance",
                         "type": "integer",
@@ -290768,6 +291258,14 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "ReadoutMode": {
+                        "description": "Sensor "
+                        "readout "
+                        "mode: "
+                        "integrate-while-read "
+                        "(IWR) "
+                        "or "
+                        "integrate-then-read "
+                        "(ITR).",
                         "enum": ["IWR", "ITR"],
                         "title": "ReadoutMode",
                         "type": "string",
@@ -298871,6 +299369,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -298936,6 +299435,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -301329,6 +301837,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -309565,6 +310081,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -309630,6 +310147,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -312023,6 +312549,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -320279,6 +320813,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -320344,6 +320879,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -322737,6 +323281,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -330993,6 +331545,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -331058,6 +331611,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -333451,6 +334013,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -341707,6 +342277,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -341772,6 +342343,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -344165,6 +344745,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -352425,6 +353013,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -352490,6 +353079,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -354883,6 +355481,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -363119,6 +363725,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -363184,6 +363791,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -365577,6 +366193,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -373833,6 +374457,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -373898,6 +374523,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -376291,6 +376925,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -384556,6 +385198,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -384621,6 +385264,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -387014,6 +387666,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -395250,6 +395910,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -395315,6 +395976,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -397708,6 +398378,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -405964,6 +406642,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -406029,6 +406708,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -408422,6 +409110,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -416632,6 +417328,7 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "Filter": {
+                        "description": "Optical filter for day or night capture.",
                         "enum": ["DAY", "NIGHT"],
                         "title": "Filter",
                         "type": "string",
@@ -416697,6 +417394,15 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "FullWellCapacitance": {
+                        "description": "Detector "
+                        "gain "
+                        "setting, "
+                        "sent "
+                        "to "
+                        "SatOps "
+                        "as "
+                        "an "
+                        "integer.",
                         "enum": [0, 1],
                         "title": "FullWellCapacitance",
                         "type": "integer",
@@ -419020,6 +419726,14 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "ReadoutMode": {
+                        "description": "Sensor "
+                        "readout "
+                        "mode: "
+                        "integrate-while-read "
+                        "(IWR) "
+                        "or "
+                        "integrate-then-read "
+                        "(ITR).",
                         "enum": ["IWR", "ITR"],
                         "title": "ReadoutMode",
                         "type": "string",
@@ -427062,6 +427776,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -427127,6 +427842,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -429520,6 +430244,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -437756,6 +438488,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -437821,6 +438554,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -440214,6 +440956,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -448474,6 +449224,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -448539,6 +449290,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -450932,6 +451692,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -459173,6 +459941,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -459238,6 +460007,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -461631,6 +462409,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -470026,6 +470812,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -470091,6 +470878,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -472484,6 +473280,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -480733,6 +481537,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -480798,6 +481603,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -483191,6 +484005,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -491447,6 +492269,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -491512,6 +492335,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -493905,6 +494737,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -502161,6 +503001,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -502226,6 +503067,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -504619,6 +505469,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -512863,6 +513721,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -512928,6 +513787,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -515321,6 +516189,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -523582,6 +524458,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -523647,6 +524524,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -526040,6 +526926,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -534310,6 +535204,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -534375,6 +535270,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -536768,6 +537672,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -545041,6 +545953,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -545106,6 +546019,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -547499,6 +548421,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -555764,6 +556694,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -555829,6 +556760,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -558222,6 +559162,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -566458,6 +567406,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -566523,6 +567472,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -568916,6 +569874,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -577172,6 +578138,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -577237,6 +578204,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -579630,6 +580606,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -587879,6 +588863,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -587944,6 +588929,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -590337,6 +591331,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -598576,6 +599578,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -598641,6 +599644,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -601034,6 +602046,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -609244,6 +610264,7 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "Filter": {
+                        "description": "Optical filter for day or night capture.",
                         "enum": ["DAY", "NIGHT"],
                         "title": "Filter",
                         "type": "string",
@@ -609309,6 +610330,15 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "FullWellCapacitance": {
+                        "description": "Detector "
+                        "gain "
+                        "setting, "
+                        "sent "
+                        "to "
+                        "SatOps "
+                        "as "
+                        "an "
+                        "integer.",
                         "enum": [0, 1],
                         "title": "FullWellCapacitance",
                         "type": "integer",
@@ -611632,6 +612662,14 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "ReadoutMode": {
+                        "description": "Sensor "
+                        "readout "
+                        "mode: "
+                        "integrate-while-read "
+                        "(IWR) "
+                        "or "
+                        "integrate-then-read "
+                        "(ITR).",
                         "enum": ["IWR", "ITR"],
                         "title": "ReadoutMode",
                         "type": "string",
@@ -619645,6 +620683,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -619710,6 +620749,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -622103,6 +623151,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -630387,6 +631443,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -630452,6 +631509,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -632845,6 +633911,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -641101,6 +642175,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -641166,6 +642241,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -643559,6 +644643,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -651819,6 +652911,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -651884,6 +652977,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -654277,6 +655379,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -662479,6 +663589,7 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "Filter": {
+                        "description": "Optical filter for day or night capture.",
                         "enum": ["DAY", "NIGHT"],
                         "title": "Filter",
                         "type": "string",
@@ -662544,6 +663655,15 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "FullWellCapacitance": {
+                        "description": "Detector "
+                        "gain "
+                        "setting, "
+                        "sent "
+                        "to "
+                        "SatOps "
+                        "as "
+                        "an "
+                        "integer.",
                         "enum": [0, 1],
                         "title": "FullWellCapacitance",
                         "type": "integer",
@@ -664867,6 +665987,14 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "ReadoutMode": {
+                        "description": "Sensor "
+                        "readout "
+                        "mode: "
+                        "integrate-while-read "
+                        "(IWR) "
+                        "or "
+                        "integrate-then-read "
+                        "(ITR).",
                         "enum": ["IWR", "ITR"],
                         "title": "ReadoutMode",
                         "type": "string",
@@ -672905,6 +674033,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -672970,6 +674099,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -675363,6 +676501,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -683699,6 +684845,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -683764,6 +684911,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -686157,6 +687313,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -694413,6 +695577,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -694478,6 +695643,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -696871,6 +698045,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -705127,6 +706309,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -705192,6 +706375,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -707585,6 +708777,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -715845,6 +717045,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -715910,6 +717111,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -718303,6 +719513,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -726544,6 +727762,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -726609,6 +727828,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -729002,6 +730230,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -737281,6 +738517,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -737346,6 +738583,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -739739,6 +740985,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -747949,6 +749203,7 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "Filter": {
+                        "description": "Optical filter for day or night capture.",
                         "enum": ["DAY", "NIGHT"],
                         "title": "Filter",
                         "type": "string",
@@ -748014,6 +749269,15 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "FullWellCapacitance": {
+                        "description": "Detector "
+                        "gain "
+                        "setting, "
+                        "sent "
+                        "to "
+                        "SatOps "
+                        "as "
+                        "an "
+                        "integer.",
                         "enum": [0, 1],
                         "title": "FullWellCapacitance",
                         "type": "integer",
@@ -750337,6 +751601,14 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "ReadoutMode": {
+                        "description": "Sensor "
+                        "readout "
+                        "mode: "
+                        "integrate-while-read "
+                        "(IWR) "
+                        "or "
+                        "integrate-then-read "
+                        "(ITR).",
                         "enum": ["IWR", "ITR"],
                         "title": "ReadoutMode",
                         "type": "string",
@@ -758366,6 +759638,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -758431,6 +759704,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -760824,6 +762106,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -769123,6 +770413,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -769188,6 +770479,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -771581,6 +772881,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -779837,6 +781145,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -779902,6 +781211,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -782295,6 +783613,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -790551,6 +791877,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -790616,6 +791943,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -793009,6 +794345,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -801269,6 +802613,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -801334,6 +802679,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -803727,6 +805081,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -811963,6 +813325,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -812028,6 +813391,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -814421,6 +815793,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -822677,6 +824057,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -822742,6 +824123,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -825135,6 +826525,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -833357,6 +834755,7 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "Filter": {
+                        "description": "Optical filter for day or night capture.",
                         "enum": ["DAY", "NIGHT"],
                         "title": "Filter",
                         "type": "string",
@@ -833422,6 +834821,15 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "FullWellCapacitance": {
+                        "description": "Detector "
+                        "gain "
+                        "setting, "
+                        "sent "
+                        "to "
+                        "SatOps "
+                        "as "
+                        "an "
+                        "integer.",
                         "enum": [0, 1],
                         "title": "FullWellCapacitance",
                         "type": "integer",
@@ -835745,6 +837153,14 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "ReadoutMode": {
+                        "description": "Sensor "
+                        "readout "
+                        "mode: "
+                        "integrate-while-read "
+                        "(IWR) "
+                        "or "
+                        "integrate-then-read "
+                        "(ITR).",
                         "enum": ["IWR", "ITR"],
                         "title": "ReadoutMode",
                         "type": "string",
@@ -843774,6 +845190,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -843839,6 +845256,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -846232,6 +847658,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -854477,6 +855911,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -854542,6 +855977,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -856935,6 +858379,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -865191,6 +866643,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -865256,6 +866709,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -867649,6 +869111,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -875909,6 +877379,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -875974,6 +877445,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -878367,6 +879847,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -886608,6 +888096,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -886673,6 +888162,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -889066,6 +890564,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -897365,6 +898871,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -897430,6 +898937,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -899823,6 +901339,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -908079,6 +909603,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -908144,6 +909669,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -910537,6 +912071,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -918747,6 +920289,7 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "Filter": {
+                        "description": "Optical filter for day or night capture.",
                         "enum": ["DAY", "NIGHT"],
                         "title": "Filter",
                         "type": "string",
@@ -918812,6 +920355,15 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "FullWellCapacitance": {
+                        "description": "Detector "
+                        "gain "
+                        "setting, "
+                        "sent "
+                        "to "
+                        "SatOps "
+                        "as "
+                        "an "
+                        "integer.",
                         "enum": [0, 1],
                         "title": "FullWellCapacitance",
                         "type": "integer",
@@ -921135,6 +922687,14 @@ _OPERATIONS = {
                         "type": "object",
                     },
                     "ReadoutMode": {
+                        "description": "Sensor "
+                        "readout "
+                        "mode: "
+                        "integrate-while-read "
+                        "(IWR) "
+                        "or "
+                        "integrate-then-read "
+                        "(ITR).",
                         "enum": ["IWR", "ITR"],
                         "title": "ReadoutMode",
                         "type": "string",
@@ -929220,6 +930780,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -929285,6 +930846,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -931678,6 +933248,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -939977,6 +941555,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -940042,6 +941621,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -942435,6 +944023,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -950691,6 +952287,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -950756,6 +952353,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -953149,6 +954755,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -961405,6 +963019,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -961470,6 +963085,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -963863,6 +965487,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -972123,6 +973755,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -972188,6 +973821,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -974581,6 +976223,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -982821,6 +984471,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -982886,6 +984537,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -985279,6 +986939,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -993520,6 +995188,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -993585,6 +995254,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -995978,6 +997656,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -1004234,6 +1005920,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -1004299,6 +1005986,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -1006692,6 +1008388,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -1014948,6 +1016652,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -1015013,6 +1016718,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -1017406,6 +1019120,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -1025655,6 +1027377,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -1025720,6 +1027443,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -1028113,6 +1029845,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -1036383,6 +1038123,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -1036448,6 +1038189,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -1038841,6 +1040591,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -1047114,6 +1048872,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -1047179,6 +1048938,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -1049572,6 +1051340,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -1057833,6 +1059609,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -1057898,6 +1059675,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -1060291,6 +1062077,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -1068552,6 +1070346,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -1068617,6 +1070412,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -1071010,6 +1072814,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",
@@ -1079266,6 +1081078,7 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "Filter": {
+                            "description": "Optical filter for day or night capture.",
                             "enum": ["DAY", "NIGHT"],
                             "title": "Filter",
                             "type": "string",
@@ -1079331,6 +1081144,15 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "FullWellCapacitance": {
+                            "description": "Detector "
+                            "gain "
+                            "setting, "
+                            "sent "
+                            "to "
+                            "SatOps "
+                            "as "
+                            "an "
+                            "integer.",
                             "enum": [0, 1],
                             "title": "FullWellCapacitance",
                             "type": "integer",
@@ -1081724,6 +1083546,14 @@ _OPERATIONS = {
                             "type": "object",
                         },
                         "ReadoutMode": {
+                            "description": "Sensor "
+                            "readout "
+                            "mode: "
+                            "integrate-while-read "
+                            "(IWR) "
+                            "or "
+                            "integrate-then-read "
+                            "(ITR).",
                             "enum": ["IWR", "ITR"],
                             "title": "ReadoutMode",
                             "type": "string",

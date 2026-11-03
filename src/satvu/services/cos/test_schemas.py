@@ -10,7 +10,7 @@ Stores entire OpenAPI spec as operations with helper functions for access.
 from satvu.services.example_cache import get_cached_example_strategy
 
 # Spec hash for example cache invalidation
-_SPEC_HASH = "prod-023c23856252504e09398b9db74810e17eb4ae8f"
+_SPEC_HASH = "prod-625454d422183af7d310269186cfd1d3065359d5"
 
 # Component schemas for $ref resolution (cleaned for JSON Schema draft-07)
 _COMPONENTS = {
@@ -360,7 +360,7 @@ _COMPONENTS = {
             },
             "order_id": {
                 "description": "The order ID.",
-                "examples": ["370a2391-4320-42e9-9a2a-abe83a4572e3"],
+                "examples": ["a605bce1-fca0-4a8f-9282-a88044321159"],
                 "format": "uuid",
                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
                 "title": "Order Id",
@@ -509,9 +509,9 @@ _COMPONENTS = {
             },
             "item_id": {
                 "anyOf": [
-                    {"minLength": 1, "type": "string"},
+                    {"maxLength": 128, "minLength": 1, "type": "string"},
                     {
-                        "items": {"minLength": 1, "type": "string"},
+                        "items": {"maxLength": 128, "minLength": 1, "type": "string"},
                         "maxItems": 100,
                         "minItems": 1,
                         "type": "array",
@@ -638,9 +638,9 @@ _COMPONENTS = {
         "properties": {
             "item_id": {
                 "anyOf": [
-                    {"minLength": 1, "type": "string"},
+                    {"maxLength": 128, "minLength": 1, "type": "string"},
                     {
-                        "items": {"minLength": 1, "type": "string"},
+                        "items": {"maxLength": 128, "minLength": 1, "type": "string"},
                         "maxItems": 100,
                         "minItems": 1,
                         "type": "array",
@@ -894,9 +894,9 @@ _COMPONENTS = {
         "properties": {
             "item_id": {
                 "anyOf": [
-                    {"minLength": 1, "type": "string"},
+                    {"maxLength": 128, "minLength": 1, "type": "string"},
                     {
-                        "items": {"minLength": 1, "type": "string"},
+                        "items": {"maxLength": 128, "minLength": 1, "type": "string"},
                         "maxItems": 100,
                         "minItems": 1,
                         "type": "array",
@@ -1082,9 +1082,9 @@ _COMPONENTS = {
             },
             "item_id": {
                 "anyOf": [
-                    {"minLength": 1, "type": "string"},
+                    {"maxLength": 128, "minLength": 1, "type": "string"},
                     {
-                        "items": {"minLength": 1, "type": "string"},
+                        "items": {"maxLength": 128, "minLength": 1, "type": "string"},
                         "maxItems": 100,
                         "minItems": 1,
                         "type": "array",
@@ -1181,9 +1181,9 @@ _COMPONENTS = {
         "properties": {
             "item_id": {
                 "anyOf": [
-                    {"minLength": 1, "type": "string"},
+                    {"maxLength": 128, "minLength": 1, "type": "string"},
                     {
-                        "items": {"minLength": 1, "type": "string"},
+                        "items": {"maxLength": 128, "minLength": 1, "type": "string"},
                         "maxItems": 100,
                         "minItems": 1,
                         "type": "array",
@@ -1279,9 +1279,9 @@ _COMPONENTS = {
         "properties": {
             "item_id": {
                 "anyOf": [
-                    {"minLength": 1, "type": "string"},
+                    {"maxLength": 128, "minLength": 1, "type": "string"},
                     {
-                        "items": {"minLength": 1, "type": "string"},
+                        "items": {"maxLength": 128, "minLength": 1, "type": "string"},
                         "maxItems": 100,
                         "minItems": 1,
                         "type": "array",
@@ -2743,7 +2743,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -2971,9 +2971,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -3191,9 +3199,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -3567,9 +3583,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -3810,9 +3834,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -3932,9 +3964,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -4037,9 +4077,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -5755,7 +5803,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -5983,9 +6031,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -6203,9 +6259,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -6579,9 +6643,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -6822,9 +6894,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -6944,9 +7024,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -7049,9 +7137,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -8716,7 +8812,7 @@ _OPERATIONS = {
                             },
                             "order_id": {
                                 "description": "The order ID.",
-                                "examples": ["370a2391-4320-42e9-9a2a-abe83a4572e3"],
+                                "examples": ["a605bce1-fca0-4a8f-9282-a88044321159"],
                                 "format": "uuid",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
                                 "title": "Order Id",
@@ -8937,9 +9033,17 @@ _OPERATIONS = {
                             },
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -9157,9 +9261,17 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -9528,9 +9640,17 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -9771,9 +9891,17 @@ _OPERATIONS = {
                             },
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -9893,9 +10021,17 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -9998,9 +10134,17 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -11107,9 +11251,17 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -11182,9 +11334,17 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -11825,7 +11985,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -12053,9 +12213,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -12273,9 +12441,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -12649,9 +12825,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -12892,9 +13076,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -13014,9 +13206,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -13119,9 +13319,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -14793,7 +15001,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -15021,9 +15229,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -15241,9 +15457,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -15617,9 +15841,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -15860,9 +16092,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -15982,9 +16222,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -16087,9 +16335,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -17764,7 +18020,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -17992,9 +18248,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -18212,9 +18476,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -18588,9 +18860,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -18831,9 +19111,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -18953,9 +19241,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -19058,9 +19354,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -20735,7 +21039,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -20963,9 +21267,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -21183,9 +21495,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -21559,9 +21879,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -21802,9 +22130,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -21924,9 +22260,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -22029,9 +22373,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -23706,7 +24058,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -23934,9 +24286,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -24154,9 +24514,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -24530,9 +24898,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -24773,9 +25149,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -24895,9 +25279,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -25000,9 +25392,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -26682,7 +27082,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -26910,9 +27310,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -27130,9 +27538,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -27506,9 +27922,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -27749,9 +28173,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -27871,9 +28303,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -27976,9 +28416,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -29638,7 +30086,7 @@ _OPERATIONS = {
                             },
                             "order_id": {
                                 "description": "The order ID.",
-                                "examples": ["370a2391-4320-42e9-9a2a-abe83a4572e3"],
+                                "examples": ["a605bce1-fca0-4a8f-9282-a88044321159"],
                                 "format": "uuid",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
                                 "title": "Order Id",
@@ -29859,9 +30307,17 @@ _OPERATIONS = {
                             },
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -30079,9 +30535,17 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -30450,9 +30914,17 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -30693,9 +31165,17 @@ _OPERATIONS = {
                             },
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -30815,9 +31295,17 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -30920,9 +31408,17 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -32029,9 +32525,17 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -32123,9 +32627,17 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -32773,7 +33285,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -33001,9 +33513,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -33221,9 +33741,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -33597,9 +34125,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -33840,9 +34376,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -33962,9 +34506,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -34067,9 +34619,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -35741,7 +36301,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -35969,9 +36529,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -36189,9 +36757,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -36565,9 +37141,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -36808,9 +37392,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -36930,9 +37522,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -37035,9 +37635,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -38703,7 +39311,7 @@ _OPERATIONS = {
                             },
                             "order_id": {
                                 "description": "The order ID.",
-                                "examples": ["370a2391-4320-42e9-9a2a-abe83a4572e3"],
+                                "examples": ["a605bce1-fca0-4a8f-9282-a88044321159"],
                                 "format": "uuid",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
                                 "title": "Order Id",
@@ -38924,9 +39532,17 @@ _OPERATIONS = {
                             },
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -39144,9 +39760,17 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -39515,9 +40139,17 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -39758,9 +40390,17 @@ _OPERATIONS = {
                             },
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -39880,9 +40520,17 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -39985,9 +40633,17 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -41668,7 +42324,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -41896,9 +42552,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -42116,9 +42780,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -42492,9 +43164,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -42735,9 +43415,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -42857,9 +43545,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -42962,9 +43658,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -44680,7 +45384,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -44908,9 +45612,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -45128,9 +45840,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -45504,9 +46224,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -45747,9 +46475,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -45869,9 +46605,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -45974,9 +46718,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -47665,7 +48417,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -47893,9 +48645,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -48113,9 +48873,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -48489,9 +49257,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -48732,9 +49508,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -48854,9 +49638,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -48959,9 +49751,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -50633,7 +51433,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -50861,9 +51661,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -51081,9 +51889,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -51457,9 +52273,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -51700,9 +52524,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -51822,9 +52654,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -51927,9 +52767,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -53604,7 +54452,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -53832,9 +54680,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -54052,9 +54908,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -54428,9 +55292,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -54671,9 +55543,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -54793,9 +55673,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -54898,9 +55786,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -56565,7 +57461,7 @@ _OPERATIONS = {
                             },
                             "order_id": {
                                 "description": "The order ID.",
-                                "examples": ["370a2391-4320-42e9-9a2a-abe83a4572e3"],
+                                "examples": ["a605bce1-fca0-4a8f-9282-a88044321159"],
                                 "format": "uuid",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
                                 "title": "Order Id",
@@ -56786,9 +57682,17 @@ _OPERATIONS = {
                             },
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -57006,9 +57910,17 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -57377,9 +58289,17 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -57620,9 +58540,17 @@ _OPERATIONS = {
                             },
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -57742,9 +58670,17 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -57847,9 +58783,17 @@ _OPERATIONS = {
                         "properties": {
                             "item_id": {
                                 "anyOf": [
-                                    {"minLength": 1, "type": "string"},
                                     {
-                                        "items": {"minLength": 1, "type": "string"},
+                                        "maxLength": 128,
+                                        "minLength": 1,
+                                        "type": "string",
+                                    },
+                                    {
+                                        "items": {
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
                                         "maxItems": 100,
                                         "minItems": 1,
                                         "type": "array",
@@ -59512,7 +60456,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -59740,9 +60684,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -59960,9 +60912,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -60336,9 +61296,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -60579,9 +61547,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -60701,9 +61677,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -60806,9 +61790,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -62480,7 +63472,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -62708,9 +63700,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -62928,9 +63928,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -63304,9 +64312,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -63547,9 +64563,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -63669,9 +64693,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -63774,9 +64806,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -65451,7 +66491,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -65679,9 +66719,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -65899,9 +66947,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -66275,9 +67331,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -66518,9 +67582,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -66640,9 +67712,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -66745,9 +67825,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -68432,7 +69520,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -68660,9 +69748,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -68880,9 +69976,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -69256,9 +70360,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -69499,9 +70611,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -69621,9 +70741,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -69726,9 +70854,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -71426,7 +72562,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -71654,9 +72790,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -71874,9 +73018,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -72250,9 +73402,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -72493,9 +73653,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -72615,9 +73783,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -72720,9 +73896,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -74431,7 +75615,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -74659,9 +75843,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -74879,9 +76071,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -75255,9 +76455,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -75498,9 +76706,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -75620,9 +76836,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -75725,9 +76949,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -77402,7 +78634,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -77630,9 +78862,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -77850,9 +79090,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -78226,9 +79474,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -78469,9 +79725,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -78591,9 +79855,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -78696,9 +79968,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -80383,7 +81663,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -80611,9 +81891,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -80831,9 +82119,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -81207,9 +82503,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -81450,9 +82754,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -81572,9 +82884,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -81677,9 +82997,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -83377,7 +84705,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -83605,9 +84933,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -83825,9 +85161,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -84201,9 +85545,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -84444,9 +85796,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -84566,9 +85926,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -84671,9 +86039,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -86382,7 +87758,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -86610,9 +87986,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -86830,9 +88214,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -87206,9 +88598,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -87449,9 +88849,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -87571,9 +88979,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -87676,9 +89092,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -89353,7 +90777,7 @@ _OPERATIONS = {
                                 "order_id": {
                                     "description": "The order ID.",
                                     "examples": [
-                                        "370a2391-4320-42e9-9a2a-abe83a4572e3"
+                                        "a605bce1-fca0-4a8f-9282-a88044321159"
                                     ],
                                     "format": "uuid",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -89581,9 +91005,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -89801,9 +91233,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -90177,9 +91617,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -90420,9 +91868,17 @@ _OPERATIONS = {
                                 },
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -90542,9 +91998,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",
@@ -90647,9 +92111,17 @@ _OPERATIONS = {
                             "properties": {
                                 "item_id": {
                                     "anyOf": [
-                                        {"minLength": 1, "type": "string"},
                                         {
-                                            "items": {"minLength": 1, "type": "string"},
+                                            "maxLength": 128,
+                                            "minLength": 1,
+                                            "type": "string",
+                                        },
+                                        {
+                                            "items": {
+                                                "maxLength": 128,
+                                                "minLength": 1,
+                                                "type": "string",
+                                            },
                                             "maxItems": 100,
                                             "minItems": 1,
                                             "type": "array",

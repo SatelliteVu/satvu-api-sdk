@@ -1,5 +1,27 @@
 ## [0.12.2](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.12.1...v0.12.2) (2026-10-30)
 
+## [0.12.2.20261103.1225] - 2026-11-03
+
+### feat(cos): update POST /{contract_id}/, POST /{contract_id}/price
+
+#### POST /{contract_id}/
+* added `subschema #1, subschema #2` to the `anyOf[subschema #1: OrderSubmissionPayload]/item_id` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `anyOf[subschema #2: ResellerSubmissionOrderPayload]/item_id` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `anyOf[subschema #1: OrderSubmissionPayload]/item_id` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `anyOf[subschema #2: ResellerSubmissionOrderPayload]/item_id` request property `anyOf` list
+
+
+#### POST /{contract_id}/price
+* added `subschema #1, subschema #2` to the `anyOf[subschema #1: PriceRequest]/item_id` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `anyOf[subschema #2: ResellerPriceRequest]/item_id` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `anyOf[subschema #1: PriceRequest]/item_id` request property `anyOf` list
+* removed `subschema #1, subschema #2` from the `anyOf[subschema #2: ResellerPriceRequest]/item_id` request property `anyOf` list
+* added `subschema #1, subschema #2` to the `anyOf[subschema #1: OrderPrice]/item_id` response property `anyOf` list for the response status `200`
+* added `subschema #1, subschema #2` to the `anyOf[subschema #2: ResellerOrderPrice]/item_id` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `anyOf[subschema #1: OrderPrice]/item_id` response property `anyOf` list for the response status `200`
+* removed `subschema #1, subschema #2` from the `anyOf[subschema #2: ResellerOrderPrice]/item_id` response property `anyOf` list for the response status `200`
+
+
 ## [0.12.2.20261102.1753] - 2026-11-02
 
 ### feat(otm): update API descriptions

@@ -29,10 +29,10 @@ pip install satvu
 With optional HTTP backends:
 
 ```bash
-pip install satvu[http-httpx]
-pip install satvu[http-httpx2]
-pip install satvu[http-requests]
-pip install satvu[http-urllib3]
+pip install "satvu[http-httpx]"
+pip install "satvu[http-httpx2]"
+pip install "satvu[http-requests]"
+pip install "satvu[http-urllib3]"
 ```
 
 The SDK works out of the box with Python's built-in `urllib`.

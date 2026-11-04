@@ -1,6 +1,8 @@
 # SatVu API SDK
 
 [![pypi](https://img.shields.io/pypi/v/satvu)](https://pypi.org/project/satvu/)
+[![Python versions](https://img.shields.io/pypi/pyversions/satvu)](https://pypi.org/project/satvu/)
+[![Docs](https://img.shields.io/badge/docs-satellitevu.com-blue)](https://docs.satellitevu.com/developers/python-sdk/overview/)
 [![GitHub License](https://img.shields.io/github/license/SatelliteVu/satvu-api-sdk)](https://github.com/SatelliteVu/satvu-api-sdk/blob/main/LICENSE)
 [![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/satellitevu)](https://x.com/intent/follow?screen_name=satellitevu)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-blue?style=flat&logo=linkedin)](https://uk.linkedin.com/company/satvu)

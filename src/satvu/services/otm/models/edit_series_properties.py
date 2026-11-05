@@ -9,8 +9,8 @@ from typing import TYPE_CHECKING, Union
 import pydantic
 
 if TYPE_CHECKING:
+    from ..models.edit_series_order_parameters import EditSeriesOrderParameters
     from ..models.point import Point
-    from ..models.series_order_parameters import SeriesOrderParameters
 
 
 class EditSeriesProperties(pydantic.BaseModel):
@@ -19,7 +19,7 @@ class EditSeriesProperties(pydantic.BaseModel):
     Attributes:
         name (None | str): Optional human-readable label.
         geometry (Union['Point', None]): Updated target location for future child orders.
-        order_parameters (Union['SeriesOrderParameters', None]): Updated template for future child orders.
+        order_parameters (Union['EditSeriesOrderParameters', None]): Updated template for future child orders.
         frequency (None | str): Updated ISO 8601 recurrence interval (e.g. P7D, P14D, P1M).
         total_order_count (int | None): Updated total planned orders (must be >= orders_created_count). Provide either
             this or end_date.
@@ -36,7 +36,7 @@ class EditSeriesProperties(pydantic.BaseModel):
         description="""Updated target location for future child orders.""",
         alias="geometry",
     )
-    order_parameters: Union[SeriesOrderParameters, None] = pydantic.Field(
+    order_parameters: Union[EditSeriesOrderParameters, None] = pydantic.Field(
         default=None,
         description="""Updated template for future child orders.""",
         alias="order_parameters",

@@ -33,6 +33,9 @@ from satvu.services.otm.models.assured_order_request_properties import (
 from satvu.services.otm.models.download_pending import DownloadPending
 from satvu.services.otm.models.edit_order_payload import EditOrderPayload
 from satvu.services.otm.models.edit_order_properties import EditOrderProperties
+from satvu.services.otm.models.edit_series_order_parameters import (
+    EditSeriesOrderParameters,
+)
 from satvu.services.otm.models.edit_series_properties import EditSeriesProperties
 from satvu.services.otm.models.feasibility_request import FeasibilityRequest
 from satvu.services.otm.models.feasibility_response import FeasibilityResponse
@@ -129,6 +132,7 @@ from .test_schemas import (
         AssuredOrderRequestProperties,
         EditOrderPayload,
         EditOrderProperties,
+        EditSeriesOrderParameters,
         EditSeriesProperties,
         FeasibilityRequest,
         FilterFields,

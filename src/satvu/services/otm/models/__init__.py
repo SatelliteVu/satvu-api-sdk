@@ -22,6 +22,7 @@ from .download_pending import DownloadPending
 from .download_progress import DownloadProgress
 from .edit_order_payload import EditOrderPayload
 from .edit_order_properties import EditOrderProperties
+from .edit_series_order_parameters import EditSeriesOrderParameters
 from .edit_series_properties import EditSeriesProperties
 from .error_response import ErrorResponse
 from .extra_ignore_assured_feasibility_response_properties import (
@@ -157,6 +158,7 @@ __all__ = (
     "DownloadProgress",
     "EditOrderPayload",
     "EditOrderProperties",
+    "EditSeriesOrderParameters",
     "EditSeriesProperties",
     "ErrorResponse",
     "ExtraIgnoreAssuredFeasibilityResponseProperties",

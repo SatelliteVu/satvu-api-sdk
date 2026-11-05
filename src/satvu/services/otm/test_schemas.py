@@ -12,7 +12,7 @@ from functools import cache
 from satvu.services.example_cache import get_cached_example_strategy
 
 # Spec hash for example cache invalidation
-_SPEC_HASH = "prod-60344cd8c3f42df91af52973abeba0409a504a22"
+_SPEC_HASH = "prod-828a9a35e824d56b603078c2a0acf5b507d4ec2b"
 
 # Component schemas for $ref resolution (cleaned for JSON Schema draft-07)
 _COMPONENTS = {
@@ -1012,6 +1012,180 @@ _COMPONENTS = {
         "title": "EditOrderProperties",
         "type": "object",
     },
+    "EditSeriesOrderParameters": {
+        "additionalProperties": False,
+        "description": "Updated template parameters for "
+        "future child orders in the "
+        "series.",
+        "properties": {
+            "addon:withhold": {
+                "anyOf": [{"type": "string"}, {"type": "null"}],
+                "description": "The "
+                "optional "
+                "ISO8601 "
+                "string "
+                "describing "
+                "the "
+                "duration "
+                "that "
+                "an "
+                "order "
+                "will "
+                "be "
+                "withheld "
+                "from "
+                "the "
+                "public "
+                "catalog. "
+                "Withhold "
+                "options "
+                "are "
+                "specific "
+                "to "
+                "the "
+                "contract. "
+                "If "
+                "not "
+                "specified, "
+                "the "
+                "option "
+                "will "
+                "be "
+                "set "
+                "to "
+                "the "
+                "default "
+                "specified "
+                "in "
+                "the "
+                "relevant "
+                "contract.",
+                "examples": ["PT0H"],
+                "title": "Addon:Withhold",
+            },
+            "licence_level": {
+                "anyOf": [{"type": "string"}, {"type": "null"}],
+                "description": "The "
+                "optional "
+                "licence "
+                "level "
+                "for "
+                "the "
+                "order. "
+                "Licence "
+                "levels "
+                "are "
+                "specific "
+                "to "
+                "the "
+                "contract. "
+                "If "
+                "not "
+                "specified, "
+                "the "
+                "option "
+                "will "
+                "be "
+                "set "
+                "to "
+                "the "
+                "licence "
+                "with "
+                "the "
+                "smallest "
+                "uplift "
+                "in "
+                "the "
+                "relevant "
+                "contract.",
+                "examples": ["My Licence"],
+                "title": "Licence Level",
+            },
+            "max_cloud_cover": {
+                "default": 25,
+                "description": "The "
+                "max "
+                "threshold "
+                "of "
+                "acceptable "
+                "cloud "
+                "coverage "
+                "where "
+                "the "
+                "lower "
+                "limit "
+                "is "
+                "capped "
+                "to "
+                "25%. "
+                "Measured "
+                "in "
+                "percent.",
+                "maximum": 100.0,
+                "minimum": 25.0,
+                "title": "Max Cloud Cover",
+                "type": "integer",
+            },
+            "max_off_nadir": {
+                "default": 30,
+                "description": "The "
+                "maximum "
+                "angle "
+                "from "
+                "the "
+                "sensor "
+                "between "
+                "nadir "
+                "and "
+                "the "
+                "scene "
+                "center. "
+                "Measured "
+                "in "
+                "decimal "
+                "degrees. "
+                "Must "
+                "be "
+                "larger "
+                "than "
+                "`min_off_nadir`.",
+                "maximum": 45.0,
+                "minimum": 0.0,
+                "title": "Max Off Nadir",
+                "type": "integer",
+            },
+            "min_off_nadir": {
+                "default": 0,
+                "description": "The "
+                "minimum "
+                "angle "
+                "from "
+                "the "
+                "sensor "
+                "between "
+                "nadir "
+                "and "
+                "the "
+                "scene "
+                "center. "
+                "Measured "
+                "in "
+                "decimal "
+                "degrees.",
+                "maximum": 45.0,
+                "minimum": 0.0,
+                "title": "Min Off Nadir",
+                "type": "integer",
+            },
+            "satvu:day_night_mode": {
+                "$ref": "#/definitions/DayNightMode",
+                "default": "day-night",
+                "description": "The mode of data capture.",
+            },
+        },
+        "title": "EditSeriesOrderParameters",
+        "type": "object",
+    },
     "EditSeriesProperties": {
         "additionalProperties": False,
         "description": "Editable fields for series updates.",
@@ -1076,7 +1250,7 @@ _COMPONENTS = {
             },
             "order_parameters": {
                 "anyOf": [
-                    {"$ref": "#/definitions/SeriesOrderParameters"},
+                    {"$ref": "#/definitions/EditSeriesOrderParameters"},
                     {"type": "null"},
                 ],
                 "description": "Updated template for future child orders.",
@@ -9756,6 +9930,187 @@ _OPERATIONS = {
                         "title": "EditOrderProperties",
                         "type": "object",
                     },
+                    "EditSeriesOrderParameters": {
+                        "additionalProperties": False,
+                        "description": "Updated "
+                        "template "
+                        "parameters "
+                        "for "
+                        "future "
+                        "child "
+                        "orders "
+                        "in "
+                        "the "
+                        "series.",
+                        "properties": {
+                            "addon:withhold": {
+                                "anyOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "The "
+                                "optional "
+                                "ISO8601 "
+                                "string "
+                                "describing "
+                                "the "
+                                "duration "
+                                "that "
+                                "an "
+                                "order "
+                                "will "
+                                "be "
+                                "withheld "
+                                "from "
+                                "the "
+                                "public "
+                                "catalog. "
+                                "Withhold "
+                                "options "
+                                "are "
+                                "specific "
+                                "to "
+                                "the "
+                                "contract. "
+                                "If "
+                                "not "
+                                "specified, "
+                                "the "
+                                "option "
+                                "will "
+                                "be "
+                                "set "
+                                "to "
+                                "the "
+                                "default "
+                                "specified "
+                                "in "
+                                "the "
+                                "relevant "
+                                "contract.",
+                                "examples": ["PT0H"],
+                                "title": "Addon:Withhold",
+                            },
+                            "licence_level": {
+                                "anyOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "The "
+                                "optional "
+                                "licence "
+                                "level "
+                                "for "
+                                "the "
+                                "order. "
+                                "Licence "
+                                "levels "
+                                "are "
+                                "specific "
+                                "to "
+                                "the "
+                                "contract. "
+                                "If "
+                                "not "
+                                "specified, "
+                                "the "
+                                "option "
+                                "will "
+                                "be "
+                                "set "
+                                "to "
+                                "the "
+                                "licence "
+                                "with "
+                                "the "
+                                "smallest "
+                                "uplift "
+                                "in "
+                                "the "
+                                "relevant "
+                                "contract.",
+                                "examples": ["My Licence"],
+                                "title": "Licence Level",
+                            },
+                            "max_cloud_cover": {
+                                "default": 25,
+                                "description": "The "
+                                "max "
+                                "threshold "
+                                "of "
+                                "acceptable "
+                                "cloud "
+                                "coverage "
+                                "where "
+                                "the "
+                                "lower "
+                                "limit "
+                                "is "
+                                "capped "
+                                "to "
+                                "25%. "
+                                "Measured "
+                                "in "
+                                "percent.",
+                                "maximum": 100.0,
+                                "minimum": 25.0,
+                                "title": "Max Cloud Cover",
+                                "type": "integer",
+                            },
+                            "max_off_nadir": {
+                                "default": 30,
+                                "description": "The "
+                                "maximum "
+                                "angle "
+                                "from "
+                                "the "
+                                "sensor "
+                                "between "
+                                "nadir "
+                                "and "
+                                "the "
+                                "scene "
+                                "center. "
+                                "Measured "
+                                "in "
+                                "decimal "
+                                "degrees. "
+                                "Must "
+                                "be "
+                                "larger "
+                                "than "
+                                "`min_off_nadir`.",
+                                "maximum": 45.0,
+                                "minimum": 0.0,
+                                "title": "Max Off Nadir",
+                                "type": "integer",
+                            },
+                            "min_off_nadir": {
+                                "default": 0,
+                                "description": "The "
+                                "minimum "
+                                "angle "
+                                "from "
+                                "the "
+                                "sensor "
+                                "between "
+                                "nadir "
+                                "and "
+                                "the "
+                                "scene "
+                                "center. "
+                                "Measured "
+                                "in "
+                                "decimal "
+                                "degrees.",
+                                "maximum": 45.0,
+                                "minimum": 0.0,
+                                "title": "Min Off Nadir",
+                                "type": "integer",
+                            },
+                            "satvu:day_night_mode": {
+                                "$ref": "#/definitions/DayNightMode",
+                                "default": "day-night",
+                                "description": "The mode of data capture.",
+                            },
+                        },
+                        "title": "EditSeriesOrderParameters",
+                        "type": "object",
+                    },
                     "EditSeriesProperties": {
                         "additionalProperties": False,
                         "description": "Editable fields for series updates.",
@@ -9835,7 +10190,7 @@ _OPERATIONS = {
                             },
                             "order_parameters": {
                                 "anyOf": [
-                                    {"$ref": "#/definitions/SeriesOrderParameters"},
+                                    {"$ref": "#/definitions/EditSeriesOrderParameters"},
                                     {"type": "null"},
                                 ],
                                 "description": "Updated "
@@ -20420,6 +20775,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -20499,7 +21035,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -31322,6 +31860,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -31401,7 +32120,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -42054,6 +42775,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -42133,7 +43035,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -52779,6 +53683,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -52858,7 +53943,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -63522,6 +64609,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -63601,7 +64869,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -74227,6 +75497,187 @@ _OPERATIONS = {
                         "title": "EditOrderProperties",
                         "type": "object",
                     },
+                    "EditSeriesOrderParameters": {
+                        "additionalProperties": False,
+                        "description": "Updated "
+                        "template "
+                        "parameters "
+                        "for "
+                        "future "
+                        "child "
+                        "orders "
+                        "in "
+                        "the "
+                        "series.",
+                        "properties": {
+                            "addon:withhold": {
+                                "anyOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "The "
+                                "optional "
+                                "ISO8601 "
+                                "string "
+                                "describing "
+                                "the "
+                                "duration "
+                                "that "
+                                "an "
+                                "order "
+                                "will "
+                                "be "
+                                "withheld "
+                                "from "
+                                "the "
+                                "public "
+                                "catalog. "
+                                "Withhold "
+                                "options "
+                                "are "
+                                "specific "
+                                "to "
+                                "the "
+                                "contract. "
+                                "If "
+                                "not "
+                                "specified, "
+                                "the "
+                                "option "
+                                "will "
+                                "be "
+                                "set "
+                                "to "
+                                "the "
+                                "default "
+                                "specified "
+                                "in "
+                                "the "
+                                "relevant "
+                                "contract.",
+                                "examples": ["PT0H"],
+                                "title": "Addon:Withhold",
+                            },
+                            "licence_level": {
+                                "anyOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "The "
+                                "optional "
+                                "licence "
+                                "level "
+                                "for "
+                                "the "
+                                "order. "
+                                "Licence "
+                                "levels "
+                                "are "
+                                "specific "
+                                "to "
+                                "the "
+                                "contract. "
+                                "If "
+                                "not "
+                                "specified, "
+                                "the "
+                                "option "
+                                "will "
+                                "be "
+                                "set "
+                                "to "
+                                "the "
+                                "licence "
+                                "with "
+                                "the "
+                                "smallest "
+                                "uplift "
+                                "in "
+                                "the "
+                                "relevant "
+                                "contract.",
+                                "examples": ["My Licence"],
+                                "title": "Licence Level",
+                            },
+                            "max_cloud_cover": {
+                                "default": 25,
+                                "description": "The "
+                                "max "
+                                "threshold "
+                                "of "
+                                "acceptable "
+                                "cloud "
+                                "coverage "
+                                "where "
+                                "the "
+                                "lower "
+                                "limit "
+                                "is "
+                                "capped "
+                                "to "
+                                "25%. "
+                                "Measured "
+                                "in "
+                                "percent.",
+                                "maximum": 100.0,
+                                "minimum": 25.0,
+                                "title": "Max Cloud Cover",
+                                "type": "integer",
+                            },
+                            "max_off_nadir": {
+                                "default": 30,
+                                "description": "The "
+                                "maximum "
+                                "angle "
+                                "from "
+                                "the "
+                                "sensor "
+                                "between "
+                                "nadir "
+                                "and "
+                                "the "
+                                "scene "
+                                "center. "
+                                "Measured "
+                                "in "
+                                "decimal "
+                                "degrees. "
+                                "Must "
+                                "be "
+                                "larger "
+                                "than "
+                                "`min_off_nadir`.",
+                                "maximum": 45.0,
+                                "minimum": 0.0,
+                                "title": "Max Off Nadir",
+                                "type": "integer",
+                            },
+                            "min_off_nadir": {
+                                "default": 0,
+                                "description": "The "
+                                "minimum "
+                                "angle "
+                                "from "
+                                "the "
+                                "sensor "
+                                "between "
+                                "nadir "
+                                "and "
+                                "the "
+                                "scene "
+                                "center. "
+                                "Measured "
+                                "in "
+                                "decimal "
+                                "degrees.",
+                                "maximum": 45.0,
+                                "minimum": 0.0,
+                                "title": "Min Off Nadir",
+                                "type": "integer",
+                            },
+                            "satvu:day_night_mode": {
+                                "$ref": "#/definitions/DayNightMode",
+                                "default": "day-night",
+                                "description": "The mode of data capture.",
+                            },
+                        },
+                        "title": "EditSeriesOrderParameters",
+                        "type": "object",
+                    },
                     "EditSeriesProperties": {
                         "additionalProperties": False,
                         "description": "Editable fields for series updates.",
@@ -74306,7 +75757,7 @@ _OPERATIONS = {
                             },
                             "order_parameters": {
                                 "anyOf": [
-                                    {"$ref": "#/definitions/SeriesOrderParameters"},
+                                    {"$ref": "#/definitions/EditSeriesOrderParameters"},
                                     {"type": "null"},
                                 ],
                                 "description": "Updated "
@@ -84624,6 +86075,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -84703,7 +86335,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -95412,6 +97046,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -95491,7 +97306,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -106144,6 +107961,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -106223,7 +108221,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -116864,6 +118864,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -116943,7 +119124,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -127581,6 +129764,187 @@ _OPERATIONS = {
                         "title": "EditOrderProperties",
                         "type": "object",
                     },
+                    "EditSeriesOrderParameters": {
+                        "additionalProperties": False,
+                        "description": "Updated "
+                        "template "
+                        "parameters "
+                        "for "
+                        "future "
+                        "child "
+                        "orders "
+                        "in "
+                        "the "
+                        "series.",
+                        "properties": {
+                            "addon:withhold": {
+                                "anyOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "The "
+                                "optional "
+                                "ISO8601 "
+                                "string "
+                                "describing "
+                                "the "
+                                "duration "
+                                "that "
+                                "an "
+                                "order "
+                                "will "
+                                "be "
+                                "withheld "
+                                "from "
+                                "the "
+                                "public "
+                                "catalog. "
+                                "Withhold "
+                                "options "
+                                "are "
+                                "specific "
+                                "to "
+                                "the "
+                                "contract. "
+                                "If "
+                                "not "
+                                "specified, "
+                                "the "
+                                "option "
+                                "will "
+                                "be "
+                                "set "
+                                "to "
+                                "the "
+                                "default "
+                                "specified "
+                                "in "
+                                "the "
+                                "relevant "
+                                "contract.",
+                                "examples": ["PT0H"],
+                                "title": "Addon:Withhold",
+                            },
+                            "licence_level": {
+                                "anyOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "The "
+                                "optional "
+                                "licence "
+                                "level "
+                                "for "
+                                "the "
+                                "order. "
+                                "Licence "
+                                "levels "
+                                "are "
+                                "specific "
+                                "to "
+                                "the "
+                                "contract. "
+                                "If "
+                                "not "
+                                "specified, "
+                                "the "
+                                "option "
+                                "will "
+                                "be "
+                                "set "
+                                "to "
+                                "the "
+                                "licence "
+                                "with "
+                                "the "
+                                "smallest "
+                                "uplift "
+                                "in "
+                                "the "
+                                "relevant "
+                                "contract.",
+                                "examples": ["My Licence"],
+                                "title": "Licence Level",
+                            },
+                            "max_cloud_cover": {
+                                "default": 25,
+                                "description": "The "
+                                "max "
+                                "threshold "
+                                "of "
+                                "acceptable "
+                                "cloud "
+                                "coverage "
+                                "where "
+                                "the "
+                                "lower "
+                                "limit "
+                                "is "
+                                "capped "
+                                "to "
+                                "25%. "
+                                "Measured "
+                                "in "
+                                "percent.",
+                                "maximum": 100.0,
+                                "minimum": 25.0,
+                                "title": "Max Cloud Cover",
+                                "type": "integer",
+                            },
+                            "max_off_nadir": {
+                                "default": 30,
+                                "description": "The "
+                                "maximum "
+                                "angle "
+                                "from "
+                                "the "
+                                "sensor "
+                                "between "
+                                "nadir "
+                                "and "
+                                "the "
+                                "scene "
+                                "center. "
+                                "Measured "
+                                "in "
+                                "decimal "
+                                "degrees. "
+                                "Must "
+                                "be "
+                                "larger "
+                                "than "
+                                "`min_off_nadir`.",
+                                "maximum": 45.0,
+                                "minimum": 0.0,
+                                "title": "Max Off Nadir",
+                                "type": "integer",
+                            },
+                            "min_off_nadir": {
+                                "default": 0,
+                                "description": "The "
+                                "minimum "
+                                "angle "
+                                "from "
+                                "the "
+                                "sensor "
+                                "between "
+                                "nadir "
+                                "and "
+                                "the "
+                                "scene "
+                                "center. "
+                                "Measured "
+                                "in "
+                                "decimal "
+                                "degrees.",
+                                "maximum": 45.0,
+                                "minimum": 0.0,
+                                "title": "Min Off Nadir",
+                                "type": "integer",
+                            },
+                            "satvu:day_night_mode": {
+                                "$ref": "#/definitions/DayNightMode",
+                                "default": "day-night",
+                                "description": "The mode of data capture.",
+                            },
+                        },
+                        "title": "EditSeriesOrderParameters",
+                        "type": "object",
+                    },
                     "EditSeriesProperties": {
                         "additionalProperties": False,
                         "description": "Editable fields for series updates.",
@@ -127660,7 +130024,7 @@ _OPERATIONS = {
                             },
                             "order_parameters": {
                                 "anyOf": [
-                                    {"$ref": "#/definitions/SeriesOrderParameters"},
+                                    {"$ref": "#/definitions/EditSeriesOrderParameters"},
                                     {"type": "null"},
                                 ],
                                 "description": "Updated "
@@ -138014,6 +140378,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -138093,7 +140638,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -148802,6 +151349,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -148881,7 +151609,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -159534,6 +162264,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -159613,7 +162524,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -170266,6 +173179,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -170345,7 +173439,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -180998,6 +184094,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -181077,7 +184354,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -191718,6 +194997,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -191797,7 +195257,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -202455,6 +205917,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -202534,7 +206177,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -213243,6 +216888,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -213322,7 +217148,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -223975,6 +227803,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -224054,7 +228063,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -234700,6 +238711,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -234779,7 +238971,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -245485,6 +249679,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -245564,7 +249939,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -256217,6 +260594,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -256296,7 +260854,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -266942,6 +271502,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -267021,7 +271762,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -277685,6 +282428,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -277764,7 +282688,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -288389,6 +293315,187 @@ _OPERATIONS = {
                         "title": "EditOrderProperties",
                         "type": "object",
                     },
+                    "EditSeriesOrderParameters": {
+                        "additionalProperties": False,
+                        "description": "Updated "
+                        "template "
+                        "parameters "
+                        "for "
+                        "future "
+                        "child "
+                        "orders "
+                        "in "
+                        "the "
+                        "series.",
+                        "properties": {
+                            "addon:withhold": {
+                                "anyOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "The "
+                                "optional "
+                                "ISO8601 "
+                                "string "
+                                "describing "
+                                "the "
+                                "duration "
+                                "that "
+                                "an "
+                                "order "
+                                "will "
+                                "be "
+                                "withheld "
+                                "from "
+                                "the "
+                                "public "
+                                "catalog. "
+                                "Withhold "
+                                "options "
+                                "are "
+                                "specific "
+                                "to "
+                                "the "
+                                "contract. "
+                                "If "
+                                "not "
+                                "specified, "
+                                "the "
+                                "option "
+                                "will "
+                                "be "
+                                "set "
+                                "to "
+                                "the "
+                                "default "
+                                "specified "
+                                "in "
+                                "the "
+                                "relevant "
+                                "contract.",
+                                "examples": ["PT0H"],
+                                "title": "Addon:Withhold",
+                            },
+                            "licence_level": {
+                                "anyOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "The "
+                                "optional "
+                                "licence "
+                                "level "
+                                "for "
+                                "the "
+                                "order. "
+                                "Licence "
+                                "levels "
+                                "are "
+                                "specific "
+                                "to "
+                                "the "
+                                "contract. "
+                                "If "
+                                "not "
+                                "specified, "
+                                "the "
+                                "option "
+                                "will "
+                                "be "
+                                "set "
+                                "to "
+                                "the "
+                                "licence "
+                                "with "
+                                "the "
+                                "smallest "
+                                "uplift "
+                                "in "
+                                "the "
+                                "relevant "
+                                "contract.",
+                                "examples": ["My Licence"],
+                                "title": "Licence Level",
+                            },
+                            "max_cloud_cover": {
+                                "default": 25,
+                                "description": "The "
+                                "max "
+                                "threshold "
+                                "of "
+                                "acceptable "
+                                "cloud "
+                                "coverage "
+                                "where "
+                                "the "
+                                "lower "
+                                "limit "
+                                "is "
+                                "capped "
+                                "to "
+                                "25%. "
+                                "Measured "
+                                "in "
+                                "percent.",
+                                "maximum": 100.0,
+                                "minimum": 25.0,
+                                "title": "Max Cloud Cover",
+                                "type": "integer",
+                            },
+                            "max_off_nadir": {
+                                "default": 30,
+                                "description": "The "
+                                "maximum "
+                                "angle "
+                                "from "
+                                "the "
+                                "sensor "
+                                "between "
+                                "nadir "
+                                "and "
+                                "the "
+                                "scene "
+                                "center. "
+                                "Measured "
+                                "in "
+                                "decimal "
+                                "degrees. "
+                                "Must "
+                                "be "
+                                "larger "
+                                "than "
+                                "`min_off_nadir`.",
+                                "maximum": 45.0,
+                                "minimum": 0.0,
+                                "title": "Max Off Nadir",
+                                "type": "integer",
+                            },
+                            "min_off_nadir": {
+                                "default": 0,
+                                "description": "The "
+                                "minimum "
+                                "angle "
+                                "from "
+                                "the "
+                                "sensor "
+                                "between "
+                                "nadir "
+                                "and "
+                                "the "
+                                "scene "
+                                "center. "
+                                "Measured "
+                                "in "
+                                "decimal "
+                                "degrees.",
+                                "maximum": 45.0,
+                                "minimum": 0.0,
+                                "title": "Min Off Nadir",
+                                "type": "integer",
+                            },
+                            "satvu:day_night_mode": {
+                                "$ref": "#/definitions/DayNightMode",
+                                "default": "day-night",
+                                "description": "The mode of data capture.",
+                            },
+                        },
+                        "title": "EditSeriesOrderParameters",
+                        "type": "object",
+                    },
                     "EditSeriesProperties": {
                         "additionalProperties": False,
                         "description": "Editable fields for series updates.",
@@ -288468,7 +293575,7 @@ _OPERATIONS = {
                             },
                             "order_parameters": {
                                 "anyOf": [
-                                    {"$ref": "#/definitions/SeriesOrderParameters"},
+                                    {"$ref": "#/definitions/EditSeriesOrderParameters"},
                                     {"type": "null"},
                                 ],
                                 "description": "Updated "
@@ -298879,6 +303986,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -298958,7 +304246,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -309591,6 +314881,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -309670,7 +315141,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -320323,6 +325796,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -320402,7 +326056,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -331055,6 +336711,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -331134,7 +336971,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -341787,6 +347626,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -341866,7 +347886,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -352523,6 +358545,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -352602,7 +358805,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -363235,6 +369440,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -363314,7 +369700,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -373967,6 +380355,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -374046,7 +380615,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -384708,6 +391279,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -384787,7 +391539,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -395420,6 +402174,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -395499,7 +402434,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -406152,6 +413089,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -406231,7 +413349,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -416857,6 +423977,187 @@ _OPERATIONS = {
                         "title": "EditOrderProperties",
                         "type": "object",
                     },
+                    "EditSeriesOrderParameters": {
+                        "additionalProperties": False,
+                        "description": "Updated "
+                        "template "
+                        "parameters "
+                        "for "
+                        "future "
+                        "child "
+                        "orders "
+                        "in "
+                        "the "
+                        "series.",
+                        "properties": {
+                            "addon:withhold": {
+                                "anyOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "The "
+                                "optional "
+                                "ISO8601 "
+                                "string "
+                                "describing "
+                                "the "
+                                "duration "
+                                "that "
+                                "an "
+                                "order "
+                                "will "
+                                "be "
+                                "withheld "
+                                "from "
+                                "the "
+                                "public "
+                                "catalog. "
+                                "Withhold "
+                                "options "
+                                "are "
+                                "specific "
+                                "to "
+                                "the "
+                                "contract. "
+                                "If "
+                                "not "
+                                "specified, "
+                                "the "
+                                "option "
+                                "will "
+                                "be "
+                                "set "
+                                "to "
+                                "the "
+                                "default "
+                                "specified "
+                                "in "
+                                "the "
+                                "relevant "
+                                "contract.",
+                                "examples": ["PT0H"],
+                                "title": "Addon:Withhold",
+                            },
+                            "licence_level": {
+                                "anyOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "The "
+                                "optional "
+                                "licence "
+                                "level "
+                                "for "
+                                "the "
+                                "order. "
+                                "Licence "
+                                "levels "
+                                "are "
+                                "specific "
+                                "to "
+                                "the "
+                                "contract. "
+                                "If "
+                                "not "
+                                "specified, "
+                                "the "
+                                "option "
+                                "will "
+                                "be "
+                                "set "
+                                "to "
+                                "the "
+                                "licence "
+                                "with "
+                                "the "
+                                "smallest "
+                                "uplift "
+                                "in "
+                                "the "
+                                "relevant "
+                                "contract.",
+                                "examples": ["My Licence"],
+                                "title": "Licence Level",
+                            },
+                            "max_cloud_cover": {
+                                "default": 25,
+                                "description": "The "
+                                "max "
+                                "threshold "
+                                "of "
+                                "acceptable "
+                                "cloud "
+                                "coverage "
+                                "where "
+                                "the "
+                                "lower "
+                                "limit "
+                                "is "
+                                "capped "
+                                "to "
+                                "25%. "
+                                "Measured "
+                                "in "
+                                "percent.",
+                                "maximum": 100.0,
+                                "minimum": 25.0,
+                                "title": "Max Cloud Cover",
+                                "type": "integer",
+                            },
+                            "max_off_nadir": {
+                                "default": 30,
+                                "description": "The "
+                                "maximum "
+                                "angle "
+                                "from "
+                                "the "
+                                "sensor "
+                                "between "
+                                "nadir "
+                                "and "
+                                "the "
+                                "scene "
+                                "center. "
+                                "Measured "
+                                "in "
+                                "decimal "
+                                "degrees. "
+                                "Must "
+                                "be "
+                                "larger "
+                                "than "
+                                "`min_off_nadir`.",
+                                "maximum": 45.0,
+                                "minimum": 0.0,
+                                "title": "Max Off Nadir",
+                                "type": "integer",
+                            },
+                            "min_off_nadir": {
+                                "default": 0,
+                                "description": "The "
+                                "minimum "
+                                "angle "
+                                "from "
+                                "the "
+                                "sensor "
+                                "between "
+                                "nadir "
+                                "and "
+                                "the "
+                                "scene "
+                                "center. "
+                                "Measured "
+                                "in "
+                                "decimal "
+                                "degrees.",
+                                "maximum": 45.0,
+                                "minimum": 0.0,
+                                "title": "Min Off Nadir",
+                                "type": "integer",
+                            },
+                            "satvu:day_night_mode": {
+                                "$ref": "#/definitions/DayNightMode",
+                                "default": "day-night",
+                                "description": "The mode of data capture.",
+                            },
+                        },
+                        "title": "EditSeriesOrderParameters",
+                        "type": "object",
+                    },
                     "EditSeriesProperties": {
                         "additionalProperties": False,
                         "description": "Editable fields for series updates.",
@@ -416936,7 +424237,7 @@ _OPERATIONS = {
                             },
                             "order_parameters": {
                                 "anyOf": [
-                                    {"$ref": "#/definitions/SeriesOrderParameters"},
+                                    {"$ref": "#/definitions/EditSeriesOrderParameters"},
                                     {"type": "null"},
                                 ],
                                 "description": "Updated "
@@ -427286,6 +434587,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -427365,7 +434847,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -437998,6 +445482,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -438077,7 +445742,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -448734,6 +456401,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -448813,7 +456661,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -459451,6 +467301,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -459530,7 +467561,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -470322,6 +478355,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -470401,7 +478615,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -481047,6 +489263,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -481126,7 +489523,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -491779,6 +500178,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -491858,7 +500438,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -502511,6 +511093,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -502590,7 +511353,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -513231,6 +521996,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -513310,7 +522256,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -523968,6 +532916,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -524047,7 +533176,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -534714,6 +543845,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -534793,7 +544105,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -545463,6 +554777,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -545542,7 +555037,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -556204,6 +565701,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -556283,7 +565961,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -566916,6 +576596,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -566995,7 +576856,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -577648,6 +587511,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -577727,7 +587771,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -588373,6 +598419,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -588452,7 +598679,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -599088,6 +609317,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -599167,7 +609577,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -609793,6 +620205,187 @@ _OPERATIONS = {
                         "title": "EditOrderProperties",
                         "type": "object",
                     },
+                    "EditSeriesOrderParameters": {
+                        "additionalProperties": False,
+                        "description": "Updated "
+                        "template "
+                        "parameters "
+                        "for "
+                        "future "
+                        "child "
+                        "orders "
+                        "in "
+                        "the "
+                        "series.",
+                        "properties": {
+                            "addon:withhold": {
+                                "anyOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "The "
+                                "optional "
+                                "ISO8601 "
+                                "string "
+                                "describing "
+                                "the "
+                                "duration "
+                                "that "
+                                "an "
+                                "order "
+                                "will "
+                                "be "
+                                "withheld "
+                                "from "
+                                "the "
+                                "public "
+                                "catalog. "
+                                "Withhold "
+                                "options "
+                                "are "
+                                "specific "
+                                "to "
+                                "the "
+                                "contract. "
+                                "If "
+                                "not "
+                                "specified, "
+                                "the "
+                                "option "
+                                "will "
+                                "be "
+                                "set "
+                                "to "
+                                "the "
+                                "default "
+                                "specified "
+                                "in "
+                                "the "
+                                "relevant "
+                                "contract.",
+                                "examples": ["PT0H"],
+                                "title": "Addon:Withhold",
+                            },
+                            "licence_level": {
+                                "anyOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "The "
+                                "optional "
+                                "licence "
+                                "level "
+                                "for "
+                                "the "
+                                "order. "
+                                "Licence "
+                                "levels "
+                                "are "
+                                "specific "
+                                "to "
+                                "the "
+                                "contract. "
+                                "If "
+                                "not "
+                                "specified, "
+                                "the "
+                                "option "
+                                "will "
+                                "be "
+                                "set "
+                                "to "
+                                "the "
+                                "licence "
+                                "with "
+                                "the "
+                                "smallest "
+                                "uplift "
+                                "in "
+                                "the "
+                                "relevant "
+                                "contract.",
+                                "examples": ["My Licence"],
+                                "title": "Licence Level",
+                            },
+                            "max_cloud_cover": {
+                                "default": 25,
+                                "description": "The "
+                                "max "
+                                "threshold "
+                                "of "
+                                "acceptable "
+                                "cloud "
+                                "coverage "
+                                "where "
+                                "the "
+                                "lower "
+                                "limit "
+                                "is "
+                                "capped "
+                                "to "
+                                "25%. "
+                                "Measured "
+                                "in "
+                                "percent.",
+                                "maximum": 100.0,
+                                "minimum": 25.0,
+                                "title": "Max Cloud Cover",
+                                "type": "integer",
+                            },
+                            "max_off_nadir": {
+                                "default": 30,
+                                "description": "The "
+                                "maximum "
+                                "angle "
+                                "from "
+                                "the "
+                                "sensor "
+                                "between "
+                                "nadir "
+                                "and "
+                                "the "
+                                "scene "
+                                "center. "
+                                "Measured "
+                                "in "
+                                "decimal "
+                                "degrees. "
+                                "Must "
+                                "be "
+                                "larger "
+                                "than "
+                                "`min_off_nadir`.",
+                                "maximum": 45.0,
+                                "minimum": 0.0,
+                                "title": "Max Off Nadir",
+                                "type": "integer",
+                            },
+                            "min_off_nadir": {
+                                "default": 0,
+                                "description": "The "
+                                "minimum "
+                                "angle "
+                                "from "
+                                "the "
+                                "sensor "
+                                "between "
+                                "nadir "
+                                "and "
+                                "the "
+                                "scene "
+                                "center. "
+                                "Measured "
+                                "in "
+                                "decimal "
+                                "degrees.",
+                                "maximum": 45.0,
+                                "minimum": 0.0,
+                                "title": "Min Off Nadir",
+                                "type": "integer",
+                            },
+                            "satvu:day_night_mode": {
+                                "$ref": "#/definitions/DayNightMode",
+                                "default": "day-night",
+                                "description": "The mode of data capture.",
+                            },
+                        },
+                        "title": "EditSeriesOrderParameters",
+                        "type": "object",
+                    },
                     "EditSeriesProperties": {
                         "additionalProperties": False,
                         "description": "Editable fields for series updates.",
@@ -609872,7 +620465,7 @@ _OPERATIONS = {
                             },
                             "order_parameters": {
                                 "anyOf": [
-                                    {"$ref": "#/definitions/SeriesOrderParameters"},
+                                    {"$ref": "#/definitions/EditSeriesOrderParameters"},
                                     {"type": "null"},
                                 ],
                                 "description": "Updated "
@@ -620193,6 +630786,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -620272,7 +631046,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -630953,6 +641729,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -631032,7 +641989,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -641685,6 +652644,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -641764,7 +652904,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -652421,6 +663563,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -652500,7 +663823,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -663118,6 +674443,187 @@ _OPERATIONS = {
                         "title": "EditOrderProperties",
                         "type": "object",
                     },
+                    "EditSeriesOrderParameters": {
+                        "additionalProperties": False,
+                        "description": "Updated "
+                        "template "
+                        "parameters "
+                        "for "
+                        "future "
+                        "child "
+                        "orders "
+                        "in "
+                        "the "
+                        "series.",
+                        "properties": {
+                            "addon:withhold": {
+                                "anyOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "The "
+                                "optional "
+                                "ISO8601 "
+                                "string "
+                                "describing "
+                                "the "
+                                "duration "
+                                "that "
+                                "an "
+                                "order "
+                                "will "
+                                "be "
+                                "withheld "
+                                "from "
+                                "the "
+                                "public "
+                                "catalog. "
+                                "Withhold "
+                                "options "
+                                "are "
+                                "specific "
+                                "to "
+                                "the "
+                                "contract. "
+                                "If "
+                                "not "
+                                "specified, "
+                                "the "
+                                "option "
+                                "will "
+                                "be "
+                                "set "
+                                "to "
+                                "the "
+                                "default "
+                                "specified "
+                                "in "
+                                "the "
+                                "relevant "
+                                "contract.",
+                                "examples": ["PT0H"],
+                                "title": "Addon:Withhold",
+                            },
+                            "licence_level": {
+                                "anyOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "The "
+                                "optional "
+                                "licence "
+                                "level "
+                                "for "
+                                "the "
+                                "order. "
+                                "Licence "
+                                "levels "
+                                "are "
+                                "specific "
+                                "to "
+                                "the "
+                                "contract. "
+                                "If "
+                                "not "
+                                "specified, "
+                                "the "
+                                "option "
+                                "will "
+                                "be "
+                                "set "
+                                "to "
+                                "the "
+                                "licence "
+                                "with "
+                                "the "
+                                "smallest "
+                                "uplift "
+                                "in "
+                                "the "
+                                "relevant "
+                                "contract.",
+                                "examples": ["My Licence"],
+                                "title": "Licence Level",
+                            },
+                            "max_cloud_cover": {
+                                "default": 25,
+                                "description": "The "
+                                "max "
+                                "threshold "
+                                "of "
+                                "acceptable "
+                                "cloud "
+                                "coverage "
+                                "where "
+                                "the "
+                                "lower "
+                                "limit "
+                                "is "
+                                "capped "
+                                "to "
+                                "25%. "
+                                "Measured "
+                                "in "
+                                "percent.",
+                                "maximum": 100.0,
+                                "minimum": 25.0,
+                                "title": "Max Cloud Cover",
+                                "type": "integer",
+                            },
+                            "max_off_nadir": {
+                                "default": 30,
+                                "description": "The "
+                                "maximum "
+                                "angle "
+                                "from "
+                                "the "
+                                "sensor "
+                                "between "
+                                "nadir "
+                                "and "
+                                "the "
+                                "scene "
+                                "center. "
+                                "Measured "
+                                "in "
+                                "decimal "
+                                "degrees. "
+                                "Must "
+                                "be "
+                                "larger "
+                                "than "
+                                "`min_off_nadir`.",
+                                "maximum": 45.0,
+                                "minimum": 0.0,
+                                "title": "Max Off Nadir",
+                                "type": "integer",
+                            },
+                            "min_off_nadir": {
+                                "default": 0,
+                                "description": "The "
+                                "minimum "
+                                "angle "
+                                "from "
+                                "the "
+                                "sensor "
+                                "between "
+                                "nadir "
+                                "and "
+                                "the "
+                                "scene "
+                                "center. "
+                                "Measured "
+                                "in "
+                                "decimal "
+                                "degrees.",
+                                "maximum": 45.0,
+                                "minimum": 0.0,
+                                "title": "Min Off Nadir",
+                                "type": "integer",
+                            },
+                            "satvu:day_night_mode": {
+                                "$ref": "#/definitions/DayNightMode",
+                                "default": "day-night",
+                                "description": "The mode of data capture.",
+                            },
+                        },
+                        "title": "EditSeriesOrderParameters",
+                        "type": "object",
+                    },
                     "EditSeriesProperties": {
                         "additionalProperties": False,
                         "description": "Editable fields for series updates.",
@@ -663197,7 +674703,7 @@ _OPERATIONS = {
                             },
                             "order_parameters": {
                                 "anyOf": [
-                                    {"$ref": "#/definitions/SeriesOrderParameters"},
+                                    {"$ref": "#/definitions/EditSeriesOrderParameters"},
                                     {"type": "null"},
                                 ],
                                 "description": "Updated "
@@ -673543,6 +685049,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -673622,7 +685309,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -684355,6 +696044,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -684434,7 +696304,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -695087,6 +706959,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -695166,7 +707219,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -705819,6 +717874,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -705898,7 +718134,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -716555,6 +728793,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -716634,7 +729053,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -727272,6 +739693,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -727351,7 +739953,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -738027,6 +750631,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -738106,7 +750891,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -748732,6 +761519,187 @@ _OPERATIONS = {
                         "title": "EditOrderProperties",
                         "type": "object",
                     },
+                    "EditSeriesOrderParameters": {
+                        "additionalProperties": False,
+                        "description": "Updated "
+                        "template "
+                        "parameters "
+                        "for "
+                        "future "
+                        "child "
+                        "orders "
+                        "in "
+                        "the "
+                        "series.",
+                        "properties": {
+                            "addon:withhold": {
+                                "anyOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "The "
+                                "optional "
+                                "ISO8601 "
+                                "string "
+                                "describing "
+                                "the "
+                                "duration "
+                                "that "
+                                "an "
+                                "order "
+                                "will "
+                                "be "
+                                "withheld "
+                                "from "
+                                "the "
+                                "public "
+                                "catalog. "
+                                "Withhold "
+                                "options "
+                                "are "
+                                "specific "
+                                "to "
+                                "the "
+                                "contract. "
+                                "If "
+                                "not "
+                                "specified, "
+                                "the "
+                                "option "
+                                "will "
+                                "be "
+                                "set "
+                                "to "
+                                "the "
+                                "default "
+                                "specified "
+                                "in "
+                                "the "
+                                "relevant "
+                                "contract.",
+                                "examples": ["PT0H"],
+                                "title": "Addon:Withhold",
+                            },
+                            "licence_level": {
+                                "anyOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "The "
+                                "optional "
+                                "licence "
+                                "level "
+                                "for "
+                                "the "
+                                "order. "
+                                "Licence "
+                                "levels "
+                                "are "
+                                "specific "
+                                "to "
+                                "the "
+                                "contract. "
+                                "If "
+                                "not "
+                                "specified, "
+                                "the "
+                                "option "
+                                "will "
+                                "be "
+                                "set "
+                                "to "
+                                "the "
+                                "licence "
+                                "with "
+                                "the "
+                                "smallest "
+                                "uplift "
+                                "in "
+                                "the "
+                                "relevant "
+                                "contract.",
+                                "examples": ["My Licence"],
+                                "title": "Licence Level",
+                            },
+                            "max_cloud_cover": {
+                                "default": 25,
+                                "description": "The "
+                                "max "
+                                "threshold "
+                                "of "
+                                "acceptable "
+                                "cloud "
+                                "coverage "
+                                "where "
+                                "the "
+                                "lower "
+                                "limit "
+                                "is "
+                                "capped "
+                                "to "
+                                "25%. "
+                                "Measured "
+                                "in "
+                                "percent.",
+                                "maximum": 100.0,
+                                "minimum": 25.0,
+                                "title": "Max Cloud Cover",
+                                "type": "integer",
+                            },
+                            "max_off_nadir": {
+                                "default": 30,
+                                "description": "The "
+                                "maximum "
+                                "angle "
+                                "from "
+                                "the "
+                                "sensor "
+                                "between "
+                                "nadir "
+                                "and "
+                                "the "
+                                "scene "
+                                "center. "
+                                "Measured "
+                                "in "
+                                "decimal "
+                                "degrees. "
+                                "Must "
+                                "be "
+                                "larger "
+                                "than "
+                                "`min_off_nadir`.",
+                                "maximum": 45.0,
+                                "minimum": 0.0,
+                                "title": "Max Off Nadir",
+                                "type": "integer",
+                            },
+                            "min_off_nadir": {
+                                "default": 0,
+                                "description": "The "
+                                "minimum "
+                                "angle "
+                                "from "
+                                "the "
+                                "sensor "
+                                "between "
+                                "nadir "
+                                "and "
+                                "the "
+                                "scene "
+                                "center. "
+                                "Measured "
+                                "in "
+                                "decimal "
+                                "degrees.",
+                                "maximum": 45.0,
+                                "minimum": 0.0,
+                                "title": "Min Off Nadir",
+                                "type": "integer",
+                            },
+                            "satvu:day_night_mode": {
+                                "$ref": "#/definitions/DayNightMode",
+                                "default": "day-night",
+                                "description": "The mode of data capture.",
+                            },
+                        },
+                        "title": "EditSeriesOrderParameters",
+                        "type": "object",
+                    },
                     "EditSeriesProperties": {
                         "additionalProperties": False,
                         "description": "Editable fields for series updates.",
@@ -748811,7 +761779,7 @@ _OPERATIONS = {
                             },
                             "order_parameters": {
                                 "anyOf": [
-                                    {"$ref": "#/definitions/SeriesOrderParameters"},
+                                    {"$ref": "#/definitions/EditSeriesOrderParameters"},
                                     {"type": "null"},
                                 ],
                                 "description": "Updated "
@@ -759148,6 +772116,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -759227,7 +772376,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -769923,6 +783074,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -770002,7 +783334,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -780655,6 +793989,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -780734,7 +794249,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -791387,6 +804904,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -791466,7 +805164,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -802123,6 +815823,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -802202,7 +816083,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -812835,6 +826718,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -812914,7 +826978,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -823567,6 +837633,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -823646,7 +837893,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -834284,6 +848533,187 @@ _OPERATIONS = {
                         "title": "EditOrderProperties",
                         "type": "object",
                     },
+                    "EditSeriesOrderParameters": {
+                        "additionalProperties": False,
+                        "description": "Updated "
+                        "template "
+                        "parameters "
+                        "for "
+                        "future "
+                        "child "
+                        "orders "
+                        "in "
+                        "the "
+                        "series.",
+                        "properties": {
+                            "addon:withhold": {
+                                "anyOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "The "
+                                "optional "
+                                "ISO8601 "
+                                "string "
+                                "describing "
+                                "the "
+                                "duration "
+                                "that "
+                                "an "
+                                "order "
+                                "will "
+                                "be "
+                                "withheld "
+                                "from "
+                                "the "
+                                "public "
+                                "catalog. "
+                                "Withhold "
+                                "options "
+                                "are "
+                                "specific "
+                                "to "
+                                "the "
+                                "contract. "
+                                "If "
+                                "not "
+                                "specified, "
+                                "the "
+                                "option "
+                                "will "
+                                "be "
+                                "set "
+                                "to "
+                                "the "
+                                "default "
+                                "specified "
+                                "in "
+                                "the "
+                                "relevant "
+                                "contract.",
+                                "examples": ["PT0H"],
+                                "title": "Addon:Withhold",
+                            },
+                            "licence_level": {
+                                "anyOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "The "
+                                "optional "
+                                "licence "
+                                "level "
+                                "for "
+                                "the "
+                                "order. "
+                                "Licence "
+                                "levels "
+                                "are "
+                                "specific "
+                                "to "
+                                "the "
+                                "contract. "
+                                "If "
+                                "not "
+                                "specified, "
+                                "the "
+                                "option "
+                                "will "
+                                "be "
+                                "set "
+                                "to "
+                                "the "
+                                "licence "
+                                "with "
+                                "the "
+                                "smallest "
+                                "uplift "
+                                "in "
+                                "the "
+                                "relevant "
+                                "contract.",
+                                "examples": ["My Licence"],
+                                "title": "Licence Level",
+                            },
+                            "max_cloud_cover": {
+                                "default": 25,
+                                "description": "The "
+                                "max "
+                                "threshold "
+                                "of "
+                                "acceptable "
+                                "cloud "
+                                "coverage "
+                                "where "
+                                "the "
+                                "lower "
+                                "limit "
+                                "is "
+                                "capped "
+                                "to "
+                                "25%. "
+                                "Measured "
+                                "in "
+                                "percent.",
+                                "maximum": 100.0,
+                                "minimum": 25.0,
+                                "title": "Max Cloud Cover",
+                                "type": "integer",
+                            },
+                            "max_off_nadir": {
+                                "default": 30,
+                                "description": "The "
+                                "maximum "
+                                "angle "
+                                "from "
+                                "the "
+                                "sensor "
+                                "between "
+                                "nadir "
+                                "and "
+                                "the "
+                                "scene "
+                                "center. "
+                                "Measured "
+                                "in "
+                                "decimal "
+                                "degrees. "
+                                "Must "
+                                "be "
+                                "larger "
+                                "than "
+                                "`min_off_nadir`.",
+                                "maximum": 45.0,
+                                "minimum": 0.0,
+                                "title": "Max Off Nadir",
+                                "type": "integer",
+                            },
+                            "min_off_nadir": {
+                                "default": 0,
+                                "description": "The "
+                                "minimum "
+                                "angle "
+                                "from "
+                                "the "
+                                "sensor "
+                                "between "
+                                "nadir "
+                                "and "
+                                "the "
+                                "scene "
+                                "center. "
+                                "Measured "
+                                "in "
+                                "decimal "
+                                "degrees.",
+                                "maximum": 45.0,
+                                "minimum": 0.0,
+                                "title": "Min Off Nadir",
+                                "type": "integer",
+                            },
+                            "satvu:day_night_mode": {
+                                "$ref": "#/definitions/DayNightMode",
+                                "default": "day-night",
+                                "description": "The mode of data capture.",
+                            },
+                        },
+                        "title": "EditSeriesOrderParameters",
+                        "type": "object",
+                    },
                     "EditSeriesProperties": {
                         "additionalProperties": False,
                         "description": "Editable fields for series updates.",
@@ -834363,7 +848793,7 @@ _OPERATIONS = {
                             },
                             "order_parameters": {
                                 "anyOf": [
-                                    {"$ref": "#/definitions/SeriesOrderParameters"},
+                                    {"$ref": "#/definitions/EditSeriesOrderParameters"},
                                     {"type": "null"},
                                 ],
                                 "description": "Updated "
@@ -844700,6 +859130,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -844779,7 +859390,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -855421,6 +870034,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -855500,7 +870294,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -866153,6 +880949,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -866232,7 +881209,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -876889,6 +891868,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -876968,7 +892128,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -887606,6 +902768,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -887685,7 +903028,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -898381,6 +913726,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -898460,7 +913986,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -909113,6 +924641,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -909192,7 +924901,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -919818,6 +935529,187 @@ _OPERATIONS = {
                         "title": "EditOrderProperties",
                         "type": "object",
                     },
+                    "EditSeriesOrderParameters": {
+                        "additionalProperties": False,
+                        "description": "Updated "
+                        "template "
+                        "parameters "
+                        "for "
+                        "future "
+                        "child "
+                        "orders "
+                        "in "
+                        "the "
+                        "series.",
+                        "properties": {
+                            "addon:withhold": {
+                                "anyOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "The "
+                                "optional "
+                                "ISO8601 "
+                                "string "
+                                "describing "
+                                "the "
+                                "duration "
+                                "that "
+                                "an "
+                                "order "
+                                "will "
+                                "be "
+                                "withheld "
+                                "from "
+                                "the "
+                                "public "
+                                "catalog. "
+                                "Withhold "
+                                "options "
+                                "are "
+                                "specific "
+                                "to "
+                                "the "
+                                "contract. "
+                                "If "
+                                "not "
+                                "specified, "
+                                "the "
+                                "option "
+                                "will "
+                                "be "
+                                "set "
+                                "to "
+                                "the "
+                                "default "
+                                "specified "
+                                "in "
+                                "the "
+                                "relevant "
+                                "contract.",
+                                "examples": ["PT0H"],
+                                "title": "Addon:Withhold",
+                            },
+                            "licence_level": {
+                                "anyOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "The "
+                                "optional "
+                                "licence "
+                                "level "
+                                "for "
+                                "the "
+                                "order. "
+                                "Licence "
+                                "levels "
+                                "are "
+                                "specific "
+                                "to "
+                                "the "
+                                "contract. "
+                                "If "
+                                "not "
+                                "specified, "
+                                "the "
+                                "option "
+                                "will "
+                                "be "
+                                "set "
+                                "to "
+                                "the "
+                                "licence "
+                                "with "
+                                "the "
+                                "smallest "
+                                "uplift "
+                                "in "
+                                "the "
+                                "relevant "
+                                "contract.",
+                                "examples": ["My Licence"],
+                                "title": "Licence Level",
+                            },
+                            "max_cloud_cover": {
+                                "default": 25,
+                                "description": "The "
+                                "max "
+                                "threshold "
+                                "of "
+                                "acceptable "
+                                "cloud "
+                                "coverage "
+                                "where "
+                                "the "
+                                "lower "
+                                "limit "
+                                "is "
+                                "capped "
+                                "to "
+                                "25%. "
+                                "Measured "
+                                "in "
+                                "percent.",
+                                "maximum": 100.0,
+                                "minimum": 25.0,
+                                "title": "Max Cloud Cover",
+                                "type": "integer",
+                            },
+                            "max_off_nadir": {
+                                "default": 30,
+                                "description": "The "
+                                "maximum "
+                                "angle "
+                                "from "
+                                "the "
+                                "sensor "
+                                "between "
+                                "nadir "
+                                "and "
+                                "the "
+                                "scene "
+                                "center. "
+                                "Measured "
+                                "in "
+                                "decimal "
+                                "degrees. "
+                                "Must "
+                                "be "
+                                "larger "
+                                "than "
+                                "`min_off_nadir`.",
+                                "maximum": 45.0,
+                                "minimum": 0.0,
+                                "title": "Max Off Nadir",
+                                "type": "integer",
+                            },
+                            "min_off_nadir": {
+                                "default": 0,
+                                "description": "The "
+                                "minimum "
+                                "angle "
+                                "from "
+                                "the "
+                                "sensor "
+                                "between "
+                                "nadir "
+                                "and "
+                                "the "
+                                "scene "
+                                "center. "
+                                "Measured "
+                                "in "
+                                "decimal "
+                                "degrees.",
+                                "maximum": 45.0,
+                                "minimum": 0.0,
+                                "title": "Min Off Nadir",
+                                "type": "integer",
+                            },
+                            "satvu:day_night_mode": {
+                                "$ref": "#/definitions/DayNightMode",
+                                "default": "day-night",
+                                "description": "The mode of data capture.",
+                            },
+                        },
+                        "title": "EditSeriesOrderParameters",
+                        "type": "object",
+                    },
                     "EditSeriesProperties": {
                         "additionalProperties": False,
                         "description": "Editable fields for series updates.",
@@ -919897,7 +935789,7 @@ _OPERATIONS = {
                             },
                             "order_parameters": {
                                 "anyOf": [
-                                    {"$ref": "#/definitions/SeriesOrderParameters"},
+                                    {"$ref": "#/definitions/EditSeriesOrderParameters"},
                                     {"type": "null"},
                                 ],
                                 "description": "Updated "
@@ -929030,7 +944922,7 @@ _OPERATIONS = {
                     },
                     "order_parameters": {
                         "anyOf": [
-                            {"$ref": "#/definitions/SeriesOrderParameters"},
+                            {"$ref": "#/definitions/EditSeriesOrderParameters"},
                             {"type": "null"},
                         ],
                         "description": "Updated template for future child orders.",
@@ -930290,6 +946182,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -930369,7 +946442,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -941065,6 +957140,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -941144,7 +957400,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -951797,6 +968055,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -951876,7 +968315,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -962529,6 +978970,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -962608,7 +979230,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -973265,6 +989889,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -973344,7 +990149,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -983981,6 +1000788,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -984060,7 +1001048,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -994698,6 +1011688,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -994777,7 +1011948,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -1005430,6 +1022603,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -1005509,7 +1022863,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -1016162,6 +1033518,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -1016241,7 +1033778,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -1026887,6 +1044426,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -1026966,7 +1044686,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -1037633,6 +1055355,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -1037712,7 +1055615,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -1048382,6 +1066287,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -1048461,7 +1066547,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -1059119,6 +1077207,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -1059198,7 +1077467,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -1069856,6 +1088127,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -1069935,7 +1088387,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -1080588,6 +1099042,187 @@ _OPERATIONS = {
                             "title": "EditOrderProperties",
                             "type": "object",
                         },
+                        "EditSeriesOrderParameters": {
+                            "additionalProperties": False,
+                            "description": "Updated "
+                            "template "
+                            "parameters "
+                            "for "
+                            "future "
+                            "child "
+                            "orders "
+                            "in "
+                            "the "
+                            "series.",
+                            "properties": {
+                                "addon:withhold": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "ISO8601 "
+                                    "string "
+                                    "describing "
+                                    "the "
+                                    "duration "
+                                    "that "
+                                    "an "
+                                    "order "
+                                    "will "
+                                    "be "
+                                    "withheld "
+                                    "from "
+                                    "the "
+                                    "public "
+                                    "catalog. "
+                                    "Withhold "
+                                    "options "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "default "
+                                    "specified "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["PT0H"],
+                                    "title": "Addon:Withhold",
+                                },
+                                "licence_level": {
+                                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                                    "description": "The "
+                                    "optional "
+                                    "licence "
+                                    "level "
+                                    "for "
+                                    "the "
+                                    "order. "
+                                    "Licence "
+                                    "levels "
+                                    "are "
+                                    "specific "
+                                    "to "
+                                    "the "
+                                    "contract. "
+                                    "If "
+                                    "not "
+                                    "specified, "
+                                    "the "
+                                    "option "
+                                    "will "
+                                    "be "
+                                    "set "
+                                    "to "
+                                    "the "
+                                    "licence "
+                                    "with "
+                                    "the "
+                                    "smallest "
+                                    "uplift "
+                                    "in "
+                                    "the "
+                                    "relevant "
+                                    "contract.",
+                                    "examples": ["My Licence"],
+                                    "title": "Licence Level",
+                                },
+                                "max_cloud_cover": {
+                                    "default": 25,
+                                    "description": "The "
+                                    "max "
+                                    "threshold "
+                                    "of "
+                                    "acceptable "
+                                    "cloud "
+                                    "coverage "
+                                    "where "
+                                    "the "
+                                    "lower "
+                                    "limit "
+                                    "is "
+                                    "capped "
+                                    "to "
+                                    "25%. "
+                                    "Measured "
+                                    "in "
+                                    "percent.",
+                                    "maximum": 100.0,
+                                    "minimum": 25.0,
+                                    "title": "Max Cloud Cover",
+                                    "type": "integer",
+                                },
+                                "max_off_nadir": {
+                                    "default": 30,
+                                    "description": "The "
+                                    "maximum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees. "
+                                    "Must "
+                                    "be "
+                                    "larger "
+                                    "than "
+                                    "`min_off_nadir`.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Max Off Nadir",
+                                    "type": "integer",
+                                },
+                                "min_off_nadir": {
+                                    "default": 0,
+                                    "description": "The "
+                                    "minimum "
+                                    "angle "
+                                    "from "
+                                    "the "
+                                    "sensor "
+                                    "between "
+                                    "nadir "
+                                    "and "
+                                    "the "
+                                    "scene "
+                                    "center. "
+                                    "Measured "
+                                    "in "
+                                    "decimal "
+                                    "degrees.",
+                                    "maximum": 45.0,
+                                    "minimum": 0.0,
+                                    "title": "Min Off Nadir",
+                                    "type": "integer",
+                                },
+                                "satvu:day_night_mode": {
+                                    "$ref": "#/definitions/DayNightMode",
+                                    "default": "day-night",
+                                    "description": "The mode of data capture.",
+                                },
+                            },
+                            "title": "EditSeriesOrderParameters",
+                            "type": "object",
+                        },
                         "EditSeriesProperties": {
                             "additionalProperties": False,
                             "description": "Editable fields for series updates.",
@@ -1080667,7 +1099302,9 @@ _OPERATIONS = {
                                 },
                                 "order_parameters": {
                                     "anyOf": [
-                                        {"$ref": "#/definitions/SeriesOrderParameters"},
+                                        {
+                                            "$ref": "#/definitions/EditSeriesOrderParameters"
+                                        },
                                         {"type": "null"},
                                     ],
                                     "description": "Updated "
@@ -1090096,6 +1108733,7 @@ _REQUEST_MODELS = {
     },
     "EditOrderPayload": {"$ref": "#/definitions/EditOrderPayload"},
     "EditOrderProperties": {"$ref": "#/definitions/EditOrderProperties"},
+    "EditSeriesOrderParameters": {"$ref": "#/definitions/EditSeriesOrderParameters"},
     "EditSeriesProperties": {"$ref": "#/definitions/EditSeriesProperties"},
     "FeasibilityRequest": {"$ref": "#/definitions/FeasibilityRequest"},
     "FilterFields": {"$ref": "#/definitions/FilterFields"},

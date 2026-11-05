@@ -36,6 +36,7 @@ from builder.spec_schemas import (
 
 def generate_tests(
     api_name: str,
+    service_class_name: str,
     project: Project,
     openapi_dict: dict,
     base_path: str,
@@ -46,7 +47,8 @@ def generate_tests(
     Generate test file for a service API.
 
     Args:
-        api_name: API identifier (e.g., 'catalog', 'wallet')
+        api_name: Dotted service path (e.g., 'catalog', 'otm.v2')
+        service_class_name: Generated service class (e.g., 'OtmV2Service')
         project: Existing Project object with loaded templates
         openapi_dict: Raw OpenAPI dict with components/schemas
         base_path: Base path for the API (e.g., '/catalog/v1')
@@ -92,6 +94,7 @@ def generate_tests(
     # Render and write test files
     _render_test_files(
         api_name=api_name,
+        service_class_name=service_class_name,
         project=project,
         components=components,
         operations=operations,
@@ -328,6 +331,7 @@ def _process_endpoint(
 
 def _render_test_files(
     api_name: str,
+    service_class_name: str,
     project: Project,
     components: dict[str, Any],
     operations: dict,
@@ -341,7 +345,8 @@ def _render_test_files(
     Render and write test files from templates.
 
     Args:
-        api_name: API identifier
+        api_name: Dotted service path
+        service_class_name: Generated service class name
         project: Project with Jinja2 environment
         components: Component schemas
         operations: Operations dict
@@ -357,7 +362,7 @@ def _render_test_files(
 
     context = {
         "api_name": api_name,
-        "service_class_name": f"{api_name.capitalize()}Service",
+        "service_class_name": service_class_name,
         "endpoints": endpoints_data,
         "request_models": request_models,
         "request_model_schemas": {

@@ -212,6 +212,10 @@ The builder system (`src/builder/`) generates SDK code from OpenAPI specificatio
    - Detects and adds pagination support for STAC-compliant endpoints
    - Uses custom Jinja2 templates from `src/builder/templates/`
 
+   **orchestration.py** is the entry point (`build()`, used by the CLI and the hatch hook):
+   it runs `build_service` for each API or API version, then writes the stable alias for
+   versioned APIs.
+
 3. **openapi_preprocessor.py**: Preprocesses OpenAPI specs before generation to handle SatVu-specific patterns
 
 4. **patches.py**: Monkey patches openapi-python-client to customize code generation behavior
@@ -358,6 +362,15 @@ Generated code lives in `src/satvu/services/{api_name}/`:
 - `api.py`: Service class with endpoint methods
 - `models/`: Pydantic models for request/response types
 - Models are generated per-API to avoid naming conflicts
+
+**Versioned APIs** (`VersionedApi` in `src/builder/config.py`, currently OTM) generate one
+service per version under `src/satvu/services/{api_name}/{version}/` (`OtmV2Service`). The
+API root is a generated alias for the `stable` version: `{api_name}/api.py` subclasses it
+and adds lazy per-version properties (`sdk.otm.v2`), and `{api_name}/models/__init__.py`
+re-exports its models. The dotted path (`otm.v2`) is both the module path and the SDK
+accessor, and templates rely on that. The builder wipes a versioned API's root dir before
+generating, so nothing hand-written may live there. The CLI and release still take the
+bare API name, and one build covers every version.
 
 ## Key Implementation Notes
 

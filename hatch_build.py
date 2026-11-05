@@ -12,7 +12,7 @@ from hatchling.builders.hooks.plugin.interface import (  # type: ignore[import-n
 ROOT_DIR = Path(__file__).parent
 sys.path.insert(0, str(ROOT_DIR / "src"))
 
-from builder.build import build  # noqa: E402
+from builder.orchestration import build  # noqa: E402
 
 # Environment variable to control test generation during builds
 # Default: False (don't generate tests - they're excluded from wheel anyway)

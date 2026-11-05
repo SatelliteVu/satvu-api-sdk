@@ -1,10 +1,10 @@
 from argparse import ArgumentParser
 
-from builder.build import build
 from builder.config import CMD_ARGS
+from builder.orchestration import build
 
 parser = ArgumentParser(__package__, description="OpenAPI SDK builder")
-parser.add_argument("api", choices=CMD_ARGS.keys())
+parser.add_argument("api", choices=CMD_ARGS)
 parser.add_argument(
     "--cached",
     action="store_true",

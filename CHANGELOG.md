@@ -1,5 +1,14 @@
 ## [0.12.3](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.12.2...v0.12.3) (2026-11-05)
 
+## [0.12.3.20261105.1052] - 2026-11-05
+
+### feat(otm): 2 changes to PATCH /{contract_id}/tasking/series/{series_id}
+
+#### PATCH /{contract_id}/tasking/series/{series_id}
+* added `#/components/schemas/EditSeriesOrderParameters` to the `order_parameters` request property `anyOf` list
+* removed `#/components/schemas/SeriesOrderParameters` from the `order_parameters` request property `anyOf` list
+
+
 
 ### Bug Fixes
 

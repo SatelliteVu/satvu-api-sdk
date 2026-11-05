@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, Union
+from typing import TYPE_CHECKING, Any, Literal, Union
 from uuid import UUID
 
 import pydantic
@@ -72,3 +72,8 @@ class SearchResponseFeatureStandardOrderRequest(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(
         validate_by_name=True, validate_by_alias=True, extra="allow"
     )
+
+    def model_post_init(self, context: Any, /) -> None:
+        # Required fields the SDK fills in (constants, spec defaults) must survive
+        # model_dump(exclude_unset=True)
+        self.__pydantic_fields_set__ = self.model_fields_set.union(["type_"])

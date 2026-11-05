@@ -7,6 +7,8 @@ These schemas are used with hypothesis-jsonschema to generate test data.
 Stores entire OpenAPI spec as operations with helper functions for access.
 """
 
+from functools import cache
+
 from satvu.services.example_cache import get_cached_example_strategy
 
 # Spec hash for example cache invalidation
@@ -93263,6 +93265,19 @@ _OPERATIONS = {
     },
 }
 
+# Request models: class name -> schema (a $ref into _COMPONENTS unless inline);
+# definitions are attached on access
+_REQUEST_MODELS = {
+    "OrderEditPayload": {"$ref": "#/definitions/OrderEditPayload"},
+    "OrderSubmissionPayload": {"$ref": "#/definitions/OrderSubmissionPayload"},
+    "PriceRequest": {"$ref": "#/definitions/PriceRequest"},
+    "ResellerPriceRequest": {"$ref": "#/definitions/ResellerPriceRequest"},
+    "ResellerSubmissionOrderPayload": {
+        "$ref": "#/definitions/ResellerSubmissionOrderPayload"
+    },
+    "SearchRequest": {"$ref": "#/definitions/SearchRequest"},
+}
+
 
 def get_response_schema(path: str, method: str, status: str) -> dict:
     """
@@ -93349,6 +93364,30 @@ def get_parameter_strategy(path: str, method: str, param_name: str):
         example_type="param",
         key=param_name,
         schema_getter=lambda: get_parameter_schema(path, method, param_name),
+    )
+
+
+def get_request_model_schema(name: str) -> dict:
+    """Get the schema for a request model class, with definitions attached."""
+    return {**_REQUEST_MODELS[name], "definitions": _COMPONENTS}
+
+
+@cache
+def get_request_model_strategy(name: str):
+    """
+    Get hypothesis strategy for request model examples (cached or generated).
+
+    Drawn inside the test body, so it is built once per model rather than once per
+    example; the from_schema fallback is expensive over the full definitions.
+    """
+    return get_cached_example_strategy(
+        api_name="cos",
+        spec_hash=_SPEC_HASH,
+        path=name,
+        method="model",
+        example_type="body",
+        key="request",
+        schema_getter=lambda: get_request_model_schema(name),
     )
 
 

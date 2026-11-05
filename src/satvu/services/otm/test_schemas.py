@@ -7,6 +7,8 @@ These schemas are used with hypothesis-jsonschema to generate test data.
 Stores entire OpenAPI spec as operations with helper functions for access.
 """
 
+from functools import cache
+
 from satvu.services.example_cache import get_cached_example_strategy
 
 # Spec hash for example cache invalidation
@@ -1090081,6 +1090083,55 @@ _OPERATIONS = {
     },
 }
 
+# Request models: class name -> schema (a $ref into _COMPONENTS unless inline);
+# definitions are attached on access
+_REQUEST_MODELS = {
+    "AssuredFeasibilityFields": {"$ref": "#/definitions/AssuredFeasibilityFields"},
+    "AssuredFeasibilityFieldsWithAddons": {
+        "$ref": "#/definitions/AssuredFeasibilityFieldsWithAddons"
+    },
+    "AssuredOrderRequest": {"$ref": "#/definitions/AssuredOrderRequest"},
+    "AssuredOrderRequestProperties": {
+        "$ref": "#/definitions/AssuredOrderRequestProperties"
+    },
+    "EditOrderPayload": {"$ref": "#/definitions/EditOrderPayload"},
+    "EditOrderProperties": {"$ref": "#/definitions/EditOrderProperties"},
+    "EditSeriesProperties": {"$ref": "#/definitions/EditSeriesProperties"},
+    "FeasibilityRequest": {"$ref": "#/definitions/FeasibilityRequest"},
+    "FilterFields": {"$ref": "#/definitions/FilterFields"},
+    "GeometryCollection": {"$ref": "#/definitions/GeometryCollection"},
+    "LineString": {"$ref": "#/definitions/LineString"},
+    "ModifyFeasibilityRequest": {"$ref": "#/definitions/ModifyFeasibilityRequest"},
+    "ModifyFeasibilityRequestProperties": {
+        "$ref": "#/definitions/ModifyFeasibilityRequestProperties"
+    },
+    "MultiLineString": {"$ref": "#/definitions/MultiLineString"},
+    "MultiPoint": {"$ref": "#/definitions/MultiPoint"},
+    "MultiPolygon": {"$ref": "#/definitions/MultiPolygon"},
+    "Point": {"$ref": "#/definitions/Point"},
+    "Polygon": {"$ref": "#/definitions/Polygon"},
+    "PriceRequest": {"$ref": "#/definitions/PriceRequest"},
+    "ResellerAssuredOrderRequest": {
+        "$ref": "#/definitions/ResellerAssuredOrderRequest"
+    },
+    "ResellerStandardOrderRequest": {
+        "$ref": "#/definitions/ResellerStandardOrderRequest"
+    },
+    "SearchRequest": {"$ref": "#/definitions/SearchRequest"},
+    "SeriesOrderParameters": {"$ref": "#/definitions/SeriesOrderParameters"},
+    "SeriesProperties": {"$ref": "#/definitions/SeriesProperties"},
+    "SeriesRequest": {"$ref": "#/definitions/SeriesRequest"},
+    "SortEntities": {"$ref": "#/definitions/SortEntities"},
+    "StandardOrderRequest": {"$ref": "#/definitions/StandardOrderRequest"},
+    "StandardOrderRequestProperties": {
+        "$ref": "#/definitions/StandardOrderRequestProperties"
+    },
+    "StandardPriceRequestProperties": {
+        "$ref": "#/definitions/StandardPriceRequestProperties"
+    },
+    "StandardRequestProperties": {"$ref": "#/definitions/StandardRequestProperties"},
+}
+
 
 def get_response_schema(path: str, method: str, status: str) -> dict:
     """
@@ -1090167,6 +1090218,30 @@ def get_parameter_strategy(path: str, method: str, param_name: str):
         example_type="param",
         key=param_name,
         schema_getter=lambda: get_parameter_schema(path, method, param_name),
+    )
+
+
+def get_request_model_schema(name: str) -> dict:
+    """Get the schema for a request model class, with definitions attached."""
+    return {**_REQUEST_MODELS[name], "definitions": _COMPONENTS}
+
+
+@cache
+def get_request_model_strategy(name: str):
+    """
+    Get hypothesis strategy for request model examples (cached or generated).
+
+    Drawn inside the test body, so it is built once per model rather than once per
+    example; the from_schema fallback is expensive over the full definitions.
+    """
+    return get_cached_example_strategy(
+        api_name="otm",
+        spec_hash=_SPEC_HASH,
+        path=name,
+        method="model",
+        example_type="body",
+        key="request",
+        schema_getter=lambda: get_request_model_schema(name),
     )
 
 

@@ -15,6 +15,7 @@ from uuid import uuid4
 import pook
 import pytest
 from hypothesis import HealthCheck, given, settings
+from hypothesis import strategies as st
 from pydantic import TypeAdapter
 
 from satvu import SatVuSDK, create_http_client
@@ -24,6 +25,12 @@ from satvu.services.catalog.models.acquisition_feature_collection import (
 )
 from satvu.services.catalog.models.acquisition_item import AcquisitionItem
 from satvu.services.catalog.models.acquisition_queryables import AcquisitionQueryables
+from satvu.services.catalog.models.and_or_expression import AndOrExpression
+from satvu.services.catalog.models.arithmetic_expression import ArithmeticExpression
+from satvu.services.catalog.models.bbox_literal import BboxLiteral
+from satvu.services.catalog.models.binary_comparison_predicate import (
+    BinaryComparisonPredicate,
+)
 from satvu.services.catalog.models.catalog import Catalog
 from satvu.services.catalog.models.collection import Collection
 from satvu.services.catalog.models.collection_search_json_input import (
@@ -31,16 +38,35 @@ from satvu.services.catalog.models.collection_search_json_input import (
 )
 from satvu.services.catalog.models.collections import Collections
 from satvu.services.catalog.models.conformance import Conformance
+from satvu.services.catalog.models.date_instant import DateInstant
 from satvu.services.catalog.models.feature import Feature
 from satvu.services.catalog.models.feature_collection import FeatureCollection
+from satvu.services.catalog.models.geo_json_geometry_collection import (
+    GeoJSONGeometryCollection,
+)
+from satvu.services.catalog.models.geo_json_line_string import GeoJSONLineString
+from satvu.services.catalog.models.geo_json_multi_line_string import (
+    GeoJSONMultiLineString,
+)
+from satvu.services.catalog.models.geo_json_multi_point import GeoJSONMultiPoint
+from satvu.services.catalog.models.geo_json_multi_polygon import GeoJSONMultiPolygon
+from satvu.services.catalog.models.geo_json_point import GeoJSONPoint
+from satvu.services.catalog.models.geo_json_polygon import GeoJSONPolygon
+from satvu.services.catalog.models.is_between_predicate import IsBetweenPredicate
+from satvu.services.catalog.models.is_in_list_predicate import IsInListPredicate
+from satvu.services.catalog.models.is_like_predicate import IsLikePredicate
+from satvu.services.catalog.models.is_null_predicate import IsNullPredicate
+from satvu.services.catalog.models.not_expression import NotExpression
 from satvu.services.catalog.models.primary_feature_collection import (
     PrimaryFeatureCollection,
 )
 from satvu.services.catalog.models.primary_item import PrimaryItem
 from satvu.services.catalog.models.primary_queryables import PrimaryQueryables
+from satvu.services.catalog.models.property_ref import PropertyRef
 from satvu.services.catalog.models.queryables import Queryables
 from satvu.services.catalog.models.search_json_input import SearchJsonInput
 from satvu.services.catalog.models.search_response import SearchResponse
+from satvu.services.catalog.models.sort_by_element import SortByElement
 from satvu.services.catalog.models.surface_brightness_temperature_feature_collection import (
     SurfaceBrightnessTemperatureFeatureCollection,
 )
@@ -50,7 +76,9 @@ from satvu.services.catalog.models.surface_brightness_temperature_item import (
 from satvu.services.catalog.models.surface_brightness_temperature_queryables import (
     SurfaceBrightnessTemperatureQueryables,
 )
+from satvu.services.catalog.models.timestamp_instant import TimestampInstant
 from satvu.services.schema_conformance import (
+    assert_minimal_dump_conforms,
     assert_request_body_conforms,
     assert_request_body_matches_input,
     drop_optional_properties,
@@ -59,8 +87,57 @@ from satvu.services.schema_conformance import (
 from .test_schemas import (
     get_request_body_schema,
     get_request_body_strategy,
+    get_request_model_schema,
+    get_request_model_strategy,
     get_response_strategy,
 )
+
+
+@pytest.mark.parametrize(
+    "model",
+    [
+        AndOrExpression,
+        ArithmeticExpression,
+        BboxLiteral,
+        BinaryComparisonPredicate,
+        CollectionSearchJsonInput,
+        DateInstant,
+        GeoJSONGeometryCollection,
+        GeoJSONLineString,
+        GeoJSONMultiLineString,
+        GeoJSONMultiPoint,
+        GeoJSONMultiPolygon,
+        GeoJSONPoint,
+        GeoJSONPolygon,
+        IsBetweenPredicate,
+        IsInListPredicate,
+        IsLikePredicate,
+        IsNullPredicate,
+        NotExpression,
+        PropertyRef,
+        SearchJsonInput,
+        SortByElement,
+        TimestampInstant,
+    ],
+    ids=lambda model: model.__name__,
+)
+@settings(
+    max_examples=5,
+    deadline=None,
+    suppress_health_check=[
+        HealthCheck.filter_too_much,
+        HealthCheck.too_slow,
+        HealthCheck.data_too_large,
+    ],
+)
+@given(data=st.data())
+def test_minimal_request_model_dump_keeps_required_keys(model, data):
+    """
+    Test a request model built from its caller-required fields dumps every spec-required key.
+    """
+    schema = get_request_model_schema(model.__name__)
+    body_data = data.draw(get_request_model_strategy(model.__name__))
+    assert_minimal_dump_conforms(model, body_data, schema)
 
 
 @pytest.mark.parametrize(

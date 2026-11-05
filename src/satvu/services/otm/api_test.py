@@ -15,17 +15,31 @@ from uuid import uuid4
 import pook
 import pytest
 from hypothesis import HealthCheck, given, settings
+from hypothesis import strategies as st
 from pydantic import TypeAdapter
 
 from satvu import SatVuSDK, create_http_client
 from satvu.http.errors import ClientError, ServerError
+from satvu.services.otm.models.assured_feasibility_fields import (
+    AssuredFeasibilityFields,
+)
+from satvu.services.otm.models.assured_feasibility_fields_with_addons import (
+    AssuredFeasibilityFieldsWithAddons,
+)
 from satvu.services.otm.models.assured_order_request import AssuredOrderRequest
+from satvu.services.otm.models.assured_order_request_properties import (
+    AssuredOrderRequestProperties,
+)
 from satvu.services.otm.models.download_pending import DownloadPending
 from satvu.services.otm.models.edit_order_payload import EditOrderPayload
+from satvu.services.otm.models.edit_order_properties import EditOrderProperties
 from satvu.services.otm.models.edit_series_properties import EditSeriesProperties
 from satvu.services.otm.models.feasibility_request import FeasibilityRequest
 from satvu.services.otm.models.feasibility_response import FeasibilityResponse
+from satvu.services.otm.models.filter_fields import FilterFields
+from satvu.services.otm.models.geometry_collection import GeometryCollection
 from satvu.services.otm.models.get_order_response import GetOrderResponse
+from satvu.services.otm.models.line_string import LineString
 from satvu.services.otm.models.list_order_tasks_response import ListOrderTasksResponse
 from satvu.services.otm.models.list_order_tasks_unavailable_response import (
     ListOrderTasksUnavailableResponse,
@@ -40,9 +54,17 @@ from satvu.services.otm.models.list_stored_orders_response_1 import (
 from satvu.services.otm.models.modify_feasibility_request import (
     ModifyFeasibilityRequest,
 )
+from satvu.services.otm.models.modify_feasibility_request_properties import (
+    ModifyFeasibilityRequestProperties,
+)
+from satvu.services.otm.models.multi_line_string import MultiLineString
+from satvu.services.otm.models.multi_point import MultiPoint
+from satvu.services.otm.models.multi_polygon import MultiPolygon
 from satvu.services.otm.models.order_item_download_url import OrderItemDownloadUrl
 from satvu.services.otm.models.order_modification_price import OrderModificationPrice
 from satvu.services.otm.models.order_price import OrderPrice
+from satvu.services.otm.models.point import Point
+from satvu.services.otm.models.polygon import Polygon
 from satvu.services.otm.models.price_request import PriceRequest
 from satvu.services.otm.models.reseller_assured_order_request import (
     ResellerAssuredOrderRequest,
@@ -58,10 +80,22 @@ from satvu.services.otm.models.reseller_stored_order_response import (
 )
 from satvu.services.otm.models.search_request import SearchRequest
 from satvu.services.otm.models.search_response import SearchResponse
+from satvu.services.otm.models.series_order_parameters import SeriesOrderParameters
 from satvu.services.otm.models.series_price_response import SeriesPriceResponse
+from satvu.services.otm.models.series_properties import SeriesProperties
 from satvu.services.otm.models.series_request import SeriesRequest
+from satvu.services.otm.models.sort_entities import SortEntities
 from satvu.services.otm.models.stac_feature import StacFeature
 from satvu.services.otm.models.standard_order_request import StandardOrderRequest
+from satvu.services.otm.models.standard_order_request_properties import (
+    StandardOrderRequestProperties,
+)
+from satvu.services.otm.models.standard_price_request_properties import (
+    StandardPriceRequestProperties,
+)
+from satvu.services.otm.models.standard_request_properties import (
+    StandardRequestProperties,
+)
 from satvu.services.otm.models.stored_feasibility_feature_collection import (
     StoredFeasibilityFeatureCollection,
 )
@@ -71,6 +105,7 @@ from satvu.services.otm.models.stored_feasibility_request import (
 from satvu.services.otm.models.stored_order_response import StoredOrderResponse
 from satvu.services.otm.models.stored_series_response import StoredSeriesResponse
 from satvu.services.schema_conformance import (
+    assert_minimal_dump_conforms,
     assert_request_body_conforms,
     assert_request_body_matches_input,
     drop_optional_properties,
@@ -79,8 +114,65 @@ from satvu.services.schema_conformance import (
 from .test_schemas import (
     get_request_body_schema,
     get_request_body_strategy,
+    get_request_model_schema,
+    get_request_model_strategy,
     get_response_strategy,
 )
+
+
+@pytest.mark.parametrize(
+    "model",
+    [
+        AssuredFeasibilityFields,
+        AssuredFeasibilityFieldsWithAddons,
+        AssuredOrderRequest,
+        AssuredOrderRequestProperties,
+        EditOrderPayload,
+        EditOrderProperties,
+        EditSeriesProperties,
+        FeasibilityRequest,
+        FilterFields,
+        GeometryCollection,
+        LineString,
+        ModifyFeasibilityRequest,
+        ModifyFeasibilityRequestProperties,
+        MultiLineString,
+        MultiPoint,
+        MultiPolygon,
+        Point,
+        Polygon,
+        PriceRequest,
+        ResellerAssuredOrderRequest,
+        ResellerStandardOrderRequest,
+        SearchRequest,
+        SeriesOrderParameters,
+        SeriesProperties,
+        SeriesRequest,
+        SortEntities,
+        StandardOrderRequest,
+        StandardOrderRequestProperties,
+        StandardPriceRequestProperties,
+        StandardRequestProperties,
+    ],
+    ids=lambda model: model.__name__,
+)
+@settings(
+    max_examples=5,
+    deadline=None,
+    suppress_health_check=[
+        HealthCheck.filter_too_much,
+        HealthCheck.too_slow,
+        HealthCheck.data_too_large,
+    ],
+)
+@given(data=st.data())
+def test_minimal_request_model_dump_keeps_required_keys(model, data):
+    """
+    Test a request model built from its caller-required fields dumps every spec-required key.
+    """
+    schema = get_request_model_schema(model.__name__)
+    body_data = data.draw(get_request_model_strategy(model.__name__))
+    assert_minimal_dump_conforms(model, body_data, schema)
 
 
 @pytest.mark.parametrize(

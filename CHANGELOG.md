@@ -1,3 +1,10 @@
+## [0.12.3](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.12.2...v0.12.3) (2026-11-05)
+
+
+### Bug Fixes
+
+* **builder:** send spec-required constants under exclude_unset
+
 ## [0.12.2](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.12.1...v0.12.2) (2026-10-30)
 
 ## [0.12.2.20261103.1225] - 2026-11-03

@@ -13,6 +13,7 @@ from unittest.mock import Mock
 import pook
 import pytest
 from hypothesis import HealthCheck, given, settings
+from hypothesis import strategies as st
 
 from satvu import SatVuSDK, create_http_client
 from satvu.http.errors import ClientError
@@ -29,6 +30,7 @@ from satvu.services.policy.models.user_acceptance_terms_input import (
     UserAcceptanceTermsInput,
 )
 from satvu.services.schema_conformance import (
+    assert_minimal_dump_conforms,
     assert_request_body_conforms,
     assert_request_body_matches_input,
     drop_optional_properties,
@@ -37,8 +39,38 @@ from satvu.services.schema_conformance import (
 from .test_schemas import (
     get_request_body_schema,
     get_request_body_strategy,
+    get_request_model_schema,
+    get_request_model_strategy,
     get_response_strategy,
 )
+
+
+@pytest.mark.parametrize(
+    "model",
+    [
+        ListActiveContractsInput,
+        UserAcceptanceTermsInput,
+    ],
+    ids=lambda model: model.__name__,
+)
+@settings(
+    max_examples=5,
+    deadline=None,
+    suppress_health_check=[
+        HealthCheck.filter_too_much,
+        HealthCheck.too_slow,
+        HealthCheck.data_too_large,
+    ],
+)
+@given(data=st.data())
+def test_minimal_request_model_dump_keeps_required_keys(model, data):
+    """
+    Test a request model built from its caller-required fields dumps every spec-required key.
+    """
+    schema = get_request_model_schema(model.__name__)
+    body_data = data.draw(get_request_model_strategy(model.__name__))
+
+    assert_minimal_dump_conforms(model, body_data, schema)
 
 
 @pytest.mark.parametrize(

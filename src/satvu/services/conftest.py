@@ -2,12 +2,15 @@
 
 import os
 import warnings
+from pathlib import Path
 
 import hypothesis.internal.conjecture.engine as engine
 
 # Reduce shrinking time from default (5 minutes) to 30 seconds
 # See: https://hypothesis.readthedocs.io/en/latest/reference/internals.html#engine-constants
 engine.MAX_SHRINKING_SECONDS = 30
+
+SERVICES_DIR = Path(__file__).parent
 
 # All available HTTP backends
 ALL_BACKENDS = ["stdlib", "httpx", "httpx2", "urllib3", "requests"]
@@ -35,8 +38,8 @@ def pytest_ignore_collect(collection_path):
         return None
 
     warnings.warn(
-        f"Skipping {collection_path.parent.name} service tests: test_schemas.py is "
-        "missing. Generate it with: SATVU_GENERATE_TESTS=1 uv build",
+        f"Skipping {collection_path.parent.relative_to(SERVICES_DIR)} service tests: "
+        "test_schemas.py is missing. Generate it with: SATVU_GENERATE_TESTS=1 uv build",
         stacklevel=1,
     )
     return True

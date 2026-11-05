@@ -4,6 +4,7 @@ import pytest
 
 from satvu.auth import MemoryCache
 from satvu.sdk import SatVuSDK
+from satvu.services.otm import models as otm_models
 
 
 class TestSatVuSDKInit:
@@ -107,6 +108,40 @@ class TestLazyServiceInitialization:
         catalog1 = sdk.catalog
         catalog2 = sdk.catalog
         assert catalog1 is catalog2
+
+
+class TestVersionedServices:
+    """Versioned APIs: the bare accessor is the stable version, pinned ones hang off it."""
+
+    @pytest.fixture
+    def sdk(self):
+        return SatVuSDK(
+            client_id="test_id",
+            client_secret="test_secret",  # pragma: allowlist secret
+            timeout=120,
+            max_retry_attempts=10,
+        )
+
+    def test_bare_accessor_is_stable_version(self, sdk):
+        assert type(sdk.otm).__bases__ == (type(sdk.otm.v2),)
+
+    def test_pinned_version_is_cached_and_separate(self, sdk):
+        assert sdk.otm.v2 is sdk.otm.v2
+        assert sdk.otm.v2 is not sdk.otm
+
+    def test_pinned_stable_version_shares_http_client(self, sdk):
+        assert sdk.otm.v2.client is sdk.otm.client
+
+    def test_config_propagated_to_pinned_version(self, sdk):
+        assert sdk.otm.v2.timeout == 120
+        assert sdk.otm.v2.max_retry_attempts == 10
+        assert sdk.otm.v2.base_path == sdk.otm.base_path
+
+    def test_stable_models_reexported(self):
+        assert all(
+            getattr(otm_models, name).__module__.startswith("satvu.services.otm.v2.")
+            for name in otm_models.__all__
+        )
 
 
 class TestConfigPropagation:

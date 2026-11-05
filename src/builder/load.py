@@ -7,7 +7,7 @@ from typing import Any
 
 from httpx import get
 
-from builder.config import APIS, BASE_URL
+from builder.config import BASE_URL, ServiceTarget
 
 BASE_DIR = (Path(__file__).parent / ".." / "..").resolve()
 CACHE_DIR = BASE_DIR / ".cache"
@@ -191,23 +191,26 @@ def spec_content_hash(spec: dict) -> str:
     return sha1(canonical.encode(), usedforsecurity=False).hexdigest()
 
 
-def load_openapi(api_id: str, use_cached: bool = False) -> tuple[dict, Path]:
+def load_openapi(target: ServiceTarget, use_cached: bool = False) -> tuple[dict, Path]:
     """
-    Load and inline the OpenAPI specification for the given API ID.
+    Load and inline the OpenAPI specification for the given service.
 
-    :param api_id: The identifier for the API to load.
+    :param target: The service (API, or one version of it) to load.
     :param use_cached: If True, use cached OpenAPI spec if available; otherwise, fetch it.
                        Ignored if SATVU_TRIGGERED_API environment variable is set.
     :return: The inlined OpenAPI specification as a dictionary.
     """
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    openapi_url = f"{BASE_URL.rstrip('/')}/{APIS[api_id].lstrip('/')}/openapi.json"
+    api_id = target.module_path
+    openapi_url = f"{BASE_URL.rstrip('/')}/{target.base_path.lstrip('/')}/openapi.json"
+    # The URL hash keeps versions (and envs) apart; the bare API name prefix matches
+    # caches written before versioning, so those stay valid.
     cache_file = (
         CACHE_DIR
-        / f"{api_id}-{sha1(openapi_url.encode(), usedforsecurity=False).hexdigest()}.json"
+        / f"{target.api}-{sha1(openapi_url.encode(), usedforsecurity=False).hexdigest()}.json"
     )
 
-    fetch_fresh = _should_fetch_fresh(api_id, use_cached)
+    fetch_fresh = _should_fetch_fresh(target.api, use_cached)
     cache_exists = cache_file.exists()
 
     # Fetch fresh if needed, or if cache doesn't exist (graceful fallback)

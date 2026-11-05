@@ -1,4 +1,3 @@
-import sys
 import traceback
 from collections.abc import Sequence
 from dataclasses import dataclass, field
@@ -17,7 +16,7 @@ from openapi_python_client.schema import UntrustedString
 from openapi_python_client.strings import safe_for_docstring
 
 from builder.code_strings import unwrap_code
-from builder.config import APIS, SPEC_ENV
+from builder.config import SPEC_ENV, ServiceTarget
 from builder.jinja_filters import (
     always_sent_fields,
     to_pydantic_model_field,
@@ -63,6 +62,8 @@ class BuildContext:
     """Context for building a single API service."""
 
     api_id: str
+    """Dotted service path, e.g. 'catalog' or 'otm.v2'"""
+    class_name: str
     base_path: str
     output_dir: Path
     template_dir: Path
@@ -334,6 +335,7 @@ class ServiceCodeGenerator:
         template_context = {
             "endpoints": [e.endpoint for e in self.enhanced_endpoints],
             "api_id": self.context.api_id,
+            "class_name": self.context.class_name,
             "base_path": self.context.base_path,
         }
 
@@ -395,6 +397,7 @@ class ServiceCodeGenerator:
         try:
             generate_tests(
                 api_name=self.context.api_id,
+                service_class_name=self.context.class_name,
                 project=self.project,
                 openapi_dict=self.openapi_dict,
                 base_path=self.context.base_path,
@@ -444,26 +447,28 @@ class ServiceCodeGenerator:
 
 
 def build_service(
-    api_id: str, use_cached: bool = False, generate_tests: bool = False
+    target: ServiceTarget, use_cached: bool = False, generate_tests: bool = False
 ) -> Sequence[GeneratorError]:
     """
-    Build an API service.
+    Build one service: an unversioned API, or a single version of one.
 
     Args:
-        api_id: API identifier
+        target: Service to build
         use_cached: Use cached OpenAPI spec
         generate_tests: Generate test files (default: False for faster builds)
 
     Returns:
         List of errors (empty on success)
     """
+    api_id = target.module_path
     print(f"Building {api_id} service{' (with tests)' if generate_tests else ''}...")
 
     # Create build context
     context = BuildContext(
         api_id=api_id,
-        base_path=APIS[api_id],
-        output_dir=SRC_DIR / api_id,
+        class_name=target.class_name,
+        base_path=target.base_path,
+        output_dir=SRC_DIR.joinpath(*api_id.split(".")),
         template_dir=TEMPLATE_DIR,
         strip_version_prefix=True,
     )
@@ -473,7 +478,7 @@ def build_service(
 
     # Load OpenAPI spec
     try:
-        openapi_dict, openapi_src = load_openapi(api_id, use_cached)
+        openapi_dict, openapi_src = load_openapi(target, use_cached)
         # Preprocess the spec to fix issues that would require patching
         openapi_dict = preprocess_for_sdk_generation(openapi_dict)
         # Cache key for pre-generated examples. Hashes the preprocessed spec *content*:
@@ -543,36 +548,3 @@ def build_service(
         print(f"  ✓ Generated to {context.output_dir}")
 
     return errors
-
-
-def build_all(
-    use_cached: bool = False, generate_tests: bool = False
-) -> dict[str, list[GeneratorError]]:
-    """Build all API services."""
-    results = {}
-
-    for api_id in APIS:
-        print(f"\n{'=' * 60}")
-        errors = build_service(api_id, use_cached, generate_tests=generate_tests)
-        results[api_id] = errors
-
-    print(f"\n{'=' * 60}")
-    successful = sum(1 for e in results.values() if not e)
-    print(f"Summary: {successful}/{len(results)} services built successfully")
-
-    return results
-
-
-def build(api_id: str, use_cached: bool = False, generate_tests: bool = False) -> None:
-    """Main entry point (CLI compatible)."""
-    if api_id == "all":
-        results = build_all(use_cached, generate_tests=generate_tests)
-        if any(results.values()):
-            sys.exit(1)
-    else:
-        errors = build_service(api_id, use_cached, generate_tests=generate_tests)
-        if errors:
-            print("\nErrors:")
-            for error in errors:
-                print(f"  {error.detail}")
-            sys.exit(1)

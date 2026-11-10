@@ -8,7 +8,7 @@ from urllib.parse import parse_qs, urlparse
 
 from pydantic import BaseModel
 
-from satvu.http import HttpClient, create_http_client
+from satvu.http import HttpClientLike, ensure_http_client
 from satvu.http.errors import HttpError
 from satvu.http.protocol import HttpResponse
 from satvu.result import Result
@@ -83,7 +83,7 @@ class SDKClient:
         env: str | None,
         get_token: Callable[[], str] | None = None,
         subdomain: str = "api",
-        http_client: HttpClient | None = None,
+        http_client: HttpClientLike | None = None,
         timeout: int = 30,
         max_retry_attempts: int = 5,
         max_retry_after_seconds: float = 300.0,
@@ -94,7 +94,10 @@ class SDKClient:
         :param env: the environment to use
         :param get_token: callable that returns the auth token
         :param subdomain: the subdomain to use
-        :param http_client: optional custom HTTP client, defaults to auto-created client
+        :param http_client: optional HTTP client: an ``httpx.Client``, ``httpx2.Client``,
+            ``requests.Session``, ``urllib3.PoolManager`` or ``HttpClient``. Defaults to
+            the best installed library. This class adds the base URL and auth, so one
+            client can be shared by every service.
         :param timeout: request timeout in seconds, default 30s
         :param max_retry_attempts: maximum number of retry attempts, default 5
         :param max_retry_after_seconds: maximum seconds to wait for Retry-After, default 300s
@@ -103,19 +106,11 @@ class SDKClient:
         self.max_retry_attempts = max_retry_attempts
         self.max_retry_after_seconds = max_retry_after_seconds
         self.env = env
-
-        base_url = (
-            f"{self.build_url(subdomain).rstrip('/')}/{self.base_path.lstrip('/')}"
+        self._get_token = get_token
+        self._base_url = (
+            f"{self.build_url(subdomain).rstrip('/')}/{self.base_path.strip('/')}"
         )
-
-        if http_client is not None:
-            self.client = http_client
-        else:
-            self.client = create_http_client(
-                "auto",
-                base_url=base_url,
-                get_token=get_token,
-            )
+        self.client = ensure_http_client(http_client)
 
     def build_url(self, subdomain: str) -> str:
         """
@@ -126,6 +121,27 @@ class SDKClient:
         """
         env = "" if not self.env else f"{self.env}."
         return f"https://{subdomain}.{env}satellitevu.com/"
+
+    def _resolve_url(self, url: str) -> str:
+        """Prefix a relative endpoint path with this service's base URL."""
+        if url.startswith(("http://", "https://")):
+            return url
+        return f"{self._base_url}/{url.lstrip('/')}"
+
+    def _request_headers(
+        self, url: str, headers: dict[str, str] | None
+    ) -> dict[str, str] | None:
+        """
+        Return a new headers dict with the bearer token added.
+
+        The token is only sent to this service's own URLs (never to e.g. a presigned
+        download link), and never replaces an ``Authorization`` the caller set.
+        """
+        if self._get_token is None or not url.startswith(f"{self._base_url}/"):
+            return headers
+        if any(key.lower() == "authorization" for key in headers or {}):
+            return headers
+        return {**(headers or {}), "Authorization": f"Bearer {self._get_token()}"}
 
     def make_request(
         self,
@@ -229,14 +245,15 @@ class SDKClient:
         # Use instance timeout if not specified
         timeout_val = timeout if timeout is not None else self.timeout
 
+        resolved_url = self._resolve_url(url)
         return self.client.request(
             method=method,  # type: ignore
-            url=url,
+            url=resolved_url,
             json=json,
             params=params,
             follow_redirects=follow_redirects,
             timeout=float(timeout_val),
-            headers=headers,
+            headers=self._request_headers(resolved_url, headers),
         )
 
     @staticmethod

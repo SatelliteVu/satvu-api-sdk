@@ -135,20 +135,14 @@ class TestCatalogService:
         # Create mock auth token
         mock_get_token = Mock(return_value="test_token")
 
-        # Create HTTP client with specified backend
-        http_client = create_http_client(
-            backend=backend,
-            base_url=self.base_url,
-            get_token=mock_get_token,
-        )
-
-        # Initialize SDK
+        # A plain client: the SDK adds the base URL and auth
         self.sdk = SatVuSDK(
             client_id="test_client_id",
             client_secret="test_client_secret",  # pragma: allowlist secret
-            http_client=http_client,
+            http_client=create_http_client(backend=backend),
             env="qa",
         )
+        self.sdk.catalog._get_token = mock_get_token
 
     # ---- Success Tests (2xx) ----
     @settings(max_examples=10, deadline=None, suppress_health_check=[...])

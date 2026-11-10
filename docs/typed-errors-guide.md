@@ -231,10 +231,10 @@ from satvu.http import (
 
 
 def fetch_user_data(user_id: str):
-    adapter = StdlibAdapter(base_url="https://api.example.com")
+    adapter = StdlibAdapter()
 
     # Make request
-    result = adapter.request("GET", f"/users/{user_id}")
+    result = adapter.request("GET", f"https://api.example.com/users/{user_id}")
 
     # Handle errors
     if result.is_err():
@@ -285,10 +285,10 @@ if user:
 
 ```python
 def fetch_user_data_functional(user_id: str):
-    adapter = StdlibAdapter(base_url="https://api.example.com")
+    adapter = StdlibAdapter()
 
     return (
-        adapter.request("GET", f"/users/{user_id}")
+        adapter.request("GET", f"https://api.example.com/users/{user_id}")
         .and_then(lambda response: response.json())
         .map(lambda data: data.get("user"))
         .unwrap_or(None)

@@ -100,7 +100,7 @@ class HttpClient(Protocol):
 
         Args:
             method: HTTP method (GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS)
-            url: URL to request (can be relative to base_url if supported)
+            url: Absolute URL to request
             headers: Optional HTTP headers
             params: Optional query parameters
             json: Optional JSON body (will be serialized)

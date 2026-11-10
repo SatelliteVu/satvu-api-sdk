@@ -172,7 +172,7 @@ from uuid import UUID, uuid4
 from uuid import UUID
 {% endif %}
 from satvu.core import SDKClient, _deep_merge
-from satvu.http import HttpClient
+from satvu.http import HttpClientLike
 from satvu.shared.parsing import normalize_keys, parse_response
 
 {% for endpoint in endpoints %}
@@ -193,7 +193,7 @@ from satvu.shared.parsing import normalize_keys, parse_response
 class {{ class_name }}(SDKClient):
     base_path = "{{ base_path }}"
 
-    def __init__(self, env: str | None, get_token: Callable[[], str], http_client: HttpClient | None = None, timeout: int = 30, max_retry_attempts: int = 5, max_retry_after_seconds: float = 300.0):
+    def __init__(self, env: str | None, get_token: Callable[[], str], http_client: HttpClientLike | None = None, timeout: int = 30, max_retry_attempts: int = 5, max_retry_after_seconds: float = 300.0):
         super().__init__(env=env, get_token=get_token, http_client=http_client, timeout=timeout, max_retry_attempts=max_retry_attempts, max_retry_after_seconds=max_retry_after_seconds)
 
     {% for endpoint in endpoints %}

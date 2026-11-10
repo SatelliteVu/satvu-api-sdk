@@ -70,47 +70,61 @@ sdk = SatVuSDK(
 )
 ```
 
-## Explicit Backend Selection
+## Configuring the HTTP Client
 
-Use `create_http_client()` to specify a backend:
+Pass your own configured client from any supported library. The SDK wraps it, adds the
+base URL and auth token to every request, and shares it across every service:
 
 ```python
-from satvu import SatVuSDK
-from satvu.http import create_http_client
+import ssl
 
-# Use httpx explicitly
-http_client = create_http_client(backend="httpx")
+import httpx
+
+from satvu import SatVuSDK
 
 sdk = SatVuSDK(
     client_id="...",
     client_secret="...",
-    http_client=http_client,
+    http_client=httpx.Client(
+        proxy="http://proxy.internal:8080",
+        verify=ssl.create_default_context(cafile="ca-bundle.pem"),
+    ),
+    timeout=60,  # Request timeout in seconds
 )
 ```
 
-## Configuration Options
+| Backend    | Pass                  |
+| ---------- | --------------------- |
+| `httpx`    | `httpx.Client`        |
+| `httpx2`   | `httpx2.Client`       |
+| `requests` | `requests.Session`    |
+| `urllib3`  | `urllib3.PoolManager` |
 
-All backends support common configuration:
+Leave out `base_url` and auth on the client you pass, since the SDK sets both.
+
+## Explicit Backend Selection
+
+To pick a library but keep its default settings, use `create_http_client()`:
 
 ```python
-http_client = create_http_client(
-    backend="httpx",
-    timeout=60,  # Request timeout in seconds
-)
+from satvu.http import create_http_client
 
 sdk = SatVuSDK(
     client_id="...",
     client_secret="...",
-    http_client=http_client,
+    http_client=create_http_client(backend="requests"),
 )
 ```
 
 ## Implementing a Custom Backend
 
-Implement the `HttpClient` protocol for custom HTTP handling:
+Implement the `HttpClient` protocol for custom HTTP handling. The SDK always passes
+an absolute `url` and includes the `Authorization` header in `headers`:
 
 ```python
-from satvu.http.protocol import HttpClient, HttpResponse
+from typing import Any
+
+from satvu.http.protocol import HttpClient, HttpMethod, HttpResponse
 from satvu.result import Result, Ok, Err
 from satvu.http.errors import HttpError
 
@@ -118,14 +132,15 @@ from satvu.http.errors import HttpError
 class CustomHttpClient(HttpClient):
     def request(
         self,
-        method: str,
+        method: HttpMethod,
         url: str,
         *,
         headers: dict[str, str] | None = None,
-        params: dict[str, str] | None = None,
-        json: dict | None = None,
-        data: bytes | None = None,
-        timeout: int | None = None,
+        params: dict[str, Any] | None = None,
+        json: dict[str, Any] | list | None = None,
+        data: dict[str, str] | None = None,
+        timeout: float = 5.0,
+        follow_redirects: bool = False,
     ) -> Result[HttpResponse, HttpError]:
         # Your implementation here
         ...

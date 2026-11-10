@@ -305,12 +305,11 @@ See [Pagination](pagination.md) for details.
 - from requests import Session
 - http_client = RequestsSession(instance=Session())
 - client = Client(cid, secret, http_client=http_client)
-+ from satvu.http import create_http_client
-+ http_client = create_http_client(backend="requests")
-+ sdk = SatVuSDK(client_id=cid, client_secret=secret, http_client=http_client)
++ from requests import Session
++ sdk = SatVuSDK(client_id=cid, client_secret=secret, http_client=Session())
 ```
 
-The new SDK auto-detects the best available backend (httpx → requests → urllib3 → stdlib). Explicit selection via `create_http_client(backend=...)` is optional.
+The new SDK accepts the library's own client directly (`requests.Session`, `httpx.Client`, `httpx2.Client` or `urllib3.PoolManager`). Without one, it auto-detects the best available backend (httpx → httpx2 → requests → urllib3 → stdlib).
 
 ## Token Caching
 

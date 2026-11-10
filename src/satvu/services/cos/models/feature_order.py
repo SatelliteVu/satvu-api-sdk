@@ -9,6 +9,7 @@ from uuid import UUID
 import pydantic
 
 if TYPE_CHECKING:
+    from ..models.multi_polygon_geometry import MultiPolygonGeometry
     from ..models.order import Order
     from ..models.point_geometry import PointGeometry
     from ..models.polygon_geometry import PolygonGeometry
@@ -19,8 +20,8 @@ class FeatureOrder(pydantic.BaseModel):
     Attributes:
         id (str | UUID): The unique identifier of the feature.
         type_ (Literal['Feature']):  Default: 'Feature'.
-        geometry (Union['PointGeometry', 'PolygonGeometry', None]): Defines the full footprint of the asset represented
-            by this feature.
+        geometry (Union['MultiPolygonGeometry', 'PointGeometry', 'PolygonGeometry', None]): Defines the full footprint
+            of the asset represented by this feature.
         properties (Union['Order', None]): A map of additional metadata for the feature.
     """
 
@@ -30,10 +31,12 @@ class FeatureOrder(pydantic.BaseModel):
     type_: Literal["Feature"] = pydantic.Field(
         default="Feature", description=None, alias="type"
     )
-    geometry: Union[PointGeometry, PolygonGeometry, None] = pydantic.Field(
-        default=None,
-        description="""Defines the full footprint of the asset represented by this feature.""",
-        alias="geometry",
+    geometry: Union[MultiPolygonGeometry, PointGeometry, PolygonGeometry, None] = (
+        pydantic.Field(
+            default=None,
+            description="""Defines the full footprint of the asset represented by this feature.""",
+            alias="geometry",
+        )
     )
     properties: Union[Order, None] = pydantic.Field(
         default=None,

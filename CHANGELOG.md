@@ -1,3 +1,10 @@
+# [0.13.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.12.3...v0.13.0) (2026-11-10)
+
+
+### Features
+
+* **builder:** support multiple versions per API
+
 ## [0.12.3](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.12.2...v0.12.3) (2026-11-05)
 
 ## [0.12.3.20261105.1052] - 2026-11-05

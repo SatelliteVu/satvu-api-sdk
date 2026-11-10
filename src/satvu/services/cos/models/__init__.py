@@ -18,6 +18,7 @@ from .http_validation_error import HTTPValidationError
 from .legacy_link import LegacyLink
 from .link import Link
 from .method import Method
+from .multi_polygon_geometry import MultiPolygonGeometry
 from .order import Order
 from .order_download_url import OrderDownloadUrl
 from .order_edit_payload import OrderEditPayload
@@ -62,6 +63,7 @@ __all__ = (
     "LegacyLink",
     "Link",
     "Method",
+    "MultiPolygonGeometry",
     "Order",
     "OrderDownloadUrl",
     "OrderEditPayload",

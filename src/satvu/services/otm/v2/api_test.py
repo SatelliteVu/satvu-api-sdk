@@ -1,7 +1,7 @@
 # Auto-generated from OpenAPI spec by the SatVu SDK builder — do not edit.
 # Source: src/builder/templates/test_module.py.jinja
 """
-Tests for otm service.
+Tests for otm.v2 service.
 
 Generated from OpenAPI spec version v2.
 Uses property-based testing with hypothesis-jsonschema.
@@ -20,93 +20,95 @@ from pydantic import TypeAdapter
 
 from satvu import SatVuSDK, create_http_client
 from satvu.http.errors import ClientError, ServerError
-from satvu.services.otm.models.assured_feasibility_fields import (
+from satvu.services.otm.v2.models.assured_feasibility_fields import (
     AssuredFeasibilityFields,
 )
-from satvu.services.otm.models.assured_feasibility_fields_with_addons import (
+from satvu.services.otm.v2.models.assured_feasibility_fields_with_addons import (
     AssuredFeasibilityFieldsWithAddons,
 )
-from satvu.services.otm.models.assured_order_request import AssuredOrderRequest
-from satvu.services.otm.models.assured_order_request_properties import (
+from satvu.services.otm.v2.models.assured_order_request import AssuredOrderRequest
+from satvu.services.otm.v2.models.assured_order_request_properties import (
     AssuredOrderRequestProperties,
 )
-from satvu.services.otm.models.download_pending import DownloadPending
-from satvu.services.otm.models.edit_order_payload import EditOrderPayload
-from satvu.services.otm.models.edit_order_properties import EditOrderProperties
-from satvu.services.otm.models.edit_series_order_parameters import (
+from satvu.services.otm.v2.models.download_pending import DownloadPending
+from satvu.services.otm.v2.models.edit_order_payload import EditOrderPayload
+from satvu.services.otm.v2.models.edit_order_properties import EditOrderProperties
+from satvu.services.otm.v2.models.edit_series_order_parameters import (
     EditSeriesOrderParameters,
 )
-from satvu.services.otm.models.edit_series_properties import EditSeriesProperties
-from satvu.services.otm.models.feasibility_request import FeasibilityRequest
-from satvu.services.otm.models.feasibility_response import FeasibilityResponse
-from satvu.services.otm.models.filter_fields import FilterFields
-from satvu.services.otm.models.geometry_collection import GeometryCollection
-from satvu.services.otm.models.get_order_response import GetOrderResponse
-from satvu.services.otm.models.line_string import LineString
-from satvu.services.otm.models.list_order_tasks_response import ListOrderTasksResponse
-from satvu.services.otm.models.list_order_tasks_unavailable_response import (
+from satvu.services.otm.v2.models.edit_series_properties import EditSeriesProperties
+from satvu.services.otm.v2.models.feasibility_request import FeasibilityRequest
+from satvu.services.otm.v2.models.feasibility_response import FeasibilityResponse
+from satvu.services.otm.v2.models.filter_fields import FilterFields
+from satvu.services.otm.v2.models.geometry_collection import GeometryCollection
+from satvu.services.otm.v2.models.get_order_response import GetOrderResponse
+from satvu.services.otm.v2.models.line_string import LineString
+from satvu.services.otm.v2.models.list_order_tasks_response import (
+    ListOrderTasksResponse,
+)
+from satvu.services.otm.v2.models.list_order_tasks_unavailable_response import (
     ListOrderTasksUnavailableResponse,
 )
-from satvu.services.otm.models.list_series_response import ListSeriesResponse
-from satvu.services.otm.models.list_stored_orders_response import (
+from satvu.services.otm.v2.models.list_series_response import ListSeriesResponse
+from satvu.services.otm.v2.models.list_stored_orders_response import (
     ListStoredOrdersResponse,
 )
-from satvu.services.otm.models.list_stored_orders_response_1 import (
+from satvu.services.otm.v2.models.list_stored_orders_response_1 import (
     ListStoredOrdersResponse1,
 )
-from satvu.services.otm.models.modify_feasibility_request import (
+from satvu.services.otm.v2.models.modify_feasibility_request import (
     ModifyFeasibilityRequest,
 )
-from satvu.services.otm.models.modify_feasibility_request_properties import (
+from satvu.services.otm.v2.models.modify_feasibility_request_properties import (
     ModifyFeasibilityRequestProperties,
 )
-from satvu.services.otm.models.multi_line_string import MultiLineString
-from satvu.services.otm.models.multi_point import MultiPoint
-from satvu.services.otm.models.multi_polygon import MultiPolygon
-from satvu.services.otm.models.order_item_download_url import OrderItemDownloadUrl
-from satvu.services.otm.models.order_modification_price import OrderModificationPrice
-from satvu.services.otm.models.order_price import OrderPrice
-from satvu.services.otm.models.point import Point
-from satvu.services.otm.models.polygon import Polygon
-from satvu.services.otm.models.price_request import PriceRequest
-from satvu.services.otm.models.reseller_assured_order_request import (
+from satvu.services.otm.v2.models.multi_line_string import MultiLineString
+from satvu.services.otm.v2.models.multi_point import MultiPoint
+from satvu.services.otm.v2.models.multi_polygon import MultiPolygon
+from satvu.services.otm.v2.models.order_item_download_url import OrderItemDownloadUrl
+from satvu.services.otm.v2.models.order_modification_price import OrderModificationPrice
+from satvu.services.otm.v2.models.order_price import OrderPrice
+from satvu.services.otm.v2.models.point import Point
+from satvu.services.otm.v2.models.polygon import Polygon
+from satvu.services.otm.v2.models.price_request import PriceRequest
+from satvu.services.otm.v2.models.reseller_assured_order_request import (
     ResellerAssuredOrderRequest,
 )
-from satvu.services.otm.models.reseller_get_order_response import (
+from satvu.services.otm.v2.models.reseller_get_order_response import (
     ResellerGetOrderResponse,
 )
-from satvu.services.otm.models.reseller_standard_order_request import (
+from satvu.services.otm.v2.models.reseller_standard_order_request import (
     ResellerStandardOrderRequest,
 )
-from satvu.services.otm.models.reseller_stored_order_response import (
+from satvu.services.otm.v2.models.reseller_stored_order_response import (
     ResellerStoredOrderResponse,
 )
-from satvu.services.otm.models.search_request import SearchRequest
-from satvu.services.otm.models.search_response import SearchResponse
-from satvu.services.otm.models.series_order_parameters import SeriesOrderParameters
-from satvu.services.otm.models.series_price_response import SeriesPriceResponse
-from satvu.services.otm.models.series_properties import SeriesProperties
-from satvu.services.otm.models.series_request import SeriesRequest
-from satvu.services.otm.models.sort_entities import SortEntities
-from satvu.services.otm.models.stac_feature import StacFeature
-from satvu.services.otm.models.standard_order_request import StandardOrderRequest
-from satvu.services.otm.models.standard_order_request_properties import (
+from satvu.services.otm.v2.models.search_request import SearchRequest
+from satvu.services.otm.v2.models.search_response import SearchResponse
+from satvu.services.otm.v2.models.series_order_parameters import SeriesOrderParameters
+from satvu.services.otm.v2.models.series_price_response import SeriesPriceResponse
+from satvu.services.otm.v2.models.series_properties import SeriesProperties
+from satvu.services.otm.v2.models.series_request import SeriesRequest
+from satvu.services.otm.v2.models.sort_entities import SortEntities
+from satvu.services.otm.v2.models.stac_feature import StacFeature
+from satvu.services.otm.v2.models.standard_order_request import StandardOrderRequest
+from satvu.services.otm.v2.models.standard_order_request_properties import (
     StandardOrderRequestProperties,
 )
-from satvu.services.otm.models.standard_price_request_properties import (
+from satvu.services.otm.v2.models.standard_price_request_properties import (
     StandardPriceRequestProperties,
 )
-from satvu.services.otm.models.standard_request_properties import (
+from satvu.services.otm.v2.models.standard_request_properties import (
     StandardRequestProperties,
 )
-from satvu.services.otm.models.stored_feasibility_feature_collection import (
+from satvu.services.otm.v2.models.stored_feasibility_feature_collection import (
     StoredFeasibilityFeatureCollection,
 )
-from satvu.services.otm.models.stored_feasibility_request import (
+from satvu.services.otm.v2.models.stored_feasibility_request import (
     StoredFeasibilityRequest,
 )
-from satvu.services.otm.models.stored_order_response import StoredOrderResponse
-from satvu.services.otm.models.stored_series_response import StoredSeriesResponse
+from satvu.services.otm.v2.models.stored_order_response import StoredOrderResponse
+from satvu.services.otm.v2.models.stored_series_response import StoredSeriesResponse
 from satvu.services.schema_conformance import (
     assert_minimal_dump_conforms,
     assert_request_body_conforms,
@@ -182,8 +184,8 @@ def test_minimal_request_model_dump_keeps_required_keys(model, data):
 @pytest.mark.parametrize(
     "backend", ["stdlib", "httpx", "httpx2", "urllib3", "requests"]
 )
-class TestOtmService:
-    """Property-based tests for OtmService."""
+class TestOtmV2Service:
+    """Property-based tests for OtmV2Service."""
 
     @pytest.fixture(autouse=True)
     def setup(self, backend):
@@ -202,7 +204,7 @@ class TestOtmService:
             http_client=http_client,
             env="qa",
         )
-        self.sdk.otm._get_token = mock_get_token
+        self.sdk.otm.v2._get_token = mock_get_token
 
     @settings(
         max_examples=10,
@@ -230,7 +232,7 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.list_orders(contract_id=contract_id)
+        result = self.sdk.otm.v2.list_orders(contract_id=contract_id)
         assert result is not None
         assert isinstance(result, ListStoredOrdersResponse1)
 
@@ -263,7 +265,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.list_orders(contract_id=contract_id)
+            self.sdk.otm.v2.list_orders(contract_id=contract_id)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -301,7 +303,7 @@ class TestOtmService:
             ]
         )
         body = body_adapter.validate_python(body_data)
-        result = self.sdk.otm.create_order(contract_id=contract_id, body=body)
+        result = self.sdk.otm.v2.create_order(contract_id=contract_id, body=body)
         assert_request_body_matches_input(
             mock, body_data, "POST /{contract_id}/tasking/orders/"
         )
@@ -355,7 +357,7 @@ class TestOtmService:
         )
         body = body_adapter.validate_python(body_data)
         with suppress(Exception):
-            self.sdk.otm.create_order(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.create_order(contract_id=contract_id, body=body)
         assert_request_body_matches_input(
             mock, body_data, "POST /{contract_id}/tasking/orders/"
         )
@@ -405,7 +407,7 @@ class TestOtmService:
         )
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.create_order(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.create_order(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 400
 
     @settings(
@@ -447,7 +449,7 @@ class TestOtmService:
         )
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.create_order(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.create_order(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 402
 
     @settings(
@@ -489,7 +491,7 @@ class TestOtmService:
         )
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.create_order(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.create_order(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 403
 
     @settings(
@@ -531,7 +533,7 @@ class TestOtmService:
         )
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.create_order(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.create_order(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 409
 
     @settings(
@@ -573,7 +575,7 @@ class TestOtmService:
         )
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.create_order(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.create_order(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -615,7 +617,7 @@ class TestOtmService:
         )
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ServerError) as exc_info:
-            self.sdk.otm.create_order(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.create_order(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 500
 
     @settings(
@@ -657,7 +659,7 @@ class TestOtmService:
         )
         body = body_adapter.validate_python(body_data)
         with pytest.raises(ServerError) as exc_info:
-            self.sdk.otm.create_order(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.create_order(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 503
 
     @settings(
@@ -687,7 +689,7 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.get_tasking_order(
+        result = self.sdk.otm.v2.get_tasking_order(
             contract_id=contract_id, order_id=order_id
         )
         assert result is not None
@@ -723,7 +725,9 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_tasking_order(contract_id=contract_id, order_id=order_id)
+            self.sdk.otm.v2.get_tasking_order(
+                contract_id=contract_id, order_id=order_id
+            )
         assert exc_info.value.status_code == 404
 
     @settings(
@@ -756,7 +760,9 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_tasking_order(contract_id=contract_id, order_id=order_id)
+            self.sdk.otm.v2.get_tasking_order(
+                contract_id=contract_id, order_id=order_id
+            )
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -789,7 +795,7 @@ class TestOtmService:
         mock = pook.patch(url)
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = EditOrderPayload.model_validate(body_data)
-        result = self.sdk.otm.edit_tasking_order(
+        result = self.sdk.otm.v2.edit_tasking_order(
             contract_id=contract_id, order_id=order_id, body=body
         )
         assert_request_body_matches_input(
@@ -845,7 +851,7 @@ class TestOtmService:
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = EditOrderPayload.model_validate(body_data)
         with suppress(Exception):
-            self.sdk.otm.edit_tasking_order(
+            self.sdk.otm.v2.edit_tasking_order(
                 contract_id=contract_id, order_id=order_id, body=body
             )
         assert_request_body_matches_input(
@@ -894,7 +900,7 @@ class TestOtmService:
         )
         body = EditOrderPayload.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.edit_tasking_order(
+            self.sdk.otm.v2.edit_tasking_order(
                 contract_id=contract_id, order_id=order_id, body=body
             )
         assert exc_info.value.status_code == 404
@@ -933,7 +939,7 @@ class TestOtmService:
         )
         body = EditOrderPayload.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.edit_tasking_order(
+            self.sdk.otm.v2.edit_tasking_order(
                 contract_id=contract_id, order_id=order_id, body=body
             )
         assert exc_info.value.status_code == 422
@@ -968,7 +974,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.cancel_tasking_order(
+            self.sdk.otm.v2.cancel_tasking_order(
                 contract_id=contract_id, order_id=order_id
             )
         assert exc_info.value.status_code == 404
@@ -1003,7 +1009,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.cancel_tasking_order(
+            self.sdk.otm.v2.cancel_tasking_order(
                 contract_id=contract_id, order_id=order_id
             )
         assert exc_info.value.status_code == 409
@@ -1038,7 +1044,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.cancel_tasking_order(
+            self.sdk.otm.v2.cancel_tasking_order(
                 contract_id=contract_id, order_id=order_id
             )
         assert exc_info.value.status_code == 422
@@ -1073,7 +1079,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ServerError) as exc_info:
-            self.sdk.otm.cancel_tasking_order(
+            self.sdk.otm.v2.cancel_tasking_order(
                 contract_id=contract_id, order_id=order_id
             )
         assert exc_info.value.status_code == 500
@@ -1090,7 +1096,7 @@ class TestOtmService:
         path = f"/{contract_id}/tasking/orders/{order_id}/cancel"
         url = f"{self.base_url}{path}"
         pook.post(url).reply(204).header("Content-Type", "application/json")
-        result = self.sdk.otm.cancel_tasking_order(
+        result = self.sdk.otm.v2.cancel_tasking_order(
             contract_id=contract_id, order_id=order_id
         )
         assert result is None
@@ -1122,7 +1128,7 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.download_tasking_order(
+        result = self.sdk.otm.v2.download_tasking_order(
             contract_id=contract_id, order_id=order_id
         )
         assert result is not None
@@ -1155,7 +1161,7 @@ class TestOtmService:
         pook.get(url).reply(202).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.download_tasking_order(
+        result = self.sdk.otm.v2.download_tasking_order(
             contract_id=contract_id, order_id=order_id
         )
         assert result is not None
@@ -1191,7 +1197,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.download_tasking_order(
+            self.sdk.otm.v2.download_tasking_order(
                 contract_id=contract_id, order_id=order_id
             )
         assert exc_info.value.status_code == 422
@@ -1223,7 +1229,7 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.get_order_acquisition(
+        result = self.sdk.otm.v2.get_order_acquisition(
             contract_id=contract_id, order_id=order_id
         )
         assert result is not None
@@ -1259,7 +1265,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_order_acquisition(
+            self.sdk.otm.v2.get_order_acquisition(
                 contract_id=contract_id, order_id=order_id
             )
         assert exc_info.value.status_code == 422
@@ -1291,7 +1297,7 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.list_order_tasks(
+        result = self.sdk.otm.v2.list_order_tasks(
             contract_id=contract_id, order_id=order_id
         )
         assert result is not None
@@ -1329,7 +1335,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.list_order_tasks(contract_id=contract_id, order_id=order_id)
+            self.sdk.otm.v2.list_order_tasks(contract_id=contract_id, order_id=order_id)
         assert exc_info.value.status_code == 404
 
     @settings(
@@ -1362,7 +1368,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.list_order_tasks(contract_id=contract_id, order_id=order_id)
+            self.sdk.otm.v2.list_order_tasks(contract_id=contract_id, order_id=order_id)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -1391,7 +1397,7 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.list_feasibility_requests(contract_id=contract_id)
+        result = self.sdk.otm.v2.list_feasibility_requests(contract_id=contract_id)
         assert result is not None
         assert isinstance(result, StoredFeasibilityFeatureCollection)
 
@@ -1424,7 +1430,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.list_feasibility_requests(contract_id=contract_id)
+            self.sdk.otm.v2.list_feasibility_requests(contract_id=contract_id)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -1456,7 +1462,7 @@ class TestOtmService:
         mock = pook.post(url)
         mock.reply(202).json(response_data).header("Content-Type", "application/json")
         body = FeasibilityRequest.model_validate(body_data)
-        result = self.sdk.otm.create_feasibility_request(
+        result = self.sdk.otm.v2.create_feasibility_request(
             contract_id=contract_id, body=body
         )
         assert_request_body_matches_input(
@@ -1507,7 +1513,9 @@ class TestOtmService:
         mock.reply(202).json(response_data).header("Content-Type", "application/json")
         body = FeasibilityRequest.model_validate(body_data)
         with suppress(Exception):
-            self.sdk.otm.create_feasibility_request(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.create_feasibility_request(
+                contract_id=contract_id, body=body
+            )
         assert_request_body_matches_input(
             mock, body_data, "POST /{contract_id}/tasking/feasibilities/"
         )
@@ -1553,7 +1561,9 @@ class TestOtmService:
         )
         body = FeasibilityRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.create_feasibility_request(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.create_feasibility_request(
+                contract_id=contract_id, body=body
+            )
         assert exc_info.value.status_code == 403
 
     @settings(
@@ -1591,7 +1601,9 @@ class TestOtmService:
         )
         body = FeasibilityRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.create_feasibility_request(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.create_feasibility_request(
+                contract_id=contract_id, body=body
+            )
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -1629,7 +1641,9 @@ class TestOtmService:
         )
         body = FeasibilityRequest.model_validate(body_data)
         with pytest.raises(ServerError) as exc_info:
-            self.sdk.otm.create_feasibility_request(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.create_feasibility_request(
+                contract_id=contract_id, body=body
+            )
         assert exc_info.value.status_code == 503
 
     @settings(
@@ -1659,7 +1673,7 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.get_feasibility_request(contract_id=contract_id, id=id)
+        result = self.sdk.otm.v2.get_feasibility_request(contract_id=contract_id, id=id)
         assert result is not None
         assert isinstance(result, StoredFeasibilityRequest)
 
@@ -1693,7 +1707,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_feasibility_request(contract_id=contract_id, id=id)
+            self.sdk.otm.v2.get_feasibility_request(contract_id=contract_id, id=id)
         assert exc_info.value.status_code == 404
 
     @settings(
@@ -1726,7 +1740,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_feasibility_request(contract_id=contract_id, id=id)
+            self.sdk.otm.v2.get_feasibility_request(contract_id=contract_id, id=id)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -1756,7 +1770,9 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.get_feasibility_response(contract_id=contract_id, id=id)
+        result = self.sdk.otm.v2.get_feasibility_response(
+            contract_id=contract_id, id=id
+        )
         assert result is not None
         assert isinstance(result, FeasibilityResponse)
 
@@ -1790,7 +1806,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_feasibility_response(contract_id=contract_id, id=id)
+            self.sdk.otm.v2.get_feasibility_response(contract_id=contract_id, id=id)
         assert exc_info.value.status_code == 404
 
     @settings(
@@ -1823,7 +1839,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_feasibility_response(contract_id=contract_id, id=id)
+            self.sdk.otm.v2.get_feasibility_response(contract_id=contract_id, id=id)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -1858,7 +1874,7 @@ class TestOtmService:
         mock = pook.post(url)
         mock.reply(202).json(response_data).header("Content-Type", "application/json")
         body = ModifyFeasibilityRequest.model_validate(body_data)
-        result = self.sdk.otm.create_order_feasibility_request(
+        result = self.sdk.otm.v2.create_order_feasibility_request(
             contract_id=contract_id, order_id=order_id, body=body
         )
         assert_request_body_matches_input(
@@ -1916,7 +1932,7 @@ class TestOtmService:
         mock.reply(202).json(response_data).header("Content-Type", "application/json")
         body = ModifyFeasibilityRequest.model_validate(body_data)
         with suppress(Exception):
-            self.sdk.otm.create_order_feasibility_request(
+            self.sdk.otm.v2.create_order_feasibility_request(
                 contract_id=contract_id, order_id=order_id, body=body
             )
         assert_request_body_matches_input(
@@ -1969,7 +1985,7 @@ class TestOtmService:
         )
         body = ModifyFeasibilityRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.create_order_feasibility_request(
+            self.sdk.otm.v2.create_order_feasibility_request(
                 contract_id=contract_id, order_id=order_id, body=body
             )
         assert exc_info.value.status_code == 403
@@ -2010,7 +2026,7 @@ class TestOtmService:
         )
         body = ModifyFeasibilityRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.create_order_feasibility_request(
+            self.sdk.otm.v2.create_order_feasibility_request(
                 contract_id=contract_id, order_id=order_id, body=body
             )
         assert exc_info.value.status_code == 404
@@ -2051,7 +2067,7 @@ class TestOtmService:
         )
         body = ModifyFeasibilityRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.create_order_feasibility_request(
+            self.sdk.otm.v2.create_order_feasibility_request(
                 contract_id=contract_id, order_id=order_id, body=body
             )
         assert exc_info.value.status_code == 409
@@ -2092,7 +2108,7 @@ class TestOtmService:
         )
         body = ModifyFeasibilityRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.create_order_feasibility_request(
+            self.sdk.otm.v2.create_order_feasibility_request(
                 contract_id=contract_id, order_id=order_id, body=body
             )
         assert exc_info.value.status_code == 422
@@ -2133,7 +2149,7 @@ class TestOtmService:
         )
         body = ModifyFeasibilityRequest.model_validate(body_data)
         with pytest.raises(ServerError) as exc_info:
-            self.sdk.otm.create_order_feasibility_request(
+            self.sdk.otm.v2.create_order_feasibility_request(
                 contract_id=contract_id, order_id=order_id, body=body
             )
         assert exc_info.value.status_code == 503
@@ -2165,7 +2181,7 @@ class TestOtmService:
         mock = pook.post(url)
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = PriceRequest.model_validate(body_data)
-        result = self.sdk.otm.calculate_price(contract_id=contract_id, body=body)
+        result = self.sdk.otm.v2.calculate_price(contract_id=contract_id, body=body)
         assert_request_body_matches_input(
             mock, body_data, "POST /{contract_id}/tasking/price/"
         )
@@ -2211,7 +2227,7 @@ class TestOtmService:
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = PriceRequest.model_validate(body_data)
         with suppress(Exception):
-            self.sdk.otm.calculate_price(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.calculate_price(contract_id=contract_id, body=body)
         assert_request_body_matches_input(
             mock, body_data, "POST /{contract_id}/tasking/price/"
         )
@@ -2253,7 +2269,7 @@ class TestOtmService:
         )
         body = PriceRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.calculate_price(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.calculate_price(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 400
 
     @settings(
@@ -2287,7 +2303,7 @@ class TestOtmService:
         )
         body = PriceRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.calculate_price(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.calculate_price(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 403
 
     @settings(
@@ -2321,7 +2337,7 @@ class TestOtmService:
         )
         body = PriceRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.calculate_price(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.calculate_price(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -2356,7 +2372,7 @@ class TestOtmService:
         mock = pook.post(url)
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = EditOrderPayload.model_validate(body_data)
-        result = self.sdk.otm.calculate_modified_order_price(
+        result = self.sdk.otm.v2.calculate_modified_order_price(
             contract_id=contract_id, order_id=order_id, body=body
         )
         assert_request_body_matches_input(
@@ -2408,7 +2424,7 @@ class TestOtmService:
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = EditOrderPayload.model_validate(body_data)
         with suppress(Exception):
-            self.sdk.otm.calculate_modified_order_price(
+            self.sdk.otm.v2.calculate_modified_order_price(
                 contract_id=contract_id, order_id=order_id, body=body
             )
         assert_request_body_matches_input(
@@ -2457,7 +2473,7 @@ class TestOtmService:
         )
         body = EditOrderPayload.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.calculate_modified_order_price(
+            self.sdk.otm.v2.calculate_modified_order_price(
                 contract_id=contract_id, order_id=order_id, body=body
             )
         assert exc_info.value.status_code == 400
@@ -2498,7 +2514,7 @@ class TestOtmService:
         )
         body = EditOrderPayload.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.calculate_modified_order_price(
+            self.sdk.otm.v2.calculate_modified_order_price(
                 contract_id=contract_id, order_id=order_id, body=body
             )
         assert exc_info.value.status_code == 404
@@ -2539,7 +2555,7 @@ class TestOtmService:
         )
         body = EditOrderPayload.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.calculate_modified_order_price(
+            self.sdk.otm.v2.calculate_modified_order_price(
                 contract_id=contract_id, order_id=order_id, body=body
             )
         assert exc_info.value.status_code == 409
@@ -2580,7 +2596,7 @@ class TestOtmService:
         )
         body = EditOrderPayload.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.calculate_modified_order_price(
+            self.sdk.otm.v2.calculate_modified_order_price(
                 contract_id=contract_id, order_id=order_id, body=body
             )
         assert exc_info.value.status_code == 422
@@ -2611,7 +2627,7 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.list_unplanned_outages(contract_id=contract_id)
+        result = self.sdk.otm.v2.list_unplanned_outages(contract_id=contract_id)
         assert result is not None
         assert isinstance(result, list)
 
@@ -2644,7 +2660,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.list_unplanned_outages(contract_id=contract_id)
+            self.sdk.otm.v2.list_unplanned_outages(contract_id=contract_id)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -2673,7 +2689,7 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.list_series(contract_id=contract_id)
+        result = self.sdk.otm.v2.list_series(contract_id=contract_id)
         assert result is not None
         assert isinstance(result, ListSeriesResponse)
 
@@ -2706,7 +2722,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.list_series(contract_id=contract_id)
+            self.sdk.otm.v2.list_series(contract_id=contract_id)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -2736,7 +2752,7 @@ class TestOtmService:
         mock = pook.post(url)
         mock.reply(201).json(response_data).header("Content-Type", "application/json")
         body = SeriesRequest.model_validate(body_data)
-        result = self.sdk.otm.create_series(contract_id=contract_id, body=body)
+        result = self.sdk.otm.v2.create_series(contract_id=contract_id, body=body)
         assert_request_body_matches_input(
             mock, body_data, "POST /{contract_id}/tasking/series/"
         )
@@ -2782,7 +2798,7 @@ class TestOtmService:
         mock.reply(201).json(response_data).header("Content-Type", "application/json")
         body = SeriesRequest.model_validate(body_data)
         with suppress(Exception):
-            self.sdk.otm.create_series(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.create_series(contract_id=contract_id, body=body)
         assert_request_body_matches_input(
             mock, body_data, "POST /{contract_id}/tasking/series/"
         )
@@ -2824,7 +2840,7 @@ class TestOtmService:
         )
         body = SeriesRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.create_series(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.create_series(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 400
 
     @settings(
@@ -2858,7 +2874,7 @@ class TestOtmService:
         )
         body = SeriesRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.create_series(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.create_series(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 402
 
     @settings(
@@ -2892,7 +2908,7 @@ class TestOtmService:
         )
         body = SeriesRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.create_series(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.create_series(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 403
 
     @settings(
@@ -2926,7 +2942,7 @@ class TestOtmService:
         )
         body = SeriesRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.create_series(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.create_series(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -2960,7 +2976,7 @@ class TestOtmService:
         )
         body = SeriesRequest.model_validate(body_data)
         with pytest.raises(ServerError) as exc_info:
-            self.sdk.otm.create_series(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.create_series(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 500
 
     @settings(
@@ -2994,7 +3010,7 @@ class TestOtmService:
         )
         body = SeriesRequest.model_validate(body_data)
         with pytest.raises(ServerError) as exc_info:
-            self.sdk.otm.create_series(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.create_series(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 503
 
     @settings(
@@ -3024,7 +3040,9 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.get_series(contract_id=contract_id, series_id=series_id)
+        result = self.sdk.otm.v2.get_series(
+            contract_id=contract_id, series_id=series_id
+        )
         assert result is not None
         assert isinstance(result, StoredSeriesResponse)
 
@@ -3058,7 +3076,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_series(contract_id=contract_id, series_id=series_id)
+            self.sdk.otm.v2.get_series(contract_id=contract_id, series_id=series_id)
         assert exc_info.value.status_code == 404
 
     @settings(
@@ -3091,7 +3109,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.get_series(contract_id=contract_id, series_id=series_id)
+            self.sdk.otm.v2.get_series(contract_id=contract_id, series_id=series_id)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -3124,7 +3142,7 @@ class TestOtmService:
         mock = pook.patch(url)
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = EditSeriesProperties.model_validate(body_data)
-        result = self.sdk.otm.edit_series(
+        result = self.sdk.otm.v2.edit_series(
             contract_id=contract_id, series_id=series_id, body=body
         )
         assert_request_body_matches_input(
@@ -3180,7 +3198,7 @@ class TestOtmService:
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = EditSeriesProperties.model_validate(body_data)
         with suppress(Exception):
-            self.sdk.otm.edit_series(
+            self.sdk.otm.v2.edit_series(
                 contract_id=contract_id, series_id=series_id, body=body
             )
         assert_request_body_matches_input(
@@ -3229,7 +3247,7 @@ class TestOtmService:
         )
         body = EditSeriesProperties.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.edit_series(
+            self.sdk.otm.v2.edit_series(
                 contract_id=contract_id, series_id=series_id, body=body
             )
         assert exc_info.value.status_code == 400
@@ -3268,7 +3286,7 @@ class TestOtmService:
         )
         body = EditSeriesProperties.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.edit_series(
+            self.sdk.otm.v2.edit_series(
                 contract_id=contract_id, series_id=series_id, body=body
             )
         assert exc_info.value.status_code == 403
@@ -3307,7 +3325,7 @@ class TestOtmService:
         )
         body = EditSeriesProperties.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.edit_series(
+            self.sdk.otm.v2.edit_series(
                 contract_id=contract_id, series_id=series_id, body=body
             )
         assert exc_info.value.status_code == 404
@@ -3346,7 +3364,7 @@ class TestOtmService:
         )
         body = EditSeriesProperties.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.edit_series(
+            self.sdk.otm.v2.edit_series(
                 contract_id=contract_id, series_id=series_id, body=body
             )
         assert exc_info.value.status_code == 409
@@ -3385,7 +3403,7 @@ class TestOtmService:
         )
         body = EditSeriesProperties.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.edit_series(
+            self.sdk.otm.v2.edit_series(
                 contract_id=contract_id, series_id=series_id, body=body
             )
         assert exc_info.value.status_code == 422
@@ -3417,7 +3435,7 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.list_series_orders(
+        result = self.sdk.otm.v2.list_series_orders(
             contract_id=contract_id, series_id=series_id
         )
         assert result is not None
@@ -3453,7 +3471,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.list_series_orders(
+            self.sdk.otm.v2.list_series_orders(
                 contract_id=contract_id, series_id=series_id
             )
         assert exc_info.value.status_code == 404
@@ -3488,7 +3506,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.list_series_orders(
+            self.sdk.otm.v2.list_series_orders(
                 contract_id=contract_id, series_id=series_id
             )
         assert exc_info.value.status_code == 422
@@ -3524,7 +3542,7 @@ class TestOtmService:
         mock = pook.post(url)
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = SeriesRequest.model_validate(body_data)
-        result = self.sdk.otm.calculate_series_price_estimate(
+        result = self.sdk.otm.v2.calculate_series_price_estimate(
             contract_id=contract_id, body=body
         )
         assert_request_body_matches_input(
@@ -3575,7 +3593,7 @@ class TestOtmService:
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = SeriesRequest.model_validate(body_data)
         with suppress(Exception):
-            self.sdk.otm.calculate_series_price_estimate(
+            self.sdk.otm.v2.calculate_series_price_estimate(
                 contract_id=contract_id, body=body
             )
         assert_request_body_matches_input(
@@ -3623,7 +3641,7 @@ class TestOtmService:
         )
         body = SeriesRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.calculate_series_price_estimate(
+            self.sdk.otm.v2.calculate_series_price_estimate(
                 contract_id=contract_id, body=body
             )
         assert exc_info.value.status_code == 400
@@ -3663,7 +3681,7 @@ class TestOtmService:
         )
         body = SeriesRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.calculate_series_price_estimate(
+            self.sdk.otm.v2.calculate_series_price_estimate(
                 contract_id=contract_id, body=body
             )
         assert exc_info.value.status_code == 403
@@ -3703,7 +3721,7 @@ class TestOtmService:
         )
         body = SeriesRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.calculate_series_price_estimate(
+            self.sdk.otm.v2.calculate_series_price_estimate(
                 contract_id=contract_id, body=body
             )
         assert exc_info.value.status_code == 422
@@ -3738,7 +3756,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.cancel_series(contract_id=contract_id, series_id=series_id)
+            self.sdk.otm.v2.cancel_series(contract_id=contract_id, series_id=series_id)
         assert exc_info.value.status_code == 404
 
     @settings(
@@ -3771,7 +3789,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.cancel_series(contract_id=contract_id, series_id=series_id)
+            self.sdk.otm.v2.cancel_series(contract_id=contract_id, series_id=series_id)
         assert exc_info.value.status_code == 409
 
     @settings(
@@ -3804,7 +3822,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.cancel_series(contract_id=contract_id, series_id=series_id)
+            self.sdk.otm.v2.cancel_series(contract_id=contract_id, series_id=series_id)
         assert exc_info.value.status_code == 422
 
     @pook.on
@@ -3819,7 +3837,7 @@ class TestOtmService:
         path = f"/{contract_id}/tasking/series/{series_id}/cancel"
         url = f"{self.base_url}{path}"
         pook.post(url).reply(204).header("Content-Type", "application/json")
-        result = self.sdk.otm.cancel_series(
+        result = self.sdk.otm.v2.cancel_series(
             contract_id=contract_id, series_id=series_id
         )
         assert result is None
@@ -3851,7 +3869,7 @@ class TestOtmService:
         pook.get(url).reply(200).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.download_series(
+        result = self.sdk.otm.v2.download_series(
             contract_id=contract_id, series_id=series_id
         )
         assert result is not None
@@ -3884,7 +3902,7 @@ class TestOtmService:
         pook.get(url).reply(202).json(response_data).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.download_series(
+        result = self.sdk.otm.v2.download_series(
             contract_id=contract_id, series_id=series_id
         )
         assert result is not None
@@ -3920,7 +3938,9 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.download_series(contract_id=contract_id, series_id=series_id)
+            self.sdk.otm.v2.download_series(
+                contract_id=contract_id, series_id=series_id
+            )
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -3948,7 +3968,7 @@ class TestOtmService:
         mock = pook.post(url)
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = SearchRequest.model_validate(body_data)
-        result = self.sdk.otm.search(contract_id=contract_id, body=body)
+        result = self.sdk.otm.v2.search(contract_id=contract_id, body=body)
         assert_request_body_matches_input(
             mock, body_data, "POST /{contract_id}/search/"
         )
@@ -3992,7 +4012,7 @@ class TestOtmService:
         mock.reply(200).json(response_data).header("Content-Type", "application/json")
         body = SearchRequest.model_validate(body_data)
         with suppress(Exception):
-            self.sdk.otm.search(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.search(contract_id=contract_id, body=body)
         assert_request_body_matches_input(
             mock, body_data, "POST /{contract_id}/search/"
         )
@@ -4032,7 +4052,7 @@ class TestOtmService:
         )
         body = SearchRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.search(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.search(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 400
 
     @settings(
@@ -4064,7 +4084,7 @@ class TestOtmService:
         )
         body = SearchRequest.model_validate(body_data)
         with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.search(contract_id=contract_id, body=body)
+            self.sdk.otm.v2.search(contract_id=contract_id, body=body)
         assert exc_info.value.status_code == 422
 
     @settings(
@@ -4109,7 +4129,7 @@ class TestOtmService:
         pook.get(url).times(1).reply(200).json(page2_data).header(
             "Content-Type", "application/json"
         )
-        pages = list(self.sdk.otm.list_orders_iter(contract_id=contract_id))
+        pages = list(self.sdk.otm.v2.list_orders_iter(contract_id=contract_id))
         assert len(pages) == 2
 
     @settings(
@@ -4173,7 +4193,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.otm.list_orders_iter(contract_id=contract_id, max_pages=2)
+            self.sdk.otm.v2.list_orders_iter(contract_id=contract_id, max_pages=2)
         )
         assert len(pages) == 2
 
@@ -4209,7 +4229,7 @@ class TestOtmService:
         pook.get(url).times(1).reply(200).json(page_data).header(
             "Content-Type", "application/json"
         )
-        pages = list(self.sdk.otm.list_orders_iter(contract_id=contract_id))
+        pages = list(self.sdk.otm.v2.list_orders_iter(contract_id=contract_id))
         assert len(pages) == 1
 
     @settings(
@@ -4257,7 +4277,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.otm.list_feasibility_requests_iter(contract_id=contract_id)
+            self.sdk.otm.v2.list_feasibility_requests_iter(contract_id=contract_id)
         )
         assert len(pages) == 2
 
@@ -4322,7 +4342,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.otm.list_feasibility_requests_iter(
+            self.sdk.otm.v2.list_feasibility_requests_iter(
                 contract_id=contract_id, max_pages=2
             )
         )
@@ -4363,7 +4383,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.otm.list_feasibility_requests_iter(contract_id=contract_id)
+            self.sdk.otm.v2.list_feasibility_requests_iter(contract_id=contract_id)
         )
         assert len(pages) == 1
 
@@ -4409,7 +4429,7 @@ class TestOtmService:
         pook.get(url).times(1).reply(200).json(page2_data).header(
             "Content-Type", "application/json"
         )
-        pages = list(self.sdk.otm.list_series_iter(contract_id=contract_id))
+        pages = list(self.sdk.otm.v2.list_series_iter(contract_id=contract_id))
         assert len(pages) == 2
 
     @settings(
@@ -4473,7 +4493,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.otm.list_series_iter(contract_id=contract_id, max_pages=2)
+            self.sdk.otm.v2.list_series_iter(contract_id=contract_id, max_pages=2)
         )
         assert len(pages) == 2
 
@@ -4509,7 +4529,7 @@ class TestOtmService:
         pook.get(url).times(1).reply(200).json(page_data).header(
             "Content-Type", "application/json"
         )
-        pages = list(self.sdk.otm.list_series_iter(contract_id=contract_id))
+        pages = list(self.sdk.otm.v2.list_series_iter(contract_id=contract_id))
         assert len(pages) == 1
 
     @settings(
@@ -4556,7 +4576,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.otm.list_series_orders_iter(
+            self.sdk.otm.v2.list_series_orders_iter(
                 contract_id=contract_id, series_id=series_id
             )
         )
@@ -4624,7 +4644,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.otm.list_series_orders_iter(
+            self.sdk.otm.v2.list_series_orders_iter(
                 contract_id=contract_id, series_id=series_id, max_pages=2
             )
         )
@@ -4666,7 +4686,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         pages = list(
-            self.sdk.otm.list_series_orders_iter(
+            self.sdk.otm.v2.list_series_orders_iter(
                 contract_id=contract_id, series_id=series_id
             )
         )
@@ -4711,7 +4731,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         body = SearchRequest()
-        pages = list(self.sdk.otm.search_iter(body=body, contract_id=contract_id))
+        pages = list(self.sdk.otm.v2.search_iter(body=body, contract_id=contract_id))
         assert len(pages) == 2
 
     @settings(
@@ -4768,7 +4788,7 @@ class TestOtmService:
         )
         body = SearchRequest()
         pages = list(
-            self.sdk.otm.search_iter(body=body, contract_id=contract_id, max_pages=2)
+            self.sdk.otm.v2.search_iter(body=body, contract_id=contract_id, max_pages=2)
         )
         assert len(pages) == 2
 
@@ -4803,7 +4823,7 @@ class TestOtmService:
             "Content-Type", "application/json"
         )
         body = SearchRequest()
-        pages = list(self.sdk.otm.search_iter(body=body, contract_id=contract_id))
+        pages = list(self.sdk.otm.v2.search_iter(body=body, contract_id=contract_id))
         assert len(pages) == 1
 
     @pook.on
@@ -4820,7 +4840,7 @@ class TestOtmService:
         ).reply(200).body(mock_content).header(
             "Content-Type", "application/zip"
         ).header("Content-Length", str(len(mock_content)))
-        result = self.sdk.otm.download_tasking_order_to_file(
+        result = self.sdk.otm.v2.download_tasking_order_to_file(
             contract_id=contract_id, order_id=order_id, output_path=output_path
         )
         assert result.is_ok()
@@ -4844,7 +4864,7 @@ class TestOtmService:
         pook.get(url).reply(200).body(mock_content).header(
             "Content-Type", "application/zip"
         ).header("Content-Length", str(len(mock_content)))
-        result = self.sdk.otm.download_tasking_order_to_file(
+        result = self.sdk.otm.v2.download_tasking_order_to_file(
             contract_id=contract_id,
             order_id=order_id,
             output_path=output_path,
@@ -4867,7 +4887,7 @@ class TestOtmService:
         pook.get(url).reply(404).json({"error": "Not found"}).header(
             "Content-Type", "application/json"
         )
-        result = self.sdk.otm.download_tasking_order_to_file(
+        result = self.sdk.otm.v2.download_tasking_order_to_file(
             contract_id=contract_id, order_id=order_id, output_path=output_path
         )
         assert result.is_err()

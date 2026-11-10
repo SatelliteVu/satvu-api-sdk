@@ -9,7 +9,6 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from time import time
 from typing import Protocol
-from urllib.parse import urljoin
 
 from pydantic import BaseModel, ValidationError
 
@@ -21,7 +20,7 @@ except ImportError:
 import contextlib
 
 from satvu.core import SDKClient
-from satvu.http import HttpClient
+from satvu.http import HttpClientLike
 from satvu.http.errors import ClientError, ServerError
 from satvu.result import Err, Ok, Result, is_err
 
@@ -138,7 +137,7 @@ class AuthService(SDKClient):
         self,
         env: str | None,
         token_cache: TokenCache | None = None,
-        http_client: HttpClient | None = None,
+        http_client: HttpClientLike | None = None,
         timeout: int = 30,
         token_expiry_margin: float | None = None,
     ):
@@ -232,11 +231,9 @@ class AuthService(SDKClient):
             - Err(AuthError) if authentication fails
         """
         logger.info("performing client_credential authentication")
-        token_url = urljoin(self.base_path, "token")
-
         result = self.client.request(
             "POST",
-            token_url,
+            self._resolve_url("token"),
             headers={"content-type": "application/x-www-form-urlencoded"},
             data={
                 "grant_type": "client_credentials",

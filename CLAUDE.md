@@ -165,10 +165,13 @@ from satvu.http import create_http_client
 client = create_http_client()
 
 # Specify backend explicitly
-client = create_http_client(backend="httpx", base_url="https://api.example.com")
+client = create_http_client(backend="httpx")
 
 # Zero dependencies - always works
 client = create_http_client(backend="stdlib")
+
+# Or pass a library's own client; SatVuSDK/SDKClient wrap it via as_http_client()
+sdk = SatVuSDK(..., http_client=httpx.Client(proxy="..."))
 ```
 
 **Error Handling Pattern:**

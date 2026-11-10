@@ -96,24 +96,17 @@ class Test{{ service_class_name }}:
         # Mock the auth token
         mock_get_token = Mock(return_value="test_token")
 
-        # Construct base URL for the {{ api_name }} service
-        # We need to match how SDKClient builds its base_url in __init__
+        # Expected request URL prefix; must match how SDKClient builds its base URL
         subdomain = "api"
         env_part = "qa."
         base_path = "{{ base_path }}"
         self.base_url = f"https://{subdomain}.{env_part}satellitevu.com{base_path}"
 
-        # Create HTTP client with specified backend
-        http_client = create_http_client(
-            backend=backend,
-            base_url=self.base_url,
-            get_token=mock_get_token,
-        )
-
+        # A plain client, as users pass one: the SDK adds the base URL and auth
         self.sdk = SatVuSDK(
             client_id="test_client_id",
             client_secret="test_client_secret",  # pragma: allowlist secret # nosec B106
-            http_client=http_client,
+            http_client=create_http_client(backend=backend),
             env="qa",
         )
 

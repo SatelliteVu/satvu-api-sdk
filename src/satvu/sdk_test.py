@@ -1,8 +1,16 @@
 """Tests for the SatVuSDK main entry point."""
 
+from base64 import urlsafe_b64encode
+from functools import partial
+from json import dumps
+
+import pook
 import pytest
+import requests
 
 from satvu.auth import MemoryCache
+from satvu.http import create_http_client
+from satvu.result import is_ok
 from satvu.sdk import SatVuSDK
 from satvu.services.otm import models as otm_models
 
@@ -195,3 +203,53 @@ class TestConfigPropagation:
             token_cache=cache,
         )
         assert sdk.auth.cache is cache
+
+
+def _jwt(exp: int) -> str:
+    payload = urlsafe_b64encode(dumps({"exp": exp}).encode()).decode().rstrip("=")
+    return f"header.{payload}.signature"
+
+
+@pytest.fixture(
+    params=[partial(create_http_client, backend="stdlib"), requests.Session],
+    ids=["adapter", "library-client"],
+)
+def http_client(request):
+    client = request.param()
+    yield client
+    if isinstance(client, requests.Session):
+        client.close()
+
+
+def test_shared_http_client_built_on_first_use():
+    """No HTTP client is built until a service is used (keeps cold starts cheap)."""
+    sdk = SatVuSDK("test_id", "test_secret")  # pragma: allowlist secret
+    assert sdk._shared_client is None
+
+    _ = sdk.wallet
+    assert sdk._shared_client is not None
+    assert sdk.wallet.client is sdk._shared_client
+
+
+@pook.on
+def test_custom_http_client_shared_across_services(http_client):
+    """One client serves auth and every service, each at its own URL."""
+    token = _jwt(exp=4_102_444_800)  # 2100-01-01
+    pook.post("https://auth.qa.satellitevu.com/oauth/token").reply(200).json(
+        {"access_token": token, "token_type": "Bearer", "expires_in": 3600}
+    )
+    for path in ("/wallet/v1/balances", "/catalog/v1/collections"):
+        pook.get(f"https://api.qa.satellitevu.com{path}").header(
+            "Authorization", f"Bearer {token}"
+        ).reply(200).json({})
+    sdk = SatVuSDK(
+        "test_id",
+        "test_secret",  # pragma: allowlist secret
+        env="qa",
+        http_client=http_client,
+    )
+
+    assert is_ok(sdk.wallet.make_request("GET", "/balances"))
+    assert is_ok(sdk.catalog.make_request("GET", "/collections"))
+    assert sdk.wallet.client is sdk.catalog.client is sdk.auth.client
+    assert sdk.http_client is http_client

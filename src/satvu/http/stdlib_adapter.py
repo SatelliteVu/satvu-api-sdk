@@ -3,11 +3,11 @@
 import json as json_lib
 import socket
 import warnings
-from collections.abc import Callable, Iterator
+from collections.abc import Iterator
 from http.client import HTTPResponse as StdlibHTTPResponse
 from typing import Any, cast
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlencode, urljoin
+from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 from satvu.http.errors import (
@@ -151,20 +151,6 @@ class StdlibAdapter:
     Zero external dependencies. Suitable for minimal installations.
     """
 
-    def __init__(
-        self, base_url: str | None = None, get_token: Callable[[], str] | None = None
-    ):
-        """
-        Initialize the stdlib adapter.
-
-        Args:
-            base_url: Optional base URL for all requests. Relative URLs will be joined to this.
-            get_token: Optional callback to get the current access token. Will be called
-                      before each request to support token refresh.
-        """
-        self.base_url = base_url.rstrip("/") if base_url else ""
-        self.get_token = get_token
-
     def request(
         self,
         method: HttpMethod,
@@ -196,11 +182,7 @@ class StdlibAdapter:
                 stacklevel=2,
             )
 
-        # Build full URL
-        if self.base_url and not url.startswith(("http://", "https://")):
-            full_url = urljoin(self.base_url + "/", url.lstrip("/"))
-        else:
-            full_url = url
+        full_url = url
 
         # Add query parameters
         if params:
@@ -211,11 +193,7 @@ class StdlibAdapter:
                 separator = "&" if "?" in full_url else "?"
                 full_url = f"{full_url}{separator}{query_string}"
 
-        # Prepare headers with auth token if get_token is available
         req_headers = headers.copy() if headers else {}
-        if self.get_token:
-            token = self.get_token()
-            req_headers["Authorization"] = f"Bearer {token}"
 
         # Prepare body
         body_data: bytes | None = None

@@ -3,7 +3,7 @@ Shared implementation for the httpx and httpx2 adapters.
 """
 
 import json as json_lib
-from collections.abc import Callable, Iterator, Mapping
+from collections.abc import Iterator, Mapping
 from typing import Any, ClassVar, Protocol, cast
 
 from satvu.http.errors import (
@@ -286,26 +286,20 @@ class HttpxAdapterBase:
 
     def __init__(
         self,
-        base_url: str | None = None,
         client: Any | None = None,
-        get_token: Callable[[], str] | None = None,
     ):
         """
         Initialize the adapter.
 
         Args:
-            base_url: Optional base URL for all requests. Relative URLs will be joined to this.
             client: Optional pre-configured Client instance from this adapter's module.
                    If not provided, a new client will be created.
-            get_token: Optional callback to get the current access token. Will be called
-                      before each request to support token refresh.
         """
-        self.get_token = get_token
         if client is not None:
             self.client = client
             self._owns_client = False
         else:
-            self.client = self._module.Client(base_url=base_url or "")
+            self.client = self._module.Client()
             self._owns_client = True
 
     def __del__(self):
@@ -326,11 +320,7 @@ class HttpxAdapterBase:
         follow_redirects: bool = False,
     ) -> Result[HttpResponse, HttpxRequestError]:
         """Make an HTTP request."""
-        # Prepare headers with auth token if get_token is available
         req_headers = headers.copy() if headers else {}
-        if self.get_token:
-            token = self.get_token()
-            req_headers["Authorization"] = f"Bearer {token}"
 
         # Filter out None values from params
         if params:

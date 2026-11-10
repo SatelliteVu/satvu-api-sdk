@@ -11,7 +11,7 @@ from satvu.http.requests_adapter import RequestsAdapter
 @pytest.fixture
 def adapter():
     """Create a RequestsAdapter instance for testing."""
-    return RequestsAdapter(base_url="https://api.example.com")
+    return RequestsAdapter()
 
 
 @pook.on
@@ -21,7 +21,7 @@ def test_get_request(adapter):
         {"users": ["alice", "bob"]}
     )
 
-    result = adapter.request("GET", "/users")
+    result = adapter.request("GET", "https://api.example.com/users")
 
     assert is_ok(result), f"Expected Ok but got: {result}"
 
@@ -41,7 +41,9 @@ def test_post_request_with_json(adapter):
         {"id": 123, "name": "charlie"}
     )
 
-    result = adapter.request("POST", "/users", json={"name": "charlie"})
+    result = adapter.request(
+        "POST", "https://api.example.com/users", json={"name": "charlie"}
+    )
 
     assert is_ok(result), f"Expected Ok but got: {result}"
 
@@ -61,7 +63,9 @@ def test_request_with_query_params(adapter):
         {"count": 2}
     )
 
-    result = adapter.request("GET", "/users", params={"limit": 10, "offset": 20})
+    result = adapter.request(
+        "GET", "https://api.example.com/users", params={"limit": 10, "offset": 20}
+    )
 
     assert is_ok(result), f"Expected Ok but got: {result}"
 
@@ -79,7 +83,9 @@ def test_request_with_none_params(adapter):
     """Test that None params are filtered out."""
     pook.get("https://api.example.com/users?limit=10").reply(200).json({})
 
-    result = adapter.request("GET", "/users", params={"limit": 10, "offset": None})
+    result = adapter.request(
+        "GET", "https://api.example.com/users", params={"limit": 10, "offset": None}
+    )
 
     assert is_ok(result), f"Expected Ok but got: {result}"
 
@@ -95,7 +101,9 @@ def test_request_with_headers(adapter):
     ).reply(200).json({})
 
     result = adapter.request(
-        "GET", "/users", headers={"Authorization": "Bearer token123"}
+        "GET",
+        "https://api.example.com/users",
+        headers={"Authorization": "Bearer token123"},
     )
 
     assert is_ok(result), f"Expected Ok but got: {result}"
@@ -112,7 +120,7 @@ def test_request_with_form_data(adapter):
 
     result = adapter.request(
         "POST",
-        "/login",
+        "https://api.example.com/login",
         data={"username": "user", "password": "pass"},  # pragma: allowlist secret
     )
 
@@ -132,7 +140,7 @@ def test_response_text_property(adapter):
     """Test response text property."""
     pook.get("https://api.example.com/hello").reply(200).body("Hello, World!")
 
-    result = adapter.request("GET", "/hello")
+    result = adapter.request("GET", "https://api.example.com/hello")
 
     assert is_ok(result), f"Expected Ok but got: {result}"
 
@@ -149,7 +157,7 @@ def test_response_body_property(adapter):
     """Test response body property."""
     pook.get("https://api.example.com/data").reply(200).body(b"binary data")
 
-    result = adapter.request("GET", "/data")
+    result = adapter.request("GET", "https://api.example.com/data")
 
     assert is_ok(result), f"Expected Ok but got: {result}"
 
@@ -164,7 +172,7 @@ def test_response_headers(adapter):
         "X-Custom", "value"
     ).body("test")
 
-    result = adapter.request("GET", "/test")
+    result = adapter.request("GET", "https://api.example.com/test")
 
     assert is_ok(result), f"Expected Ok but got: {result}"
 
@@ -178,7 +186,7 @@ def test_http_error_response(adapter):
     """Test handling of HTTP error responses."""
     pook.get("https://api.example.com/notfound").reply(404).json({"error": "Not found"})
 
-    result = adapter.request("GET", "/notfound")
+    result = adapter.request("GET", "https://api.example.com/notfound")
 
     # 404 should now return Err(ClientError)
     assert result.is_err(), f"Expected Err but got: {result}"
@@ -195,7 +203,9 @@ def test_follow_redirects_false(adapter):
         "Location", "https://api.example.com/target"
     )
 
-    result = adapter.request("GET", "/redirect", follow_redirects=False)
+    result = adapter.request(
+        "GET", "https://api.example.com/redirect", follow_redirects=False
+    )
 
     assert is_ok(result), f"Expected Ok but got: {result}"
 
@@ -211,7 +221,9 @@ def test_follow_redirects_true(adapter):
     )
     pook.get("https://api.example.com/target").reply(200).json({"final": "destination"})
 
-    result = adapter.request("GET", "/redirect", follow_redirects=True)
+    result = adapter.request(
+        "GET", "https://api.example.com/redirect", follow_redirects=True
+    )
 
     assert is_ok(result), f"Expected Ok but got: {result}"
 
@@ -224,37 +236,19 @@ def test_follow_redirects_true(adapter):
     assert json_result.unwrap() == {"final": "destination"}
 
 
-@pook.on
-def test_absolute_url_ignores_base_url():
-    """Test that absolute URLs ignore the base_url."""
-    adapter = RequestsAdapter(base_url="https://api.example.com")
-
-    pook.get("https://other-api.example.com/data").reply(200).json({"ok": True})
-
-    result = adapter.request("GET", "https://other-api.example.com/data")
-
-    assert is_ok(result), f"Expected Ok but got: {result}"
-
-    response = result.unwrap()
-
-    assert response.status_code == 200
-
-
 def test_custom_session():
     """Test using a custom requests.Session instance."""
     custom_session = requests.Session()
     custom_session.headers.update({"X-Custom": "header"})
 
-    adapter = RequestsAdapter(
-        base_url="https://custom.example.com", session=custom_session
-    )
+    adapter = RequestsAdapter(session=custom_session)
 
     pook.activate()
     pook.get("https://custom.example.com/test").header("X-Custom", "header").reply(
         200
     ).json({"ok": True})
 
-    result = adapter.request("GET", "/test")
+    result = adapter.request("GET", "https://custom.example.com/test")
 
     assert is_ok(result), f"Expected Ok but got: {result}"
 
@@ -273,7 +267,7 @@ def test_custom_session():
 
 def test_adapter_cleanup():
     """Test that adapter closes session when it owns it."""
-    adapter = RequestsAdapter(base_url="https://api.example.com")
+    adapter = RequestsAdapter()
 
     # Manually trigger cleanup
     assert adapter._owns_session is True

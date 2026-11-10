@@ -1,5 +1,5 @@
 from satvu.auth import AuthService, TokenCache, resolve_token_expiry_margin
-from satvu.http import HttpClient
+from satvu.http import HttpClient, HttpClientLike, ensure_http_client
 from satvu.services.catalog.api import CatalogService
 from satvu.services.cos.api import CosService
 from satvu.services.id.api import IdService
@@ -18,7 +18,7 @@ class SatVuSDK:
         client_secret: str,
         env: str | None = None,
         token_cache: TokenCache | None = None,
-        http_client: HttpClient | None = None,
+        http_client: HttpClientLike | None = None,
         timeout: int = 30,
         max_retry_attempts: int = 5,
         max_retry_after_seconds: float = 300.0,
@@ -31,7 +31,9 @@ class SatVuSDK:
         :param client_secret: the client secret for authentication
         :param env: the environment to use
         :param token_cache: the token cache to use
-        :param http_client: the HTTP client to use
+        :param http_client: the HTTP client to use: an ``httpx.Client``, ``httpx2.Client``,
+            ``requests.Session``, ``urllib3.PoolManager`` or ``HttpClient``. Defaults to
+            the best installed library.
         :param timeout: request timeout in seconds, defaults to 30 seconds
         :param max_retry_attempts: maximum number of retry attempts, default 5
         :param max_retry_after_seconds: maximum seconds to wait for Retry-After, default 300 seconds
@@ -50,6 +52,7 @@ class SatVuSDK:
         self.token_expiry_margin = resolve_token_expiry_margin(token_expiry_margin)
 
         # for lazy service initialisation
+        self._shared_client: HttpClient | None = None
         self._auth = None
         self._catalog = None
         self._cos = None
@@ -64,12 +67,19 @@ class SatVuSDK:
         return self.auth.token(self.client_id, self.client_secret).unwrap()
 
     @property
+    def _client(self) -> HttpClient:
+        """One client (and connection pool) shared by auth and every service, built on first use."""
+        if self._shared_client is None:
+            self._shared_client = ensure_http_client(self.http_client)
+        return self._shared_client
+
+    @property
     def auth(self) -> AuthService:
         if not self._auth:
             self._auth = AuthService(
                 env=self.env,
                 token_cache=self.token_cache,
-                http_client=self.http_client,
+                http_client=self._client,
                 timeout=self.timeout,
                 token_expiry_margin=self.token_expiry_margin,
             )
@@ -81,7 +91,7 @@ class SatVuSDK:
             self._catalog = CatalogService(
                 env=self.env,
                 get_token=self.get_token,
-                http_client=self.http_client,
+                http_client=self._client,
                 timeout=self.timeout,
                 max_retry_attempts=self.max_retry_attempts,
                 max_retry_after_seconds=self.max_retry_after_seconds,
@@ -94,7 +104,7 @@ class SatVuSDK:
             self._cos = CosService(
                 env=self.env,
                 get_token=self.get_token,
-                http_client=self.http_client,
+                http_client=self._client,
                 timeout=self.timeout,
                 max_retry_attempts=self.max_retry_attempts,
                 max_retry_after_seconds=self.max_retry_after_seconds,
@@ -107,7 +117,7 @@ class SatVuSDK:
             self._id = IdService(
                 env=self.env,
                 get_token=self.get_token,
-                http_client=self.http_client,
+                http_client=self._client,
                 timeout=self.timeout,
                 max_retry_attempts=self.max_retry_attempts,
                 max_retry_after_seconds=self.max_retry_after_seconds,
@@ -120,7 +130,7 @@ class SatVuSDK:
             self._otm = OtmService(
                 env=self.env,
                 get_token=self.get_token,
-                http_client=self.http_client,
+                http_client=self._client,
                 timeout=self.timeout,
                 max_retry_attempts=self.max_retry_attempts,
                 max_retry_after_seconds=self.max_retry_after_seconds,
@@ -133,7 +143,7 @@ class SatVuSDK:
             self._policy = PolicyService(
                 env=self.env,
                 get_token=self.get_token,
-                http_client=self.http_client,
+                http_client=self._client,
                 timeout=self.timeout,
                 max_retry_attempts=self.max_retry_attempts,
                 max_retry_after_seconds=self.max_retry_after_seconds,
@@ -146,7 +156,7 @@ class SatVuSDK:
             self._reseller = ResellerService(
                 env=self.env,
                 get_token=self.get_token,
-                http_client=self.http_client,
+                http_client=self._client,
                 timeout=self.timeout,
                 max_retry_attempts=self.max_retry_attempts,
                 max_retry_after_seconds=self.max_retry_after_seconds,
@@ -159,7 +169,7 @@ class SatVuSDK:
             self._wallet = WalletService(
                 env=self.env,
                 get_token=self.get_token,
-                http_client=self.http_client,
+                http_client=self._client,
                 timeout=self.timeout,
                 max_retry_attempts=self.max_retry_attempts,
                 max_retry_after_seconds=self.max_retry_after_seconds,

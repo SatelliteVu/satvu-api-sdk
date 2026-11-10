@@ -1,9 +1,9 @@
 """Urllib3 HTTP adapter."""
 
 import json as json_lib
-from collections.abc import Callable, Iterator
+from collections.abc import Iterator
 from typing import Any, cast
-from urllib.parse import urlencode, urljoin
+from urllib.parse import urlencode
 
 try:
     import urllib3
@@ -142,23 +142,15 @@ class Urllib3Adapter:
 
     def __init__(
         self,
-        base_url: str | None = None,
         pool_manager: urllib3.PoolManager | None = None,
-        get_token: Callable[[], str] | None = None,
     ):
         """
         Initialize the urllib3 adapter.
 
         Args:
-            base_url: Optional base URL for all requests. Relative URLs will be joined to this.
             pool_manager: Optional pre-configured urllib3.PoolManager instance.
                          If not provided, a new one will be created.
-            get_token: Optional callback to get the current access token. Will be called
-                      before each request to support token refresh.
         """
-        self.base_url = base_url.rstrip("/") if base_url else ""
-        self.get_token = get_token
-
         if pool_manager is not None:
             self.pool_manager = pool_manager
             self._owns_pool = False
@@ -193,11 +185,7 @@ class Urllib3Adapter:
         | ProxyError,
     ]:
         """Make an HTTP request using urllib3."""
-        # Build full URL
-        if self.base_url and not url.startswith(("http://", "https://")):
-            full_url = urljoin(self.base_url + "/", url.lstrip("/"))
-        else:
-            full_url = url
+        full_url = url
 
         # Add query parameters
         if params:
@@ -208,11 +196,7 @@ class Urllib3Adapter:
                 separator = "&" if "?" in full_url else "?"
                 full_url = f"{full_url}{separator}{query_string}"
 
-        # Prepare headers with auth token if get_token is available
         req_headers = headers.copy() if headers else {}
-        if self.get_token:
-            token = self.get_token()
-            req_headers["Authorization"] = f"Bearer {token}"
 
         # Prepare body
         body_data: bytes | str | None = None

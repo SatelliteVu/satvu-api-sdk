@@ -1,7 +1,7 @@
 """Requests HTTP adapter."""
 
 import json as json_lib
-from collections.abc import Callable, Iterator
+from collections.abc import Iterator
 from typing import Any, cast
 
 try:
@@ -123,23 +123,15 @@ class RequestsAdapter:
 
     def __init__(
         self,
-        base_url: str | None = None,
         session: requests.Session | None = None,
-        get_token: Callable[[], str] | None = None,
     ):
         """
         Initialize the requests adapter.
 
         Args:
-            base_url: Optional base URL for all requests. Relative URLs will be joined to this.
             session: Optional pre-configured requests.Session instance. If not provided,
                     a new session will be created.
-            get_token: Optional callback to get the current access token. Will be called
-                      before each request to support token refresh.
         """
-        self.base_url = base_url.rstrip("/") if base_url else ""
-        self.get_token = get_token
-
         if session is not None:
             self.session = session
             self._owns_session = False
@@ -174,17 +166,7 @@ class RequestsAdapter:
         | ProxyError,
     ]:
         """Make an HTTP request using requests."""
-        # Build full URL
-        if self.base_url and not url.startswith(("http://", "https://")):
-            full_url = f"{self.base_url}/{url.lstrip('/')}"
-        else:
-            full_url = url
-
-        # Prepare headers with auth token if get_token is available
         req_headers = headers.copy() if headers else {}
-        if self.get_token:
-            token = self.get_token()
-            req_headers["Authorization"] = f"Bearer {token}"
 
         # Filter out None values from params
         if params:
@@ -194,7 +176,7 @@ class RequestsAdapter:
         try:
             response = self.session.request(
                 method=method,
-                url=full_url,
+                url=url,
                 headers=req_headers,
                 params=params,
                 json=json,
@@ -233,7 +215,7 @@ class RequestsAdapter:
             return Err(
                 ConnectionTimeoutError(
                     message=f"Connection timeout after {timeout} seconds",
-                    url=full_url,
+                    url=url,
                     timeout=timeout,
                     original_error=e,
                 )
@@ -243,7 +225,7 @@ class RequestsAdapter:
             return Err(
                 ReadTimeoutError(
                     message=f"Read timeout after {timeout} seconds",
-                    url=full_url,
+                    url=url,
                     timeout=timeout,
                     original_error=e,
                 )
@@ -254,7 +236,7 @@ class RequestsAdapter:
             return Err(
                 ReadTimeoutError(
                     message=f"Request timeout after {timeout} seconds",
-                    url=full_url,
+                    url=url,
                     timeout=timeout,
                     original_error=e,
                 )
@@ -264,7 +246,7 @@ class RequestsAdapter:
             return Err(
                 ProxyError(
                     message=f"Proxy error: {e}",
-                    url=full_url,
+                    url=url,
                     original_error=e,
                 )
             )
@@ -273,7 +255,7 @@ class RequestsAdapter:
             return Err(
                 SSLError(
                     message=f"SSL/TLS error: {e}",
-                    url=full_url,
+                    url=url,
                     original_error=e,
                 )
             )
@@ -282,7 +264,7 @@ class RequestsAdapter:
             return Err(
                 NetworkError(
                     message=f"Connection error: {e}",
-                    url=full_url,
+                    url=url,
                     original_error=e,
                 )
             )
@@ -292,7 +274,7 @@ class RequestsAdapter:
             return Err(
                 NetworkError(
                     message=f"Request error: {e}",
-                    url=full_url,
+                    url=url,
                     original_error=e,
                 )
             )

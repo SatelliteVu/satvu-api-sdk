@@ -41,22 +41,89 @@ def sdk_client_with_env():
 @pytest.fixture
 def sdk_client_with_token():
     """Create an SDKClient with authentication token."""
-    # Instead of using get_token which tries to pass headers to adapter init,
-    # create a custom http_client with headers
-    http_client = create_http_client(
-        "stdlib",
-        base_url="https://api.satellitevu.com/test",
-    )
-    return ConcreteSDKClient(env=None, http_client=http_client)
+    return ConcreteSDKClient(env=None, get_token=lambda: "test_token")
 
 
 @pytest.fixture
 def sdk_client_with_custom_http():
     """Create an SDKClient with custom HTTP client."""
-    http_client = create_http_client(
-        "stdlib", base_url="https://api.satellitevu.com/test"
+    return ConcreteSDKClient(env=None, http_client=create_http_client("stdlib"))
+
+
+@pytest.mark.parametrize(
+    ("url", "expected"),
+    [
+        ("/endpoint", "https://api.satellitevu.com/test/endpoint"),
+        ("endpoint", "https://api.satellitevu.com/test/endpoint"),
+        ("https://other.example.com/x", "https://other.example.com/x"),
+    ],
+)
+def test_resolve_url(sdk_client, url, expected):
+    """Relative paths get the service base URL; absolute URLs pass through."""
+    assert sdk_client._resolve_url(url) == expected
+
+
+@pytest.mark.parametrize(
+    ("url", "headers", "expected"),
+    [
+        (
+            "https://api.satellitevu.com/test/endpoint",
+            None,
+            {"Authorization": "Bearer test_token"},
+        ),
+        (
+            "https://api.satellitevu.com/test/endpoint",
+            {"X-Id": "1"},
+            {"X-Id": "1", "Authorization": "Bearer test_token"},
+        ),
+        (
+            "https://api.satellitevu.com/test/endpoint",
+            {"authorization": "Bearer mine"},
+            {"authorization": "Bearer mine"},
+        ),
+        ("https://bucket.s3.amazonaws.com/file.zip?sig=x", None, None),
+        ("https://api.satellitevu.com/testing/other", None, None),
+    ],
+    ids=[
+        "own-url",
+        "keeps-caller-headers",
+        "caller-auth-wins",
+        "foreign-host",
+        "path-prefix-only",
+    ],
+)
+def test_request_headers(sdk_client_with_token, url, headers, expected):
+    """The token goes only to this service's URLs, and never overrides the caller's."""
+    assert sdk_client_with_token._request_headers(url, headers) == expected
+
+
+@pook.on
+def test_custom_http_client_gets_base_url_and_auth():
+    """A plain user-supplied client still hits the service URL with a bearer token."""
+    pook.get("https://api.satellitevu.com/test/endpoint").header(
+        "Authorization", "Bearer test_token"
+    ).reply(200).json({})
+    client = ConcreteSDKClient(
+        env=None,
+        get_token=lambda: "test_token",
+        http_client=create_http_client("stdlib"),
     )
-    return ConcreteSDKClient(env=None, http_client=http_client)
+
+    assert is_ok(client.make_request("GET", "/endpoint"))
+
+
+@pook.on
+def test_auth_header_does_not_mutate_caller_headers(sdk_client_with_token):
+    """The caller's headers dict is left alone (it's reused across 202 retries)."""
+    pook.get("https://api.satellitevu.com/test/endpoint").header(
+        "Authorization", "Bearer test_token"
+    ).header("X-Request-Id", "abc").reply(200).json({})
+    headers = {"X-Request-Id": "abc"}
+
+    assert is_ok(
+        sdk_client_with_token.make_request("GET", "/endpoint", headers=headers)
+    )
+    assert headers == {"X-Request-Id": "abc"}
 
 
 def test_build_url_no_env():

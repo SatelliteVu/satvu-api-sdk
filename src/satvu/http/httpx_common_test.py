@@ -53,7 +53,7 @@ def http_module(backend):
 @pytest.fixture
 def adapter(adapter_cls):
     """Create an adapter instance for testing."""
-    return adapter_cls(base_url="https://api.example.com")
+    return adapter_cls()
 
 
 @pook.on
@@ -63,7 +63,7 @@ def test_get_request(adapter):
         {"users": ["alice", "bob"]}
     )
 
-    result = adapter.request("GET", "/users")
+    result = adapter.request("GET", "https://api.example.com/users")
     assert is_ok(result), f"Expected Ok but got: {result}"
     response = result.unwrap()
 
@@ -80,7 +80,9 @@ def test_post_request_with_json(adapter):
         {"id": 123, "name": "charlie"}
     )
 
-    result = adapter.request("POST", "/users", json={"name": "charlie"})
+    result = adapter.request(
+        "POST", "https://api.example.com/users", json={"name": "charlie"}
+    )
     assert is_ok(result), f"Expected Ok but got: {result}"
     response = result.unwrap()
 
@@ -97,7 +99,9 @@ def test_request_with_query_params(adapter):
         {"count": 2}
     )
 
-    result = adapter.request("GET", "/users", params={"limit": 10, "offset": 20})
+    result = adapter.request(
+        "GET", "https://api.example.com/users", params={"limit": 10, "offset": 20}
+    )
     assert is_ok(result), f"Expected Ok but got: {result}"
     response = result.unwrap()
 
@@ -112,7 +116,9 @@ def test_request_with_none_params(adapter):
     """Test that None params are filtered out."""
     pook.get("https://api.example.com/users?limit=10").reply(200).json({})
 
-    result = adapter.request("GET", "/users", params={"limit": 10, "offset": None})
+    result = adapter.request(
+        "GET", "https://api.example.com/users", params={"limit": 10, "offset": None}
+    )
     assert is_ok(result), f"Expected Ok but got: {result}"
     response = result.unwrap()
 
@@ -127,7 +133,9 @@ def test_request_with_headers(adapter):
     ).reply(200).json({})
 
     result = adapter.request(
-        "GET", "/users", headers={"Authorization": "Bearer token123"}
+        "GET",
+        "https://api.example.com/users",
+        headers={"Authorization": "Bearer token123"},
     )
     assert is_ok(result), f"Expected Ok but got: {result}"
     response = result.unwrap()
@@ -143,7 +151,7 @@ def test_request_with_form_data(adapter):
 
     result = adapter.request(
         "POST",
-        "/login",
+        "https://api.example.com/login",
         data={"username": "user", "password": "pass"},  # pragma: allowlist secret
     )
     assert is_ok(result), f"Expected Ok but got: {result}"
@@ -160,7 +168,7 @@ def test_response_text_property(adapter):
     """Test response text property."""
     pook.get("https://api.example.com/hello").reply(200).body("Hello, World!")
 
-    result = adapter.request("GET", "/hello")
+    result = adapter.request("GET", "https://api.example.com/hello")
     assert is_ok(result), f"Expected Ok but got: {result}"
     response = result.unwrap()
 
@@ -174,7 +182,7 @@ def test_response_body_property(adapter):
     """Test response body property."""
     pook.get("https://api.example.com/data").reply(200).body(b"binary data")
 
-    result = adapter.request("GET", "/data")
+    result = adapter.request("GET", "https://api.example.com/data")
     assert is_ok(result), f"Expected Ok but got: {result}"
     response = result.unwrap()
 
@@ -188,7 +196,7 @@ def test_response_headers(adapter):
         "X-Custom", "value"
     ).body("test")
 
-    result = adapter.request("GET", "/test")
+    result = adapter.request("GET", "https://api.example.com/test")
     assert is_ok(result), f"Expected Ok but got: {result}"
     response = result.unwrap()
 
@@ -200,7 +208,7 @@ def test_http_error_response(adapter):
     """Test handling of HTTP error responses."""
     pook.get("https://api.example.com/notfound").reply(404).json({"error": "Not found"})
 
-    result = adapter.request("GET", "/notfound")
+    result = adapter.request("GET", "https://api.example.com/notfound")
     # 404 should now return Err(ClientError)
     assert result.is_err(), f"Expected Err but got: {result}"
     error = result.error()
@@ -216,32 +224,18 @@ def test_follow_redirects_false(adapter):
         "Location", "https://api.example.com/target"
     )
 
-    result = adapter.request("GET", "/redirect", follow_redirects=False)
+    result = adapter.request(
+        "GET", "https://api.example.com/redirect", follow_redirects=False
+    )
     assert is_ok(result), f"Expected Ok but got: {result}"
     response = result.unwrap()
 
     assert response.status_code == 302
 
 
-@pook.on
-def test_absolute_url_ignores_base_url(adapter_cls):
-    """Test that absolute URLs ignore the base_url."""
-    adapter = adapter_cls(base_url="https://api.example.com")
-
-    pook.get("https://other-api.example.com/data").reply(200).json({"ok": True})
-
-    result = adapter.request("GET", "https://other-api.example.com/data")
-    assert is_ok(result), f"Expected Ok but got: {result}"
-    response = result.unwrap()
-
-    assert response.status_code == 200
-
-
 def test_custom_client(adapter_cls, http_module):
     """Test using a custom Client instance."""
-    custom_client = http_module.Client(
-        base_url="https://custom.example.com", headers={"X-Custom": "header"}
-    )
+    custom_client = http_module.Client(headers={"X-Custom": "header"})
 
     adapter = adapter_cls(client=custom_client)
 
@@ -250,7 +244,7 @@ def test_custom_client(adapter_cls, http_module):
         200
     ).json({"ok": True})
 
-    result = adapter.request("GET", "/test")
+    result = adapter.request("GET", "https://custom.example.com/test")
 
     assert is_ok(result), f"Expected Ok but got: {result}"
 
@@ -267,7 +261,7 @@ def test_custom_client(adapter_cls, http_module):
 
 def test_adapter_cleanup(adapter_cls):
     """Test that adapter closes client when it owns it."""
-    adapter = adapter_cls(base_url="https://api.example.com")
+    adapter = adapter_cls()
 
     # Manually trigger cleanup
     assert adapter._owns_client is True
@@ -295,7 +289,7 @@ def test_transport_error_mapping(
 
     monkeypatch.setattr(adapter.client, "request", raise_exc)
 
-    result = adapter.request("GET", "/boom")
+    result = adapter.request("GET", "https://api.example.com/boom")
 
     assert is_err(result), f"Expected Err but got: {result}"
     error = result.error()

@@ -64,22 +64,20 @@ pip install satvu[standard]
 
 ## Custom HTTP Client
 
-You can provide your own HTTP client for advanced configuration:
+Pass your own configured client (`httpx.Client`, `httpx2.Client`,
+`requests.Session` or `urllib3.PoolManager`) for transport settings such as proxies
+or TLS. The SDK adds the base URL and auth token to every request:
 
 ```python
-from satvu import SatVuSDK
-from satvu.http import create_http_client
+import httpx
 
-# Create a custom HTTP client
-http_client = create_http_client(
-    backend="httpx",
-    timeout=60,
-)
+from satvu import SatVuSDK
 
 sdk = SatVuSDK(
     client_id=os.environ["SATVU_CLIENT_ID"],
     client_secret=os.environ["SATVU_CLIENT_SECRET"],
-    http_client=http_client,
+    http_client=httpx.Client(proxy="http://proxy.internal:8080"),
+    timeout=60,
 )
 ```
 

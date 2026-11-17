@@ -52,6 +52,7 @@ from .modify_feasibility_request_properties import ModifyFeasibilityRequestPrope
 from .multi_line_string import MultiLineString
 from .multi_point import MultiPoint
 from .multi_polygon import MultiPolygon
+from .multi_polygon_geometry import MultiPolygonGeometry
 from .order_item_download_url import OrderItemDownloadUrl
 from .order_modification_price import OrderModificationPrice
 from .order_price import OrderPrice
@@ -186,6 +187,7 @@ __all__ = (
     "MultiLineString",
     "MultiPoint",
     "MultiPolygon",
+    "MultiPolygonGeometry",
     "OrderItemDownloadUrl",
     "OrderModificationPrice",
     "OrderPrice",

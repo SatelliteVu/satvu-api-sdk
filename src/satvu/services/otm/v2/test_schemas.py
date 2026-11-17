@@ -12,7 +12,7 @@ from functools import cache
 from satvu.services.example_cache import get_cached_example_strategy
 
 # Spec hash for example cache invalidation
-_SPEC_HASH = "prod-828a9a35e824d56b603078c2a0acf5b507d4ec2b"
+_SPEC_HASH = "prod-67ccc32aa49a35bf5b7654ce5850bb476b9eec69"
 
 # Component schemas for $ref resolution (cleaned for JSON Schema draft-07)
 _COMPONENTS = {
@@ -2862,6 +2862,72 @@ _COMPONENTS = {
         },
         "required": ["type", "coordinates"],
         "title": "MultiPolygon",
+        "type": "object",
+    },
+    "MultiPolygonGeometry": {
+        "description": "GeoJSON MultiPolygon geometry.\n"
+        "\n"
+        "Represents a collection of polygons. "
+        "Commonly produced when a footprint\n"
+        "crosses the antimeridian and is "
+        "split into multiple polygons. "
+        "Coordinates\n"
+        "must be in WGS84 (longitude, "
+        "latitude); each polygon's outer ring "
+        "must be\n"
+        "closed (first and last coordinates "
+        "must be the same).",
+        "properties": {
+            "coordinates": {
+                "description": "The "
+                "coordinates "
+                "of "
+                "the "
+                "multipolygon. "
+                "Each "
+                "element "
+                "is a "
+                "polygon "
+                "(list "
+                "of "
+                "rings); "
+                "the "
+                "first "
+                "ring "
+                "is "
+                "the "
+                "outer "
+                "boundary, "
+                "the "
+                "rest "
+                "are "
+                "holes.",
+                "items": {
+                    "items": {
+                        "items": {
+                            "items": {
+                                "anyOf": [{"type": "number"}, {"type": "integer"}]
+                            },
+                            "maxItems": 2,
+                            "minItems": 2,
+                            "type": "array",
+                        },
+                        "type": "array",
+                    },
+                    "type": "array",
+                },
+                "title": "Coordinates",
+                "type": "array",
+            },
+            "type": {
+                "const": "MultiPolygon",
+                "default": "MultiPolygon",
+                "title": "Type",
+                "type": "string",
+            },
+        },
+        "required": ["coordinates"],
+        "title": "MultiPolygonGeometry",
         "type": "object",
     },
     "OrderItemDownloadUrl": {
@@ -5976,6 +6042,7 @@ _COMPONENTS = {
                 "anyOf": [
                     {"$ref": "#/definitions/PointGeometry"},
                     {"$ref": "#/definitions/PolygonGeometry"},
+                    {"$ref": "#/definitions/MultiPolygonGeometry"},
                     {"type": "null"},
                 ],
                 "description": "Defines the full "
@@ -12117,6 +12184,109 @@ _OPERATIONS = {
                         "title": "MultiPolygon",
                         "type": "object",
                     },
+                    "MultiPolygonGeometry": {
+                        "description": "GeoJSON "
+                        "MultiPolygon "
+                        "geometry.\n"
+                        "\n"
+                        "Represents "
+                        "a "
+                        "collection "
+                        "of "
+                        "polygons. "
+                        "Commonly "
+                        "produced "
+                        "when "
+                        "a "
+                        "footprint\n"
+                        "crosses "
+                        "the "
+                        "antimeridian "
+                        "and "
+                        "is "
+                        "split "
+                        "into "
+                        "multiple "
+                        "polygons. "
+                        "Coordinates\n"
+                        "must "
+                        "be "
+                        "in "
+                        "WGS84 "
+                        "(longitude, "
+                        "latitude); "
+                        "each "
+                        "polygon's "
+                        "outer "
+                        "ring "
+                        "must "
+                        "be\n"
+                        "closed "
+                        "(first "
+                        "and "
+                        "last "
+                        "coordinates "
+                        "must "
+                        "be "
+                        "the "
+                        "same).",
+                        "properties": {
+                            "coordinates": {
+                                "description": "The "
+                                "coordinates "
+                                "of "
+                                "the "
+                                "multipolygon. "
+                                "Each "
+                                "element "
+                                "is "
+                                "a "
+                                "polygon "
+                                "(list "
+                                "of "
+                                "rings); "
+                                "the "
+                                "first "
+                                "ring "
+                                "is "
+                                "the "
+                                "outer "
+                                "boundary, "
+                                "the "
+                                "rest "
+                                "are "
+                                "holes.",
+                                "items": {
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
+                                            "maxItems": 2,
+                                            "minItems": 2,
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "type": "array",
+                                },
+                                "title": "Coordinates",
+                                "type": "array",
+                            },
+                            "type": {
+                                "const": "MultiPolygon",
+                                "default": "MultiPolygon",
+                                "title": "Type",
+                                "type": "string",
+                            },
+                        },
+                        "required": ["coordinates"],
+                        "title": "MultiPolygonGeometry",
+                        "type": "object",
+                    },
                     "OrderItemDownloadUrl": {
                         "description": "Payload "
                         "for "
@@ -16094,6 +16264,7 @@ _OPERATIONS = {
                                 "anyOf": [
                                     {"$ref": "#/definitions/PointGeometry"},
                                     {"$ref": "#/definitions/PolygonGeometry"},
+                                    {"$ref": "#/definitions/MultiPolygonGeometry"},
                                     {"type": "null"},
                                 ],
                                 "description": "Defines "
@@ -23045,6 +23216,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -27169,6 +27443,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -34130,6 +34405,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -38254,6 +38632,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -45045,6 +45424,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -49169,6 +49651,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -55953,6 +56436,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -60077,6 +60663,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -66879,6 +67466,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -71003,6 +71693,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -77684,6 +78375,109 @@ _OPERATIONS = {
                         "title": "MultiPolygon",
                         "type": "object",
                     },
+                    "MultiPolygonGeometry": {
+                        "description": "GeoJSON "
+                        "MultiPolygon "
+                        "geometry.\n"
+                        "\n"
+                        "Represents "
+                        "a "
+                        "collection "
+                        "of "
+                        "polygons. "
+                        "Commonly "
+                        "produced "
+                        "when "
+                        "a "
+                        "footprint\n"
+                        "crosses "
+                        "the "
+                        "antimeridian "
+                        "and "
+                        "is "
+                        "split "
+                        "into "
+                        "multiple "
+                        "polygons. "
+                        "Coordinates\n"
+                        "must "
+                        "be "
+                        "in "
+                        "WGS84 "
+                        "(longitude, "
+                        "latitude); "
+                        "each "
+                        "polygon's "
+                        "outer "
+                        "ring "
+                        "must "
+                        "be\n"
+                        "closed "
+                        "(first "
+                        "and "
+                        "last "
+                        "coordinates "
+                        "must "
+                        "be "
+                        "the "
+                        "same).",
+                        "properties": {
+                            "coordinates": {
+                                "description": "The "
+                                "coordinates "
+                                "of "
+                                "the "
+                                "multipolygon. "
+                                "Each "
+                                "element "
+                                "is "
+                                "a "
+                                "polygon "
+                                "(list "
+                                "of "
+                                "rings); "
+                                "the "
+                                "first "
+                                "ring "
+                                "is "
+                                "the "
+                                "outer "
+                                "boundary, "
+                                "the "
+                                "rest "
+                                "are "
+                                "holes.",
+                                "items": {
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
+                                            "maxItems": 2,
+                                            "minItems": 2,
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "type": "array",
+                                },
+                                "title": "Coordinates",
+                                "type": "array",
+                            },
+                            "type": {
+                                "const": "MultiPolygon",
+                                "default": "MultiPolygon",
+                                "title": "Type",
+                                "type": "string",
+                            },
+                        },
+                        "required": ["coordinates"],
+                        "title": "MultiPolygonGeometry",
+                        "type": "object",
+                    },
                     "OrderItemDownloadUrl": {
                         "description": "Payload "
                         "for "
@@ -81661,6 +82455,7 @@ _OPERATIONS = {
                                 "anyOf": [
                                     {"$ref": "#/definitions/PointGeometry"},
                                     {"$ref": "#/definitions/PolygonGeometry"},
+                                    {"$ref": "#/definitions/MultiPolygonGeometry"},
                                     {"type": "null"},
                                 ],
                                 "description": "Defines "
@@ -88345,6 +89140,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -92469,6 +93367,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -99316,6 +100215,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -103440,6 +104442,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -110231,6 +111234,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -114355,6 +115461,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -121134,6 +122241,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -125258,6 +126468,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -131951,6 +133162,109 @@ _OPERATIONS = {
                         "title": "MultiPolygon",
                         "type": "object",
                     },
+                    "MultiPolygonGeometry": {
+                        "description": "GeoJSON "
+                        "MultiPolygon "
+                        "geometry.\n"
+                        "\n"
+                        "Represents "
+                        "a "
+                        "collection "
+                        "of "
+                        "polygons. "
+                        "Commonly "
+                        "produced "
+                        "when "
+                        "a "
+                        "footprint\n"
+                        "crosses "
+                        "the "
+                        "antimeridian "
+                        "and "
+                        "is "
+                        "split "
+                        "into "
+                        "multiple "
+                        "polygons. "
+                        "Coordinates\n"
+                        "must "
+                        "be "
+                        "in "
+                        "WGS84 "
+                        "(longitude, "
+                        "latitude); "
+                        "each "
+                        "polygon's "
+                        "outer "
+                        "ring "
+                        "must "
+                        "be\n"
+                        "closed "
+                        "(first "
+                        "and "
+                        "last "
+                        "coordinates "
+                        "must "
+                        "be "
+                        "the "
+                        "same).",
+                        "properties": {
+                            "coordinates": {
+                                "description": "The "
+                                "coordinates "
+                                "of "
+                                "the "
+                                "multipolygon. "
+                                "Each "
+                                "element "
+                                "is "
+                                "a "
+                                "polygon "
+                                "(list "
+                                "of "
+                                "rings); "
+                                "the "
+                                "first "
+                                "ring "
+                                "is "
+                                "the "
+                                "outer "
+                                "boundary, "
+                                "the "
+                                "rest "
+                                "are "
+                                "holes.",
+                                "items": {
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
+                                            "maxItems": 2,
+                                            "minItems": 2,
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "type": "array",
+                                },
+                                "title": "Coordinates",
+                                "type": "array",
+                            },
+                            "type": {
+                                "const": "MultiPolygon",
+                                "default": "MultiPolygon",
+                                "title": "Type",
+                                "type": "string",
+                            },
+                        },
+                        "required": ["coordinates"],
+                        "title": "MultiPolygonGeometry",
+                        "type": "object",
+                    },
                     "OrderItemDownloadUrl": {
                         "description": "Payload "
                         "for "
@@ -135928,6 +137242,7 @@ _OPERATIONS = {
                                 "anyOf": [
                                     {"$ref": "#/definitions/PointGeometry"},
                                     {"$ref": "#/definitions/PolygonGeometry"},
+                                    {"$ref": "#/definitions/MultiPolygonGeometry"},
                                     {"type": "null"},
                                 ],
                                 "description": "Defines "
@@ -142648,6 +143963,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -146772,6 +148190,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -153619,6 +155038,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -157743,6 +159265,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -164534,6 +166057,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -168658,6 +170284,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -175449,6 +177076,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -179573,6 +181303,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -186364,6 +188095,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -190488,6 +192322,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -197267,6 +199102,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -201391,6 +203329,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -208187,6 +210126,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -212311,6 +214353,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -219158,6 +221201,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -223282,6 +225428,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -230073,6 +232220,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -234197,6 +236447,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -240981,6 +243232,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -245105,6 +247459,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -251949,6 +254304,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -256073,6 +258531,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -262864,6 +265323,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -266988,6 +269550,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -273772,6 +276335,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -277896,6 +280562,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -284698,6 +287365,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -288822,6 +291592,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -295502,6 +298273,109 @@ _OPERATIONS = {
                         "title": "MultiPolygon",
                         "type": "object",
                     },
+                    "MultiPolygonGeometry": {
+                        "description": "GeoJSON "
+                        "MultiPolygon "
+                        "geometry.\n"
+                        "\n"
+                        "Represents "
+                        "a "
+                        "collection "
+                        "of "
+                        "polygons. "
+                        "Commonly "
+                        "produced "
+                        "when "
+                        "a "
+                        "footprint\n"
+                        "crosses "
+                        "the "
+                        "antimeridian "
+                        "and "
+                        "is "
+                        "split "
+                        "into "
+                        "multiple "
+                        "polygons. "
+                        "Coordinates\n"
+                        "must "
+                        "be "
+                        "in "
+                        "WGS84 "
+                        "(longitude, "
+                        "latitude); "
+                        "each "
+                        "polygon's "
+                        "outer "
+                        "ring "
+                        "must "
+                        "be\n"
+                        "closed "
+                        "(first "
+                        "and "
+                        "last "
+                        "coordinates "
+                        "must "
+                        "be "
+                        "the "
+                        "same).",
+                        "properties": {
+                            "coordinates": {
+                                "description": "The "
+                                "coordinates "
+                                "of "
+                                "the "
+                                "multipolygon. "
+                                "Each "
+                                "element "
+                                "is "
+                                "a "
+                                "polygon "
+                                "(list "
+                                "of "
+                                "rings); "
+                                "the "
+                                "first "
+                                "ring "
+                                "is "
+                                "the "
+                                "outer "
+                                "boundary, "
+                                "the "
+                                "rest "
+                                "are "
+                                "holes.",
+                                "items": {
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
+                                            "maxItems": 2,
+                                            "minItems": 2,
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "type": "array",
+                                },
+                                "title": "Coordinates",
+                                "type": "array",
+                            },
+                            "type": {
+                                "const": "MultiPolygon",
+                                "default": "MultiPolygon",
+                                "title": "Type",
+                                "type": "string",
+                            },
+                        },
+                        "required": ["coordinates"],
+                        "title": "MultiPolygonGeometry",
+                        "type": "object",
+                    },
                     "OrderItemDownloadUrl": {
                         "description": "Payload "
                         "for "
@@ -299479,6 +302353,7 @@ _OPERATIONS = {
                                 "anyOf": [
                                     {"$ref": "#/definitions/PointGeometry"},
                                     {"$ref": "#/definitions/PolygonGeometry"},
+                                    {"$ref": "#/definitions/MultiPolygonGeometry"},
                                     {"type": "null"},
                                 ],
                                 "description": "Defines "
@@ -306256,6 +309131,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -310380,6 +313358,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -317151,6 +320130,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -321275,6 +324357,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -328066,6 +331149,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -332190,6 +335376,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -338981,6 +342168,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -343105,6 +346395,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -349896,6 +353187,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -354020,6 +357414,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -360815,6 +364210,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -364939,6 +368437,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -371710,6 +375209,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -375834,6 +379436,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -382625,6 +386228,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -386749,6 +390455,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -393549,6 +397256,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -397673,6 +401483,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -404444,6 +408255,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -408568,6 +412482,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -415359,6 +419274,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -419483,6 +423501,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -426164,6 +430183,109 @@ _OPERATIONS = {
                         "title": "MultiPolygon",
                         "type": "object",
                     },
+                    "MultiPolygonGeometry": {
+                        "description": "GeoJSON "
+                        "MultiPolygon "
+                        "geometry.\n"
+                        "\n"
+                        "Represents "
+                        "a "
+                        "collection "
+                        "of "
+                        "polygons. "
+                        "Commonly "
+                        "produced "
+                        "when "
+                        "a "
+                        "footprint\n"
+                        "crosses "
+                        "the "
+                        "antimeridian "
+                        "and "
+                        "is "
+                        "split "
+                        "into "
+                        "multiple "
+                        "polygons. "
+                        "Coordinates\n"
+                        "must "
+                        "be "
+                        "in "
+                        "WGS84 "
+                        "(longitude, "
+                        "latitude); "
+                        "each "
+                        "polygon's "
+                        "outer "
+                        "ring "
+                        "must "
+                        "be\n"
+                        "closed "
+                        "(first "
+                        "and "
+                        "last "
+                        "coordinates "
+                        "must "
+                        "be "
+                        "the "
+                        "same).",
+                        "properties": {
+                            "coordinates": {
+                                "description": "The "
+                                "coordinates "
+                                "of "
+                                "the "
+                                "multipolygon. "
+                                "Each "
+                                "element "
+                                "is "
+                                "a "
+                                "polygon "
+                                "(list "
+                                "of "
+                                "rings); "
+                                "the "
+                                "first "
+                                "ring "
+                                "is "
+                                "the "
+                                "outer "
+                                "boundary, "
+                                "the "
+                                "rest "
+                                "are "
+                                "holes.",
+                                "items": {
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
+                                            "maxItems": 2,
+                                            "minItems": 2,
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "type": "array",
+                                },
+                                "title": "Coordinates",
+                                "type": "array",
+                            },
+                            "type": {
+                                "const": "MultiPolygon",
+                                "default": "MultiPolygon",
+                                "title": "Type",
+                                "type": "string",
+                            },
+                        },
+                        "required": ["coordinates"],
+                        "title": "MultiPolygonGeometry",
+                        "type": "object",
+                    },
                     "OrderItemDownloadUrl": {
                         "description": "Payload "
                         "for "
@@ -430141,6 +434263,7 @@ _OPERATIONS = {
                                 "anyOf": [
                                     {"$ref": "#/definitions/PointGeometry"},
                                     {"$ref": "#/definitions/PolygonGeometry"},
+                                    {"$ref": "#/definitions/MultiPolygonGeometry"},
                                     {"type": "null"},
                                 ],
                                 "description": "Defines "
@@ -436857,6 +440980,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -440981,6 +445207,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -447752,6 +451979,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -451876,6 +456206,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -458671,6 +463002,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -462795,6 +467229,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -469571,6 +474006,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -473695,6 +478233,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -477051,6 +481590,7 @@ _OPERATIONS = {
                             "anyOf": [
                                 {"$ref": "#/definitions/PointGeometry"},
                                 {"$ref": "#/definitions/PolygonGeometry"},
+                                {"$ref": "#/definitions/MultiPolygonGeometry"},
                                 {"type": "null"},
                             ],
                             "description": "Defines "
@@ -480625,6 +485165,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -484749,6 +489392,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -491533,6 +496177,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -495657,6 +500404,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -502448,6 +507196,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -506572,6 +511423,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -513363,6 +518215,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -517487,6 +522442,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -524266,6 +529222,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -528390,6 +533449,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -535186,6 +540246,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -539310,6 +544473,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -546115,6 +551279,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -550239,6 +555506,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -557047,6 +562315,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -561171,6 +566542,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -567971,6 +573343,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -572095,6 +577570,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -578866,6 +584342,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -582990,6 +588569,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -589781,6 +595361,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -593905,6 +599588,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -600689,6 +606373,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -604813,6 +610600,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -611587,6 +617375,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -615711,6 +621602,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -622392,6 +628284,109 @@ _OPERATIONS = {
                         "title": "MultiPolygon",
                         "type": "object",
                     },
+                    "MultiPolygonGeometry": {
+                        "description": "GeoJSON "
+                        "MultiPolygon "
+                        "geometry.\n"
+                        "\n"
+                        "Represents "
+                        "a "
+                        "collection "
+                        "of "
+                        "polygons. "
+                        "Commonly "
+                        "produced "
+                        "when "
+                        "a "
+                        "footprint\n"
+                        "crosses "
+                        "the "
+                        "antimeridian "
+                        "and "
+                        "is "
+                        "split "
+                        "into "
+                        "multiple "
+                        "polygons. "
+                        "Coordinates\n"
+                        "must "
+                        "be "
+                        "in "
+                        "WGS84 "
+                        "(longitude, "
+                        "latitude); "
+                        "each "
+                        "polygon's "
+                        "outer "
+                        "ring "
+                        "must "
+                        "be\n"
+                        "closed "
+                        "(first "
+                        "and "
+                        "last "
+                        "coordinates "
+                        "must "
+                        "be "
+                        "the "
+                        "same).",
+                        "properties": {
+                            "coordinates": {
+                                "description": "The "
+                                "coordinates "
+                                "of "
+                                "the "
+                                "multipolygon. "
+                                "Each "
+                                "element "
+                                "is "
+                                "a "
+                                "polygon "
+                                "(list "
+                                "of "
+                                "rings); "
+                                "the "
+                                "first "
+                                "ring "
+                                "is "
+                                "the "
+                                "outer "
+                                "boundary, "
+                                "the "
+                                "rest "
+                                "are "
+                                "holes.",
+                                "items": {
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
+                                            "maxItems": 2,
+                                            "minItems": 2,
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "type": "array",
+                                },
+                                "title": "Coordinates",
+                                "type": "array",
+                            },
+                            "type": {
+                                "const": "MultiPolygon",
+                                "default": "MultiPolygon",
+                                "title": "Type",
+                                "type": "string",
+                            },
+                        },
+                        "required": ["coordinates"],
+                        "title": "MultiPolygonGeometry",
+                        "type": "object",
+                    },
                     "OrderItemDownloadUrl": {
                         "description": "Payload "
                         "for "
@@ -626369,6 +632364,7 @@ _OPERATIONS = {
                                 "anyOf": [
                                     {"$ref": "#/definitions/PointGeometry"},
                                     {"$ref": "#/definitions/PolygonGeometry"},
+                                    {"$ref": "#/definitions/MultiPolygonGeometry"},
                                     {"type": "null"},
                                 ],
                                 "description": "Defines "
@@ -633056,6 +639052,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -637180,6 +643279,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -643999,6 +650099,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -648123,6 +654326,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -654914,6 +661118,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -659038,6 +665345,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -665833,6 +672141,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -669957,6 +676368,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -676630,6 +683042,109 @@ _OPERATIONS = {
                         "title": "MultiPolygon",
                         "type": "object",
                     },
+                    "MultiPolygonGeometry": {
+                        "description": "GeoJSON "
+                        "MultiPolygon "
+                        "geometry.\n"
+                        "\n"
+                        "Represents "
+                        "a "
+                        "collection "
+                        "of "
+                        "polygons. "
+                        "Commonly "
+                        "produced "
+                        "when "
+                        "a "
+                        "footprint\n"
+                        "crosses "
+                        "the "
+                        "antimeridian "
+                        "and "
+                        "is "
+                        "split "
+                        "into "
+                        "multiple "
+                        "polygons. "
+                        "Coordinates\n"
+                        "must "
+                        "be "
+                        "in "
+                        "WGS84 "
+                        "(longitude, "
+                        "latitude); "
+                        "each "
+                        "polygon's "
+                        "outer "
+                        "ring "
+                        "must "
+                        "be\n"
+                        "closed "
+                        "(first "
+                        "and "
+                        "last "
+                        "coordinates "
+                        "must "
+                        "be "
+                        "the "
+                        "same).",
+                        "properties": {
+                            "coordinates": {
+                                "description": "The "
+                                "coordinates "
+                                "of "
+                                "the "
+                                "multipolygon. "
+                                "Each "
+                                "element "
+                                "is "
+                                "a "
+                                "polygon "
+                                "(list "
+                                "of "
+                                "rings); "
+                                "the "
+                                "first "
+                                "ring "
+                                "is "
+                                "the "
+                                "outer "
+                                "boundary, "
+                                "the "
+                                "rest "
+                                "are "
+                                "holes.",
+                                "items": {
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
+                                            "maxItems": 2,
+                                            "minItems": 2,
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "type": "array",
+                                },
+                                "title": "Coordinates",
+                                "type": "array",
+                            },
+                            "type": {
+                                "const": "MultiPolygon",
+                                "default": "MultiPolygon",
+                                "title": "Type",
+                                "type": "string",
+                            },
+                        },
+                        "required": ["coordinates"],
+                        "title": "MultiPolygonGeometry",
+                        "type": "object",
+                    },
                     "OrderItemDownloadUrl": {
                         "description": "Payload "
                         "for "
@@ -680607,6 +687122,7 @@ _OPERATIONS = {
                                 "anyOf": [
                                     {"$ref": "#/definitions/PointGeometry"},
                                     {"$ref": "#/definitions/PolygonGeometry"},
+                                    {"$ref": "#/definitions/MultiPolygonGeometry"},
                                     {"type": "null"},
                                 ],
                                 "description": "Defines "
@@ -687319,6 +693835,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -691443,6 +698062,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -698314,6 +704934,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -702438,6 +709161,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -709229,6 +715953,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -713353,6 +720180,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -720144,6 +726972,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -724268,6 +731199,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -731063,6 +737995,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -735187,6 +742222,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -741963,6 +748999,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -746087,6 +753226,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -752901,6 +760041,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -757025,6 +764268,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -763706,6 +770950,109 @@ _OPERATIONS = {
                         "title": "MultiPolygon",
                         "type": "object",
                     },
+                    "MultiPolygonGeometry": {
+                        "description": "GeoJSON "
+                        "MultiPolygon "
+                        "geometry.\n"
+                        "\n"
+                        "Represents "
+                        "a "
+                        "collection "
+                        "of "
+                        "polygons. "
+                        "Commonly "
+                        "produced "
+                        "when "
+                        "a "
+                        "footprint\n"
+                        "crosses "
+                        "the "
+                        "antimeridian "
+                        "and "
+                        "is "
+                        "split "
+                        "into "
+                        "multiple "
+                        "polygons. "
+                        "Coordinates\n"
+                        "must "
+                        "be "
+                        "in "
+                        "WGS84 "
+                        "(longitude, "
+                        "latitude); "
+                        "each "
+                        "polygon's "
+                        "outer "
+                        "ring "
+                        "must "
+                        "be\n"
+                        "closed "
+                        "(first "
+                        "and "
+                        "last "
+                        "coordinates "
+                        "must "
+                        "be "
+                        "the "
+                        "same).",
+                        "properties": {
+                            "coordinates": {
+                                "description": "The "
+                                "coordinates "
+                                "of "
+                                "the "
+                                "multipolygon. "
+                                "Each "
+                                "element "
+                                "is "
+                                "a "
+                                "polygon "
+                                "(list "
+                                "of "
+                                "rings); "
+                                "the "
+                                "first "
+                                "ring "
+                                "is "
+                                "the "
+                                "outer "
+                                "boundary, "
+                                "the "
+                                "rest "
+                                "are "
+                                "holes.",
+                                "items": {
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
+                                            "maxItems": 2,
+                                            "minItems": 2,
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "type": "array",
+                                },
+                                "title": "Coordinates",
+                                "type": "array",
+                            },
+                            "type": {
+                                "const": "MultiPolygon",
+                                "default": "MultiPolygon",
+                                "title": "Type",
+                                "type": "string",
+                            },
+                        },
+                        "required": ["coordinates"],
+                        "title": "MultiPolygonGeometry",
+                        "type": "object",
+                    },
                     "OrderItemDownloadUrl": {
                         "description": "Payload "
                         "for "
@@ -767683,6 +775030,7 @@ _OPERATIONS = {
                                 "anyOf": [
                                     {"$ref": "#/definitions/PointGeometry"},
                                     {"$ref": "#/definitions/PolygonGeometry"},
+                                    {"$ref": "#/definitions/MultiPolygonGeometry"},
                                     {"type": "null"},
                                 ],
                                 "description": "Defines "
@@ -774386,6 +781734,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -778510,6 +785961,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -785344,6 +792796,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -789468,6 +797023,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -796259,6 +803815,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -800383,6 +808042,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -807174,6 +814834,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -811298,6 +819061,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -818093,6 +825857,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -822217,6 +830084,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -828988,6 +836856,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -833112,6 +841083,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -839903,6 +847875,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -844027,6 +852102,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -850720,6 +858796,109 @@ _OPERATIONS = {
                         "title": "MultiPolygon",
                         "type": "object",
                     },
+                    "MultiPolygonGeometry": {
+                        "description": "GeoJSON "
+                        "MultiPolygon "
+                        "geometry.\n"
+                        "\n"
+                        "Represents "
+                        "a "
+                        "collection "
+                        "of "
+                        "polygons. "
+                        "Commonly "
+                        "produced "
+                        "when "
+                        "a "
+                        "footprint\n"
+                        "crosses "
+                        "the "
+                        "antimeridian "
+                        "and "
+                        "is "
+                        "split "
+                        "into "
+                        "multiple "
+                        "polygons. "
+                        "Coordinates\n"
+                        "must "
+                        "be "
+                        "in "
+                        "WGS84 "
+                        "(longitude, "
+                        "latitude); "
+                        "each "
+                        "polygon's "
+                        "outer "
+                        "ring "
+                        "must "
+                        "be\n"
+                        "closed "
+                        "(first "
+                        "and "
+                        "last "
+                        "coordinates "
+                        "must "
+                        "be "
+                        "the "
+                        "same).",
+                        "properties": {
+                            "coordinates": {
+                                "description": "The "
+                                "coordinates "
+                                "of "
+                                "the "
+                                "multipolygon. "
+                                "Each "
+                                "element "
+                                "is "
+                                "a "
+                                "polygon "
+                                "(list "
+                                "of "
+                                "rings); "
+                                "the "
+                                "first "
+                                "ring "
+                                "is "
+                                "the "
+                                "outer "
+                                "boundary, "
+                                "the "
+                                "rest "
+                                "are "
+                                "holes.",
+                                "items": {
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
+                                            "maxItems": 2,
+                                            "minItems": 2,
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "type": "array",
+                                },
+                                "title": "Coordinates",
+                                "type": "array",
+                            },
+                            "type": {
+                                "const": "MultiPolygon",
+                                "default": "MultiPolygon",
+                                "title": "Type",
+                                "type": "string",
+                            },
+                        },
+                        "required": ["coordinates"],
+                        "title": "MultiPolygonGeometry",
+                        "type": "object",
+                    },
                     "OrderItemDownloadUrl": {
                         "description": "Payload "
                         "for "
@@ -854697,6 +862876,7 @@ _OPERATIONS = {
                                 "anyOf": [
                                     {"$ref": "#/definitions/PointGeometry"},
                                     {"$ref": "#/definitions/PolygonGeometry"},
+                                    {"$ref": "#/definitions/MultiPolygonGeometry"},
                                     {"type": "null"},
                                 ],
                                 "description": "Defines "
@@ -861400,6 +869580,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -865524,6 +873807,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -872304,6 +880588,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -876428,6 +884815,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -883219,6 +891607,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -887343,6 +895834,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -894138,6 +902630,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -898262,6 +906857,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -905038,6 +913634,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -909162,6 +917861,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -915996,6 +924696,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -920120,6 +928923,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -926911,6 +935715,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -931035,6 +939942,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -937716,6 +946624,109 @@ _OPERATIONS = {
                         "title": "MultiPolygon",
                         "type": "object",
                     },
+                    "MultiPolygonGeometry": {
+                        "description": "GeoJSON "
+                        "MultiPolygon "
+                        "geometry.\n"
+                        "\n"
+                        "Represents "
+                        "a "
+                        "collection "
+                        "of "
+                        "polygons. "
+                        "Commonly "
+                        "produced "
+                        "when "
+                        "a "
+                        "footprint\n"
+                        "crosses "
+                        "the "
+                        "antimeridian "
+                        "and "
+                        "is "
+                        "split "
+                        "into "
+                        "multiple "
+                        "polygons. "
+                        "Coordinates\n"
+                        "must "
+                        "be "
+                        "in "
+                        "WGS84 "
+                        "(longitude, "
+                        "latitude); "
+                        "each "
+                        "polygon's "
+                        "outer "
+                        "ring "
+                        "must "
+                        "be\n"
+                        "closed "
+                        "(first "
+                        "and "
+                        "last "
+                        "coordinates "
+                        "must "
+                        "be "
+                        "the "
+                        "same).",
+                        "properties": {
+                            "coordinates": {
+                                "description": "The "
+                                "coordinates "
+                                "of "
+                                "the "
+                                "multipolygon. "
+                                "Each "
+                                "element "
+                                "is "
+                                "a "
+                                "polygon "
+                                "(list "
+                                "of "
+                                "rings); "
+                                "the "
+                                "first "
+                                "ring "
+                                "is "
+                                "the "
+                                "outer "
+                                "boundary, "
+                                "the "
+                                "rest "
+                                "are "
+                                "holes.",
+                                "items": {
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "anyOf": [
+                                                    {"type": "number"},
+                                                    {"type": "integer"},
+                                                ]
+                                            },
+                                            "maxItems": 2,
+                                            "minItems": 2,
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "type": "array",
+                                },
+                                "title": "Coordinates",
+                                "type": "array",
+                            },
+                            "type": {
+                                "const": "MultiPolygon",
+                                "default": "MultiPolygon",
+                                "title": "Type",
+                                "type": "string",
+                            },
+                        },
+                        "required": ["coordinates"],
+                        "title": "MultiPolygonGeometry",
+                        "type": "object",
+                    },
                     "OrderItemDownloadUrl": {
                         "description": "Payload "
                         "for "
@@ -941693,6 +950704,7 @@ _OPERATIONS = {
                                 "anyOf": [
                                     {"$ref": "#/definitions/PointGeometry"},
                                     {"$ref": "#/definitions/PolygonGeometry"},
+                                    {"$ref": "#/definitions/MultiPolygonGeometry"},
                                     {"type": "null"},
                                 ],
                                 "description": "Defines "
@@ -948452,6 +957464,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -952576,6 +961691,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -959410,6 +968526,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -963534,6 +972753,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -970325,6 +979545,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -974449,6 +983772,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -981240,6 +990564,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -985364,6 +994791,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -992159,6 +1001587,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -996283,6 +1005814,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -1003058,6 +1012590,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -1007182,6 +1016817,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -1013958,6 +1023594,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -1018082,6 +1027821,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -1024873,6 +1034613,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -1028997,6 +1038840,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -1035788,6 +1045632,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -1039912,6 +1049859,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -1046696,6 +1056644,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -1050820,6 +1060871,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -1057625,6 +1067677,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -1061749,6 +1071904,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -1068557,6 +1078713,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -1072681,6 +1082940,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -1079477,6 +1089737,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -1083601,6 +1093964,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -1090397,6 +1100761,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -1094521,6 +1104988,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "
@@ -1101312,6 +1111780,109 @@ _OPERATIONS = {
                             "title": "MultiPolygon",
                             "type": "object",
                         },
+                        "MultiPolygonGeometry": {
+                            "description": "GeoJSON "
+                            "MultiPolygon "
+                            "geometry.\n"
+                            "\n"
+                            "Represents "
+                            "a "
+                            "collection "
+                            "of "
+                            "polygons. "
+                            "Commonly "
+                            "produced "
+                            "when "
+                            "a "
+                            "footprint\n"
+                            "crosses "
+                            "the "
+                            "antimeridian "
+                            "and "
+                            "is "
+                            "split "
+                            "into "
+                            "multiple "
+                            "polygons. "
+                            "Coordinates\n"
+                            "must "
+                            "be "
+                            "in "
+                            "WGS84 "
+                            "(longitude, "
+                            "latitude); "
+                            "each "
+                            "polygon's "
+                            "outer "
+                            "ring "
+                            "must "
+                            "be\n"
+                            "closed "
+                            "(first "
+                            "and "
+                            "last "
+                            "coordinates "
+                            "must "
+                            "be "
+                            "the "
+                            "same).",
+                            "properties": {
+                                "coordinates": {
+                                    "description": "The "
+                                    "coordinates "
+                                    "of "
+                                    "the "
+                                    "multipolygon. "
+                                    "Each "
+                                    "element "
+                                    "is "
+                                    "a "
+                                    "polygon "
+                                    "(list "
+                                    "of "
+                                    "rings); "
+                                    "the "
+                                    "first "
+                                    "ring "
+                                    "is "
+                                    "the "
+                                    "outer "
+                                    "boundary, "
+                                    "the "
+                                    "rest "
+                                    "are "
+                                    "holes.",
+                                    "items": {
+                                        "items": {
+                                            "items": {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {"type": "number"},
+                                                        {"type": "integer"},
+                                                    ]
+                                                },
+                                                "maxItems": 2,
+                                                "minItems": 2,
+                                                "type": "array",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "title": "Coordinates",
+                                    "type": "array",
+                                },
+                                "type": {
+                                    "const": "MultiPolygon",
+                                    "default": "MultiPolygon",
+                                    "title": "Type",
+                                    "type": "string",
+                                },
+                            },
+                            "required": ["coordinates"],
+                            "title": "MultiPolygonGeometry",
+                            "type": "object",
+                        },
                         "OrderItemDownloadUrl": {
                             "description": "Payload "
                             "for "
@@ -1105436,6 +1116007,7 @@ _OPERATIONS = {
                                     "anyOf": [
                                         {"$ref": "#/definitions/PointGeometry"},
                                         {"$ref": "#/definitions/PolygonGeometry"},
+                                        {"$ref": "#/definitions/MultiPolygonGeometry"},
                                         {"type": "null"},
                                     ],
                                     "description": "Defines "

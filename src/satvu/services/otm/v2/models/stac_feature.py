@@ -9,6 +9,7 @@ import pydantic
 
 if TYPE_CHECKING:
     from ..models.link_1 import Link1
+    from ..models.multi_polygon_geometry import MultiPolygonGeometry
     from ..models.point_geometry import PointGeometry
     from ..models.polygon_geometry import PolygonGeometry
 
@@ -27,8 +28,8 @@ class StacFeature(pydantic.BaseModel):
             properties (dict): A map of additional metadata for the item.
             type_ (Literal['Feature']):  Default: 'Feature'.
             stac_version (Union[None, str]): The STAC version the Item implements. Default: '1.0.0'.
-            geometry (Union['PointGeometry', 'PolygonGeometry', None]): Defines the full footprint of the asset represented
-                by this item.
+            geometry (Union['MultiPolygonGeometry', 'PointGeometry', 'PolygonGeometry', None]): Defines the full footprint
+                of the asset represented by this item.
             links (Union[None, list[Link1]]): A list of link objects to resources and related URLs.
             assets (Union[None, dict]): A map of asset objects that can be downloaded, each with a unique key.
             stac_extensions (Union[None, list[str]]): A list of STAC extensions the Item implements.
@@ -60,10 +61,12 @@ class StacFeature(pydantic.BaseModel):
         description="""The STAC version the Item implements.""",
         alias="stac_version",
     )
-    geometry: Union[PointGeometry, PolygonGeometry, None] = pydantic.Field(
-        default=None,
-        description="""Defines the full footprint of the asset represented by this item.""",
-        alias="geometry",
+    geometry: Union[MultiPolygonGeometry, PointGeometry, PolygonGeometry, None] = (
+        pydantic.Field(
+            default=None,
+            description="""Defines the full footprint of the asset represented by this item.""",
+            alias="geometry",
+        )
     )
     links: Union[None, list[Link1]] = pydantic.Field(
         default=None,

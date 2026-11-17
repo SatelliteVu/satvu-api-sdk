@@ -1,5 +1,17 @@
 # [0.13.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.12.3...v0.13.0) (2026-11-10)
 
+## [0.13.0.20261117.1025] - 2026-11-17
+
+### feat(otm): 2 changes to POST /{contract_id}/tasking/orders/
+
+#### POST /{contract_id}/tasking/orders/
+* added `subschema #1, subschema #2` to the request body `anyOf` list
+* removed `subschema #1, subschema #2` from the request body `anyOf` list
+
+#### Description Updates
+* 1761 description(s) modified
+
+
 ## [0.13.0.20261117.0955] - 2026-11-17
 
 ### feat(otm): added `#/components/schemas/MultiPolygonGeometry` to the `geometry` response property `anyOf` list for the response status `200` (GET /{contract_id}/tasking/orders/{order_id}/acquisition/details)

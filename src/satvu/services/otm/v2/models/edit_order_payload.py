@@ -19,14 +19,14 @@ class EditOrderPayload(pydantic.BaseModel):
     All property fields are optional - only provided fields will be updated.
 
         Attributes:
-            geometry (Union['Point', None]): The location of the order. Only editable for Standard orders in Created/Staged
-                states.
+            geometry (Union['Point', None]): The location of the order. Only editable for standard orders that are still
+                `staged`.
             properties (Union['EditOrderProperties', None]): The properties to edit in the order.
     """
 
     geometry: Union[Point, None] = pydantic.Field(
         default=None,
-        description="""The location of the order. Only editable for Standard orders in Created/Staged states.""",
+        description="""The location of the order. Only editable for standard orders that are still `staged`.""",
         alias="geometry",
     )
     properties: Union[EditOrderProperties, None] = pydantic.Field(

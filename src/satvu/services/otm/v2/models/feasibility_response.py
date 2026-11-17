@@ -25,12 +25,13 @@ class FeasibilityResponse(pydantic.BaseModel):
 
     Attributes:
         type_ (Literal['FeatureCollection']):
-        features (list[Union['AssuredFeasibilityResponseFeature', 'StandardFeasibilityResponseFeature']]): Properties of
-            the feasibility response.
-        id (UUID): Feasibility Request ID.
+        features (list[Union['AssuredFeasibilityResponseFeature', 'StandardFeasibilityResponseFeature']]): The
+            feasibility results, as GeoJSON features: one per pass for Assured tasking, or a single feature covering the
+            tasking window for Standard tasking. Empty when the request is not feasible.
+        id (UUID): The ID of the feasibility request.
         links (list[Link]): List of link objects to resources and related URLS.
         status ('FeasibilityRequestStatus'): The status of the feasibility request.
-        contract_id (UUID): Contract ID.
+        contract_id (UUID): The ID of the contract.
     """
 
     type_: Literal["FeatureCollection"] = pydantic.Field(
@@ -39,10 +40,12 @@ class FeasibilityResponse(pydantic.BaseModel):
     features: list[
         Union[AssuredFeasibilityResponseFeature, StandardFeasibilityResponseFeature]
     ] = pydantic.Field(
-        ..., description="""Properties of the feasibility response.""", alias="features"
+        ...,
+        description="""The feasibility results, as GeoJSON features: one per pass for Assured tasking, or a single feature covering the tasking window for Standard tasking. Empty when the request is not feasible.""",
+        alias="features",
     )
     id: UUID = pydantic.Field(
-        ..., description="""Feasibility Request ID.""", alias="id"
+        ..., description="""The ID of the feasibility request.""", alias="id"
     )
     links: list[Link] = pydantic.Field(
         ...,
@@ -53,7 +56,7 @@ class FeasibilityResponse(pydantic.BaseModel):
         ..., description="""The status of the feasibility request.""", alias="status"
     )
     contract_id: UUID = pydantic.Field(
-        ..., description="""Contract ID.""", alias="contract_id"
+        ..., description="""The ID of the contract.""", alias="contract_id"
     )
 
     model_config = pydantic.ConfigDict(

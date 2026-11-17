@@ -14,20 +14,21 @@ class StandardRequestProperties(pydantic.BaseModel):
     """Request properties with enforced minimum cloud cover for new orders.
 
     Attributes:
-        datetime_ (str): The closed date-time interval of the tasking order request.
+        datetime_ (str): The tasking window: the interval within which the order may be acquired, as an ISO 8601
+            interval (`start/end`). Both bounds are required.
         satvu_day_night_mode (Union[None, 'DayNightMode']):
-        max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage where the lower limit is
-            capped to 25%. Measured in percent. Default: 25.
+        max_cloud_cover (Union[None, int]): The maximum acceptable cloud cover. Measured in percent. Must be at least
+            25. Default: 25.
         min_off_nadir (Union[None, int]): The minimum angle from the sensor between nadir and the scene center. Measured
             in decimal degrees. Default: 0.
         max_off_nadir (Union[None, int]): The maximum angle from the sensor between nadir and the scene center. Measured
-            in decimal degrees. Must be larger than `min_off_nadir`. Default: 30.
-        product (Literal['standard']): Standard Priority. Default: 'standard'.
+            in decimal degrees. Must be greater than `min_off_nadir`. Default: 30.
+        product (Literal['standard']): The tasking product. Always `standard` (Standard tasking). Default: 'standard'.
     """
 
     datetime_: str = pydantic.Field(
         ...,
-        description="""The closed date-time interval of the tasking order request.""",
+        description="""The tasking window: the interval within which the order may be acquired, as an ISO 8601 interval (`start/end`). Both bounds are required.""",
         alias="datetime",
     )
     satvu_day_night_mode: Union[None, DayNightMode] = pydantic.Field(
@@ -35,7 +36,7 @@ class StandardRequestProperties(pydantic.BaseModel):
     )
     max_cloud_cover: Union[None, int] = pydantic.Field(
         default=25,
-        description="""The max threshold of acceptable cloud coverage where the lower limit is capped to 25%. Measured in percent.""",
+        description="""The maximum acceptable cloud cover. Measured in percent. Must be at least 25.""",
         alias="max_cloud_cover",
     )
     min_off_nadir: Union[None, int] = pydantic.Field(
@@ -45,11 +46,13 @@ class StandardRequestProperties(pydantic.BaseModel):
     )
     max_off_nadir: Union[None, int] = pydantic.Field(
         default=30,
-        description="""The maximum angle from the sensor between nadir and the scene center. Measured in decimal degrees. Must be larger than `min_off_nadir`.""",
+        description="""The maximum angle from the sensor between nadir and the scene center. Measured in decimal degrees. Must be greater than `min_off_nadir`.""",
         alias="max_off_nadir",
     )
     product: Literal["standard"] = pydantic.Field(
-        default="standard", description="""Standard Priority.""", alias="product"
+        default="standard",
+        description="""The tasking product. Always `standard` (Standard tasking).""",
+        alias="product",
     )
 
     model_config = pydantic.ConfigDict(

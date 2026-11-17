@@ -26,7 +26,7 @@ class OrderPrice(pydantic.BaseModel):
         geometry (Point): Point Model
         properties (Union['AssuredFeasibilityFieldsWithAddons', 'StandardOrderFieldsWithAddons']): A map of additional
             metadata about the requested image.
-        created_at (datetime.datetime): The current UTC time.
+        created_at (datetime.datetime): When the price was calculated.
         price (PriceInformation): Pricing information.
     """
 
@@ -48,7 +48,7 @@ class OrderPrice(pydantic.BaseModel):
         alias="properties",
     )
     created_at: datetime.datetime = pydantic.Field(
-        ..., description="""The current UTC time.""", alias="created_at"
+        ..., description="""When the price was calculated.""", alias="created_at"
     )
     price: PriceInformation = pydantic.Field(
         ..., description="""Pricing information.""", alias="price"

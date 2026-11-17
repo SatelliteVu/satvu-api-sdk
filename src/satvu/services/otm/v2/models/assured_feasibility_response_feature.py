@@ -22,8 +22,8 @@ class AssuredFeasibilityResponseFeature(pydantic.BaseModel):
         type_ (Literal['Feature']):
         geometry (Point): Point Model
         properties (AssuredFeasibilityResponseProperties): Properties of the assured priority feasibility response.
-        id (UUID): The ID of the feasibility request.
-        signature (str): Signature token.
+        id (UUID): The ID of the feasibility response feature.
+        signature (str): A signed token for this pass. Include it when ordering the pass.
     """
 
     type_: Literal["Feature"] = pydantic.Field(
@@ -38,10 +38,12 @@ class AssuredFeasibilityResponseFeature(pydantic.BaseModel):
         alias="properties",
     )
     id: UUID = pydantic.Field(
-        ..., description="""The ID of the feasibility request.""", alias="id"
+        ..., description="""The ID of the feasibility response feature.""", alias="id"
     )
     signature: str = pydantic.Field(
-        ..., description="""Signature token.""", alias="signature"
+        ...,
+        description="""A signed token for this pass. Include it when ordering the pass.""",
+        alias="signature",
     )
 
     model_config = pydantic.ConfigDict(

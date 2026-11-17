@@ -22,7 +22,7 @@ class StandardFeasibilityResponseFeature(pydantic.BaseModel):
         type_ (Literal['Feature']):
         geometry (Point): Point Model
         properties (StandardFeasibilityResponseProperties): Properties of the standard priority feasibility response.
-        id (UUID): The ID of the feasibility request.
+        id (UUID): The ID of the feasibility response feature.
     """
 
     type_: Literal["Feature"] = pydantic.Field(
@@ -37,7 +37,7 @@ class StandardFeasibilityResponseFeature(pydantic.BaseModel):
         alias="properties",
     )
     id: UUID = pydantic.Field(
-        ..., description="""The ID of the feasibility request.""", alias="id"
+        ..., description="""The ID of the feasibility response feature.""", alias="id"
     )
 
     model_config = pydantic.ConfigDict(

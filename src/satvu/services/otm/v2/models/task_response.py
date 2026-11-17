@@ -20,7 +20,7 @@ class TaskResponse(pydantic.BaseModel):
     """A single task assigned to an order.
 
     Attributes:
-        id (UUID): Task ID.
+        id (UUID): The ID of the task.
         status ('UserFacingTaskStatus'): User-facing task status values exposed via the API.
         created_at (datetime.datetime): When the task was created.
         updated_at (datetime.datetime): When the task was last updated.
@@ -29,7 +29,7 @@ class TaskResponse(pydantic.BaseModel):
             first.
     """
 
-    id: UUID = pydantic.Field(..., description="""Task ID.""", alias="id")
+    id: UUID = pydantic.Field(..., description="""The ID of the task.""", alias="id")
     status: UserFacingTaskStatus = pydantic.Field(
         ...,
         description="""User-facing task status values exposed via the API.""",

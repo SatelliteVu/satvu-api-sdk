@@ -11,32 +11,33 @@ import pydantic
 class AssuredFeasibilityFieldsWithAddons(pydantic.BaseModel):
     """
     Attributes:
-        product (Literal['assured']): Assured Priority.
-        datetime_ (str): The closed date-time interval of the request, measured from the time the request is made. The
-            upper bound must not extend further into the future than the contract's assured tasking window; feasibility
-            results only include passes from the request time onwards.
-        licence_level (None | str): The optional licence level for the order. Licence levels are specific to the
-            contract.
-        addon_withhold (None | str): The optional ISO8601 string describing the duration that an order will be withheld
-            from the public catalog. Withhold options are specific to the contract.
+        product (Literal['assured']): The tasking product. Always `assured` (Assured tasking).
+        datetime_ (str): The tasking window to search for passes in, as an ISO 8601 interval (`start/end`). Both bounds
+            are required. The end must not be further in the future than the contract's assured tasking window allows. The
+            feasibility response only includes passes from the time of the request onwards.
+        licence_level (None | str): The licence level for the order. Licence levels are specific to the contract.
+        addon_withhold (None | str): How long the order's imagery is withheld from the public catalog, as an ISO 8601
+            duration. Withhold options are specific to the contract.
     """
 
     product: Literal["assured"] = pydantic.Field(
-        default="assured", description="""Assured Priority.""", alias="product"
+        default="assured",
+        description="""The tasking product. Always `assured` (Assured tasking).""",
+        alias="product",
     )
     datetime_: str = pydantic.Field(
         ...,
-        description="""The closed date-time interval of the request, measured from the time the request is made. The upper bound must not extend further into the future than the contract's assured tasking window; feasibility results only include passes from the request time onwards.""",
+        description="""The tasking window to search for passes in, as an ISO 8601 interval (`start/end`). Both bounds are required. The end must not be further in the future than the contract's assured tasking window allows. The feasibility response only includes passes from the time of the request onwards.""",
         alias="datetime",
     )
     licence_level: None | str = pydantic.Field(
         default=None,
-        description="""The optional licence level for the order. Licence levels are specific to the contract.""",
+        description="""The licence level for the order. Licence levels are specific to the contract.""",
         alias="licence_level",
     )
     addon_withhold: None | str = pydantic.Field(
         default=None,
-        description="""The optional ISO8601 string describing the duration that an order will be withheld from the public catalog. Withhold options are specific to the contract.""",
+        description="""How long the order's imagery is withheld from the public catalog, as an ISO 8601 duration. Withhold options are specific to the contract.""",
         alias="addon:withhold",
     )
 

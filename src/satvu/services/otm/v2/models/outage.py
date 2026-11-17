@@ -13,8 +13,8 @@ class Outage(pydantic.BaseModel):
 
     Attributes:
         satellite_name (str): The satellite affected by the outage.
-        start_time (datetime.datetime): The start datetime of the outage.
-        end_time (datetime.datetime): The end datetime of the outage.
+        start_time (datetime.datetime): When the outage starts.
+        end_time (datetime.datetime): When the outage ends.
     """
 
     satellite_name: str = pydantic.Field(
@@ -23,10 +23,10 @@ class Outage(pydantic.BaseModel):
         alias="satellite_name",
     )
     start_time: datetime.datetime = pydantic.Field(
-        ..., description="""The start datetime of the outage.""", alias="start_time"
+        ..., description="""When the outage starts.""", alias="start_time"
     )
     end_time: datetime.datetime = pydantic.Field(
-        ..., description="""The end datetime of the outage.""", alias="end_time"
+        ..., description="""When the outage ends.""", alias="end_time"
     )
 
     model_config = pydantic.ConfigDict(

@@ -9,50 +9,52 @@ import pydantic
 class Price(pydantic.BaseModel):
     """
     Attributes:
-        currency (str): The currency of the order.
-        base (int): The base price of the order in minor units of the currency e.g. pence, cents.
-        addon_withhold (int): The price of the order from the chosen withhold option in minor units of the currency e.g.
-            pence, cents.
-        total (int): The total price of the order in minor units of the currency e.g. pence, cents. This is the sum of
-            the base and addon prices.
-        total_uplift (int): The sum of all uplifts, including licencing, applied to the order in minor units of the
-            currency e.g. pence, cents.
-        value (int): Price of the order in minor units of the currency e.g. pence, cents.
-        licence_level (int | None): The price of the order from the chosen licence level in minor units of the currency
-            e.g. pence, cents.
+        currency (str): The currency of the price, as an ISO 4217 code.
+        base (int): The base price of the order. In minor units of the currency (for example, pence or cents).
+        addon_withhold (int): The uplift from the chosen withhold option. In minor units of the currency (for example,
+            pence or cents).
+        total (int): The total price of the order: the base price plus all uplifts. In minor units of the currency (for
+            example, pence or cents).
+        total_uplift (int): The sum of all uplifts applied to the order, including the licence level. In minor units of
+            the currency (for example, pence or cents).
+        value (int): The price of the order. In minor units of the currency (for example, pence or cents).
+        licence_level (int | None): The uplift from the chosen licence level. In minor units of the currency (for
+            example, pence or cents).
     """
 
     currency: str = pydantic.Field(
-        ..., description="""The currency of the order.""", alias="currency"
+        ...,
+        description="""The currency of the price, as an ISO 4217 code.""",
+        alias="currency",
     )
     base: int = pydantic.Field(
         ...,
-        description="""The base price of the order in minor units of the currency e.g. pence, cents.""",
+        description="""The base price of the order. In minor units of the currency (for example, pence or cents).""",
         alias="base",
     )
     addon_withhold: int = pydantic.Field(
         ...,
-        description="""The price of the order from the chosen withhold option in minor units of the currency e.g. pence, cents.""",
+        description="""The uplift from the chosen withhold option. In minor units of the currency (for example, pence or cents).""",
         alias="addon:withhold",
     )
     total: int = pydantic.Field(
         ...,
-        description="""The total price of the order in minor units of the currency e.g. pence, cents. This is the sum of the base and addon prices.""",
+        description="""The total price of the order: the base price plus all uplifts. In minor units of the currency (for example, pence or cents).""",
         alias="total",
     )
     total_uplift: int = pydantic.Field(
         ...,
-        description="""The sum of all uplifts, including licencing, applied to the order in minor units of the currency e.g. pence, cents.""",
+        description="""The sum of all uplifts applied to the order, including the licence level. In minor units of the currency (for example, pence or cents).""",
         alias="total_uplift",
     )
     value: int = pydantic.Field(
         ...,
-        description="""Price of the order in minor units of the currency e.g. pence, cents.""",
+        description="""The price of the order. In minor units of the currency (for example, pence or cents).""",
         alias="value",
     )
     licence_level: int | None = pydantic.Field(
         default=None,
-        description="""The price of the order from the chosen licence level in minor units of the currency e.g. pence, cents.""",
+        description="""The uplift from the chosen licence level. In minor units of the currency (for example, pence or cents).""",
         alias="licence_level",
     )
 

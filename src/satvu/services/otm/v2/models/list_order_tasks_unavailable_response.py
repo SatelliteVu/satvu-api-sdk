@@ -13,14 +13,14 @@ class ListOrderTasksUnavailableResponse(pydantic.BaseModel):
     """Response when task information is not available.
 
     Attributes:
-        order_id (UUID): The order ID.
+        order_id (UUID): The ID of the order.
         tasks (Union[None, None]):
         message (Union[None, str]): Explanation of why tasks are unavailable. Default: 'Tasking information is not
             available for this order.'.
     """
 
     order_id: UUID = pydantic.Field(
-        ..., description="""The order ID.""", alias="order_id"
+        ..., description="""The ID of the order.""", alias="order_id"
     )
     tasks: Union[None, None] = pydantic.Field(
         default=None, description=None, alias="tasks"

@@ -22,12 +22,12 @@ class ResellerSearchResponseFeatureStandardOrderRequest(pydantic.BaseModel):
         geometry (Union['Point', None]):
         properties (Union['SearchStandardOrderProperties', None]):
         id (UUID): ID of an item associated with the search parameters.
-        contract_id (UUID): Contract ID associated with the search.
+        contract_id (UUID): The ID of the contract the item belongs to.
         collection (str): Name of collection associated with the search result item.
         price (Price):
         reseller_end_user_id (UUID):
         links (Union[None, list[Link]]): A list of links to the STAC item that fulfilled the order, if applicable.
-        series_id (None | UUID): ID of the recurring order series this order belongs to.
+        series_id (None | UUID): The ID of the series this order belongs to.
         feature_type (Literal['reseller-order-request-standard']):  Default: 'reseller-order-request-standard'.
     """
 
@@ -47,7 +47,7 @@ class ResellerSearchResponseFeatureStandardOrderRequest(pydantic.BaseModel):
     )
     contract_id: UUID = pydantic.Field(
         ...,
-        description="""Contract ID associated with the search.""",
+        description="""The ID of the contract the item belongs to.""",
         alias="contract_id",
     )
     collection: str = pydantic.Field(
@@ -66,7 +66,7 @@ class ResellerSearchResponseFeatureStandardOrderRequest(pydantic.BaseModel):
     )
     series_id: None | UUID = pydantic.Field(
         default=None,
-        description="""ID of the recurring order series this order belongs to.""",
+        description="""The ID of the series this order belongs to.""",
         alias="series_id",
     )
     feature_type: Literal["reseller-order-request-standard"] = pydantic.Field(

@@ -19,71 +19,69 @@ class StoredAssuredOrderRequestProperties(pydantic.BaseModel):
     """Feature properties model for assured priority stored order
 
     Attributes:
-        product (Literal['assured']): Assured Priority.
-        datetime_ (str): The closed date-time interval of the tasking order request.
-        signature (str): Signature token.
+        product (Literal['assured']): The tasking product. Always `assured` (Assured tasking).
+        datetime_ (str): The tasking window: the interval within which the order may be acquired, as an ISO 8601
+            interval (`start/end`). Both bounds are required.
+        signature (str): The signature token from an assured feasibility response.
         status ('OrderStatus'):
-        created_at (datetime.datetime): The datetime at which the order was created.
-        updated_at (datetime.datetime): The datetime at which the order was last updated.
-        stac_item_id (None | str): The item id of the STAC item that fulfilled the order, if the order has been
+        created_at (datetime.datetime): When the order was created.
+        updated_at (datetime.datetime): When the order was last updated.
+        stac_item_id (None | str): The ID of the STAC item that fulfilled the order. Omitted until the order is
             fulfilled.
-        stac_datetime (datetime.datetime | None): The acquisition datetime of the STAC item that fulfilled the order, if
-            the order has been fulfilled.
-        stac_metadata (dict | None): STAC item metadata including presigned asset URLs for high-resolution imagery, if
-            the order has been fulfilled and high-res assets are available.
+        stac_datetime (datetime.datetime | None): When the imagery that fulfilled the order was acquired. Omitted until
+            the order is fulfilled.
+        stac_metadata (dict | None): The metadata of the STAC item that fulfilled the order, including presigned URLs
+            for its high-resolution assets. Omitted until the order is fulfilled, or when it has no high-resolution assets.
         satvu_day_night_mode (Union[None, 'DayNightMode']):
-        max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage. Measured in percent.
-            Default: 25.
+        max_cloud_cover (Union[None, int]): The maximum acceptable cloud cover. Measured in percent. Default: 25.
         min_off_nadir (Union[None, int]): The minimum angle from the sensor between nadir and the scene center. Measured
             in decimal degrees. Default: 0.
         max_off_nadir (Union[None, int]): The maximum angle from the sensor between nadir and the scene center. Measured
-            in decimal degrees. Must be larger than `min_off_nadir`. Default: 30.
-        licence_level (None | str): The optional licence level for the order. Licence levels are specific to the
-            contract. If not specified, the option will be set to the licence with the smallest uplift in the relevant
-            contract.
-        addon_withhold (None | str): The optional ISO8601 string describing the duration that an order will be withheld
-            from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set
-            to the default specified in the relevant contract.
+            in decimal degrees. Must be greater than `min_off_nadir`. Default: 30.
+        licence_level (None | str): The licence level for the order. Licence levels are specific to the contract.
+            Defaults to the contract's licence level with the smallest uplift.
+        addon_withhold (None | str): How long the order's imagery is withheld from the public catalog, as an ISO 8601
+            duration. Withhold options are specific to the contract. Defaults to the contract's default withhold option.
         name (None | str): The name of the order.
         status_history (Union[None, list[StatusHistoryEntry]]): Chronological history of status changes for this order,
             newest first.
     """
 
     product: Literal["assured"] = pydantic.Field(
-        default="assured", description="""Assured Priority.""", alias="product"
+        default="assured",
+        description="""The tasking product. Always `assured` (Assured tasking).""",
+        alias="product",
     )
     datetime_: str = pydantic.Field(
         ...,
-        description="""The closed date-time interval of the tasking order request.""",
+        description="""The tasking window: the interval within which the order may be acquired, as an ISO 8601 interval (`start/end`). Both bounds are required.""",
         alias="datetime",
     )
     signature: str = pydantic.Field(
-        ..., description="""Signature token.""", alias="signature"
+        ...,
+        description="""The signature token from an assured feasibility response.""",
+        alias="signature",
     )
     status: OrderStatus = pydantic.Field(..., description=None, alias="status")
     created_at: datetime.datetime = pydantic.Field(
-        ...,
-        description="""The datetime at which the order was created.""",
-        alias="created_at",
+        ..., description="""When the order was created.""", alias="created_at"
     )
     updated_at: datetime.datetime = pydantic.Field(
-        ...,
-        description="""The datetime at which the order was last updated.""",
-        alias="updated_at",
+        ..., description="""When the order was last updated.""", alias="updated_at"
     )
     stac_item_id: None | str = pydantic.Field(
         default=None,
-        description="""The item id of the STAC item that fulfilled the order, if the order has been fulfilled.""",
+        description="""The ID of the STAC item that fulfilled the order. Omitted until the order is fulfilled.""",
         alias="stac:item_id",
     )
     stac_datetime: datetime.datetime | None = pydantic.Field(
         default=None,
-        description="""The acquisition datetime of the STAC item that fulfilled the order, if the order has been fulfilled.""",
+        description="""When the imagery that fulfilled the order was acquired. Omitted until the order is fulfilled.""",
         alias="stac:datetime",
     )
     stac_metadata: dict | None = pydantic.Field(
         default=None,
-        description="""STAC item metadata including presigned asset URLs for high-resolution imagery, if the order has been fulfilled and high-res assets are available.""",
+        description="""The metadata of the STAC item that fulfilled the order, including presigned URLs for its high-resolution assets. Omitted until the order is fulfilled, or when it has no high-resolution assets.""",
         alias="stac:metadata",
     )
     satvu_day_night_mode: Union[None, DayNightMode] = pydantic.Field(
@@ -91,7 +89,7 @@ class StoredAssuredOrderRequestProperties(pydantic.BaseModel):
     )
     max_cloud_cover: Union[None, int] = pydantic.Field(
         default=25,
-        description="""The max threshold of acceptable cloud coverage. Measured in percent.""",
+        description="""The maximum acceptable cloud cover. Measured in percent.""",
         alias="max_cloud_cover",
     )
     min_off_nadir: Union[None, int] = pydantic.Field(
@@ -101,17 +99,17 @@ class StoredAssuredOrderRequestProperties(pydantic.BaseModel):
     )
     max_off_nadir: Union[None, int] = pydantic.Field(
         default=30,
-        description="""The maximum angle from the sensor between nadir and the scene center. Measured in decimal degrees. Must be larger than `min_off_nadir`.""",
+        description="""The maximum angle from the sensor between nadir and the scene center. Measured in decimal degrees. Must be greater than `min_off_nadir`.""",
         alias="max_off_nadir",
     )
     licence_level: None | str = pydantic.Field(
         default=None,
-        description="""The optional licence level for the order. Licence levels are specific to the contract. If not specified, the option will be set to the licence with the smallest uplift in the relevant contract.""",
+        description="""The licence level for the order. Licence levels are specific to the contract. Defaults to the contract's licence level with the smallest uplift.""",
         alias="licence_level",
     )
     addon_withhold: None | str = pydantic.Field(
         default=None,
-        description="""The optional ISO8601 string describing the duration that an order will be withheld from the public catalog. Withhold options are specific to the contract. If not specified, the option will be set to the default specified in the relevant contract.""",
+        description="""How long the order's imagery is withheld from the public catalog, as an ISO 8601 duration. Withhold options are specific to the contract. Defaults to the contract's default withhold option.""",
         alias="addon:withhold",
     )
     name: None | str = pydantic.Field(

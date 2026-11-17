@@ -17,11 +17,11 @@ class StoredSeriesProperties(pydantic.BaseModel):
     """Properties returned in a series response.
 
     Attributes:
-        id (UUID): Series UUID.
-        created_at (datetime.datetime): The datetime at which the series was created.
-        updated_at (datetime.datetime): The datetime at which the series was last updated.
+        id (UUID): The ID of the series.
+        created_at (datetime.datetime): When the series was created.
+        updated_at (datetime.datetime): When the series was last updated.
         owned_by (str): User who created the series.
-        contract_id (UUID): Contract ID.
+        contract_id (UUID): The ID of the contract.
         status (str): Series status.
         frequency (str): ISO 8601 recurrence interval.
         start_date (datetime.datetime): When the first order is scheduled.
@@ -35,25 +35,21 @@ class StoredSeriesProperties(pydantic.BaseModel):
         name (None | str): Optional human-readable label for this series.
         next_window (None | str): Datetime interval of the next scheduled order window (ISO 8601 interval, e.g.
             '2026-06-01T00:00:00Z/2026-06-15T00:00:00Z'). Null when all orders have been created.
-        reseller_end_user_id (None | UUID): End user UUID for reseller series.
+        reseller_end_user_id (None | UUID): The ID of the reseller end user the series is for.
     """
 
-    id: UUID = pydantic.Field(..., description="""Series UUID.""", alias="id")
+    id: UUID = pydantic.Field(..., description="""The ID of the series.""", alias="id")
     created_at: datetime.datetime = pydantic.Field(
-        ...,
-        description="""The datetime at which the series was created.""",
-        alias="created_at",
+        ..., description="""When the series was created.""", alias="created_at"
     )
     updated_at: datetime.datetime = pydantic.Field(
-        ...,
-        description="""The datetime at which the series was last updated.""",
-        alias="updated_at",
+        ..., description="""When the series was last updated.""", alias="updated_at"
     )
     owned_by: str = pydantic.Field(
         ..., description="""User who created the series.""", alias="owned_by"
     )
     contract_id: UUID = pydantic.Field(
-        ..., description="""Contract ID.""", alias="contract_id"
+        ..., description="""The ID of the contract.""", alias="contract_id"
     )
     status: str = pydantic.Field(..., description="""Series status.""", alias="status")
     frequency: str = pydantic.Field(
@@ -88,7 +84,7 @@ Extends the request parameters with `product`, which is set server-side
     )
     reseller_end_user_id: None | UUID = pydantic.Field(
         default=None,
-        description="""End user UUID for reseller series.""",
+        description="""The ID of the reseller end user the series is for.""",
         alias="reseller_end_user_id",
     )
 

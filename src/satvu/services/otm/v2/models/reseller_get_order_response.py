@@ -26,12 +26,12 @@ class ResellerGetOrderResponse(pydantic.BaseModel):
         geometry (Point): Point Model
         properties (Union['GetAssuredOrderProperties', 'GetStandardOrderProperties']): A map of additional metadata
             about the requested image.
-        id (UUID): Order ID.
+        id (UUID): The ID of the order.
         links (list[Link]): A list of related links for the order.
-        contract_id (UUID): Contract ID.
+        contract_id (UUID): The ID of the contract.
         price (Price):
         reseller_end_user_id (UUID):
-        series_id (None | UUID): ID of the recurring order series this order belongs to.
+        series_id (None | UUID): The ID of the series this order belongs to.
     """
 
     type_: Literal["Feature"] = pydantic.Field(
@@ -51,12 +51,12 @@ class ResellerGetOrderResponse(pydantic.BaseModel):
         description="""A map of additional metadata about the requested image.""",
         alias="properties",
     )
-    id: UUID = pydantic.Field(..., description="""Order ID.""", alias="id")
+    id: UUID = pydantic.Field(..., description="""The ID of the order.""", alias="id")
     links: list[Link] = pydantic.Field(
         ..., description="""A list of related links for the order.""", alias="links"
     )
     contract_id: UUID = pydantic.Field(
-        ..., description="""Contract ID.""", alias="contract_id"
+        ..., description="""The ID of the contract.""", alias="contract_id"
     )
     price: Price = pydantic.Field(..., description=None, alias="price")
     reseller_end_user_id: UUID = pydantic.Field(
@@ -64,7 +64,7 @@ class ResellerGetOrderResponse(pydantic.BaseModel):
     )
     series_id: None | UUID = pydantic.Field(
         default=None,
-        description="""ID of the recurring order series this order belongs to.""",
+        description="""The ID of the series this order belongs to.""",
         alias="series_id",
     )
 

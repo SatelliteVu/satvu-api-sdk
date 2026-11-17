@@ -16,12 +16,14 @@ class ListOrderTasksResponse(pydantic.BaseModel):
     """Response for listing all tasks for an order.
 
     Attributes:
-        order_id (UUID): The order these tasks belong to.
+        order_id (UUID): The ID of the order these tasks belong to.
         tasks (list[TaskResponse]): Tasks sorted by creation date, newest first.
     """
 
     order_id: UUID = pydantic.Field(
-        ..., description="""The order these tasks belong to.""", alias="order_id"
+        ...,
+        description="""The ID of the order these tasks belong to.""",
+        alias="order_id",
     )
     tasks: list[TaskResponse] = pydantic.Field(
         ...,

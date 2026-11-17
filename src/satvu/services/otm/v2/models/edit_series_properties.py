@@ -20,7 +20,8 @@ class EditSeriesProperties(pydantic.BaseModel):
         name (None | str): Optional human-readable label.
         geometry (Union['Point', None]): Updated target location for future child orders.
         order_parameters (Union['EditSeriesOrderParameters', None]): Updated template for future child orders.
-        frequency (None | str): Updated ISO 8601 recurrence interval (e.g. P7D, P14D, P1M).
+        frequency (None | str): Updated ISO 8601 recurrence interval (e.g. P7D, P14D, P1M). Whole numbers only, e.g. P6M
+            not P0.5Y.
         total_order_count (int | None): Updated total planned orders (must be >= orders_created_count). Provide either
             this or end_date.
         end_date (datetime.datetime | None): Updated end date. If provided instead of total_order_count,
@@ -43,7 +44,7 @@ class EditSeriesProperties(pydantic.BaseModel):
     )
     frequency: None | str = pydantic.Field(
         default=None,
-        description="""Updated ISO 8601 recurrence interval (e.g. P7D, P14D, P1M).""",
+        description="""Updated ISO 8601 recurrence interval (e.g. P7D, P14D, P1M). Whole numbers only, e.g. P6M not P0.5Y.""",
         alias="frequency",
     )
     total_order_count: int | None = pydantic.Field(

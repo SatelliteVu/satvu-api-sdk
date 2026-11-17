@@ -18,7 +18,8 @@ class SeriesProperties(pydantic.BaseModel):
     Provide either total_order_count or end_date to specify the series length.
 
         Attributes:
-            frequency (str): ISO 8601 duration string for the recurrence interval (e.g. P7D, P14D, P1M). Minimum 7 days.
+            frequency (str): ISO 8601 duration string for the recurrence interval (e.g. P7D, P14D, P1M). Whole numbers only,
+                e.g. P6M not P0.5Y. Minimum 7 days.
             start_date (datetime.datetime): When the first order should be created.
             order_parameters (SeriesOrderParameters): Template parameters applied to each child order in the series.
             name (None | str): Optional human-readable label for this series.
@@ -29,7 +30,7 @@ class SeriesProperties(pydantic.BaseModel):
 
     frequency: str = pydantic.Field(
         ...,
-        description="""ISO 8601 duration string for the recurrence interval (e.g. P7D, P14D, P1M). Minimum 7 days.""",
+        description="""ISO 8601 duration string for the recurrence interval (e.g. P7D, P14D, P1M). Whole numbers only, e.g. P6M not P0.5Y. Minimum 7 days.""",
         alias="frequency",
     )
     start_date: datetime.datetime = pydantic.Field(

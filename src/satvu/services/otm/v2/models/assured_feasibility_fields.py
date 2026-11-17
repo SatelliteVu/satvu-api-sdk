@@ -11,18 +11,20 @@ import pydantic
 class AssuredFeasibilityFields(pydantic.BaseModel):
     """
     Attributes:
-        product (Literal['assured']): Assured Priority.
-        datetime_ (str): The closed date-time interval of the request, measured from the time the request is made. The
-            upper bound must not extend further into the future than the contract's assured tasking window; feasibility
-            results only include passes from the request time onwards.
+        product (Literal['assured']): The tasking product. Always `assured` (Assured tasking).
+        datetime_ (str): The tasking window to search for passes in, as an ISO 8601 interval (`start/end`). Both bounds
+            are required. The end must not be further in the future than the contract's assured tasking window allows. The
+            feasibility response only includes passes from the time of the request onwards.
     """
 
     product: Literal["assured"] = pydantic.Field(
-        default="assured", description="""Assured Priority.""", alias="product"
+        default="assured",
+        description="""The tasking product. Always `assured` (Assured tasking).""",
+        alias="product",
     )
     datetime_: str = pydantic.Field(
         ...,
-        description="""The closed date-time interval of the request, measured from the time the request is made. The upper bound must not extend further into the future than the contract's assured tasking window; feasibility results only include passes from the request time onwards.""",
+        description="""The tasking window to search for passes in, as an ISO 8601 interval (`start/end`). Both bounds are required. The end must not be further in the future than the contract's assured tasking window allows. The feasibility response only includes passes from the time of the request onwards.""",
         alias="datetime",
     )
 

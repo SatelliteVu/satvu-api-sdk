@@ -10,28 +10,30 @@ class PriceInformation(pydantic.BaseModel):
     """Pricing information.
 
     Attributes:
-        currency (str): The currency of the order.
-        base (int): The base price of the order in minor units of the currency e.g. pence, cents.
+        currency (str): The currency of the price, as an ISO 4217 code.
+        base (int): The base price of the order. In minor units of the currency (for example, pence or cents).
         final (bool): Whether the price is final. When the `baseprice` query parameter is true, this will be false as
             the price may change at order submission time after relevant addons and required licence level have been
             accounted for.
-        addon_withhold (int | None): The price of the order from the chosen withhold option in minor units of the
-            currency e.g. pence, cents.
-        licence_level (int | None): The price of the order from the chosen licence level in minor units of the currency
-            e.g. pence, cents.
-        total (int | None): The total price of the order in minor units of the currency e.g. pence, cents. This is the
-            sum of the base and addon prices.
-        total_uplift (int | None): The sum of all uplifts, including licencing, applied to the order in minor units of
-            the currency e.g. pence, cents.
-        value (int | None): Price of the order in minor units of the currency e.g. pence, cents.
+        addon_withhold (int | None): The uplift from the chosen withhold option. In minor units of the currency (for
+            example, pence or cents).
+        licence_level (int | None): The uplift from the chosen licence level. In minor units of the currency (for
+            example, pence or cents).
+        total (int | None): The total price of the order: the base price plus all uplifts. In minor units of the
+            currency (for example, pence or cents).
+        total_uplift (int | None): The sum of all uplifts applied to the order, including the licence level. In minor
+            units of the currency (for example, pence or cents).
+        value (int | None): The price of the order. In minor units of the currency (for example, pence or cents).
     """
 
     currency: str = pydantic.Field(
-        ..., description="""The currency of the order.""", alias="currency"
+        ...,
+        description="""The currency of the price, as an ISO 4217 code.""",
+        alias="currency",
     )
     base: int = pydantic.Field(
         ...,
-        description="""The base price of the order in minor units of the currency e.g. pence, cents.""",
+        description="""The base price of the order. In minor units of the currency (for example, pence or cents).""",
         alias="base",
     )
     final: bool = pydantic.Field(
@@ -41,27 +43,27 @@ class PriceInformation(pydantic.BaseModel):
     )
     addon_withhold: int | None = pydantic.Field(
         default=None,
-        description="""The price of the order from the chosen withhold option in minor units of the currency e.g. pence, cents.""",
+        description="""The uplift from the chosen withhold option. In minor units of the currency (for example, pence or cents).""",
         alias="addon:withhold",
     )
     licence_level: int | None = pydantic.Field(
         default=None,
-        description="""The price of the order from the chosen licence level in minor units of the currency e.g. pence, cents.""",
+        description="""The uplift from the chosen licence level. In minor units of the currency (for example, pence or cents).""",
         alias="licence_level",
     )
     total: int | None = pydantic.Field(
         default=None,
-        description="""The total price of the order in minor units of the currency e.g. pence, cents. This is the sum of the base and addon prices.""",
+        description="""The total price of the order: the base price plus all uplifts. In minor units of the currency (for example, pence or cents).""",
         alias="total",
     )
     total_uplift: int | None = pydantic.Field(
         default=None,
-        description="""The sum of all uplifts, including licencing, applied to the order in minor units of the currency e.g. pence, cents.""",
+        description="""The sum of all uplifts applied to the order, including the licence level. In minor units of the currency (for example, pence or cents).""",
         alias="total_uplift",
     )
     value: int | None = pydantic.Field(
         default=None,
-        description="""Price of the order in minor units of the currency e.g. pence, cents.""",
+        description="""The price of the order. In minor units of the currency (for example, pence or cents).""",
         alias="value",
     )
 

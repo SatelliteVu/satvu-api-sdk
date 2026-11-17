@@ -29,9 +29,9 @@ class StoredFeasibilityRequest(pydantic.BaseModel):
         geometry (Point): Point Model
         properties (Union['AssuredStoredFeasibilityRequestProperties', 'StandardStoredFeasibilityRequestProperties']): A
             map of additional metadata about the requested image.
-        id (UUID): Feasibility Request ID.
+        id (UUID): The ID of the feasibility request.
         links (list[Link]): A list of related links for the feasibility request.
-        contract_id (UUID): Contract ID.
+        contract_id (UUID): The ID of the contract.
     """
 
     type_: Literal["Feature"] = pydantic.Field(
@@ -56,7 +56,7 @@ class StoredFeasibilityRequest(pydantic.BaseModel):
         alias="properties",
     )
     id: UUID = pydantic.Field(
-        ..., description="""Feasibility Request ID.""", alias="id"
+        ..., description="""The ID of the feasibility request.""", alias="id"
     )
     links: list[Link] = pydantic.Field(
         ...,
@@ -64,7 +64,7 @@ class StoredFeasibilityRequest(pydantic.BaseModel):
         alias="links",
     )
     contract_id: UUID = pydantic.Field(
-        ..., description="""Contract ID.""", alias="contract_id"
+        ..., description="""The ID of the contract.""", alias="contract_id"
     )
 
     model_config = pydantic.ConfigDict(

@@ -23,7 +23,7 @@ class SearchResponseFeatureStandardFeasibilityResponse(pydantic.BaseModel):
         geometry (Union['Point', None]):
         properties (Union['StandardFeasibilityResponseProperties', None]):
         id (UUID): ID of an item associated with the search parameters.
-        contract_id (UUID): Contract ID associated with the search.
+        contract_id (UUID): The ID of the contract the item belongs to.
         collection (str): Name of collection associated with the search result item.
         links (Union[None, list[Link]]): A list of links to the STAC item that fulfilled the order, if applicable.
         feature_type (Literal['feasibility-response-standard']):  Default: 'feasibility-response-standard'.
@@ -45,7 +45,7 @@ class SearchResponseFeatureStandardFeasibilityResponse(pydantic.BaseModel):
     )
     contract_id: UUID = pydantic.Field(
         ...,
-        description="""Contract ID associated with the search.""",
+        description="""The ID of the contract the item belongs to.""",
         alias="contract_id",
     )
     collection: str = pydantic.Field(

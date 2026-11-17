@@ -22,7 +22,8 @@ class SeriesRequest(pydantic.BaseModel):
         properties (SeriesProperties): Properties for a series creation request.
 
             Provide either total_order_count or end_date to specify the series length.
-        reseller_end_user_id (None | UUID): End user UUID — required when the contract is a reseller contract.
+        reseller_end_user_id (None | UUID): The ID of the reseller end user the series is for. Required for reseller
+            contracts.
     """
 
     type_: Literal["Feature"] = pydantic.Field(
@@ -40,7 +41,7 @@ Provide either total_order_count or end_date to specify the series length.""",
     )
     reseller_end_user_id: None | UUID = pydantic.Field(
         default=None,
-        description="""End user UUID — required when the contract is a reseller contract.""",
+        description="""The ID of the reseller end user the series is for. Required for reseller contracts.""",
         alias="reseller_end_user_id",
     )
 

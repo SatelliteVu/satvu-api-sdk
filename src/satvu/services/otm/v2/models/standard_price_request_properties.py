@@ -13,34 +13,34 @@ from ..models.day_night_mode import DayNightMode
 class StandardPriceRequestProperties(pydantic.BaseModel):
     """
     Attributes:
-        datetime_ (str): The closed date-time interval of the tasking order request.
-        licence_level (None | str): The optional licence level for the order. Licence levels are specific to the
-            contract.
-        addon_withhold (None | str): The optional ISO8601 string describing the duration that an order will be withheld
-            from the public catalog. Withhold options are specific to the contract.
+        datetime_ (str): The tasking window: the interval within which the order may be acquired, as an ISO 8601
+            interval (`start/end`). Both bounds are required.
+        licence_level (None | str): The licence level for the order. Licence levels are specific to the contract.
+        addon_withhold (None | str): How long the order's imagery is withheld from the public catalog, as an ISO 8601
+            duration. Withhold options are specific to the contract.
         satvu_day_night_mode (Union[None, 'DayNightMode']):
-        max_cloud_cover (Union[None, int]): The max threshold of acceptable cloud coverage where the lower limit is
-            capped to 25%. Measured in percent. Default: 25.
+        max_cloud_cover (Union[None, int]): The maximum acceptable cloud cover. Measured in percent. Must be at least
+            25. Default: 25.
         min_off_nadir (Union[None, int]): The minimum angle from the sensor between nadir and the scene center. Measured
             in decimal degrees. Default: 0.
         max_off_nadir (Union[None, int]): The maximum angle from the sensor between nadir and the scene center. Measured
-            in decimal degrees. Must be larger than `min_off_nadir`. Default: 30.
-        product (Literal['standard']): Standard Priority. Default: 'standard'.
+            in decimal degrees. Must be greater than `min_off_nadir`. Default: 30.
+        product (Literal['standard']): The tasking product. Always `standard` (Standard tasking). Default: 'standard'.
     """
 
     datetime_: str = pydantic.Field(
         ...,
-        description="""The closed date-time interval of the tasking order request.""",
+        description="""The tasking window: the interval within which the order may be acquired, as an ISO 8601 interval (`start/end`). Both bounds are required.""",
         alias="datetime",
     )
     licence_level: None | str = pydantic.Field(
         default=None,
-        description="""The optional licence level for the order. Licence levels are specific to the contract.""",
+        description="""The licence level for the order. Licence levels are specific to the contract.""",
         alias="licence_level",
     )
     addon_withhold: None | str = pydantic.Field(
         default=None,
-        description="""The optional ISO8601 string describing the duration that an order will be withheld from the public catalog. Withhold options are specific to the contract.""",
+        description="""How long the order's imagery is withheld from the public catalog, as an ISO 8601 duration. Withhold options are specific to the contract.""",
         alias="addon:withhold",
     )
     satvu_day_night_mode: Union[None, DayNightMode] = pydantic.Field(
@@ -48,7 +48,7 @@ class StandardPriceRequestProperties(pydantic.BaseModel):
     )
     max_cloud_cover: Union[None, int] = pydantic.Field(
         default=25,
-        description="""The max threshold of acceptable cloud coverage where the lower limit is capped to 25%. Measured in percent.""",
+        description="""The maximum acceptable cloud cover. Measured in percent. Must be at least 25.""",
         alias="max_cloud_cover",
     )
     min_off_nadir: Union[None, int] = pydantic.Field(
@@ -58,11 +58,13 @@ class StandardPriceRequestProperties(pydantic.BaseModel):
     )
     max_off_nadir: Union[None, int] = pydantic.Field(
         default=30,
-        description="""The maximum angle from the sensor between nadir and the scene center. Measured in decimal degrees. Must be larger than `min_off_nadir`.""",
+        description="""The maximum angle from the sensor between nadir and the scene center. Measured in decimal degrees. Must be greater than `min_off_nadir`.""",
         alias="max_off_nadir",
     )
     product: Literal["standard"] = pydantic.Field(
-        default="standard", description="""Standard Priority.""", alias="product"
+        default="standard",
+        description="""The tasking product. Always `standard` (Standard tasking).""",
+        alias="product",
     )
 
     model_config = pydantic.ConfigDict(

@@ -106,7 +106,7 @@ class OtmV2Service(SDKClient):
         date, with the most recent orders appearing first.
 
         Args:
-            contract_id (UUID): Contract ID
+            contract_id (UUID): The ID of the contract.
             per_page (Union[None, int]): The number of orders to return per page. Default: 25.
             token (None | str): The pagination token.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
@@ -141,7 +141,7 @@ class OtmV2Service(SDKClient):
         Automatically handles pagination by following STAC links.
 
         Args:
-            contract_id (UUID): Contract ID
+            contract_id (UUID): The ID of the contract.
             per_page (Union[None, int]): The number of orders to return per page. Default: 25.
             max_pages: Stop after fetching this many pages (default: unlimited)
 
@@ -190,7 +190,7 @@ class OtmV2Service(SDKClient):
         Creates a tasking order request.
 
         Args:
-            contract_id (UUID): Contract ID
+            contract_id (UUID): The ID of the contract.
             body (Union['AssuredOrderRequest', 'ResellerAssuredOrderRequest',
                 'ResellerStandardOrderRequest', 'StandardOrderRequest']):
                 One of:
@@ -236,8 +236,8 @@ class OtmV2Service(SDKClient):
         Retrieves the tasking order with a given ID.
 
         Args:
-            contract_id (UUID): Contract ID
-            order_id (UUID): Order ID
+            contract_id (UUID): The ID of the contract.
+            order_id (UUID): The ID of the order.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -295,8 +295,8 @@ class OtmV2Service(SDKClient):
         - Price-relevant parameters can be modified until fulfillment
 
         Args:
-            contract_id (UUID): Contract ID
-            order_id (UUID): Order ID
+            contract_id (UUID): The ID of the contract.
+            order_id (UUID): The ID of the order.
             body (EditOrderPayload): Payload for editing an order.
 
                 Geometry can be edited for Standard orders in Created/Staged states.
@@ -343,8 +343,8 @@ class OtmV2Service(SDKClient):
         (all orders created and all now terminal), the series is completed.
 
         Args:
-            contract_id (UUID): Contract ID
-            order_id (UUID): Order ID
+            contract_id (UUID): The ID of the contract.
+            order_id (UUID): The ID of the order.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -388,8 +388,8 @@ class OtmV2Service(SDKClient):
         presigned download URL with an expiry will be returned.
 
         Args:
-            contract_id (UUID): Contract ID
-            order_id (UUID): Order ID
+            contract_id (UUID): The ID of the contract.
+            order_id (UUID): The ID of the order.
             redirect (Union[None, bool]): If `true` download the image content locally, otherwise if
                 `false` return a presigned download URL with an expiry. Defaults to `true`. Default: True.
             collections (list['Collection'] | None): Specify a subset of collections to download.
@@ -499,8 +499,8 @@ class OtmV2Service(SDKClient):
         Returns acquisition details for a tasking order.
 
         Args:
-            contract_id (UUID): Contract ID
-            order_id (UUID): Order ID
+            contract_id (UUID): The ID of the contract.
+            order_id (UUID): The ID of the order.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -530,8 +530,8 @@ class OtmV2Service(SDKClient):
         Includes status history and acquisition metadata for each task.
 
         Args:
-            contract_id (UUID): Contract ID
-            order_id (UUID): Order ID
+            contract_id (UUID): The ID of the contract.
+            order_id (UUID): The ID of the order.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -566,8 +566,9 @@ class OtmV2Service(SDKClient):
         Retrieves all tasking feasibility requests owned by a user.
 
         Args:
-            contract_id (UUID): Contract ID
-            per_page (Union[None, int]): The number of orders to return per page Default: 25.
+            contract_id (UUID): The ID of the contract.
+            per_page (Union[None, int]): The number of feasibility requests to return per page.
+                Default: 25.
             token (None | str): The pagination token
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
@@ -603,8 +604,9 @@ class OtmV2Service(SDKClient):
         Automatically handles pagination by following STAC links.
 
         Args:
-            contract_id (UUID): Contract ID
-            per_page (Union[None, int]): The number of orders to return per page Default: 25.
+            contract_id (UUID): The ID of the contract.
+            per_page (Union[None, int]): The number of feasibility requests to return per page.
+            Default: 25.
             max_pages: Stop after fetching this many pages (default: unlimited)
 
         Yields:
@@ -647,7 +649,7 @@ class OtmV2Service(SDKClient):
         Searches feasibility options for a tasking order.
 
         Args:
-            contract_id (UUID): Contract ID
+            contract_id (UUID): The ID of the contract.
             body (FeasibilityRequest): Payload for feasibility request.
             extra_body: Optional dict deep-merged into the request body after
                 serialisation. Use this to pass fields added to the API after this
@@ -684,7 +686,7 @@ class OtmV2Service(SDKClient):
         Retrieves the tasking feasibility request with a given ID.
 
         Args:
-            contract_id (UUID): Contract ID
+            contract_id (UUID): The ID of the contract.
             id (UUID): Feasibility Request ID
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
@@ -714,7 +716,7 @@ class OtmV2Service(SDKClient):
         in ascending order based on the start of the estimated acquisition time.
 
         Args:
-            contract_id (UUID): Contract ID
+            contract_id (UUID): The ID of the contract.
             id (UUID): Feasibility Request ID
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
@@ -753,7 +755,7 @@ class OtmV2Service(SDKClient):
         Orders in the following states can be modified: `staged`.
 
         Args:
-            contract_id (UUID): Contract ID
+            contract_id (UUID): The ID of the contract.
             order_id (UUID): Order ID to modify
             body (ModifyFeasibilityRequest): Payload for modify feasibility request.
                 Only supports Standard orders. Assured orders cannot be modified.
@@ -798,7 +800,7 @@ class OtmV2Service(SDKClient):
         Returns the price for a set of ordering parameters.
 
         Args:
-            contract_id (UUID): Contract ID
+            contract_id (UUID): The ID of the contract.
             baseprice (Union[None, bool]): Whether to return the base price only, ignoring any addons
                 or the licence level. Default: False.
             body (PriceRequest): Payload for price request.
@@ -850,8 +852,8 @@ class OtmV2Service(SDKClient):
         after modification, including the original price and the updated price value.
 
         Args:
-            contract_id (UUID): Contract ID
-            order_id (UUID): Order ID
+            contract_id (UUID): The ID of the contract.
+            order_id (UUID): The ID of the order.
             body (EditOrderPayload): Payload for editing an order.
 
                 Geometry can be edited for Standard orders in Created/Staged states.
@@ -889,7 +891,7 @@ class OtmV2Service(SDKClient):
         List unplanned satellite outages.
 
         Args:
-            contract_id (UUID): Contract ID
+            contract_id (UUID): The ID of the contract.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -920,7 +922,7 @@ class OtmV2Service(SDKClient):
         (newest first).
 
         Args:
-            contract_id (UUID): Contract ID
+            contract_id (UUID): The ID of the contract.
             per_page (Union[None, int]): Number of series to return per page. Default: 25.
             token (None | str): Pagination token.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
@@ -955,7 +957,7 @@ class OtmV2Service(SDKClient):
         Automatically handles pagination by following STAC links.
 
         Args:
-            contract_id (UUID): Contract ID
+            contract_id (UUID): The ID of the contract.
             per_page (Union[None, int]): Number of series to return per page. Default: 25.
             max_pages: Stop after fetching this many pages (default: unlimited)
 
@@ -1004,7 +1006,7 @@ class OtmV2Service(SDKClient):
         Provide either total_order_count or end_date to specify series length.
 
         Args:
-            contract_id (UUID): Contract ID
+            contract_id (UUID): The ID of the contract.
             body (SeriesRequest): Request body for creating a recurring tasking series.
             extra_body: Optional dict deep-merged into the request body after
                 serialisation. Use this to pass fields added to the API after this
@@ -1041,8 +1043,8 @@ class OtmV2Service(SDKClient):
         Retrieves the tasking series with the given ID.
 
         Args:
-            contract_id (UUID): Contract ID
-            series_id (UUID): Series ID
+            contract_id (UUID): The ID of the contract.
+            series_id (UUID): The ID of the series.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -1080,8 +1082,8 @@ class OtmV2Service(SDKClient):
         Updates only affect future child orders. Already-created orders remain unchanged.
 
         Args:
-            contract_id (UUID): Contract ID
-            series_id (UUID): Series ID
+            contract_id (UUID): The ID of the contract.
+            series_id (UUID): The ID of the series.
             body (EditSeriesProperties): Editable fields for series updates.
             extra_body: Optional dict deep-merged into the request body after
                 serialisation. Use this to pass fields added to the API after this
@@ -1124,8 +1126,8 @@ class OtmV2Service(SDKClient):
         (newest first).
 
         Args:
-            contract_id (UUID): Contract ID
-            series_id (UUID): Series ID
+            contract_id (UUID): The ID of the contract.
+            series_id (UUID): The ID of the series.
             per_page (Union[None, int]): Number of orders to return per page. Default: 25.
             token (None | str): Pagination token.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
@@ -1161,8 +1163,8 @@ class OtmV2Service(SDKClient):
         Automatically handles pagination by following STAC links.
 
         Args:
-            contract_id (UUID): Contract ID
-            series_id (UUID): Series ID
+            contract_id (UUID): The ID of the contract.
+            series_id (UUID): The ID of the series.
             per_page (Union[None, int]): Number of orders to return per page. Default: 25.
             max_pages: Stop after fetching this many pages (default: unlimited)
 
@@ -1214,7 +1216,7 @@ class OtmV2Service(SDKClient):
         per-order when child orders are created.
 
         Args:
-            contract_id (UUID): Contract ID
+            contract_id (UUID): The ID of the contract.
             body (SeriesRequest): Request body for creating a recurring tasking series.
             extra_body: Optional dict deep-merged into the request body after
                 serialisation. Use this to pass fields added to the API after this
@@ -1256,8 +1258,8 @@ class OtmV2Service(SDKClient):
         cancelled and returns 409.
 
         Args:
-            contract_id (UUID): Contract ID
-            series_id (UUID): Series ID
+            contract_id (UUID): The ID of the contract.
+            series_id (UUID): The ID of the series.
             timeout: Optional request timeout in seconds. Overrides the instance timeout if
                 provided.
 
@@ -1297,8 +1299,8 @@ class OtmV2Service(SDKClient):
         across the whole series.
 
         Args:
-            contract_id (UUID): Contract ID
-            series_id (UUID): Series ID
+            contract_id (UUID): The ID of the contract.
+            series_id (UUID): The ID of the series.
             redirect (Union[None, bool]): If `true` download the image content locally, otherwise if
                 `false` return a presigned download URL with an expiry. Defaults to `true`. Default: True.
             collections (list['Collection'] | None): Specify a subset of collections to download.
@@ -1355,7 +1357,7 @@ class OtmV2Service(SDKClient):
         Search for feasibility requests/responses and tasking orders owned by the user.
 
         Args:
-            contract_id (UUID): Contract ID
+            contract_id (UUID): The ID of the contract.
             body (SearchRequest):
             extra_body: Optional dict deep-merged into the request body after
                 serialisation. Use this to pass fields added to the API after this
@@ -1397,7 +1399,7 @@ class OtmV2Service(SDKClient):
 
         Args:
             body (SearchRequest):
-            contract_id (UUID): Contract ID
+            contract_id (UUID): The ID of the contract.
             max_pages: Stop after fetching this many pages (default: unlimited)
 
         Yields:

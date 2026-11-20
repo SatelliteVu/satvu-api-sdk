@@ -15,9 +15,8 @@ if TYPE_CHECKING:
 
 
 class ModifyFeasibilityRequest(pydantic.BaseModel):
-    """Payload for modify feasibility request.
-    Only supports Standard orders. Assured orders cannot be modified.
-    All fields are optional - unspecified fields will be sourced from the existing order.
+    """A feasibility request for an edit to a standard order. Omitted fields keep
+    the order's current values.
 
         Attributes:
             type_ (Literal['Feature']):

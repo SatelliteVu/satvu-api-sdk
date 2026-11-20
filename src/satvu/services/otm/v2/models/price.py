@@ -7,7 +7,8 @@ import pydantic
 
 
 class Price(pydantic.BaseModel):
-    """
+    """The price of an order, broken down into its base price and uplifts.
+
     Attributes:
         currency (str): The currency of the price, as an ISO 4217 code.
         base (int): The base price of the order. In minor units of the currency (for example, pence or cents).

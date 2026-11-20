@@ -16,12 +16,12 @@ if TYPE_CHECKING:
 
 
 class StoredStandardOrderRequestProperties(pydantic.BaseModel):
-    """Feature properties model for standard priority stored order
+    """The properties of a standard order.
 
     Attributes:
         datetime_ (str): The tasking window: the interval within which the order may be acquired, as an ISO 8601
             interval (`start/end`). Both bounds are required.
-        status ('OrderStatus'):
+        status ('OrderStatus'): The status of an order.
         created_at (datetime.datetime): When the order was created.
         updated_at (datetime.datetime): When the order was last updated.
         stac_item_id (None | str): The ID of the STAC item that fulfilled the order. Omitted until the order is
@@ -35,7 +35,7 @@ class StoredStandardOrderRequestProperties(pydantic.BaseModel):
         addon_withhold (None | str): How long the order's imagery is withheld from the public catalog, as an ISO 8601
             duration. Withhold options are specific to the contract. Defaults to the contract's default withhold option.
         name (None | str): The name of the order.
-        satvu_day_night_mode (Union[None, 'DayNightMode']):
+        satvu_day_night_mode (Union[None, 'DayNightMode']): When the satellite may image: by day, by night, or either.
         max_cloud_cover (Union[None, int]): The maximum acceptable cloud cover. Measured in percent. Default: 25.
         min_off_nadir (Union[None, int]): The minimum angle from the sensor between nadir and the scene center. Measured
             in decimal degrees. Default: 0.
@@ -51,7 +51,9 @@ class StoredStandardOrderRequestProperties(pydantic.BaseModel):
         description="""The tasking window: the interval within which the order may be acquired, as an ISO 8601 interval (`start/end`). Both bounds are required.""",
         alias="datetime",
     )
-    status: OrderStatus = pydantic.Field(..., description=None, alias="status")
+    status: OrderStatus = pydantic.Field(
+        ..., description="""The status of an order.""", alias="status"
+    )
     created_at: datetime.datetime = pydantic.Field(
         ..., description="""When the order was created.""", alias="created_at"
     )
@@ -87,7 +89,9 @@ class StoredStandardOrderRequestProperties(pydantic.BaseModel):
         default=None, description="""The name of the order.""", alias="name"
     )
     satvu_day_night_mode: Union[None, DayNightMode] = pydantic.Field(
-        default=None, description=None, alias="satvu:day_night_mode"
+        default=None,
+        description="""When the satellite may image: by day, by night, or either.""",
+        alias="satvu:day_night_mode",
     )
     max_cloud_cover: Union[None, int] = pydantic.Field(
         default=25,

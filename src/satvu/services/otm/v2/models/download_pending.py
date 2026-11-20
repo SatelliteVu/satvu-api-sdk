@@ -12,11 +12,11 @@ if TYPE_CHECKING:
 
 
 class DownloadPending(pydantic.BaseModel):
-    """Response payload returned while a download is still being prepared.
+    """Returned while a download is still being prepared.
 
     Attributes:
         message (str): Human-readable status message. Also see the `Retry-After` header.
-        progress (DownloadProgress): Progress information for an in-flight download bundling job.
+        progress (DownloadProgress): The progress of a download being prepared.
     """
 
     message: str = pydantic.Field(
@@ -26,7 +26,7 @@ class DownloadPending(pydantic.BaseModel):
     )
     progress: DownloadProgress = pydantic.Field(
         ...,
-        description="""Progress information for an in-flight download bundling job.""",
+        description="""The progress of a download being prepared.""",
         alias="progress",
     )
 

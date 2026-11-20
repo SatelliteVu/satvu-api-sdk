@@ -9,7 +9,7 @@ import pydantic
 
 
 class Outage(pydantic.BaseModel):
-    """Model representing a satellite outage.
+    """A period when a satellite cannot image.
 
     Attributes:
         satellite_name (str): The satellite affected by the outage.

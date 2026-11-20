@@ -17,11 +17,11 @@ if TYPE_CHECKING:
 
 
 class TaskResponse(pydantic.BaseModel):
-    """A single task assigned to an order.
+    """A task: one attempt to acquire an order.
 
     Attributes:
         id (UUID): The ID of the task.
-        status ('UserFacingTaskStatus'): User-facing task status values exposed via the API.
+        status ('UserFacingTaskStatus'): The status of a task.
         created_at (datetime.datetime): When the task was created.
         updated_at (datetime.datetime): When the task was last updated.
         acquisition (Union['TaskAcquisition', None]): Acquisition metadata.
@@ -31,9 +31,7 @@ class TaskResponse(pydantic.BaseModel):
 
     id: UUID = pydantic.Field(..., description="""The ID of the task.""", alias="id")
     status: UserFacingTaskStatus = pydantic.Field(
-        ...,
-        description="""User-facing task status values exposed via the API.""",
-        alias="status",
+        ..., description="""The status of a task.""", alias="status"
     )
     created_at: datetime.datetime = pydantic.Field(
         ..., description="""When the task was created.""", alias="created_at"

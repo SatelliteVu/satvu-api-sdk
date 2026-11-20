@@ -10,7 +10,7 @@ import pydantic
 
 
 class ListOrderTasksUnavailableResponse(pydantic.BaseModel):
-    """Response when task information is not available.
+    """Returned when the tasks of an order are not available.
 
     Attributes:
         order_id (UUID): The ID of the order.

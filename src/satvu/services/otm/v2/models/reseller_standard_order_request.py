@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 
 class ResellerStandardOrderRequest(pydantic.BaseModel):
-    """Payload for reseller standard order request.
+    """A new standard order for a reseller end user.
 
     Attributes:
         type_ (Literal['Feature']):

@@ -13,10 +13,9 @@ if TYPE_CHECKING:
 
 
 class EditOrderPayload(pydantic.BaseModel):
-    """Payload for editing an order.
+    """Modifications to an order. Omitted fields keep their current values.
 
-    Geometry can be edited for Standard orders in Created/Staged states.
-    All property fields are optional - only provided fields will be updated.
+    `geometry` can only change for standard orders that are still `staged`.
 
         Attributes:
             geometry (Union['Point', None]): The location of the order. Only editable for standard orders that are still

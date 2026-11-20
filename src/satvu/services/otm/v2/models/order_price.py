@@ -20,14 +20,16 @@ if TYPE_CHECKING:
 
 
 class OrderPrice(pydantic.BaseModel):
-    """
+    """The price of an order, calculated without creating it.
+
     Attributes:
         type_ (Literal['Feature']):
         geometry (Point): Point Model
         properties (Union['AssuredFeasibilityFieldsWithAddons', 'StandardOrderFieldsWithAddons']): A map of additional
             metadata about the requested image.
         created_at (datetime.datetime): When the price was calculated.
-        price (PriceInformation): Pricing information.
+        price (PriceInformation): The price of an order, broken down into its base price and uplifts, and whether it
+            is final.
     """
 
     type_: Literal["Feature"] = pydantic.Field(
@@ -51,7 +53,10 @@ class OrderPrice(pydantic.BaseModel):
         ..., description="""When the price was calculated.""", alias="created_at"
     )
     price: PriceInformation = pydantic.Field(
-        ..., description="""Pricing information.""", alias="price"
+        ...,
+        description="""The price of an order, broken down into its base price and uplifts, and whether it
+is final.""",
+        alias="price",
     )
 
     model_config = pydantic.ConfigDict(

@@ -16,7 +16,8 @@ if TYPE_CHECKING:
 
 
 class ResellerSearchResponseFeatureStandardOrderRequest(pydantic.BaseModel):
-    """
+    """A standard order placed for a reseller end user that matches a search.
+
     Attributes:
         type_ (Literal['Feature']):
         geometry (Union['Point', None]):
@@ -24,7 +25,7 @@ class ResellerSearchResponseFeatureStandardOrderRequest(pydantic.BaseModel):
         id (UUID): ID of an item associated with the search parameters.
         contract_id (UUID): The ID of the contract the item belongs to.
         collection (str): Name of collection associated with the search result item.
-        price (Price):
+        price (Price): The price of an order, broken down into its base price and uplifts.
         reseller_end_user_id (UUID):
         links (Union[None, list[Link]]): A list of links to the STAC item that fulfilled the order, if applicable.
         series_id (None | UUID): The ID of the series this order belongs to.
@@ -55,7 +56,11 @@ class ResellerSearchResponseFeatureStandardOrderRequest(pydantic.BaseModel):
         description="""Name of collection associated with the search result item.""",
         alias="collection",
     )
-    price: Price = pydantic.Field(..., description=None, alias="price")
+    price: Price = pydantic.Field(
+        ...,
+        description="""The price of an order, broken down into its base price and uplifts.""",
+        alias="price",
+    )
     reseller_end_user_id: UUID = pydantic.Field(
         ..., description=None, alias="reseller_end_user_id"
     )

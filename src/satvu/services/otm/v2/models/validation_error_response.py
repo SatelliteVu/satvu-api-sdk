@@ -12,13 +12,10 @@ if TYPE_CHECKING:
 
 
 class ValidationErrorResponse(pydantic.BaseModel):
-    """Validation error response for Pydantic validation failures.
+    """The request is invalid. Lists every problem found.
 
-    Returned by FastAPI when request validation fails (422 status).
-    Contains a list of validation errors with details about each failure.
-
-        Attributes:
-            detail (list[ValidationErrorDetail]):
+    Attributes:
+        detail (list[ValidationErrorDetail]):
     """
 
     detail: list[ValidationErrorDetail] = pydantic.Field(

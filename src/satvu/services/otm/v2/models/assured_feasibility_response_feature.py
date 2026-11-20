@@ -16,12 +16,13 @@ if TYPE_CHECKING:
 
 
 class AssuredFeasibilityResponseFeature(pydantic.BaseModel):
-    """Object representing an assured feasibility response.
+    """A pass found by an assured feasibility request.
 
     Attributes:
         type_ (Literal['Feature']):
         geometry (Point): Point Model
-        properties (AssuredFeasibilityResponseProperties): Properties of the assured priority feasibility response.
+        properties (AssuredFeasibilityResponseProperties): The properties of a pass found by an assured feasibility
+            request.
         id (UUID): The ID of the feasibility response feature.
         signature (str): A signed token for this pass. Include it when ordering the pass.
     """
@@ -34,7 +35,7 @@ class AssuredFeasibilityResponseFeature(pydantic.BaseModel):
     )
     properties: AssuredFeasibilityResponseProperties = pydantic.Field(
         ...,
-        description="""Properties of the assured priority feasibility response.""",
+        description="""The properties of a pass found by an assured feasibility request.""",
         alias="properties",
     )
     id: UUID = pydantic.Field(

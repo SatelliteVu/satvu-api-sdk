@@ -7,16 +7,12 @@ import pydantic
 
 
 class StructuredError(pydantic.BaseModel):
-    """Machine-readable error body carrying a code, message, and context.
+    """An error with a machine-readable code, a message, and the values that caused it.
 
-    Used for validation failures where the frontend needs the specific values
-    (requested vs. required) to render actionable feedback, rather than
-    string-parsing a free-text message.
-
-        Attributes:
-            code (str):
-            message (str):
-            details (dict):
+    Attributes:
+        code (str):
+        message (str):
+        details (dict):
     """
 
     code: str = pydantic.Field(..., description=None, alias="code")

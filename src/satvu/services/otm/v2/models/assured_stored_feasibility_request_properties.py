@@ -12,7 +12,7 @@ from ..models.feasibility_request_status import FeasibilityRequestStatus
 
 
 class AssuredStoredFeasibilityRequestProperties(pydantic.BaseModel):
-    """Properties of the stored assured priority feasibility request.
+    """The properties of an assured feasibility request.
 
     Attributes:
         product (Literal['assured']): The tasking product. Always `assured` (Assured tasking).

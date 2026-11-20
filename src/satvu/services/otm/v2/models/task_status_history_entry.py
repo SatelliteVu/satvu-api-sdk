@@ -15,7 +15,7 @@ class TaskStatusHistoryEntry(pydantic.BaseModel):
     """A single status transition in the task's lifecycle.
 
     Attributes:
-        status_to ('UserFacingTaskStatus'): User-facing task status values exposed via the API.
+        status_to ('UserFacingTaskStatus'): The status of a task.
         datetime_updated (datetime.datetime): When the status transition occurred.
         reason (str): Reason for the status change.
         status_from (Union['UserFacingTaskStatus', None]): Previous status before transition (null for initial
@@ -24,9 +24,7 @@ class TaskStatusHistoryEntry(pydantic.BaseModel):
     """
 
     status_to: UserFacingTaskStatus = pydantic.Field(
-        ...,
-        description="""User-facing task status values exposed via the API.""",
-        alias="status_to",
+        ..., description="""The status of a task.""", alias="status_to"
     )
     datetime_updated: datetime.datetime = pydantic.Field(
         ...,

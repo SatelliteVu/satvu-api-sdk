@@ -12,11 +12,11 @@ from ..models.day_night_mode import DayNightMode
 
 
 class EditOrderProperties(pydantic.BaseModel):
-    """Properties that can be edited in an order.
+    """Modifications to an order's properties. Omitted fields keep their current values.
 
-    All fields are optional - only provided fields will be updated.
-    Platform-only parameters (name, withhold, licence_level) can be edited at any time.
-    Tasking parameters can only be edited for Standard orders in Created/Staged states.
+    `name` can change in any status; `licence_level` and `addon:withhold` while the order is
+    `staged` or `in progress`; the tasking fields only for standard orders
+    that are still `staged`.
 
         Attributes:
             licence_level (None | str): The licence level for the order. Licence levels are specific to the contract.

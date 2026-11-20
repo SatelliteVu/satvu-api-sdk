@@ -7,22 +7,18 @@ import pydantic
 
 
 class DownloadProgress(pydantic.BaseModel):
-    """Progress information for an in-flight download bundling job.
+    """The progress of a download being prepared.
 
     Attributes:
-        total (int): The total number of files the bundler is packaging.
-        done (int): The number of files the bundler has already packaged.
+        total (int): The total number of files to package.
+        done (int): The number of files packaged so far.
     """
 
     total: int = pydantic.Field(
-        ...,
-        description="""The total number of files the bundler is packaging.""",
-        alias="total",
+        ..., description="""The total number of files to package.""", alias="total"
     )
     done: int = pydantic.Field(
-        ...,
-        description="""The number of files the bundler has already packaged.""",
-        alias="done",
+        ..., description="""The number of files packaged so far.""", alias="done"
     )
 
     model_config = pydantic.ConfigDict(

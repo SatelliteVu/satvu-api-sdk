@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
 
 class PriceRequest(pydantic.BaseModel):
-    """Payload for price request.
+    """A request for the price of an order.
 
     Attributes:
         type_ (Literal['Feature']):

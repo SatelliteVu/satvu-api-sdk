@@ -11,11 +11,12 @@ from ..models.request_method import RequestMethod
 
 
 class Link(pydantic.BaseModel):
-    """
+    """A link to a related resource.
+
     Attributes:
         href (str): The link in the format of a URL.
         rel (str): The relationship between the current document and the linked document.
-        method (Union[None, 'RequestMethod']):
+        method (Union[None, 'RequestMethod']): The HTTP method to follow a link with.
         body (dict | None): A JSON object containing fields/values that must be included in the body of the next
             request.
         merge (Union[None, bool]): If `true`, the headers/body fields in the `next` link must be merged into the
@@ -33,7 +34,9 @@ class Link(pydantic.BaseModel):
         alias="rel",
     )
     method: Union[None, RequestMethod] = pydantic.Field(
-        default=None, description=None, alias="method"
+        default=None,
+        description="""The HTTP method to follow a link with.""",
+        alias="method",
     )
     body: dict | None = pydantic.Field(
         default=None,

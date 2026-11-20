@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 
 class AssuredFeasibilityResponseProperties(pydantic.BaseModel):
-    """Properties of the assured priority feasibility response.
+    """The properties of a pass found by an assured feasibility request.
 
     Attributes:
         product (Literal['assured']): The tasking product. Always `assured` (Assured tasking).

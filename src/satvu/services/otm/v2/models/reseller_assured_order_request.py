@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 
 class ResellerAssuredOrderRequest(pydantic.BaseModel):
-    """Payload for reseller assured order request.
+    """A new assured order for a reseller end user.
 
     Attributes:
         properties (AssuredOrderRequestProperties):

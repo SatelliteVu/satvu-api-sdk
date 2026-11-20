@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 
 
 class GetOrderResponse(pydantic.BaseModel):
-    """Payload for get order response.
+    """An order.
 
     Attributes:
         type_ (Literal['Feature']):
@@ -29,7 +29,7 @@ class GetOrderResponse(pydantic.BaseModel):
         id (UUID): The ID of the order.
         links (list[Link]): A list of related links for the order.
         contract_id (UUID): The ID of the contract.
-        price (Price):
+        price (Price): The price of an order, broken down into its base price and uplifts.
         series_id (None | UUID): The ID of the series this order belongs to.
     """
 
@@ -57,7 +57,11 @@ class GetOrderResponse(pydantic.BaseModel):
     contract_id: UUID = pydantic.Field(
         ..., description="""The ID of the contract.""", alias="contract_id"
     )
-    price: Price = pydantic.Field(..., description=None, alias="price")
+    price: Price = pydantic.Field(
+        ...,
+        description="""The price of an order, broken down into its base price and uplifts.""",
+        alias="price",
+    )
     series_id: None | UUID = pydantic.Field(
         default=None,
         description="""The ID of the series this order belongs to.""",

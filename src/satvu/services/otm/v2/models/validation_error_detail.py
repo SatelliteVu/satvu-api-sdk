@@ -9,16 +9,14 @@ import pydantic
 
 
 class ValidationErrorDetail(pydantic.BaseModel):
-    """Individual validation error detail from Pydantic.
+    """One problem with the request: where it is, and what is wrong.
 
-    Represents a single validation error with location, message, and context.
-
-        Attributes:
-            type_ (str):
-            loc (list[int | str]):
-            msg (str):
-            input_ (Any | None):
-            ctx (dict | None):
+    Attributes:
+        type_ (str):
+        loc (list[int | str]):
+        msg (str):
+        input_ (Any | None):
+        ctx (dict | None):
     """
 
     type_: str = pydantic.Field(..., description=None, alias="type")

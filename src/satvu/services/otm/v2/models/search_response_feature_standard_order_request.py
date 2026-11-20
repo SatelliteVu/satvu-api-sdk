@@ -16,7 +16,8 @@ if TYPE_CHECKING:
 
 
 class SearchResponseFeatureStandardOrderRequest(pydantic.BaseModel):
-    """
+    """A standard order that matches a search.
+
     Attributes:
         type_ (Literal['Feature']):
         geometry (Union['Point', None]):
@@ -24,7 +25,7 @@ class SearchResponseFeatureStandardOrderRequest(pydantic.BaseModel):
         id (UUID): ID of an item associated with the search parameters.
         contract_id (UUID): The ID of the contract the item belongs to.
         collection (str): Name of collection associated with the search result item.
-        price (Price):
+        price (Price): The price of an order, broken down into its base price and uplifts.
         links (Union[None, list[Link]]): A list of links to the STAC item that fulfilled the order, if applicable.
         series_id (None | UUID): The ID of the series this order belongs to.
         feature_type (Literal['order-request-standard']):  Default: 'order-request-standard'.
@@ -54,7 +55,11 @@ class SearchResponseFeatureStandardOrderRequest(pydantic.BaseModel):
         description="""Name of collection associated with the search result item.""",
         alias="collection",
     )
-    price: Price = pydantic.Field(..., description=None, alias="price")
+    price: Price = pydantic.Field(
+        ...,
+        description="""The price of an order, broken down into its base price and uplifts.""",
+        alias="price",
+    )
     links: Union[None, list[Link]] = pydantic.Field(
         default=None,
         description="""A list of links to the STAC item that fulfilled the order, if applicable.""",

@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 
 class ListStoredOrdersResponse(pydantic.BaseModel):
-    """Payload for list stored orders response.
+    """A page of orders.
 
     Attributes:
         type_ (Literal['FeatureCollection']):

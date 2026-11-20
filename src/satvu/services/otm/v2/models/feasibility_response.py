@@ -21,7 +21,7 @@ if TYPE_CHECKING:
 
 
 class FeasibilityResponse(pydantic.BaseModel):
-    """FeatureCollection model for stored feasibility response
+    """The response to a feasibility request.
 
     Attributes:
         type_ (Literal['FeatureCollection']):

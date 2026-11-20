@@ -7,7 +7,7 @@ import pydantic
 
 
 class OrderItemDownloadUrl(pydantic.BaseModel):
-    """Payload for order item download URL response without redirect.
+    """A presigned URL to download imagery from.
 
     Attributes:
         url (str): The presigned download URL for the item.

@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 
 class FeasibilityRequest(pydantic.BaseModel):
-    """Payload for feasibility request.
+    """A feasibility request.
 
     Attributes:
         type_ (Literal['Feature']):

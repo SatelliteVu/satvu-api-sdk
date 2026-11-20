@@ -16,12 +16,13 @@ if TYPE_CHECKING:
 
 
 class StandardFeasibilityResponseFeature(pydantic.BaseModel):
-    """Object representing a standard feasibility response.
+    """The result of a standard feasibility request, covering the tasking window.
 
     Attributes:
         type_ (Literal['Feature']):
         geometry (Point): Point Model
-        properties (StandardFeasibilityResponseProperties): Properties of the standard priority feasibility response.
+        properties (StandardFeasibilityResponseProperties): The properties of the result of a standard feasibility
+            request.
         id (UUID): The ID of the feasibility response feature.
     """
 
@@ -33,7 +34,7 @@ class StandardFeasibilityResponseFeature(pydantic.BaseModel):
     )
     properties: StandardFeasibilityResponseProperties = pydantic.Field(
         ...,
-        description="""Properties of the standard priority feasibility response.""",
+        description="""The properties of the result of a standard feasibility request.""",
         alias="properties",
     )
     id: UUID = pydantic.Field(

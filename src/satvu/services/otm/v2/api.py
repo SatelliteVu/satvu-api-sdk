@@ -100,10 +100,9 @@ class OtmV2Service(SDKClient):
         timeout: int | None = None,
     ) -> ListStoredOrdersResponse1:
         """
-        List all tasking orders.
+        List orders
 
-        Returns a list of your tasking orders. The orders are returned sorted by creation
-        date, with the most recent orders appearing first.
+        Lists your orders, sorted by creation date, newest first.
 
         Args:
             contract_id (UUID): The ID of the contract.
@@ -136,7 +135,7 @@ class OtmV2Service(SDKClient):
         max_pages: int | None = None,
     ) -> Generator[ListStoredOrdersResponse1, None, None]:
         """
-        List all tasking orders. (Paginated Iterator)
+        List orders (Paginated Iterator)
 
         Automatically handles pagination by following STAC links.
 
@@ -185,19 +184,19 @@ class OtmV2Service(SDKClient):
         timeout: int | None = None,
     ) -> Union["ResellerStoredOrderResponse", "StoredOrderResponse"]:
         """
-        Create a tasking order request.
+        Create an order
 
-        Creates a tasking order request.
+        Creates an order and reserves its price against the contract.
 
         Args:
             contract_id (UUID): The ID of the contract.
             body (Union['AssuredOrderRequest', 'ResellerAssuredOrderRequest',
                 'ResellerStandardOrderRequest', 'StandardOrderRequest']):
                 One of:
-                - StandardOrderRequest: Payload for standard order request.
+                - StandardOrderRequest: A new standard order.
                 - AssuredOrderRequest:
-                - ResellerStandardOrderRequest: Payload for reseller standard order request.
-                - ResellerAssuredOrderRequest: Payload for reseller assured order request.
+                - ResellerStandardOrderRequest: A new standard order for a reseller end user.
+                - ResellerAssuredOrderRequest: A new assured order for a reseller end user.
             extra_body: Optional dict deep-merged into the request body after
                 serialisation. Use this to pass fields added to the API after this
                 SDK version shipped. Nested dicts merge recursively; lists and
@@ -231,9 +230,9 @@ class OtmV2Service(SDKClient):
         self, contract_id: UUID, order_id: UUID, timeout: int | None = None
     ) -> Union["GetOrderResponse", "ResellerGetOrderResponse"]:
         """
-        Retrieve a tasking order.
+        Get an order
 
-        Retrieves the tasking order with a given ID.
+        Gets an order, including its status history and price.
 
         Args:
             contract_id (UUID): The ID of the contract.
@@ -267,20 +266,20 @@ class OtmV2Service(SDKClient):
         timeout: int | None = None,
     ) -> Union["GetOrderResponse", "ResellerGetOrderResponse"]:
         """
-        Edit a tasking order request.
+        Edit an order
 
-        Edits a tasking order request.
+        Edits an order.
 
         Supports modifying:
 
         **Platform-only parameters (any status):**
         - name: Order name
 
-        **Price-relevant parameters (until fulfillment):**
+        **Price-relevant parameters (while `staged` or `in progress`):**
         - withhold: Withhold option
         - licence_level: Licence level
 
-        **Tasking parameters (Standard orders, Created/Staged only):**
+        **Tasking parameters (standard orders, `staged` only):**
         - geometry: Order location (Point)
         - start_time: Start of tasking window (must be ≥7 days before end_time, cannot be in the past)
         - end_time: End of tasking window (must be ≥7 days after start_time, cannot be in the past)
@@ -290,17 +289,17 @@ class OtmV2Service(SDKClient):
         - max_off_nadir: Maximum off-nadir angle (0-45°)
 
         **Status-based restrictions:**
-        - Tasking parameters can only be modified for Standard orders before submission
-        - Assured orders cannot modify geometry or tasking parameters
-        - Price-relevant parameters can be modified until fulfillment
+        - Tasking parameters can only be changed for standard orders that are still `staged`
+        - The geometry and tasking parameters of assured orders cannot be changed
+        - Price-relevant parameters can be changed while the order is `staged` or `in progress`
 
         Args:
             contract_id (UUID): The ID of the contract.
             order_id (UUID): The ID of the order.
-            body (EditOrderPayload): Payload for editing an order.
+            body (EditOrderPayload): Modifications to an order. Omitted fields keep their current
+                values.
 
-                Geometry can be edited for Standard orders in Created/Staged states.
-                All property fields are optional - only provided fields will be updated.
+                `geometry` can only change for standard orders that are still `staged`.
             extra_body: Optional dict deep-merged into the request body after
                 serialisation. Use this to pass fields added to the API after this
                 SDK version shipped. Nested dicts merge recursively; lists and
@@ -333,14 +332,13 @@ class OtmV2Service(SDKClient):
         self, contract_id: UUID, order_id: UUID, timeout: int | None = None
     ) -> None:
         """
-        Cancel a tasking order request.
+        Cancel an order
 
-        Cancels a tasking order request.
+        Cancels an order.
 
-        For orders that are part of a recurring series, cancellation is terminal
-        and consumes the order's slot in the series — no replacement order is
-        scheduled. If the cancelled order was the series' last outstanding one
-        (all orders created and all now terminal), the series is completed.
+        Cancelling an order in a series is final and uses up its place in the series: no
+        replacement order is scheduled. If it was the last outstanding order in the
+        series, the series completes.
 
         Args:
             contract_id (UUID): The ID of the contract.
@@ -373,19 +371,17 @@ class OtmV2Service(SDKClient):
         timeout: int | None = None,
     ) -> Union[OrderItemDownloadUrl, DownloadPending, io.BytesIO]:
         """
-        Download a tasking order.
+        Download an order
 
-        Download the item for a specified tasking order owned by the authenticated user,
-        provided the order has been fulfilled.
+        Downloads the imagery of a fulfilled order.
 
-        For acquisition orders, all linked collections (e.g. primary,
-        surface-brightness-temperature) are downloaded by default with GeoTIFF
-        format for the primary collection. Use the collections parameter to
-        download a specific subset.
+        By default, every collection (for example, `primary` and
+        `surface-brightness-temperature`) is downloaded, with the `primary` collection
+        as GeoTIFF. Use `collections` to download a subset.
 
-        By default, the redirect parameter is set to True which allows the image
-        content to be downloaded locally. If the redirect parameter is False, a
-        presigned download URL with an expiry will be returned.
+        With `redirect` set to `true`, the default, the response redirects to the
+        download. With `redirect` set to `false`, it returns a presigned download URL
+        that expires.
 
         Args:
             contract_id (UUID): The ID of the contract.
@@ -494,9 +490,11 @@ class OtmV2Service(SDKClient):
         self, contract_id: UUID, order_id: UUID, timeout: int | None = None
     ) -> StacFeature:
         """
-        Retrieve acquisition details for a tasking order.
+        Get the acquisition details of an order
 
-        Returns acquisition details for a tasking order.
+        Gets the acquisition details of an order: the STAC item that fulfilled it.
+
+        Only available once the order is `fulfilled`.
 
         Args:
             contract_id (UUID): The ID of the contract.
@@ -523,11 +521,10 @@ class OtmV2Service(SDKClient):
         self, contract_id: UUID, order_id: UUID, timeout: int | None = None
     ) -> Union["ListOrderTasksResponse", "ListOrderTasksUnavailableResponse"]:
         """
-        List all tasks for a tasking order.
+        List the tasks of an order
 
-        Returns a list of tasks for an order, sorted by creation date (newest first).
-
-        Includes status history and acquisition metadata for each task.
+        Lists the tasks of an order, newest first, with each task's status history and
+        acquisition metadata.
 
         Args:
             contract_id (UUID): The ID of the contract.
@@ -561,9 +558,9 @@ class OtmV2Service(SDKClient):
         timeout: int | None = None,
     ) -> StoredFeasibilityFeatureCollection:
         """
-        List all feasibility requests owned by a user.
+        List feasibility requests
 
-        Retrieves all tasking feasibility requests owned by a user.
+        Lists the feasibility requests you own.
 
         Args:
             contract_id (UUID): The ID of the contract.
@@ -599,7 +596,7 @@ class OtmV2Service(SDKClient):
         max_pages: int | None = None,
     ) -> Generator[StoredFeasibilityFeatureCollection, None, None]:
         """
-        List all feasibility requests owned by a user. (Paginated Iterator)
+        List feasibility requests (Paginated Iterator)
 
         Automatically handles pagination by following STAC links.
 
@@ -644,13 +641,14 @@ class OtmV2Service(SDKClient):
         timeout: int | None = None,
     ) -> StoredFeasibilityRequest:
         """
-        Create feasibility request.
+        Create a feasibility request
 
-        Searches feasibility options for a tasking order.
+        Creates a feasibility request, which searches for passes that can image the
+        location.
 
         Args:
             contract_id (UUID): The ID of the contract.
-            body (FeasibilityRequest): Payload for feasibility request.
+            body (FeasibilityRequest): A feasibility request.
             extra_body: Optional dict deep-merged into the request body after
                 serialisation. Use this to pass fields added to the API after this
                 SDK version shipped. Nested dicts merge recursively; lists and
@@ -681,9 +679,9 @@ class OtmV2Service(SDKClient):
         self, contract_id: UUID, id: UUID, timeout: int | None = None
     ) -> StoredFeasibilityRequest:
         """
-        Retrieve a feasibility request
+        Get a feasibility request
 
-        Retrieves the tasking feasibility request with a given ID.
+        Gets a feasibility request, including its status.
 
         Args:
             contract_id (UUID): The ID of the contract.
@@ -710,10 +708,13 @@ class OtmV2Service(SDKClient):
         self, contract_id: UUID, id: UUID, timeout: int | None = None
     ) -> FeasibilityResponse:
         """
-        Retrieve response for a feasibility request
+        Get a feasibility response
 
-        Retrieves the tasking feasibility response with a given request ID. Passes are returned
-        in ascending order based on the start of the estimated acquisition time.
+        Gets the response to a feasibility request.
+
+        For assured tasking, it has one feature per pass, sorted by the start of the
+        estimated acquisition time, earliest first. For standard tasking, it has a single
+        feature covering the tasking window.
 
         Args:
             contract_id (UUID): The ID of the contract.
@@ -745,21 +746,20 @@ class OtmV2Service(SDKClient):
         timeout: int | None = None,
     ) -> StoredFeasibilityRequest:
         """
-        Create feasibility request for modifying an existing order.
+        Create a feasibility request for an order modification
 
-        Performs a feasibility check for modifying an existing tasking order.
-        Only supports Standard orders.
-        All fields in the payload are optional - unspecified fields will be sourced from the existing order.
+        Creates a feasibility request for an edit to a standard order, without
+        changing the order.
 
-        Orders can only be modified if they are not in a terminal or non-modifiable state.
-        Orders in the following states can be modified: `staged`.
+        Omitted fields keep the order's current values. Only orders in `staged` status
+        can be edited.
 
         Args:
             contract_id (UUID): The ID of the contract.
             order_id (UUID): Order ID to modify
-            body (ModifyFeasibilityRequest): Payload for modify feasibility request.
-                Only supports Standard orders. Assured orders cannot be modified.
-                All fields are optional - unspecified fields will be sourced from the existing order.
+            body (ModifyFeasibilityRequest): A feasibility request for an edit to a standard order.
+                Omitted fields keep
+                the order's current values.
             extra_body: Optional dict deep-merged into the request body after
                 serialisation. Use this to pass fields added to the API after this
                 SDK version shipped. Nested dicts merge recursively; lists and
@@ -795,15 +795,15 @@ class OtmV2Service(SDKClient):
         timeout: int | None = None,
     ) -> OrderPrice:
         """
-        Get price for a set of ordering parameters.
+        Calculate the price of an order
 
-        Returns the price for a set of ordering parameters.
+        Calculates the price of an order without creating it.
 
         Args:
             contract_id (UUID): The ID of the contract.
             baseprice (Union[None, bool]): Whether to return the base price only, ignoring any addons
                 or the licence level. Default: False.
-            body (PriceRequest): Payload for price request.
+            body (PriceRequest): A request for the price of an order.
             extra_body: Optional dict deep-merged into the request body after
                 serialisation. Use this to pass fields added to the API after this
                 SDK version shipped. Nested dicts merge recursively; lists and
@@ -841,23 +841,21 @@ class OtmV2Service(SDKClient):
         timeout: int | None = None,
     ) -> OrderModificationPrice:
         """
-        Calculate price for modification of an existing order.
+        Calculate the price of an order modification
 
-        Returns an updated price for modifying an existing order.
+        Calculates the price of an order modification without making it.
 
-        This endpoint provides a price preview before committing changes via the PATCH /orders/{order_id}
-        endpoint.
-
-        The response includes the complete updated order representation showing how the order would look
-        after modification, including the original price and the updated price value.
+        Takes the same body as `PATCH /{contract_id}/tasking/orders/{order_id}` and
+        applies the same checks. Returns the order before and after the modification, each
+        with its price.
 
         Args:
             contract_id (UUID): The ID of the contract.
             order_id (UUID): The ID of the order.
-            body (EditOrderPayload): Payload for editing an order.
+            body (EditOrderPayload): Modifications to an order. Omitted fields keep their current
+                values.
 
-                Geometry can be edited for Standard orders in Created/Staged states.
-                All property fields are optional - only provided fields will be updated.
+                `geometry` can only change for standard orders that are still `staged`.
             extra_body: Optional dict deep-merged into the request body after
                 serialisation. Use this to pass fields added to the API after this
                 SDK version shipped. Nested dicts merge recursively; lists and
@@ -888,7 +886,9 @@ class OtmV2Service(SDKClient):
         self, contract_id: UUID, timeout: int | None = None
     ) -> list[Outage]:
         """
-        List unplanned satellite outages.
+        List unplanned satellite outages
+
+        Lists the unplanned satellite outages in the next 8 days.
 
         Args:
             contract_id (UUID): The ID of the contract.
@@ -916,10 +916,9 @@ class OtmV2Service(SDKClient):
         timeout: int | None = None,
     ) -> ListSeriesResponse:
         """
-        List all tasking series.
+        List series
 
-        Returns all series belonging to the contract, sorted by creation date
-        (newest first).
+        Lists the series on the contract, sorted by creation date, newest first.
 
         Args:
             contract_id (UUID): The ID of the contract.
@@ -952,7 +951,7 @@ class OtmV2Service(SDKClient):
         max_pages: int | None = None,
     ) -> Generator[ListSeriesResponse, None, None]:
         """
-        List all tasking series. (Paginated Iterator)
+        List series (Paginated Iterator)
 
         Automatically handles pagination by following STAC links.
 
@@ -996,14 +995,13 @@ class OtmV2Service(SDKClient):
         timeout: int | None = None,
     ) -> StoredSeriesResponse:
         """
-        Create a recurring tasking series.
+        Create a series
 
-        Create a recurring tasking series.
+        Creates a series, which creates standard orders at a set frequency,
+        starting from `start_date`.
 
-        Schedules standard priority orders at the given frequency starting from
-        start_date, until total_order_count orders have been created.
-
-        Provide either total_order_count or end_date to specify series length.
+        Send either `total_order_count` or `end_date` to set how many orders it creates.
+        Each order's price is reserved when the series creates it.
 
         Args:
             contract_id (UUID): The ID of the contract.
@@ -1038,9 +1036,9 @@ class OtmV2Service(SDKClient):
         self, contract_id: UUID, series_id: UUID, timeout: int | None = None
     ) -> StoredSeriesResponse:
         """
-        Retrieve a tasking series.
+        Get a series
 
-        Retrieves the tasking series with the given ID.
+        Gets a series, including how many orders it has created.
 
         Args:
             contract_id (UUID): The ID of the contract.
@@ -1072,14 +1070,15 @@ class OtmV2Service(SDKClient):
         timeout: int | None = None,
     ) -> StoredSeriesResponse:
         """
-        Update a tasking series.
+        Edit a series
 
-        Update a series.
+        Edits a series.
 
-        - name: can be updated in any status
-        - geometry, order_parameters, frequency, total_order_count: only when status=active
+        Omitted fields keep their current values. `name` can be changed or cleared in
+        any status; every other field only while the series is `active`.
 
-        Updates only affect future child orders. Already-created orders remain unchanged.
+        Modifications apply only to orders the series creates from now on. Orders it has
+        already created are unchanged.
 
         Args:
             contract_id (UUID): The ID of the contract.
@@ -1120,10 +1119,9 @@ class OtmV2Service(SDKClient):
         timeout: int | None = None,
     ) -> ListStoredOrdersResponse:
         """
-        List orders belonging to a series.
+        List the orders in a series
 
-        Returns all orders belonging to the series, sorted by creation date
-        (newest first).
+        Lists the orders in a series, sorted by creation date, newest first.
 
         Args:
             contract_id (UUID): The ID of the contract.
@@ -1158,7 +1156,7 @@ class OtmV2Service(SDKClient):
         max_pages: int | None = None,
     ) -> Generator[ListStoredOrdersResponse, None, None]:
         """
-        List orders belonging to a series. (Paginated Iterator)
+        List the orders in a series (Paginated Iterator)
 
         Automatically handles pagination by following STAC links.
 
@@ -1207,13 +1205,12 @@ class OtmV2Service(SDKClient):
         timeout: int | None = None,
     ) -> SeriesPriceResponse:
         """
-        Calculate series price estimate.
+        Calculate the price of a series
 
-        Calculate price estimate for a series before creation.
+        Calculates the estimated price of a series without creating it.
 
-        Returns the estimated total cost based on the series parameters and current
-        contract pricing. The estimate is not a commitment — actual charges occur
-        per-order when child orders are created.
+        The estimate is not a commitment: each order's price is reserved when the series
+        creates it.
 
         Args:
             contract_id (UUID): The ID of the contract.
@@ -1248,14 +1245,12 @@ class OtmV2Service(SDKClient):
         self, contract_id: UUID, series_id: UUID, timeout: int | None = None
     ) -> None:
         """
-        Cancel a tasking series.
+        Cancel a series
 
-        Cancel a tasking series.
+        Cancels a series, so it creates no more orders.
 
-        Cancels the series and prevents future child orders from being created.
-        This operation is idempotent — cancelling an already-cancelled series
-        succeeds with 204. A series that has already completed cannot be
-        cancelled and returns 409.
+        Cancelling an already-cancelled series succeeds. A series that has already
+        completed cannot be cancelled.
 
         Args:
             contract_id (UUID): The ID of the contract.
@@ -1288,15 +1283,14 @@ class OtmV2Service(SDKClient):
         timeout: int | None = None,
     ) -> Union[OrderItemDownloadUrl, DownloadPending, io.BytesIO]:
         """
-        Download a tasking series.
+        Download a series
 
-        Download the items for all fulfilled orders in a tasking series as a single
-        bundle.
+        Downloads the imagery of every fulfilled order in a series as a single bundle.
 
-        All linked collections (e.g. primary, surface-brightness-temperature) are
-        downloaded by default with GeoTIFF format for the primary collection. Use
-        the collections and primary_formats parameters to select a subset, applied
-        across the whole series.
+        By default, every collection (for example, `primary` and
+        `surface-brightness-temperature`) is downloaded, with the `primary` collection
+        as GeoTIFF. Use `collections` and `primary_formats` to select a subset across
+        the whole series.
 
         Args:
             contract_id (UUID): The ID of the contract.
@@ -1352,9 +1346,9 @@ class OtmV2Service(SDKClient):
         timeout: int | None = None,
     ) -> SearchResponse:
         """
-        Search
+        Search orders and feasibility requests
 
-        Search for feasibility requests/responses and tasking orders owned by the user.
+        Searches the orders and feasibility requests you own.
 
         Args:
             contract_id (UUID): The ID of the contract.
@@ -1393,7 +1387,7 @@ class OtmV2Service(SDKClient):
         max_pages: int | None = None,
     ) -> Generator[SearchResponse, None, None]:
         """
-        Search (Paginated Iterator)
+        Search orders and feasibility requests (Paginated Iterator)
 
         Automatically handles pagination by following STAC links.
 

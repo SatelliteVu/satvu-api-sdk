@@ -877,6 +877,45 @@ class TestOtmV2Service:
     )
     @given(
         response_data=get_response_strategy(
+            "/{contract_id}/tasking/orders/{order_id}", "patch", "403"
+        ),
+        body_data=get_request_body_strategy(
+            "/{contract_id}/tasking/orders/{order_id}", "patch"
+        ),
+    )
+    def test_edit_tasking_order_403_error(self, backend, response_data, body_data):
+        """
+        Test edit_tasking_order with 403 error response.
+
+        HTTP 403 errors raise ClientError.
+        """
+        contract_id = uuid4()
+        order_id = uuid4()
+        path = f"/{contract_id}/tasking/orders/{order_id}"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.patch(url).reply(403).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        body = EditOrderPayload.model_validate(body_data)
+        with pytest.raises(ClientError) as exc_info:
+            self.sdk.otm.v2.edit_tasking_order(
+                contract_id=contract_id, order_id=order_id, body=body
+            )
+        assert exc_info.value.status_code == 403
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
             "/{contract_id}/tasking/orders/{order_id}", "patch", "404"
         ),
         body_data=get_request_body_strategy(
@@ -904,6 +943,45 @@ class TestOtmV2Service:
                 contract_id=contract_id, order_id=order_id, body=body
             )
         assert exc_info.value.status_code == 404
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
+            "/{contract_id}/tasking/orders/{order_id}", "patch", "409"
+        ),
+        body_data=get_request_body_strategy(
+            "/{contract_id}/tasking/orders/{order_id}", "patch"
+        ),
+    )
+    def test_edit_tasking_order_409_error(self, backend, response_data, body_data):
+        """
+        Test edit_tasking_order with 409 error response.
+
+        HTTP 409 errors raise ClientError.
+        """
+        contract_id = uuid4()
+        order_id = uuid4()
+        path = f"/{contract_id}/tasking/orders/{order_id}"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.patch(url).reply(409).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        body = EditOrderPayload.model_validate(body_data)
+        with pytest.raises(ClientError) as exc_info:
+            self.sdk.otm.v2.edit_tasking_order(
+                contract_id=contract_id, order_id=order_id, body=body
+            )
+        assert exc_info.value.status_code == 409
 
     @settings(
         max_examples=10,
@@ -1178,6 +1256,76 @@ class TestOtmV2Service:
     )
     @given(
         response_data=get_response_strategy(
+            "/{contract_id}/tasking/orders/{order_id}/download", "get", "403"
+        )
+    )
+    def test_download_tasking_order_403_error(self, backend, response_data):
+        """
+        Test download_tasking_order with 403 error response.
+
+        HTTP 403 errors raise ClientError.
+        """
+        contract_id = uuid4()
+        order_id = uuid4()
+        path = f"/{contract_id}/tasking/orders/{order_id}/download"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.get(url).reply(403).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        with pytest.raises(ClientError) as exc_info:
+            self.sdk.otm.v2.download_tasking_order(
+                contract_id=contract_id, order_id=order_id
+            )
+        assert exc_info.value.status_code == 403
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
+            "/{contract_id}/tasking/orders/{order_id}/download", "get", "404"
+        )
+    )
+    def test_download_tasking_order_404_error(self, backend, response_data):
+        """
+        Test download_tasking_order with 404 error response.
+
+        HTTP 404 errors raise ClientError.
+        """
+        contract_id = uuid4()
+        order_id = uuid4()
+        path = f"/{contract_id}/tasking/orders/{order_id}/download"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.get(url).reply(404).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        with pytest.raises(ClientError) as exc_info:
+            self.sdk.otm.v2.download_tasking_order(
+                contract_id=contract_id, order_id=order_id
+            )
+        assert exc_info.value.status_code == 404
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
             "/{contract_id}/tasking/orders/{order_id}/download", "get", "422"
         )
     )
@@ -1234,6 +1382,41 @@ class TestOtmV2Service:
         )
         assert result is not None
         assert isinstance(result, StacFeature)
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
+            "/{contract_id}/tasking/orders/{order_id}/acquisition/details", "get", "404"
+        )
+    )
+    def test_get_order_acquisition_404_error(self, backend, response_data):
+        """
+        Test get_order_acquisition with 404 error response.
+
+        HTTP 404 errors raise ClientError.
+        """
+        contract_id = uuid4()
+        order_id = uuid4()
+        path = f"/{contract_id}/tasking/orders/{order_id}/acquisition/details"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.get(url).reply(404).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        with pytest.raises(ClientError) as exc_info:
+            self.sdk.otm.v2.get_order_acquisition(
+                contract_id=contract_id, order_id=order_id
+            )
+        assert exc_info.value.status_code == 404
 
     @settings(
         max_examples=10,
@@ -2249,40 +2432,6 @@ class TestOtmV2Service:
     )
     @given(
         response_data=get_response_strategy(
-            "/{contract_id}/tasking/price/", "post", "400"
-        ),
-        body_data=get_request_body_strategy("/{contract_id}/tasking/price/", "post"),
-    )
-    def test_calculate_price_400_error(self, backend, response_data, body_data):
-        """
-        Test calculate_price with 400 error response.
-
-        HTTP 400 errors raise ClientError.
-        """
-        contract_id = uuid4()
-        path = f"/{contract_id}/tasking/price/"
-        url = f"{self.base_url}{path}"
-        pook.reset()
-        pook.on()
-        pook.post(url).reply(400).json(response_data).header(
-            "Content-Type", "application/json"
-        )
-        body = PriceRequest.model_validate(body_data)
-        with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.v2.calculate_price(contract_id=contract_id, body=body)
-        assert exc_info.value.status_code == 400
-
-    @settings(
-        max_examples=10,
-        deadline=None,
-        suppress_health_check=[
-            HealthCheck.filter_too_much,
-            HealthCheck.too_slow,
-            HealthCheck.data_too_large,
-        ],
-    )
-    @given(
-        response_data=get_response_strategy(
             "/{contract_id}/tasking/price/", "post", "403"
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/price/", "post"),
@@ -2436,47 +2585,6 @@ class TestOtmV2Service:
             "POST /{contract_id}/tasking/price/{order_id}",
             body_data,
         )
-
-    @settings(
-        max_examples=10,
-        deadline=None,
-        suppress_health_check=[
-            HealthCheck.filter_too_much,
-            HealthCheck.too_slow,
-            HealthCheck.data_too_large,
-        ],
-    )
-    @given(
-        response_data=get_response_strategy(
-            "/{contract_id}/tasking/price/{order_id}", "post", "400"
-        ),
-        body_data=get_request_body_strategy(
-            "/{contract_id}/tasking/price/{order_id}", "post"
-        ),
-    )
-    def test_calculate_modified_order_price_400_error(
-        self, backend, response_data, body_data
-    ):
-        """
-        Test calculate_modified_order_price with 400 error response.
-
-        HTTP 400 errors raise ClientError.
-        """
-        contract_id = uuid4()
-        order_id = uuid4()
-        path = f"/{contract_id}/tasking/price/{order_id}"
-        url = f"{self.base_url}{path}"
-        pook.reset()
-        pook.on()
-        pook.post(url).reply(400).json(response_data).header(
-            "Content-Type", "application/json"
-        )
-        body = EditOrderPayload.model_validate(body_data)
-        with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.v2.calculate_modified_order_price(
-                contract_id=contract_id, order_id=order_id, body=body
-            )
-        assert exc_info.value.status_code == 400
 
     @settings(
         max_examples=10,
@@ -2854,40 +2962,6 @@ class TestOtmV2Service:
     )
     @given(
         response_data=get_response_strategy(
-            "/{contract_id}/tasking/series/", "post", "402"
-        ),
-        body_data=get_request_body_strategy("/{contract_id}/tasking/series/", "post"),
-    )
-    def test_create_series_402_error(self, backend, response_data, body_data):
-        """
-        Test create_series with 402 error response.
-
-        HTTP 402 errors raise ClientError.
-        """
-        contract_id = uuid4()
-        path = f"/{contract_id}/tasking/series/"
-        url = f"{self.base_url}{path}"
-        pook.reset()
-        pook.on()
-        pook.post(url).reply(402).json(response_data).header(
-            "Content-Type", "application/json"
-        )
-        body = SeriesRequest.model_validate(body_data)
-        with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.v2.create_series(contract_id=contract_id, body=body)
-        assert exc_info.value.status_code == 402
-
-    @settings(
-        max_examples=10,
-        deadline=None,
-        suppress_health_check=[
-            HealthCheck.filter_too_much,
-            HealthCheck.too_slow,
-            HealthCheck.data_too_large,
-        ],
-    )
-    @given(
-        response_data=get_response_strategy(
             "/{contract_id}/tasking/series/", "post", "403"
         ),
         body_data=get_request_body_strategy("/{contract_id}/tasking/series/", "post"),
@@ -3212,45 +3286,6 @@ class TestOtmV2Service:
             "PATCH /{contract_id}/tasking/series/{series_id}",
             body_data,
         )
-
-    @settings(
-        max_examples=10,
-        deadline=None,
-        suppress_health_check=[
-            HealthCheck.filter_too_much,
-            HealthCheck.too_slow,
-            HealthCheck.data_too_large,
-        ],
-    )
-    @given(
-        response_data=get_response_strategy(
-            "/{contract_id}/tasking/series/{series_id}", "patch", "400"
-        ),
-        body_data=get_request_body_strategy(
-            "/{contract_id}/tasking/series/{series_id}", "patch"
-        ),
-    )
-    def test_edit_series_400_error(self, backend, response_data, body_data):
-        """
-        Test edit_series with 400 error response.
-
-        HTTP 400 errors raise ClientError.
-        """
-        contract_id = uuid4()
-        series_id = uuid4()
-        path = f"/{contract_id}/tasking/series/{series_id}"
-        url = f"{self.base_url}{path}"
-        pook.reset()
-        pook.on()
-        pook.patch(url).reply(400).json(response_data).header(
-            "Content-Type", "application/json"
-        )
-        body = EditSeriesProperties.model_validate(body_data)
-        with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.v2.edit_series(
-                contract_id=contract_id, series_id=series_id, body=body
-            )
-        assert exc_info.value.status_code == 400
 
     @settings(
         max_examples=10,
@@ -3617,46 +3652,6 @@ class TestOtmV2Service:
     )
     @given(
         response_data=get_response_strategy(
-            "/{contract_id}/tasking/series/price/", "post", "400"
-        ),
-        body_data=get_request_body_strategy(
-            "/{contract_id}/tasking/series/price/", "post"
-        ),
-    )
-    def test_calculate_series_price_estimate_400_error(
-        self, backend, response_data, body_data
-    ):
-        """
-        Test calculate_series_price_estimate with 400 error response.
-
-        HTTP 400 errors raise ClientError.
-        """
-        contract_id = uuid4()
-        path = f"/{contract_id}/tasking/series/price/"
-        url = f"{self.base_url}{path}"
-        pook.reset()
-        pook.on()
-        pook.post(url).reply(400).json(response_data).header(
-            "Content-Type", "application/json"
-        )
-        body = SeriesRequest.model_validate(body_data)
-        with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.v2.calculate_series_price_estimate(
-                contract_id=contract_id, body=body
-            )
-        assert exc_info.value.status_code == 400
-
-    @settings(
-        max_examples=10,
-        deadline=None,
-        suppress_health_check=[
-            HealthCheck.filter_too_much,
-            HealthCheck.too_slow,
-            HealthCheck.data_too_large,
-        ],
-    )
-    @given(
-        response_data=get_response_strategy(
             "/{contract_id}/tasking/series/price/", "post", "403"
         ),
         body_data=get_request_body_strategy(
@@ -3919,6 +3914,76 @@ class TestOtmV2Service:
     )
     @given(
         response_data=get_response_strategy(
+            "/{contract_id}/tasking/series/{series_id}/download", "get", "403"
+        )
+    )
+    def test_download_series_403_error(self, backend, response_data):
+        """
+        Test download_series with 403 error response.
+
+        HTTP 403 errors raise ClientError.
+        """
+        contract_id = uuid4()
+        series_id = uuid4()
+        path = f"/{contract_id}/tasking/series/{series_id}/download"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.get(url).reply(403).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        with pytest.raises(ClientError) as exc_info:
+            self.sdk.otm.v2.download_series(
+                contract_id=contract_id, series_id=series_id
+            )
+        assert exc_info.value.status_code == 403
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
+            "/{contract_id}/tasking/series/{series_id}/download", "get", "404"
+        )
+    )
+    def test_download_series_404_error(self, backend, response_data):
+        """
+        Test download_series with 404 error response.
+
+        HTTP 404 errors raise ClientError.
+        """
+        contract_id = uuid4()
+        series_id = uuid4()
+        path = f"/{contract_id}/tasking/series/{series_id}/download"
+        url = f"{self.base_url}{path}"
+        pook.reset()
+        pook.on()
+        pook.get(url).reply(404).json(response_data).header(
+            "Content-Type", "application/json"
+        )
+        with pytest.raises(ClientError) as exc_info:
+            self.sdk.otm.v2.download_series(
+                contract_id=contract_id, series_id=series_id
+            )
+        assert exc_info.value.status_code == 404
+
+    @settings(
+        max_examples=10,
+        deadline=None,
+        suppress_health_check=[
+            HealthCheck.filter_too_much,
+            HealthCheck.too_slow,
+            HealthCheck.data_too_large,
+        ],
+    )
+    @given(
+        response_data=get_response_strategy(
             "/{contract_id}/tasking/series/{series_id}/download", "get", "422"
         )
     )
@@ -4022,38 +4087,6 @@ class TestOtmV2Service:
             "POST /{contract_id}/search/",
             body_data,
         )
-
-    @settings(
-        max_examples=10,
-        deadline=None,
-        suppress_health_check=[
-            HealthCheck.filter_too_much,
-            HealthCheck.too_slow,
-            HealthCheck.data_too_large,
-        ],
-    )
-    @given(
-        response_data=get_response_strategy("/{contract_id}/search/", "post", "400"),
-        body_data=get_request_body_strategy("/{contract_id}/search/", "post"),
-    )
-    def test_search_400_error(self, backend, response_data, body_data):
-        """
-        Test search with 400 error response.
-
-        HTTP 400 errors raise ClientError.
-        """
-        contract_id = uuid4()
-        path = f"/{contract_id}/search/"
-        url = f"{self.base_url}{path}"
-        pook.reset()
-        pook.on()
-        pook.post(url).reply(400).json(response_data).header(
-            "Content-Type", "application/json"
-        )
-        body = SearchRequest.model_validate(body_data)
-        with pytest.raises(ClientError) as exc_info:
-            self.sdk.otm.v2.search(contract_id=contract_id, body=body)
-        assert exc_info.value.status_code == 400
 
     @settings(
         max_examples=10,

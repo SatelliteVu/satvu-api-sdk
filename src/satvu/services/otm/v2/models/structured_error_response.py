@@ -12,23 +12,15 @@ if TYPE_CHECKING:
 
 
 class StructuredErrorResponse(pydantic.BaseModel):
-    """Response envelope wrapping a :class:`StructuredError`.
+    """An error response with a machine-readable code.
 
     Attributes:
-        error (StructuredError): Machine-readable error body carrying a code, message, and context.
-
-            Used for validation failures where the frontend needs the specific values
-            (requested vs. required) to render actionable feedback, rather than
-            string-parsing a free-text message.
+        error (StructuredError): An error with a machine-readable code, a message, and the values that caused it.
     """
 
     error: StructuredError = pydantic.Field(
         ...,
-        description="""Machine-readable error body carrying a code, message, and context.
-
-Used for validation failures where the frontend needs the specific values
-(requested vs. required) to render actionable feedback, rather than
-string-parsing a free-text message.""",
+        description="""An error with a machine-readable code, a message, and the values that caused it.""",
         alias="error",
     )
 

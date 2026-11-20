@@ -16,9 +16,9 @@ class ModifyFeasibilityRequestProperties(pydantic.BaseModel):
     Only supports Standard product (Assured orders do not support modifications).
 
         Attributes:
-            datetime_ (None | str): The tasking window after the change, as an ISO 8601 interval (`start/end`). Both bounds
-                are required. The start may be in the past and the end less than 7 days away, but the window must be at least 7
-                days long.
+            datetime_ (None | str): The tasking window after the modification, as an ISO 8601 interval (`start/end`). Both
+                bounds are required. The start may be in the past and the end less than 7 days away, but the window must be at
+                least 7 days long.
             satvu_day_night_mode (Union['DayNightMode', None]): The mode of data capture.
             max_cloud_cover (int | None): The maximum acceptable cloud cover. Measured in percent. Must be at least 25.
             min_off_nadir (int | None): The minimum angle from the sensor between nadir and the scene center. Measured in
@@ -29,7 +29,7 @@ class ModifyFeasibilityRequestProperties(pydantic.BaseModel):
 
     datetime_: None | str = pydantic.Field(
         default=None,
-        description="""The tasking window after the change, as an ISO 8601 interval (`start/end`). Both bounds are required. The start may be in the past and the end less than 7 days away, but the window must be at least 7 days long.""",
+        description="""The tasking window after the modification, as an ISO 8601 interval (`start/end`). Both bounds are required. The start may be in the past and the end less than 7 days away, but the window must be at least 7 days long.""",
         alias="datetime",
     )
     satvu_day_night_mode: Union[DayNightMode, None] = pydantic.Field(

@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 
 class ListSeriesResponse(pydantic.BaseModel):
-    """Paginated list of series.
+    """A page of series.
 
     Attributes:
         type_ (Literal['FeatureCollection']):

@@ -13,7 +13,7 @@ from ..models.feasibility_request_status import FeasibilityRequestStatus
 
 
 class StandardStoredFeasibilityRequestProperties(pydantic.BaseModel):
-    """Properties of the stored standard priority feasibility request.
+    """The properties of a standard feasibility request.
 
     Attributes:
         datetime_ (str): The tasking window: the interval within which the order may be acquired, as an ISO 8601
@@ -21,7 +21,7 @@ class StandardStoredFeasibilityRequestProperties(pydantic.BaseModel):
         status ('FeasibilityRequestStatus'): The status of the feasibility request.
         created_at (datetime.datetime): When the feasibility request was created.
         updated_at (datetime.datetime): When the feasibility request was last updated.
-        satvu_day_night_mode (Union[None, 'DayNightMode']):
+        satvu_day_night_mode (Union[None, 'DayNightMode']): When the satellite may image: by day, by night, or either.
         max_cloud_cover (Union[None, int]): The maximum acceptable cloud cover. Measured in percent. Default: 25.
         min_off_nadir (Union[None, int]): The minimum angle from the sensor between nadir and the scene center. Measured
             in decimal degrees. Default: 0.
@@ -49,7 +49,9 @@ class StandardStoredFeasibilityRequestProperties(pydantic.BaseModel):
         alias="updated_at",
     )
     satvu_day_night_mode: Union[None, DayNightMode] = pydantic.Field(
-        default=None, description=None, alias="satvu:day_night_mode"
+        default=None,
+        description="""When the satellite may image: by day, by night, or either.""",
+        alias="satvu:day_night_mode",
     )
     max_cloud_cover: Union[None, int] = pydantic.Field(
         default=25,

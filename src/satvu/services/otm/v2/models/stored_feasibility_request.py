@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 
 
 class StoredFeasibilityRequest(pydantic.BaseModel):
-    """Object representing a stored feasibility request.
+    """A feasibility request.
 
     Attributes:
         type_ (Literal['Feature']):

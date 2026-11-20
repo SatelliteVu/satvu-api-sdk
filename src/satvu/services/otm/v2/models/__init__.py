@@ -38,7 +38,6 @@ from .geometry_collection import GeometryCollection
 from .get_assured_order_properties import GetAssuredOrderProperties
 from .get_order_response import GetOrderResponse
 from .get_standard_order_properties import GetStandardOrderProperties
-from .http_validation_error import HTTPValidationError
 from .line_string import LineString
 from .link import Link
 from .link_1 import Link1
@@ -138,7 +137,6 @@ from .task_acquisition import TaskAcquisition
 from .task_response import TaskResponse
 from .task_status_history_entry import TaskStatusHistoryEntry
 from .user_facing_task_status import UserFacingTaskStatus
-from .validation_error import ValidationError
 from .validation_error_detail import ValidationErrorDetail
 from .validation_error_response import ValidationErrorResponse
 
@@ -173,7 +171,6 @@ __all__ = (
     "GetAssuredOrderProperties",
     "GetOrderResponse",
     "GetStandardOrderProperties",
-    "HTTPValidationError",
     "LineString",
     "Link",
     "Link1",
@@ -251,7 +248,6 @@ __all__ = (
     "TaskResponse",
     "TaskStatusHistoryEntry",
     "UserFacingTaskStatus",
-    "ValidationError",
     "ValidationErrorDetail",
     "ValidationErrorResponse",
 )

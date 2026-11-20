@@ -13,12 +13,12 @@ if TYPE_CHECKING:
 
 
 class StoredSeriesResponse(pydantic.BaseModel):
-    """Response body for a stored recurring tasking series.
+    """A series.
 
     Attributes:
         type_ (Literal['Feature']):
         geometry (Point): Point Model
-        properties (StoredSeriesProperties): Properties returned in a series response.
+        properties (StoredSeriesProperties): The properties of a series.
         bbox (list[float] | None):
         id (float | int | None | str):
     """
@@ -30,9 +30,7 @@ class StoredSeriesResponse(pydantic.BaseModel):
         ..., description="""Point Model""", alias="geometry"
     )
     properties: StoredSeriesProperties = pydantic.Field(
-        ...,
-        description="""Properties returned in a series response.""",
-        alias="properties",
+        ..., description="""The properties of a series.""", alias="properties"
     )
     bbox: list[float] | None = pydantic.Field(
         default=None, description=None, alias="bbox"

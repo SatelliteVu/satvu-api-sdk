@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 
 
 class ResellerStoredOrderResponse(pydantic.BaseModel):
-    """Payload for reseller stored order response.
+    """An order placed for a reseller end user.
 
     Attributes:
         type_ (Literal['Feature']):
@@ -33,7 +33,7 @@ class ResellerStoredOrderResponse(pydantic.BaseModel):
         id (UUID): The ID of the order.
         links (list[Link]): A list of related links for the order.
         contract_id (UUID): The ID of the contract.
-        price (Price):
+        price (Price): The price of an order, broken down into its base price and uplifts.
         reseller_end_user_id (UUID):
         series_id (None | UUID): The ID of the series this order belongs to.
     """
@@ -62,7 +62,11 @@ class ResellerStoredOrderResponse(pydantic.BaseModel):
     contract_id: UUID = pydantic.Field(
         ..., description="""The ID of the contract.""", alias="contract_id"
     )
-    price: Price = pydantic.Field(..., description=None, alias="price")
+    price: Price = pydantic.Field(
+        ...,
+        description="""The price of an order, broken down into its base price and uplifts.""",
+        alias="price",
+    )
     reseller_end_user_id: UUID = pydantic.Field(
         ..., description=None, alias="reseller_end_user_id"
     )

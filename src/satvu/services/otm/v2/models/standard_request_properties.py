@@ -16,7 +16,7 @@ class StandardRequestProperties(pydantic.BaseModel):
     Attributes:
         datetime_ (str): The tasking window: the interval within which the order may be acquired, as an ISO 8601
             interval (`start/end`). Both bounds are required.
-        satvu_day_night_mode (Union[None, 'DayNightMode']):
+        satvu_day_night_mode (Union[None, 'DayNightMode']): When the satellite may image: by day, by night, or either.
         max_cloud_cover (Union[None, int]): The maximum acceptable cloud cover. Measured in percent. Must be at least
             25. Default: 25.
         min_off_nadir (Union[None, int]): The minimum angle from the sensor between nadir and the scene center. Measured
@@ -32,7 +32,9 @@ class StandardRequestProperties(pydantic.BaseModel):
         alias="datetime",
     )
     satvu_day_night_mode: Union[None, DayNightMode] = pydantic.Field(
-        default=None, description=None, alias="satvu:day_night_mode"
+        default=None,
+        description="""When the satellite may image: by day, by night, or either.""",
+        alias="satvu:day_night_mode",
     )
     max_cloud_cover: Union[None, int] = pydantic.Field(
         default=25,

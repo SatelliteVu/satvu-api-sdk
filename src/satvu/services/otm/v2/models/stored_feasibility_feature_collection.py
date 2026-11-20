@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 
 class StoredFeasibilityFeatureCollection(pydantic.BaseModel):
-    """Payload for list stored feasibility requests response.
+    """A page of feasibility requests.
 
     Attributes:
         type_ (Literal['FeatureCollection']):

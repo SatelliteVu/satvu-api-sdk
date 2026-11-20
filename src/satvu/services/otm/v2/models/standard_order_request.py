@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 
 class StandardOrderRequest(pydantic.BaseModel):
-    """Payload for standard order request.
+    """A new standard order.
 
     Attributes:
         type_ (Literal['Feature']):

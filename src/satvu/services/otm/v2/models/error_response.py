@@ -7,12 +7,10 @@ import pydantic
 
 
 class ErrorResponse(pydantic.BaseModel):
-    """Standard error response for custom HTTP exceptions.
+    """An error, with a message describing it.
 
-    Used when raising HTTPException with a string detail message.
-
-        Attributes:
-            detail (str):
+    Attributes:
+        detail (str):
     """
 
     detail: str = pydantic.Field(..., description=None, alias="detail")

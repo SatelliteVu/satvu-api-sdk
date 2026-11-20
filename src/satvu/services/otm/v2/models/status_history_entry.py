@@ -15,13 +15,15 @@ class StatusHistoryEntry(pydantic.BaseModel):
     """A single status transition in the order's lifecycle.
 
     Attributes:
-        status_to ('OrderStatus'):
+        status_to ('OrderStatus'): The status of an order.
         datetime_updated (datetime.datetime): When the status transition occurred.
         reason (str): Reason for the status change.
         status_from (Union['OrderStatus', None]): Previous status before transition (null for initial order creation).
     """
 
-    status_to: OrderStatus = pydantic.Field(..., description=None, alias="status_to")
+    status_to: OrderStatus = pydantic.Field(
+        ..., description="""The status of an order.""", alias="status_to"
+    )
     datetime_updated: datetime.datetime = pydantic.Field(
         ...,
         description="""When the status transition occurred.""",

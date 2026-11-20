@@ -9,7 +9,8 @@ import pydantic
 
 
 class AssuredFeasibilityFieldsWithAddons(pydantic.BaseModel):
-    """
+    """The parameters of the assured order the price was calculated for.
+
     Attributes:
         product (Literal['assured']): The tasking product. Always `assured` (Assured tasking).
         datetime_ (str): The tasking window to search for passes in, as an ISO 8601 interval (`start/end`). Both bounds

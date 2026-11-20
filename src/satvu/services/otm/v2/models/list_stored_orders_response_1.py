@@ -15,10 +15,11 @@ if TYPE_CHECKING:
 
 
 class ListStoredOrdersResponse1(pydantic.BaseModel):
-    """
+    """A page of orders placed for reseller end users.
+
     Attributes:
         type_ (Literal['FeatureCollection']):
-        features (list[Union['ResellerStoredOrderResponse', 'StoredOrderResponse']]): List of stored order requests.
+        features (list[Union['ResellerStoredOrderResponse', 'StoredOrderResponse']]): The orders on this page.
         links (list[Link]): Links to previous and/or next page.
         context (ResponseContext): Context about the response.
     """
@@ -28,7 +29,7 @@ class ListStoredOrdersResponse1(pydantic.BaseModel):
     )
     features: list[Union[ResellerStoredOrderResponse, StoredOrderResponse]] = (
         pydantic.Field(
-            ..., description="""List of stored order requests.""", alias="features"
+            ..., description="""The orders on this page.""", alias="features"
         )
     )
     links: list[Link] = pydantic.Field(

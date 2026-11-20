@@ -12,28 +12,18 @@ if TYPE_CHECKING:
 
 
 class OrderModificationPrice(pydantic.BaseModel):
-    """Response model for order modification price estimates.
+    """An order before and after an edit, each with its price.
 
-    Shows the complete before/after state of an order including all
-    order properties (geometry, datetime, tasking parameters, status,
-    id, contract_id, links, etc.) along with the pricing information
-    for both states.
-
-    This allows users to see:
-    - What the order looks like currently (original_order)
-    - What the order will look like after modification (updated_order)
-    - The exact price impact of the change
-
-        Attributes:
-            original_order (GetOrderResponse): Payload for get order response.
-            updated_order (GetOrderResponse): Payload for get order response.
+    Attributes:
+        original_order (GetOrderResponse): An order.
+        updated_order (GetOrderResponse): An order.
     """
 
     original_order: GetOrderResponse = pydantic.Field(
-        ..., description="""Payload for get order response.""", alias="original_order"
+        ..., description="""An order.""", alias="original_order"
     )
     updated_order: GetOrderResponse = pydantic.Field(
-        ..., description="""Payload for get order response.""", alias="updated_order"
+        ..., description="""An order.""", alias="updated_order"
     )
 
     model_config = pydantic.ConfigDict(

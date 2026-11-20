@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 
 class StoredSeriesProperties(pydantic.BaseModel):
-    """Properties returned in a series response.
+    """The properties of a series.
 
     Attributes:
         id (UUID): The ID of the series.
@@ -27,13 +27,9 @@ class StoredSeriesProperties(pydantic.BaseModel):
         start_date (datetime.datetime): When the first order is scheduled.
         total_order_count (int): Total planned orders.
         orders_created_count (int): Orders created so far.
-        order_parameters (StoredSeriesOrderParameters): Order parameters as stored on a series and returned in
-            responses.
-
-            Extends the request parameters with `product`, which is set server-side
-            (always ``standard``) rather than provided by the requester.
-        name (None | str): Optional human-readable label for this series.
-        next_window (None | str): Datetime interval of the next scheduled order window (ISO 8601 interval, e.g.
+        order_parameters (StoredSeriesOrderParameters): The parameters each order in the series is created with.
+        name (None | str): The name of the series.
+        next_window (None | str): Datetime interval of the next scheduled order window (ISO 8601 interval, for example
             '2026-06-01T00:00:00Z/2026-06-15T00:00:00Z'). Null when all orders have been created.
         reseller_end_user_id (None | UUID): The ID of the reseller end user the series is for.
     """
@@ -66,20 +62,15 @@ class StoredSeriesProperties(pydantic.BaseModel):
     )
     order_parameters: StoredSeriesOrderParameters = pydantic.Field(
         ...,
-        description="""Order parameters as stored on a series and returned in responses.
-
-Extends the request parameters with `product`, which is set server-side
-(always ``standard``) rather than provided by the requester.""",
+        description="""The parameters each order in the series is created with.""",
         alias="order_parameters",
     )
     name: None | str = pydantic.Field(
-        default=None,
-        description="""Optional human-readable label for this series.""",
-        alias="name",
+        default=None, description="""The name of the series.""", alias="name"
     )
     next_window: None | str = pydantic.Field(
         default=None,
-        description="""Datetime interval of the next scheduled order window (ISO 8601 interval, e.g. '2026-06-01T00:00:00Z/2026-06-15T00:00:00Z'). Null when all orders have been created.""",
+        description="""Datetime interval of the next scheduled order window (ISO 8601 interval, for example '2026-06-01T00:00:00Z/2026-06-15T00:00:00Z'). Null when all orders have been created.""",
         alias="next_window",
     )
     reseller_end_user_id: None | UUID = pydantic.Field(

@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 
 class ListOrderTasksResponse(pydantic.BaseModel):
-    """Response for listing all tasks for an order.
+    """The tasks of an order.
 
     Attributes:
         order_id (UUID): The ID of the order these tasks belong to.

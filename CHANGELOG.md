@@ -1,5 +1,155 @@
 # [0.13.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.12.3...v0.13.0) (2026-11-10)
 
+## [0.13.0.20261120.1044] - 2026-11-20
+
+### feat(otm): update 25 endpoints
+
+####  
+* removed the schema `HTTPValidationError`
+* removed the schema `ValidationError`
+
+
+#### POST /{contract_id}/search/
+* removed the non-success response with the status `400`
+* added `subschema #1, subschema #2` to the `detail/items/input` response property `anyOf` list for the response status `422`
+* the response property `detail` became required for the status `422`
+* response property `detail/items/ctx` list-of-types was widened by adding types `null` to media type `application/json` of response `422`
+
+
+#### GET /{contract_id}/tasking/feasibilities/
+* added `subschema #1, subschema #2` to the `detail/items/input` response property `anyOf` list for the response status `422`
+* the response property `detail` became required for the status `422`
+* response property `detail/items/ctx` list-of-types was widened by adding types `null` to media type `application/json` of response `422`
+
+
+#### POST /{contract_id}/tasking/feasibilities/
+* added `subschema #1, subschema #2` to the `detail/items/input` response property `anyOf` list for the response status `422`
+* the response property `detail` became required for the status `422`
+* response property `detail/items/ctx` list-of-types was widened by adding types `null` to media type `application/json` of response `422`
+
+
+#### POST /{contract_id}/tasking/feasibilities/orders/{order_id}
+* added `subschema #1, subschema #2` to the `detail/items/input` response property `anyOf` list for the response status `422`
+* the response property `detail` became required for the status `422`
+* response property `detail/items/ctx` list-of-types was widened by adding types `null` to media type `application/json` of response `422`
+
+
+#### GET /{contract_id}/tasking/feasibilities/{id}
+* added `subschema #1, subschema #2` to the `detail/items/input` response property `anyOf` list for the response status `422`
+* the response property `detail` became required for the status `422`
+* response property `detail/items/ctx` list-of-types was widened by adding types `null` to media type `application/json` of response `422`
+
+
+#### GET /{contract_id}/tasking/feasibilities/{id}/response
+* added `subschema #1, subschema #2` to the `detail/items/input` response property `anyOf` list for the response status `422`
+* the response property `detail` became required for the status `422`
+* response property `detail/items/ctx` list-of-types was widened by adding types `null` to media type `application/json` of response `422`
+
+
+#### GET /{contract_id}/tasking/orders/
+* added `subschema #1, subschema #2` to the `detail/items/input` response property `anyOf` list for the response status `422`
+* the response property `detail` became required for the status `422`
+* response property `detail/items/ctx` list-of-types was widened by adding types `null` to media type `application/json` of response `422`
+
+
+#### POST /{contract_id}/tasking/orders/
+* added `subschema #1, subschema #2` to the request body `anyOf` list
+* removed `subschema #1, subschema #2` from the request body `anyOf` list
+
+
+#### GET /{contract_id}/tasking/orders/{order_id}
+* added `subschema #1, subschema #2` to the `detail/items/input` response property `anyOf` list for the response status `422`
+* the response property `detail` became required for the status `422`
+* response property `detail/items/ctx` list-of-types was widened by adding types `null` to media type `application/json` of response `422`
+
+
+#### PATCH /{contract_id}/tasking/orders/{order_id}
+* added the non-success response with the status `403`
+* added the non-success response with the status `409`
+
+
+#### GET /{contract_id}/tasking/orders/{order_id}/acquisition/details
+* added the media type `application/json` for the response with the status `404`
+* added `subschema #1, subschema #2` to the `detail/items/input` response property `anyOf` list for the response status `422`
+* the response property `detail` became required for the status `422`
+* response property `detail/items/ctx` list-of-types was widened by adding types `null` to media type `application/json` of response `422`
+
+
+#### POST /{contract_id}/tasking/orders/{order_id}/cancel
+* added `subschema #1, subschema #2` to the `detail/items/input` response property `anyOf` list for the response status `422`
+* the response property `detail` became required for the status `422`
+* response property `detail/items/ctx` list-of-types was widened by adding types `null` to media type `application/json` of response `422`
+
+
+#### GET /{contract_id}/tasking/orders/{order_id}/download
+* added the media type `application/json` for the response with the status `403`
+* added the media type `application/json` for the response with the status `404`
+
+
+#### GET /{contract_id}/tasking/orders/{order_id}/tasks
+* added `subschema #1, subschema #2` to the `detail/items/input` response property `anyOf` list for the response status `422`
+* the response property `detail` became required for the status `422`
+* response property `detail/items/ctx` list-of-types was widened by adding types `null` to media type `application/json` of response `422`
+
+
+#### GET /{contract_id}/tasking/outages/
+* added `subschema #1, subschema #2` to the `detail/items/input` response property `anyOf` list for the response status `422`
+* the response property `detail` became required for the status `422`
+* response property `detail/items/ctx` list-of-types was widened by adding types `null` to media type `application/json` of response `422`
+
+
+#### POST /{contract_id}/tasking/price/
+* removed the non-success response with the status `400`
+
+
+#### POST /{contract_id}/tasking/price/{order_id}
+* removed the non-success response with the status `400`
+
+
+#### GET /{contract_id}/tasking/series/
+* added `subschema #1, subschema #2` to the `detail/items/input` response property `anyOf` list for the response status `422`
+* the response property `detail` became required for the status `422`
+* response property `detail/items/ctx` list-of-types was widened by adding types `null` to media type `application/json` of response `422`
+
+
+#### POST /{contract_id}/tasking/series/
+* removed the non-success response with the status `402`
+
+
+#### POST /{contract_id}/tasking/series/price/
+* removed the non-success response with the status `400`
+
+
+#### GET /{contract_id}/tasking/series/{series_id}
+* added `subschema #1, subschema #2` to the `detail/items/input` response property `anyOf` list for the response status `422`
+* the response property `detail` became required for the status `422`
+* response property `detail/items/ctx` list-of-types was widened by adding types `null` to media type `application/json` of response `422`
+
+
+#### PATCH /{contract_id}/tasking/series/{series_id}
+* removed the non-success response with the status `400`
+
+
+#### POST /{contract_id}/tasking/series/{series_id}/cancel
+* added `subschema #1, subschema #2` to the `detail/items/input` response property `anyOf` list for the response status `422`
+* the response property `detail` became required for the status `422`
+* response property `detail/items/ctx` list-of-types was widened by adding types `null` to media type `application/json` of response `422`
+
+
+#### GET /{contract_id}/tasking/series/{series_id}/download
+* added the media type `application/json` for the response with the status `403`
+* added the media type `application/json` for the response with the status `404`
+
+
+#### GET /{contract_id}/tasking/series/{series_id}/orders/
+* added `subschema #1, subschema #2` to the `detail/items/input` response property `anyOf` list for the response status `422`
+* the response property `detail` became required for the status `422`
+* response property `detail/items/ctx` list-of-types was widened by adding types `null` to media type `application/json` of response `422`
+
+#### Description Updates
+* 610 description(s) modified
+
+
 ## [0.13.0.20261117.1025] - 2026-11-17
 
 ### feat(otm): 2 changes to POST /{contract_id}/tasking/orders/

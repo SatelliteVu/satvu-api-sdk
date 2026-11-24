@@ -213,7 +213,8 @@ jobs:
           node-version: 'lts/*'
 
       - name: Install semantic-release
-        run: npm install -g semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/exec
+        # 26.x pulls a release-notes-generator beta that rejects our string commitPartial
+        run: npm install -g semantic-release@25 @semantic-release/changelog @semantic-release/git @semantic-release/exec
 
       - name: Install uv
         uses: astral-sh/setup-uv@v7

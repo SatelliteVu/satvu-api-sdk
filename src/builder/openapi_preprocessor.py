@@ -1,5 +1,8 @@
 import json
+from collections.abc import Callable
 from typing import Any
+
+from openapi_python_client.strings import pascal_case
 
 # Keys whose values are arbitrary user data rather than sub-schemas, so must not be
 # rewritten by the schema walkers below.
@@ -134,6 +137,105 @@ def collapse_tuple_arrays(node: Any) -> Any:
     return result
 
 
+def _enum_fingerprint(node: dict[str, Any]) -> str | None:
+    """
+    Fingerprint the values of an inline enum.
+
+    Enums nested in ``anyOf``/``oneOf`` are deliberately ignored: the builder names
+    those ``<Parent><Name>Type0`` rather than by the outer title, so they never clash.
+
+    Args:
+        node: A schema node carrying a ``title``
+
+    Returns:
+        A stable string for the enum's values, or None if the node isn't an enum
+    """
+    values = [value for value in node.get("enum", []) if value is not None]
+    return json.dumps(sorted(values, key=json.dumps)) if values else None
+
+
+def _walk_titled_enums(
+    node: Any, visit: Callable[[dict[str, Any]], Any], *, is_root: bool = False
+) -> Any:
+    """
+    Rebuild a schema tree, passing each titled inline enum through ``visit``.
+
+    Args:
+        node: Any schema node
+        visit: Called with each titled enum node; returns its replacement
+        is_root: True for a component schema itself, which is shared via $ref
+            rather than inline, so is never visited
+
+    Returns:
+        The rebuilt node
+    """
+    if isinstance(node, list):
+        return [_walk_titled_enums(item, visit) for item in node]
+    if not isinstance(node, dict):
+        return node
+
+    result = {
+        key: value if key in _DATA_KEYS else _walk_titled_enums(value, visit)
+        for key, value in node.items()
+    }
+    if (
+        not is_root
+        and isinstance(result.get("title"), str)
+        and _enum_fingerprint(result)
+    ):
+        return visit(result)
+    return result
+
+
+def prefix_clashing_enum_titles(spec: dict[str, Any]) -> dict[str, Any]:
+    """
+    Prefix inline enum titles that name different enums with their component name.
+
+    Pydantic titles every ``op: Literal[...]`` field "Op", and the builder names
+    enums by title, so two different ``op`` enums would collide. Renaming every
+    member of a clashing title (not just the second one seen) keeps these class
+    names independent of schema order. Clashes this pass doesn't see (e.g. within
+    one component) fall back to first-come naming in PATCH 20.
+
+    Args:
+        spec: OpenAPI specification dictionary
+
+    Returns:
+        The spec with clashing enum titles prefixed
+    """
+    schemas = spec.get("components", {}).get("schemas", {})
+
+    seen: dict[str, set[str]] = {}
+
+    def record(node: dict[str, Any]) -> dict[str, Any]:
+        seen.setdefault(node["title"], set()).add(_enum_fingerprint(node) or "")
+        return node
+
+    for schema in schemas.values():
+        _walk_titled_enums(schema, record, is_root=True)
+
+    clashing = {title for title, fingerprints in seen.items() if len(fingerprints) > 1}
+    if not clashing:
+        return spec
+
+    def prefixer(component: str) -> Callable[[dict[str, Any]], dict[str, Any]]:
+        def prefix(node: dict[str, Any]) -> dict[str, Any]:
+            if node["title"] not in clashing:
+                return node
+            return {
+                **node,
+                "title": pascal_case(component) + pascal_case(node["title"]),
+            }
+
+        return prefix
+
+    renamed = {
+        name: _walk_titled_enums(schema, prefixer(name), is_root=True)
+        for name, schema in schemas.items()
+    }
+    return {**spec, "components": {**spec["components"], "schemas": renamed}}
+
+
 def preprocess_openapi_spec(spec: dict[str, Any]) -> dict[str, Any]:
     """
     Preprocess OpenAPI specification to fix issues.
@@ -141,6 +243,7 @@ def preprocess_openapi_spec(spec: dict[str, Any]) -> dict[str, Any]:
     Transformations applied:
     1. Fix operationIds: Replace dashes with underscores
     2. Collapse JSON Schema 2020-12 tuple arrays into plain array schemas
+    3. Prefix inline enum titles that clash across components
 
     Args:
         spec: OpenAPI specification dictionary
@@ -148,7 +251,7 @@ def preprocess_openapi_spec(spec: dict[str, Any]) -> dict[str, Any]:
     Returns:
         Preprocessed OpenAPI specification
     """
-    spec = collapse_tuple_arrays(spec)
+    spec = prefix_clashing_enum_titles(collapse_tuple_arrays(spec))
 
     paths = spec.get("paths")
     if not paths:

@@ -657,18 +657,23 @@ def enum_build_with_title_support(
     Patched EnumProperty.build that uses title directly without parent prefix.
 
     If the schema has a title, use it as the enum name without prepending
-    the parent context. Otherwise, fall back to original behavior.
+    the parent context. Otherwise, or if the bare title fails, fall back to
+    original behavior.
     """
     # If there's a title, temporarily clear parent_name so it won't be prefixed
     if data.title:
-        return _original_enum_build(
-            data=data,
+        # The build rewrites nullable enums in place, so the retry needs a pristine copy
+        result = _original_enum_build(
+            data=data.model_copy(deep=True),
             name=name,
             required=required,
             schemas=schemas,
             parent_name="",  # Empty parent = no prefix
             config=config,
         )
+        # On any failure (typically a title clash), retry with the parent prefix
+        if not isinstance(result[0], PropertyError) or not parent_name:
+            return result
 
     # Otherwise, use original behavior
     return _original_enum_build(

@@ -1,3 +1,11 @@
+## [0.13.1](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.13.0...v0.13.1) (2026-11-26)
+
+
+### Bug Fixes
+
+* **builder:** prefix enum titles that clash across components
+* **http:** build URLs and auth in SDKClient so any http client works
+
 # [0.13.0](https://github.com/SatelliteVu/satvu-api-sdk/compare/v0.12.3...v0.13.0) (2026-11-10)
 
 ## [0.13.0.20261120.1044] - 2026-11-20

@@ -5,7 +5,7 @@ from collections.abc import Callable
 from uuid import UUID
 
 from satvu.core import SDKClient
-from satvu.http import HttpClient
+from satvu.http import HttpClientLike
 from satvu.services.wallet.models.batch_balance_response import BatchBalanceResponse
 from satvu.services.wallet.models.credit_balance_response import CreditBalanceResponse
 from satvu.shared.parsing import parse_response
@@ -18,7 +18,7 @@ class WalletService(SDKClient):
         self,
         env: str | None,
         get_token: Callable[[], str],
-        http_client: HttpClient | None = None,
+        http_client: HttpClientLike | None = None,
         timeout: int = 30,
         max_retry_attempts: int = 5,
         max_retry_after_seconds: float = 300.0,

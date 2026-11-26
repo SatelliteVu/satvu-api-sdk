@@ -6,7 +6,7 @@ from typing import Any, Union
 from uuid import UUID
 
 from satvu.core import SDKClient, _deep_merge
-from satvu.http import HttpClient
+from satvu.http import HttpClientLike
 from satvu.services.id.models.client_credentials import ClientCredentials
 from satvu.services.id.models.client_id import ClientID
 from satvu.services.id.models.core_webhook import CoreWebhook
@@ -29,7 +29,7 @@ class IdService(SDKClient):
         self,
         env: str | None,
         get_token: Callable[[], str],
-        http_client: HttpClient | None = None,
+        http_client: HttpClientLike | None = None,
         timeout: int = 30,
         max_retry_attempts: int = 5,
         max_retry_after_seconds: float = 300.0,

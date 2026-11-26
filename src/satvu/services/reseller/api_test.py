@@ -87,13 +87,10 @@ class TestResellerService:
         env_part = "qa."
         base_path = "/resellers/v1"
         self.base_url = f"https://{subdomain}.{env_part}satellitevu.com{base_path}"
-        http_client = create_http_client(
-            backend=backend, base_url=self.base_url, get_token=mock_get_token
-        )
         self.sdk = SatVuSDK(
             client_id="test_client_id",
             client_secret="test_client_secret",
-            http_client=http_client,
+            http_client=create_http_client(backend=backend),
             env="qa",
         )
         self.sdk.reseller._get_token = mock_get_token

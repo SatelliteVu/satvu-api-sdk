@@ -5,7 +5,7 @@ from collections.abc import Callable
 from typing import Any
 
 from satvu.core import SDKClient, _deep_merge
-from satvu.http import HttpClient
+from satvu.http import HttpClientLike
 from satvu.services.policy.models.list_active_contracts_input import (
     ListActiveContractsInput,
 )
@@ -28,7 +28,7 @@ class PolicyService(SDKClient):
         self,
         env: str | None,
         get_token: Callable[[], str],
-        http_client: HttpClient | None = None,
+        http_client: HttpClientLike | None = None,
         timeout: int = 30,
         max_retry_attempts: int = 5,
         max_retry_after_seconds: float = 300.0,

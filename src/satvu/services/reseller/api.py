@@ -5,7 +5,7 @@ from collections.abc import Callable, Generator
 from typing import Any, Union
 
 from satvu.core import SDKClient, _deep_merge
-from satvu.http import HttpClient
+from satvu.http import HttpClientLike
 from satvu.services.reseller.models.create_user import CreateUser
 from satvu.services.reseller.models.create_user_response import CreateUserResponse
 from satvu.services.reseller.models.get_companies import GetCompanies
@@ -22,7 +22,7 @@ class ResellerService(SDKClient):
         self,
         env: str | None,
         get_token: Callable[[], str],
-        http_client: HttpClient | None = None,
+        http_client: HttpClientLike | None = None,
         timeout: int = 30,
         max_retry_attempts: int = 5,
         max_retry_after_seconds: float = 300.0,
